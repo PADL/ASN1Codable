@@ -1,0 +1,84 @@
+//
+// Copyright (c) 2022 PADL Software Pty Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the License);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an 'AS IS' BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+import Foundation
+import ASN1Kit
+
+internal final class ASN1DecoderImpl {
+    fileprivate var container: ASN1DecodingContainer?
+    
+    let object: ASN1Object
+    let codingPath: [CodingKey]
+    let userInfo: [CodingUserInfoKey: Any]
+    var context: ASN1DecodingContext
+    
+    init(object: ASN1Object,
+         codingPath: [CodingKey] = [],
+         userInfo: [CodingUserInfoKey: Any] = [:],
+         context: ASN1DecodingContext = ASN1DecodingContext()) {
+        self.object = object
+        self.codingPath = codingPath
+        self.userInfo = userInfo
+        self.context = context
+    }
+}
+
+extension ASN1DecoderImpl: Decoder {
+    func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
+        precondition(self.container == nil)
+
+        let container = try KeyedContainer<Key>(object: self.object,
+                                                codingPath: self.codingPath,
+                                                userInfo: self.userInfo,
+                                                context: self.context)
+        self.container = container
+                
+        return KeyedDecodingContainer(container)
+    }
+    
+    func unkeyedContainer() throws -> UnkeyedDecodingContainer {
+        precondition(self.container == nil)
+        
+        let container = try UnkeyedContainer(object: self.object,
+                                             codingPath: self.codingPath,
+                                             userInfo: self.userInfo,
+                                             context: self.context)
+        self.container = container
+
+        return container
+    }
+    
+    func singleValueContainer() throws -> SingleValueDecodingContainer {
+        precondition(self.container == nil)
+
+        let container = SingleValueContainer(object: self.object,
+                                             codingPath: self.codingPath,
+                                             userInfo: self.userInfo,
+                                             context: self.context)
+        self.container = container
+                
+        return container
+    }
+}
+
+extension ASN1DecoderImpl {
+    // FIXME this is a completely unsupported and fragile hack
+    static func isEnum<T>(_ type: T.Type) -> Bool {
+        let ptr = unsafeBitCast(T.self as Any.Type, to: UnsafeRawPointer.self)
+        return ptr.load(as: Int.self) == 513
+    }
+}
+
