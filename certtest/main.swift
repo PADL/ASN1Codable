@@ -42,20 +42,6 @@ public struct TestStruct: Codable, ASN1TaggedType, ASN1EncodeAsSetType {
 
     @ASN1ContextTagged<ASN1TagNumber$6, ASN1AutomaticTagging, Set<String>>
     var aSet = Set(["A", "Set"])
-
-    /*
-
-    @ASN1ContextTagged<ASN1TagNumber$2, ASN1AutomaticTagging, Data>
-    public var something: Data = Data([0xff])
-    
-    
-    @ASN1ContextTagged<ASN1TagNumber$4, ASN1AutomaticTagging, Data>
-    var signatureValue: Data = Data([0x01, 0xff, 0x02, 0xcc])
-    
-    @ASN1ContextTagged<ASN1TagNumber$5, ASN1AutomaticTagging, Array<String>>
-    var anArray = ["Hello", "ASN.1", "Coding", "Kit"]
-    
-     */
 }
 
 struct SignatureWrapper: Codable {
@@ -70,25 +56,24 @@ let ts = TestStruct()
 struct TestType: Codable, ASN1ApplicationTaggedType {
     static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self
     
-    /*
-    @ASN1ContextTagged<ASN1TagNumber$0, Version?>
-    var version: Version? = .rfc3280_version_1
-    
-    */
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, UInt>
+    var someInteger: UInt = 0
 
-    
-
-    @ASN1ContextTagged<ASN1TagNumber$3, ASN1AutomaticTagging, GeneralizedTime>
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1AutomaticTagging, GeneralizedTime>
     @GeneralizedTime
-    var gt = Date()
+    var someTime: Date = Date()
     
-    @ASN1ContextTagged<ASN1TagNumber$5, ASN1AutomaticTagging, PrintableString<String?>>
+    @ASN1ContextTagged<ASN1TagNumber$2, ASN1AutomaticTagging, PrintableString<String?>>
     @PrintableString
-    var value: String? = "hello world"
+    var someString: String? = nil
 }
 
-let foobar = Set(["Hello", "World!"])
+var testValue = TestType()
+testValue.someInteger = 1234
+testValue.someTime = Date()
+testValue.someString = "Hello"
 
+let foobar = Set(["Hello", "World!"])
 
 func test() -> Void {
     let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
@@ -124,14 +109,13 @@ func test() -> Void {
     t.extensions = extensions
     
     //let sw = SignatureWrapper(signatureValue: Data([0x01, 0x02, 0x03, 0x55, 0x66, 0xff]))
-    //var tt = TestType()
     //let time = Time.utcTime(UTCTime(wrappedValue: Date()))
 
     var c = Certificate(tbsCertificate: t, signatureAlgorithm: ai)
     c.signatureValue = BitString([0x01, 0x02, 0x03, 0x55, 0x66, 0xff])
         
     do {
-        let valueToEncode = c
+        let valueToEncode = testValue
         
         print("Encoding value: \(valueToEncode)")
         
@@ -144,7 +128,7 @@ func test() -> Void {
         let value = try decoder.decode(type(of: valueToEncode), from: berData)
         
         print("Decoded value: \(value)")
-        print("Extensions \(String(describing: value.tbsCertificate.extensions))")
+        //print("Extensions \(String(describing: value.tbsCertificate.extensions))")
         
         // reencode as JSON
         dumpJSONData(value)
