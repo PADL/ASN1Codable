@@ -73,12 +73,3 @@ extension ASN1DecoderImpl: Decoder {
         return container
     }
 }
-
-extension ASN1DecoderImpl {
-    // FIXME this is a completely unsupported and fragile hack
-    static func isEnum<T>(_ type: T.Type) -> Bool {
-        let ptr = unsafeBitCast(T.self as Any.Type, to: UnsafeRawPointer.self)
-        return ptr.load(as: Int.self) == 513
-    }
-}
-

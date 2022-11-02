@@ -96,10 +96,3 @@ extension ASN1EncoderImpl: Encoder {
         return container
     }
 }
-
-extension ASN1EncoderImpl {    
-    static func isEnum<T>(_ value: T) -> Bool {
-        let reflection = Mirror(reflecting: value)
-        return reflection.displayStyle == .enum
-    }
-}

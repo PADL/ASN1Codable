@@ -92,11 +92,17 @@ struct ASN1DecodingContext: ASN1CodingContext {
      
      */
 
+    // FIXME this is a completely unsupported and fragile hack
+    private static func isEnum<T>(_ type: T.Type) -> Bool {
+        let ptr = unsafeBitCast(T.self as Any.Type, to: UnsafeRawPointer.self)
+        return ptr.load(as: Int.self) == 513
+    }
+
     func decodingSingleValue<T>(_ type: T.Type?) -> Self {
         var context = self
         context.nextEnumCodingState()
 
-        if let type = type, ASN1DecoderImpl.isEnum(type) {
+        if let type = type, Self.isEnum(type) {
             context.enumCodingState = .enum
             context.currentEnumType = type
         } else {

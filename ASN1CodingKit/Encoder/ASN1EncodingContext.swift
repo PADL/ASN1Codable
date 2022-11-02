@@ -22,8 +22,13 @@ struct ASN1EncodingContext: ASN1CodingContext {
     var enumCodingState: ASN1EnumCodingState = .none
     var encodeAsSet = false
     
+    private static func isEnum<T>(_ value: T) -> Bool {
+        let reflection = Mirror(reflecting: value)
+        return reflection.displayStyle == .enum
+    }
+
     mutating func encodingSingleValue<T>(_ value: T) {
-        if ASN1EncoderImpl.isEnum(value) {
+        if Self.isEnum(value) {
             self.enumCodingState = .enum
         } else {
             self.enumCodingState = .none
