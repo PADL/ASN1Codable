@@ -17,7 +17,7 @@
 import Foundation
 import ASN1Kit
 
-struct ASN1NullObjectSingleton: ASN1Object {
+struct __ASN1NullObject: ASN1Object {
     let tag: ASN1DecodedTag = .universal(.null)
     let data: ASN1Data = .primitive(Data())
     let length = 0
@@ -32,7 +32,7 @@ struct ASN1NullObjectSingleton: ASN1Object {
     }
 }
 
-let ASN1NullObject = ASN1NullObjectSingleton()
+let ASN1NullObject = __ASN1NullObject()
 
 extension ASN1Object {
     var isNull: Bool {

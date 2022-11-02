@@ -17,6 +17,9 @@
 import Foundation
 
 extension CodingUserInfoKey {
+    // ASN1Tagging indicating tagging environment
     public static var ASN1TaggingEnvironment = CodingUserInfoKey(rawValue: "ASN1TaggingEnvironmentInfoKey")!
+    
+    // [String: [ObjectIdentifier: Any.Type]] mapping string representation of types to OID:type dictionaries
     public static var ASN1ObjectSetTypeDictionary = CodingUserInfoKey(rawValue: "ASN1ObjectSetTypeDictionaryUserInfoKey")!
 }
