@@ -199,7 +199,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                 // FIXME are we potentailly squashing real tag mismatch errors
                 if (object.isNull || tag.isUniversal == false), type is any OptionalProtocol.Type {
                     // FIXME keep trying until we find a tag that matches
-                   return Optional<Decodable>.none as! T
+                    return Optional<Decodable>.init(nilLiteral: ()) as! T
                 }
                 
                 let context = DecodingError.Context(codingPath: self.codingPath,
