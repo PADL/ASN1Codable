@@ -184,52 +184,53 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                                  skipTaggedValues: Bool = false) throws -> T where T: Decodable {
         let unwrappedObject: ASN1Object
 
-        if let tag = tag {
-            guard object.tag == tag else {
-                // FIXME should we check for ASN1NullObject instead
-                // FIXME are we potentailly squashing real tag mismatch errors
-                if (object.isNull || tag.isUniversal == false), type is any OptionalProtocol.Type {
-                    // FIXME keep trying until we find a tag that matches
-                    return Optional<Decodable>.init(nilLiteral: ()) as! T
-                }
-                
+        guard let tag = tag else {
+            // FIXME should this happen? precondition check?
+            return try self.decode(type, from: object, skipTaggedValues: skipTaggedValues)
+        }
+        
+        guard object.tag == tag else {
+            // FIXME should we check for ASN1NullObject instead
+            // FIXME are we potentailly squashing real tag mismatch errors
+            if (object.isNull || tag.isUniversal == false), type is any OptionalProtocol.Type {
+                // FIXME keep trying until we find a tag that matches
+                return Optional<Decodable>.init(nilLiteral: ()) as! T
+            }
+            
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Expected tag \(tag) but received \(object.tag)")
+            throw DecodingError.typeMismatch(type, context)
+        }
+        
+        if tag.isUniversal {
+            return try self.decode(type, from: object, skipTaggedValues: true)
+        } else if tagging == .implicit {
+            guard !object.constructed else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Expected tag \(tag) but received \(object.tag)")
+                                                    debugDescription: "Expected IMPLICIT tag \(tag) to wrap primitive type")
                 throw DecodingError.typeMismatch(type, context)
             }
             
-            if tag.isUniversal {
-                return try self.decode(type, from: object, skipTaggedValues: true)
-            } else if tagging == .implicit {
-                guard !object.constructed else {
-                    let context = DecodingError.Context(codingPath: self.codingPath,
-                                                        debugDescription: "Expected IMPLICIT tag \(tag) to wrap constructed type")
-                    throw DecodingError.typeMismatch(type, context)
-                }
-                
-                guard let type = type as? ASN1UniversalTagRepresentable.Type else {
-                    let context = DecodingError.Context(codingPath: self.codingPath,
-                                                        debugDescription: "Could not find appropriate primitive tag for implicitly encoded \(type)")
-                    throw DecodingError.typeMismatch(type, context)
-                }
-
-                unwrappedObject = ASN1Kit.create(tag: .universal(type.tagNo), data: object.data)
-            } else {
-                guard object.constructed else {
-                    let context = DecodingError.Context(codingPath: self.codingPath,
-                                                        debugDescription: "Expected EXPLICIT tag \(tag) to wrap constructed type")
-                    throw DecodingError.typeMismatch(type, context)
-                }
-                
-                guard let items = object.data.items, items.count == 1, let object = object.data.items!.first else {
-                    let context = DecodingError.Context(codingPath: self.codingPath,
-                                                        debugDescription: "Tag \(tag) for single value container must wrap a single value only")
-                    throw DecodingError.typeMismatch(type, context)
-                }
-                
-                unwrappedObject = object
+            guard let type = type as? ASN1UniversalTagRepresentable.Type else {
+                let context = DecodingError.Context(codingPath: self.codingPath,
+                                                    debugDescription: "Could not find appropriate primitive tag for implicitly encoded \(type)")
+                throw DecodingError.typeMismatch(type, context)
             }
+
+            unwrappedObject = ASN1Kit.create(tag: .universal(type.tagNo), data: object.data)
         } else {
+            guard object.constructed else {
+                let context = DecodingError.Context(codingPath: self.codingPath,
+                                                    debugDescription: "Expected EXPLICIT tag \(tag) to wrap constructed type")
+                throw DecodingError.typeMismatch(type, context)
+            }
+            
+            guard let items = object.data.items, items.count == 1, let object = object.data.items!.first else {
+                let context = DecodingError.Context(codingPath: self.codingPath,
+                                                    debugDescription: "Tag \(tag) for single value container must wrap a single value only")
+                throw DecodingError.typeMismatch(type, context)
+            }
+            
             unwrappedObject = object
         }
         
