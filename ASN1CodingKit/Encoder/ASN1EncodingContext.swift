@@ -31,7 +31,7 @@ struct ASN1EncodingContext: ASN1CodingContext {
     }
     
     mutating func encodingNestedContainer() {
-        self.advanceCodingDepth()
+        self.nextEnumCodingState()
     }
 }
 

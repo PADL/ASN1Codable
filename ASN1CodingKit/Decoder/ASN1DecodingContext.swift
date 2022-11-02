@@ -97,7 +97,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
 
     func decodingSingleValue<T>(_ type: T.Type) -> Self {
         var context = self
-        context.advanceCodingDepth()
+        context.nextEnumCodingState()
 
         if ASN1DecoderImpl.isEnum(type) {
             context.enumCodingState = .enum
@@ -112,7 +112,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     
     func decodingNestedContainer() -> Self {
         var context = self
-        context.advanceCodingDepth()
+        context.nextEnumCodingState()
         return context
     }
     

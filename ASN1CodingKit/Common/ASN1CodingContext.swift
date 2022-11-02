@@ -31,7 +31,7 @@ protocol ASN1CodingContext {
 }
 
 extension ASN1CodingContext {
-    mutating func advanceCodingDepth() {
+    mutating func nextEnumCodingState() {
         if self.enumCodingState == .enum {
             self.enumCodingState = .enumCase
         } else {
