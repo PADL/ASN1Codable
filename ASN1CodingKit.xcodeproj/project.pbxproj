@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D33AC5D1290FF5F3003190DC /* ASN1ImplicitlyTagged.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D0290FF5F3003190DC /* ASN1ImplicitlyTagged.swift */; };
-		D33AC5D3290FF68C003190DC /* ASN1ExplicitlyTagged.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D2290FF68C003190DC /* ASN1ExplicitlyTagged.swift */; };
 		D33AC5D52910F626003190DC /* ASN1UniversalTagRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D42910F626003190DC /* ASN1UniversalTagRepresentable.swift */; };
 		D33AC5D72910F789003190DC /* ASN1DecodingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D62910F789003190DC /* ASN1DecodingContext.swift */; };
 		D33AC5D92910F796003190DC /* ASN1EncodingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D82910F796003190DC /* ASN1EncodingContext.swift */; };
@@ -104,8 +102,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D33AC5D0290FF5F3003190DC /* ASN1ImplicitlyTagged.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1ImplicitlyTagged.swift; sourceTree = "<group>"; };
-		D33AC5D2290FF68C003190DC /* ASN1ExplicitlyTagged.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1ExplicitlyTagged.swift; sourceTree = "<group>"; };
 		D33AC5D42910F626003190DC /* ASN1UniversalTagRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1UniversalTagRepresentable.swift; sourceTree = "<group>"; };
 		D33AC5D62910F789003190DC /* ASN1DecodingContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecodingContext.swift; sourceTree = "<group>"; };
 		D33AC5D82910F796003190DC /* ASN1EncodingContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1EncodingContext.swift; sourceTree = "<group>"; };
@@ -300,11 +296,9 @@
 		D351DC7E290E8AF700540132 /* PropertyWrappers */ = {
 			isa = PBXGroup;
 			children = (
-				D33AC5D2290FF68C003190DC /* ASN1ExplicitlyTagged.swift */,
 				D351DC7F290E8AF700540132 /* ASN1ApplicationTagged.swift */,
 				D351DC80290E8AF700540132 /* ASN1PrivateTagged.swift */,
 				D351DC84290E8AF700540132 /* ASN1ContextTagged.swift */,
-				D33AC5D0290FF5F3003190DC /* ASN1ImplicitlyTagged.swift */,
 			);
 			path = PropertyWrappers;
 			sourceTree = "<group>";
@@ -474,11 +468,9 @@
 				D33AC5DF29121744003190DC /* ASN1NullObject.swift in Sources */,
 				D351DC8A290E8AF700540132 /* ASN1PreserveBinary.swift in Sources */,
 				D351DC8F290E8AF700540132 /* ASN1CodingKit.docc in Sources */,
-				D33AC5D3290FF68C003190DC /* ASN1ExplicitlyTagged.swift in Sources */,
 				D351DC93290E8AF700540132 /* KeyedEncodingContainer.swift in Sources */,
 				D33AC5D52910F626003190DC /* ASN1UniversalTagRepresentable.swift in Sources */,
 				D351DC90290E8AF700540132 /* UnkeyedEncodingContainer.swift in Sources */,
-				D33AC5D1290FF5F3003190DC /* ASN1ImplicitlyTagged.swift in Sources */,
 				D33AC5D92910F796003190DC /* ASN1EncodingContext.swift in Sources */,
 				D351DC9C290E8AF700540132 /* ASN1PrivateTagged.swift in Sources */,
 				D33AC5DD29120492003190DC /* OptionalProtocol.swift in Sources */,
