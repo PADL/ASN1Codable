@@ -40,13 +40,7 @@
 		D351DC9B290E8AF700540132 /* ASN1ApplicationTagged.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC7F290E8AF700540132 /* ASN1ApplicationTagged.swift */; };
 		D351DC9C290E8AF700540132 /* ASN1PrivateTagged.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC80290E8AF700540132 /* ASN1PrivateTagged.swift */; };
 		D351DCA0290E8AF700540132 /* ASN1ContextTagged.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC84290E8AF700540132 /* ASN1ContextTagged.swift */; };
-		D351DCAC290EA90100540132 /* ASN1Kit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D351DCA4290E8D2500540132 /* ASN1Kit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D351DCB9290EAC2500540132 /* ASN1CodingKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCB8290EAC2500540132 /* ASN1CodingKit.swift */; };
-		D351DCBE290EB83B00540132 /* ASN1Kit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DCA4290E8D2500540132 /* ASN1Kit.xcframework */; };
-		D351DCC3290EBE5700540132 /* DataKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D351DCBF290EBE4500540132 /* DataKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D351DCC4290EBE5700540132 /* GemCommonsKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D351DCC0290EBE4500540132 /* GemCommonsKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D351DCC5290EC20D00540132 /* AnyCodable.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC45290E898300540132 /* AnyCodable.xcframework */; };
-		D351DCC6290EC20D00540132 /* AnyCodable.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC45290E898300540132 /* AnyCodable.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D351DCCA290EC5EE00540132 /* ASN1CodingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1CodingKit.framework */; };
 		D351DCDA290ECE3200540132 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCD9290ECE3200540132 /* Box.swift */; };
 		D351DCE2290EF95E00540132 /* ASN1Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCE0290EF91B00540132 /* ASN1Decoder.swift */; };
@@ -56,6 +50,8 @@
 		D351DCE6290EF95E00540132 /* UnkeyedDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCDF290EF91B00540132 /* UnkeyedDecodingContainer.swift */; };
 		D351DCE7290EF95E00540132 /* SingleValueDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCDD290EF91B00540132 /* SingleValueDecodingContainer.swift */; };
 		D399B208290FB1120010B730 /* ASN1Tagging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D399B207290FB1120010B730 /* ASN1Tagging.swift */; };
+		D3D13E61291339FA00218279 /* ASN1Kit in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E60291339FA00218279 /* ASN1Kit */; };
+		D3D13E6429133A2200218279 /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6329133A2200218279 /* AnyCodable */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,20 +81,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		D351DCAA290EA8FE00540132 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				D351DCC3290EBE5700540132 /* DataKit.xcframework in Embed Frameworks */,
-				D351DCC4290EBE5700540132 /* GemCommonsKit.xcframework in Embed Frameworks */,
-				D351DCAC290EA90100540132 /* ASN1Kit.xcframework in Embed Frameworks */,
-				D351DCC6290EC20D00540132 /* AnyCodable.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -111,7 +93,6 @@
 		D351DC2A290E849200540132 /* ASN1CodingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASN1CodingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC34290E849200540132 /* ASN1CodingKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ASN1CodingKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC39290E849200540132 /* ASN1CodingKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1CodingKitTests.swift; sourceTree = "<group>"; };
-		D351DC45290E898300540132 /* AnyCodable.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AnyCodable.xcframework; path = Carthage/Build/AnyCodable.xcframework; sourceTree = "<group>"; };
 		D351DC4B290E8A4A00540132 /* certtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = certtest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC5B290E8AAF00540132 /* rfc2459.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = rfc2459.swift; sourceTree = "<group>"; };
 		D351DC5C290E8AAF00540132 /* RDNSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RDNSequence.swift; sourceTree = "<group>"; };
@@ -139,10 +120,7 @@
 		D351DC7F290E8AF700540132 /* ASN1ApplicationTagged.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1ApplicationTagged.swift; sourceTree = "<group>"; };
 		D351DC80290E8AF700540132 /* ASN1PrivateTagged.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1PrivateTagged.swift; sourceTree = "<group>"; };
 		D351DC84290E8AF700540132 /* ASN1ContextTagged.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1ContextTagged.swift; sourceTree = "<group>"; };
-		D351DCA4290E8D2500540132 /* ASN1Kit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ASN1Kit.xcframework; path = Carthage/Build/ASN1Kit.xcframework; sourceTree = "<group>"; };
 		D351DCB8290EAC2500540132 /* ASN1CodingKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1CodingKit.swift; sourceTree = "<group>"; };
-		D351DCBF290EBE4500540132 /* DataKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = DataKit.xcframework; path = Carthage/Build/DataKit.xcframework; sourceTree = "<group>"; };
-		D351DCC0290EBE4500540132 /* GemCommonsKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GemCommonsKit.xcframework; path = Carthage/Build/GemCommonsKit.xcframework; sourceTree = "<group>"; };
 		D351DCD9290ECE3200540132 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
 		D351DCDC290EF91B00540132 /* KeyedDecodingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedDecodingContainer.swift; sourceTree = "<group>"; };
 		D351DCDD290EF91B00540132 /* SingleValueDecodingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleValueDecodingContainer.swift; sourceTree = "<group>"; };
@@ -158,8 +136,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D351DCBE290EB83B00540132 /* ASN1Kit.xcframework in Frameworks */,
-				D351DCC5290EC20D00540132 /* AnyCodable.xcframework in Frameworks */,
+				D3D13E6429133A2200218279 /* AnyCodable in Frameworks */,
+				D3D13E61291339FA00218279 /* ASN1Kit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,10 +205,6 @@
 		D351DC44290E898300540132 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D351DCA4290E8D2500540132 /* ASN1Kit.xcframework */,
-				D351DC45290E898300540132 /* AnyCodable.xcframework */,
-				D351DCBF290EBE4500540132 /* DataKit.xcframework */,
-				D351DCC0290EBE4500540132 /* GemCommonsKit.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -338,13 +312,16 @@
 				D351DC26290E849200540132 /* Sources */,
 				D351DC27290E849200540132 /* Frameworks */,
 				D351DC28290E849200540132 /* Resources */,
-				D351DCAA290EA8FE00540132 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = ASN1CodingKit;
+			packageProductDependencies = (
+				D3D13E60291339FA00218279 /* ASN1Kit */,
+				D3D13E6329133A2200218279 /* AnyCodable */,
+			);
 			productName = ASN1CodingKit;
 			productReference = D351DC2A290E849200540132 /* ASN1CodingKit.framework */;
 			productType = "com.apple.product-type.framework";
@@ -416,6 +393,10 @@
 				Base,
 			);
 			mainGroup = D351DC20290E849200540132;
+			packageReferences = (
+				D3D13E5F291339FA00218279 /* XCRemoteSwiftPackageReference "ASN1Kit" */,
+				D3D13E6229133A2200218279 /* XCRemoteSwiftPackageReference "AnyCodable" */,
+			);
 			productRefGroup = D351DC2B290E849200540132 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -649,10 +630,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"Carthage/Build\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -687,10 +665,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"Carthage/Build\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -843,6 +818,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D3D13E5F291339FA00218279 /* XCRemoteSwiftPackageReference "ASN1Kit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PADL/ASN1Kit";
+			requirement = {
+				branch = lhoward/pr;
+				kind = branch;
+			};
+		};
+		D3D13E6229133A2200218279 /* XCRemoteSwiftPackageReference "AnyCodable" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Flight-School/AnyCodable";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D3D13E60291339FA00218279 /* ASN1Kit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3D13E5F291339FA00218279 /* XCRemoteSwiftPackageReference "ASN1Kit" */;
+			productName = ASN1Kit;
+		};
+		D3D13E6329133A2200218279 /* AnyCodable */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3D13E6229133A2200218279 /* XCRemoteSwiftPackageReference "AnyCodable" */;
+			productName = AnyCodable;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D351DC21290E849200540132 /* Project object */;
 }
