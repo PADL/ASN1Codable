@@ -95,11 +95,11 @@ struct ASN1DecodingContext: ASN1CodingContext {
      
      */
 
-    func decodingSingleValue<T>(_ type: T.Type) -> Self {
+    func decodingSingleValue<T>(_ type: T.Type?) -> Self {
         var context = self
         context.nextEnumCodingState()
 
-        if ASN1DecoderImpl.isEnum(type) {
+        if let type = type, ASN1DecoderImpl.isEnum(type) {
             context.enumCodingState = .enum
             context.currentEnumType = type
         } else {
