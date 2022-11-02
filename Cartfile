@@ -1,2 +1,2 @@
-git "ssh://git@github.com/PADL/ASN1Kit.git" "lhoward/pr"
+github "PADL/ASN1Kit" "lhoward/pr"
 github "Flight-School/AnyCodable" "0.6.7"

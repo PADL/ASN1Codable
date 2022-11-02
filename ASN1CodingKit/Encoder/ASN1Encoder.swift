@@ -1,36 +1,45 @@
 //
-//  ASN1Encoder.swift
-//  asn1bridgetest
+// Copyright (c) 2022 PADL Software Pty Ltd
 //
-//  Created by Luke Howard on 23/10/2022.
+// Licensed under the Apache License, Version 2.0 (the License);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an 'AS IS' BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 
 import Foundation
 import ASN1Kit
 
-open class ASN1Encoder {
-    open var userInfo: [CodingUserInfoKey: Any] = [:]
+public final class ASN1Encoder {
+    public var userInfo: [CodingUserInfoKey: Any] = [:]
 
     public init() {
     }
     
-    open func encode<T: Encodable>(_ value: T) throws -> Data {
-        let object: ASN1Object = try encodeAsASN1Object(value)
-                
-        return try object.serialize()
-        
-    }
-    
-    func encodeAsASN1Object<T: Encodable>(_ value: T) throws -> ASN1Object {
-        let state = ASN1CodingState(depth: -1)
-        
-        // wrap in an array so that we can access the containing structure
-        // otherwise we just get the elements
-        let asn1Encoder = ASN1EncoderImpl(codingPath: [], userInfo: self.userInfo, state: state)
-        try [value].encode(to: asn1Encoder)
-        guard let object = asn1Encoder.object else {
-            throw ASN1Error.malformedEncoding("No objects encoded")
+    public func encode<T: Encodable>(_ value: T) throws -> Data {
+        let encoder = ASN1EncoderImpl(userInfo: self.userInfo)
+        let box = Box(value) // needed to encode containing structure
+        try box.encode(to: encoder)
+        guard let object = encoder.object else {
+            let context = EncodingError.Context(codingPath: [], debugDescription: "No object encoded")
+            throw EncodingError.invalidValue(value, context)
         }
-        return object
+
+        return try object.serialize()
     }
 }
+
+#if canImport(Combine)
+import Combine
+
+extension ASN1Encoder: TopLevelEncoder {
+    public typealias Input = Data
+}
+#endif

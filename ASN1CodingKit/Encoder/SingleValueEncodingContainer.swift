@@ -1,8 +1,17 @@
 //
-//  SingleValueEncodingContainer.swift
-//  asn1bridgetest
+// Copyright (c) 2022 PADL Software Pty Ltd
 //
-//  Created by Luke Howard on 23/10/2022.
+// Licensed under the Apache License, Version 2.0 (the License);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an 'AS IS' BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 
 import Foundation
@@ -15,13 +24,11 @@ extension ASN1EncoderImpl {
         var codingPath: [CodingKey]
         var userInfo: [CodingUserInfoKey: Any]
         
-        var tags: [ASN1DecodedTag] = []
-        var taggingModes: [ASN1TaggingMode] = []
+        var context: ASN1EncodingContext
         var didEncode: Bool = false
-        var state: ASN1CodingState
-        
-        private var defaultTaggingMode: ASN1TaggingMode {
-            return (self.userInfo[CodingUserInfoKey.ASN1TaggingMode] as? ASN1TaggingMode) ?? .automatic
+
+        private var defaultTaggingMode: ASN1Tagging {
+            return (self.userInfo[CodingUserInfoKey.ASN1TaggingEnvironment] as? ASN1Tagging) ?? .automatic
         }
         
         private(set) var object: ASN1Object? {
@@ -36,62 +43,66 @@ extension ASN1EncoderImpl {
             }
         }
         
-        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey : Any], state: ASN1CodingState) {
+        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey : Any],
+             context: ASN1EncodingContext = ASN1EncodingContext()) {
             self.codingPath = codingPath
             self.userInfo = userInfo
-            self.state = state
+            self.context = context
         }
 
         func preconditionCanEncodeNewValue() {
             precondition(!self.didEncode)
         }
-        
-        fileprivate func wrap(tag: ASN1DecodedTag?, taggingMode: ASN1TaggingMode?) throws {
-            guard let object = self._object,
-                  let tag = tag else {
-                return
-            }
-            
-            let taggingMode: ASN1TaggingMode = taggingMode ?? self.defaultTaggingMode
-            self._object = object.wrap(with: tag, constructed: taggingMode != .implicit)
-        }
     }
 }
 
 extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
+    private func mappingASN1Error<T>(_ value: T, _ block: () throws -> ()) throws {
+        do {
+            try block()
+        } catch let error as ASN1Error {
+            let context = EncodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "ASN.1 encoding error",
+                                                underlyingError: error)
+            throw EncodingError.invalidValue(value, context)
+        }
+    }
+        
     func encodeNil() throws {
         preconditionCanEncodeNewValue()
         self.didEncode = true
     }
-    
-    func encodeFixedWithInteger<T>(_ value: T) throws where T: FixedWidthInteger {
-        let object: ASN1Object
         
-        object = T.isSigned ?
-            try Int(value).asn1encode(tag: nil) : try UInt(value).asn1encode(tag: nil)
-        self.object = object
-    }
-    
     func encode(_ value: Bool) throws {
-        let object: ASN1Object = try value.asn1encode(tag: nil)
-        self.object = object
+        try self.mappingASN1Error(value) {
+            let object: ASN1Object = try value.asn1encode(tag: nil)
+            self.object = object
+        }
     }
     
     func encode(_ value: String) throws {
-        let object: ASN1Object = try value.asn1encode(tag: nil)
-        self.object = object
+        try self.mappingASN1Error(value) {
+            let object: ASN1Object = try value.asn1encode(tag: nil)
+            self.object = object
+        }
     }
     
     func encode(_ value: Double) throws {
         fatalError("no support for encoding floating point values")
-        //throw ASN1Error.unsupported("No support yet for floating point values")
     }
     
     func encode(_ value: Float) throws {
         fatalError("no support for encoding floating point values")
-        //throw ASN1Error.unsupported("No support yet for floating point values")
     }
     
+    private func encodeFixedWithInteger<T>(_ value: T) throws where T: FixedWidthInteger {
+        try self.mappingASN1Error(value) {
+            let object = T.isSigned ?
+            try Int(value).asn1encode(tag: nil) : try UInt(value).asn1encode(tag: nil)
+            self.object = object
+        }
+    }
+
     func encode(_ value: Int) throws {
         try self.encodeFixedWithInteger(value)
     }
@@ -132,72 +143,71 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         try self.encodeFixedWithInteger(value)
     }
     
-    private func encode<T: Encodable>(_ value: T,
-                                      tags: inout [ASN1DecodedTag],
-                                      taggingModes: inout [ASN1TaggingMode]) throws {
-        if let value = value as? ASN1EncodableType {
-            try self.encodePrimitiveValue(value, tags: &tags)
-        } else {
-            try self.encodeConstructedValue(value)
-        }
-                
-        try tags.filter { $0.isUniversal == false }.forEach {
-            try self.wrap(tag: $0, taggingMode: taggingModes.popLast() ?? .automatic)
-        }
-        tags = []
-        taggingModes = []
-    }
-
     func encode<T: Encodable>(_ value: T) throws {
-        if let value = value as? ASN1Type & Encodable {
-            let type = type(of: value)
-            var tags: [ASN1DecodedTag]
-            var taggingModes: [ASN1TaggingMode]
-            
-            if let tag = type.tag {
-                tags = [tag]
-            } else {
-                tags = []
-            }
-            
-            if let taggingMode = type.taggingMode {
-                taggingModes = [taggingMode]
-            } else {
-                taggingModes = []
-            }
-            
-            try self.encode(value, tags: &tags, taggingModes: &taggingModes)
-        } else {
-            try self.encode(value, tags: &self.tags, taggingModes: &self.taggingModes)
+        self.context.encodingSingleValue(value) // FIXME
+
+        return try self.mappingASN1Error(value) {
+            self.object = try encode(value)
         }
     }
     
-    private func encodePrimitiveValue(_ value: ASN1EncodableType,
-                                      tags: inout [ASN1DecodedTag]) throws {
-        let object: ASN1Object
+    private func encode<T: Encodable>(_ value: T, skipTaggedValues: Bool = false) throws -> ASN1Object? {
+        let object: ASN1Object?
         
-        if let tag = tags.last, tag.isUniversal {
-            object = try value.asn1encode(tag: tag)
-            tags.removeLast()
+        if !skipTaggedValues, let value = value as? ASN1TaggedType {
+            object = try self.encodeTaggedValue(value)
+        } else if let value = value as? any (Encodable & ASN1TaggedProperty) {
+            object = try self.encodeTaggedProperty(value)
+        } else if let value = value as? ASN1EncodableType {
+            object = try self.encodePrimitiveValue(value)
         } else {
-            object = try value.asn1encode(tag: nil)
+            object = try self.encodeConstructedValue(value)
         }
         
-        self.object = object
+        return object
     }
-
-    private func encodeConstructedValue<T: Encodable>(_ value: T) throws {
-        // FIXME sort struct set fields by encoding
-        self.state.encodeAsSet = value is Set<AnyHashable> || value is ASN1EncodeAsSetType
+    
+    private func encodeTagged<T: Encodable>(_ value: T, tag: ASN1DecodedTag?, tagging: ASN1Tagging, skipTaggedValues: Bool = false) throws -> ASN1Object? {
+        let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
         
-        let encoder = ASN1EncoderImpl(codingPath: self.codingPath, userInfo: self.userInfo, state: self.state)
-        try value.encode(to: encoder)
-        
-        if let object = encoder.object {
-            self.object = object
-            if var value = value as? ASN1PreserveBinary {
-                value._save = try object.serialize()
+        if let object = object, let tag = tag {
+            if tag.isUniversal {
+                precondition(value is ASN1EncodableType)
+                return try (value as! ASN1EncodableType).asn1encode(tag: tag)
+            } else {
+                return object.wrap(with: tag, constructed: tagging != .implicit)
             }
         }
+        
+        return object
+    }
+    
+    private func encodeTaggedValue<T: Encodable & ASN1TaggedType>(_ value: T) throws -> ASN1Object? {
+        return try self.encodeTagged(value, tag: T.tag, tagging: T.tagging, skipTaggedValues: true)
+    }
+    
+    private func encodeTaggedProperty<T: Encodable & ASN1TaggedProperty>(_ value: T) throws -> ASN1Object? {
+        return try self.encodeTagged(value.wrappedValue, tag: T.tag, tagging: T.tagging)
+    }
+    
+    private func encodePrimitiveValue<T: ASN1EncodableType>(_ value: T) throws -> ASN1Object? {
+        return try value.asn1encode(tag: nil)
+    }
+    
+    private func encodeConstructedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
+        // FIXME sort struct set fields by encoding
+        self.context.encodeAsSet = value is Set<AnyHashable> || value is ASN1EncodeAsSetType
+        
+        let encoder = ASN1EncoderImpl(codingPath: self.codingPath,
+                                      userInfo: self.userInfo,
+                                      context: self.context)
+        try value.encode(to: encoder)
+        
+        if let object = encoder.object, var value = value as? ASN1PreserveBinary {
+            // Note this requires the value to be a class
+            value._save = try object.serialize()
+        }
+    
+        return encoder.object
     }
 }

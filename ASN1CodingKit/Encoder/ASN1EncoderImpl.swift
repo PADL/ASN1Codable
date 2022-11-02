@@ -1,8 +1,17 @@
 //
-//  ASN1EncoderImpl.swift
-//  ASN1CodingKit
+// Copyright (c) 2022 PADL Software Pty Ltd
 //
-//  Created by Luke Howard on 30/10/2022.
+// Licensed under the Apache License, Version 2.0 (the License);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an 'AS IS' BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 
 import Foundation
@@ -13,12 +22,13 @@ internal final class ASN1EncoderImpl {
     
     let codingPath: [CodingKey]
     let userInfo: [CodingUserInfoKey: Any]
-    var state: ASN1CodingState
+    let context: ASN1EncodingContext
     
-    init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any], state: ASN1CodingState) {
+    init(codingPath: [CodingKey] = [], userInfo: [CodingUserInfoKey: Any] = [:],
+         context: ASN1EncodingContext = ASN1EncodingContext()) {
         self.codingPath = codingPath
         self.userInfo = userInfo
-        self.state = state
+        self.context = context
     }
     
     var object: ASN1Object? {
@@ -41,7 +51,7 @@ extension ASN1EncoderImpl: Encoder {
         
         let container = KeyedContainer<Key>(codingPath: self.codingPath,
                                             userInfo: self.userInfo,
-                                            state: self.state)
+                                            context: self.context)
         self.container = container
         
         return KeyedEncodingContainer(container)
@@ -57,10 +67,10 @@ extension ASN1EncoderImpl: Encoder {
     /// - returns: A new empty unkeyed container.
     func unkeyedContainer() -> UnkeyedEncodingContainer {
         precondition(self.container == nil)
-
+        
         let container = UnkeyedContainer(codingPath: self.codingPath,
                                          userInfo: self.userInfo,
-                                         state: self.state)
+                                         context: self.context)
         self.container = container
         
         return container
@@ -77,20 +87,19 @@ extension ASN1EncoderImpl: Encoder {
     /// - returns: A new empty single value container.
     func singleValueContainer() -> SingleValueEncodingContainer {
         precondition(self.container == nil)
-
+        
         let container = SingleValueContainer(codingPath: self.codingPath,
                                              userInfo: self.userInfo,
-                                             state: self.state)
+                                             context: self.context)
         self.container = container
-
+        
         return container
     }
 }
 
-extension ASN1EncoderImpl {
+extension ASN1EncoderImpl {    
     static func isEnum<T>(_ value: T) -> Bool {
         let reflection = Mirror(reflecting: value)
-
         return reflection.displayStyle == .enum
     }
 }

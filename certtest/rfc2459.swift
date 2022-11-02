@@ -1,12 +1,20 @@
 //
-//  rfc2459.swift
-//  asn1bridgetest
+// Copyright (c) 2022 PADL Software Pty Ltd
 //
-//  Created by Luke Howard on 24/10/2022.
+// Licensed under the Apache License, Version 2.0 (the License);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an 'AS IS' BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 
 import Foundation
-import ASN1Kit
 import ASN1CodingKit
 import AnyCodable // FIXME
 
@@ -29,13 +37,17 @@ public typealias AttributeValue = AnyCodable
 
 public typealias AttributeValues = Set<AttributeValue>
 
+/*
 public enum DirectoryString: Codable, Hashable {
     case ia5String(IA5String<String>)
     case printableString(PrintableString<String>)
-    case universalString(UniveralString<String>)
+    case universalString(UniversalString<String>)
     case utf8String(UTF8String<String>)
     case bmpString(BMPString<String>)
 }
+ */
+
+typealias DirectoryString = String
 
 public struct AttributeTypeAndValue: Codable, Hashable {
     var type: AttributeType
@@ -51,13 +63,50 @@ public typealias RelativeDistinguishedName = Set<AttributeTypeAndValue>
 
 public typealias RDNSequence = [RelativeDistinguishedName]
 
-public enum Name: Codable {
+public enum Name: Codable, ASN1ChoiceCodable {
+    // FIXME temporary
+    enum CodingKeys: CodingKey {
+        case rdnSequence
+    }
+
+    public static var allCodingKeys: [CodingKey] {
+        return [CodingKeys.rdnSequence]
+    }
+    
+    public static func type(for key: any CodingKey) -> Any.Type? {
+        let key = key as! Name.CodingKeys
+        switch key {
+        case .rdnSequence:
+            return RDNSequence.self
+        }
+    }
+    
     case rdnSequence(RDNSequence)
 }
 
-public enum Time: Codable {
+public enum Time: Codable, ASN1ChoiceCodable {
     case utcTime(UTCTime)
     case generalTime(GeneralizedTime)
+    
+    // FIXME temporary
+    enum CodingKeys: CodingKey {
+        case utcTime
+        case generalTime
+    }
+
+    public static var allCodingKeys: [CodingKey] {
+        return [CodingKeys.utcTime, CodingKeys.generalTime]
+    }
+    
+    public static func type(for key: any CodingKey) -> Any.Type? {
+        let key = key as! Time.CodingKeys
+        switch key {
+        case .utcTime:
+            return UTCTime.self
+        case .generalTime:
+            return GeneralizedTime.self
+        }
+    }
 }
 
 public struct Validity: Codable {
@@ -72,8 +121,26 @@ public struct SubjectPublicKeyInfo: Codable {
 
 public let SubjectAltNameOID = ObjectIdentifier(rawValue: "2.5.29.17")!
 
-public enum GeneralName: Codable {
-    case rfc822Name(IA5String<String>)
+public enum GeneralName: Codable, ASN1ChoiceCodable {
+    //FIXME IA5String
+    case rfc822Name(ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, String>)
+    
+    // FIXME temporary
+    enum CodingKeys: CodingKey {
+        case rfc822Name
+    }
+
+    public static var allCodingKeys: [CodingKey] {
+        return [CodingKeys.rfc822Name]
+    }
+    
+    public static func type(for key: any CodingKey) -> Any.Type? {
+        let key = key as! GeneralName.CodingKeys
+        switch key {
+        case .rfc822Name:
+            return ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, String>.self
+        }
+    }
 }
 
 public typealias GeneralNames = [GeneralName]
@@ -116,7 +183,7 @@ public struct Extension: Codable {
                                              with: Self.knownTypes,
                                              userInfo: decoder.userInfo)
         let berData = try container.decode(Data.self, forKey: .extnValue)
-        let innerDecoder = JSONDecoder() // XXX FIXME once ASN1Decoder exists!
+        let innerDecoder = ASN1Decoder()
         self.extnValue = try innerDecoder.decode(witness, from: berData)
     }
     
@@ -150,7 +217,7 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
         case extensions
     }
 
-    @ASN1ContextTagged<ASN1TagNumber$0, Version?>
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, Version?>
     var version: Version?
     var serialNumber: CertificateSerialNumber
     var signature: AlgorithmIdentifier
@@ -159,17 +226,13 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
     var subject: Name
     var subjectPublicKeyInfo: SubjectPublicKeyInfo
     
-    // FIXME remove need for placeholder value when using nested property wrappers and optionals
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitlyTagged<BitString?>>
-    @ASN1ImplicitlyTagged<BitString?>
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, BitString?>
     var issuerUniqueID: BitString? = BitString()
 
-    // FIXME remove need for placeholder value when using nested property wrappers and optionals
-    @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitlyTagged<BitString?>>
-    @ASN1ImplicitlyTagged<BitString?>
-    var subjectUniqueID: BitString? = BitString()
+    @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString?>
+    var subjectUniqueID: BitString?
     
-    @ASN1ContextTagged<ASN1TagNumber$3, [Extension]?>
+    @ASN1ContextTagged<ASN1TagNumber$3, ASN1ExplicitTagging, [Extension]?>
     var extensions: [Extension]?
     
     public init(version: Version? = nil,
@@ -178,10 +241,7 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
                 issuer: Name,
                 validity: Validity,
                 subject: Name,
-                subjectPublicKeyInfo: SubjectPublicKeyInfo,
-                issuerUniqueID: BitString? = nil,
-                subjectUniqueID: BitString? = nil,
-                extensions: [Extension]? = nil) {
+                subjectPublicKeyInfo: SubjectPublicKeyInfo) {
         self.version = version
         self.serialNumber = serialNumber
         self.signature = signature
@@ -189,9 +249,6 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
         self.validity = validity
         self.subject = subject
         self.subjectPublicKeyInfo = subjectPublicKeyInfo
-        self.issuerUniqueID = issuerUniqueID
-        self.subjectUniqueID = subjectUniqueID
-        self.extensions = extensions
     }
 }
 

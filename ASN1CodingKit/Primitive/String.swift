@@ -1,8 +1,17 @@
 //
-//  String.swift
-//  ASN1Kit
+// Copyright (c) 2022 PADL Software Pty Ltd
 //
-//  Created by Luke Howard on 26/10/2022.
+// Licensed under the Apache License, Version 2.0 (the License);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an 'AS IS' BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 //
 
 import Foundation
@@ -26,7 +35,7 @@ extension Optional: ExpressibleByString where Wrapped == String {
 
 extension Optional: ASN1DecodableType where Wrapped == String {
     public init(from asn1: ASN1Object) throws {
-        if asn1.tag == .universal(.null) {
+        if asn1.isNull {
             self = nil
         } else {
             self = try Wrapped(from: asn1)
@@ -39,7 +48,7 @@ extension Optional: ASN1EncodableType where Wrapped == String {
         switch self {
         case .none:
             return ASN1Kit.create(tag: ASN1DecodedTag.universal(.null),
-                                  data: ASN1Data.primitive(Data.empty))
+                                  data: ASN1Data.primitive(Data()))
         case .some(let value):
             return try value.asn1encode(tag: tag)
         }
@@ -47,7 +56,7 @@ extension Optional: ASN1EncodableType where Wrapped == String {
 }
 
 @propertyWrapper
-public struct IA5String<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1WrappedValue {
+public struct IA5String<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedProperty {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -64,7 +73,7 @@ public struct IA5String<Value: Codable & ExpressibleByString & ASN1CodableType>:
 }
 
 @propertyWrapper
-public struct UTF8String<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1WrappedValue {
+public struct UTF8String<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedProperty {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -81,7 +90,7 @@ public struct UTF8String<Value: Codable & ExpressibleByString & ASN1CodableType>
 }
 
 @propertyWrapper
-public struct UniveralString<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1WrappedValue {
+public struct UniversalString<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedProperty {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -98,7 +107,7 @@ public struct UniveralString<Value: Codable & ExpressibleByString & ASN1CodableT
 }
 
 @propertyWrapper
-public struct BMPString<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1WrappedValue {
+public struct BMPString<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedProperty {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -115,7 +124,7 @@ public struct BMPString<Value: Codable & ExpressibleByString & ASN1CodableType>:
 }
 
 @propertyWrapper
-public struct PrintableString<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1WrappedValue {
+public struct PrintableString<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedProperty {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
