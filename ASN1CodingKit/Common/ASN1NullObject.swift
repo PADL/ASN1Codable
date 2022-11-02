@@ -17,25 +17,22 @@
 import Foundation
 import ASN1Kit
 
-struct ASN1NullObject: ASN1Object {
-    var save: Data? = nil
+struct ASN1NullObjectSingleton: ASN1Object {
+    let tag: ASN1DecodedTag = .universal(.null)
+    let data: ASN1Data = .primitive(Data())
+    let length = 0
+    let constructed = false
     
-    var tag: ASN1DecodedTag {
-        return .universal(.null )
-    }
-    
-    var data: ASN1Data {
-        return .primitive(Data())
-    }
-    
-    var length: Int {
-        return 0
-    }
-    
-    var constructed: Bool {
-        return false
+    var save: Data? {
+        get {
+            return nil
+        }
+        set {
+        }
     }
 }
+
+let ASN1NullObject = ASN1NullObjectSingleton()
 
 extension ASN1Object {
     var isNull: Bool {

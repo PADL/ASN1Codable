@@ -126,7 +126,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         // the remaining wrapped objects; pad the object set with null instances.
         
         if self.isAtEnd {
-            object = ASN1NullObject()
+            object = ASN1NullObject
         } else {
             try self.validateCurrentIndex()
             try self.context.validateObject(self.currentObject, codingPath: self.codingPath)
