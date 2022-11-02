@@ -17,6 +17,8 @@
 import Foundation
 import ASN1Kit
 
+// FIXME need to deal with bit strings that are not byte multiples
+
 public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, ASN1CodableType {
     public var startIndex: Data.Index { self.wrappedValue.startIndex }
     public var endIndex: Data.Index { self.wrappedValue.endIndex }
