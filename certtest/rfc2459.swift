@@ -201,22 +201,6 @@ public struct Extension: Codable {
 // must be class to support ASN1PreserveBinary on encode
 
 public class TBSCertificate: Codable, ASN1PreserveBinary {
-    public var _save: Data? = nil
-    
-    // CodingKeys required to omit _save on encode
-    enum CodingKeys: CodingKey {
-        case version
-        case serialNumber
-        case signature
-        case issuer
-        case validity
-        case subject
-        case subjectPublicKeyInfo
-        case issuerUniqueID
-        case subjectUniqueID
-        case extensions
-    }
-
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, Version?>
     var version: Version?
     var serialNumber: CertificateSerialNumber
@@ -234,7 +218,10 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
     
     @ASN1ContextTagged<ASN1TagNumber$3, ASN1ExplicitTagging, [Extension]?>
     var extensions: [Extension]?
-    
+
+    // MBZ before encode
+    public var _save: Data? = nil
+
     public init(version: Version? = nil,
                 serialNumber: CertificateSerialNumber,
                 signature: AlgorithmIdentifier,

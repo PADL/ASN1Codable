@@ -124,6 +124,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         
         // if we've reached the end of the SEQUENCE or SET, we still need to initialise
         // the remaining wrapped objects; pad the object set with null instances.
+
+        // FIXME check _save?
         
         if self.isAtEnd {
             object = ASN1NullObject
