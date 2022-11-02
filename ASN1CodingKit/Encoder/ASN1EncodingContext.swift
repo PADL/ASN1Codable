@@ -19,14 +19,14 @@ import Foundation
 import ASN1Kit
 
 struct ASN1EncodingContext: ASN1CodingContext {
-    var depth: ASN1CodingDepth = .none
+    var enumCodingState: ASN1EnumCodingState = .none
     var encodeAsSet = false
     
     mutating func encodingSingleValue<T>(_ value: T) {
         if ASN1EncoderImpl.isEnum(value) {
-            self.depth = .enum
+            self.enumCodingState = .enum
         } else {
-            self.depth = .none
+            self.enumCodingState = .none
         }
     }
     

@@ -19,23 +19,23 @@
 
 import Foundation
 
-internal enum ASN1CodingDepth {
+enum ASN1EnumCodingState {
     case none
     case `enum`
     case enumCase
 }
 
-internal protocol ASN1CodingContext {
-    var depth: ASN1CodingDepth { get set }
+protocol ASN1CodingContext {
+    var enumCodingState: ASN1EnumCodingState { get set }
     var encodeAsSet: Bool { get set }
 }
 
 extension ASN1CodingContext {
     mutating func advanceCodingDepth() {
-        if self.depth == .enum {
-            self.depth = .enumCase
+        if self.enumCodingState == .enum {
+            self.enumCodingState = .enumCase
         } else {
-            self.depth = .none
+            self.enumCodingState = .none
         }
     }
 }

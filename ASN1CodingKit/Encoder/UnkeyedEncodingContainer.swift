@@ -106,7 +106,7 @@ extension ASN1EncoderImpl.UnkeyedContainer {
     var object: ASN1Object? {
         let object: ASN1Object?
 
-        if self.context.depth != .none {
+        if self.context.enumCodingState != .none {
             precondition(self.containers.count <= 1)
             object = self.containers.first?.object
         } else {

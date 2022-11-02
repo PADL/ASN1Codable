@@ -17,7 +17,7 @@
 import Foundation
 
 struct ASN1DecodingContext: ASN1CodingContext {
-    var depth: ASN1CodingDepth = .none
+    var enumCodingState: ASN1EnumCodingState = .none
     var encodeAsSet = false
     var currentEnumType: Any.Type?
     
@@ -100,10 +100,10 @@ struct ASN1DecodingContext: ASN1CodingContext {
         context.advanceCodingDepth()
 
         if ASN1DecoderImpl.isEnum(type) {
-            context.depth = .enum
+            context.enumCodingState = .enum
             context.currentEnumType = type
         } else {
-            context.depth = .none
+            context.enumCodingState = .none
             context.currentEnumType = nil
         }
         
@@ -133,7 +133,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
                                                     debugDescription: "Expected a SEQUENCE, but received tag \(object.tag)")
                 throw DecodingError.dataCorrupted(context)
             }
-        } else if self.depth != .enum {
+        } else if self.enumCodingState != .enum {
             let context = DecodingError.Context(codingPath: codingPath,
                                                 debugDescription: "Expected a SET or SEQUENCE, instead received tag \(object.tag)")
             throw DecodingError.dataCorrupted(context)
