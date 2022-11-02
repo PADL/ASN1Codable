@@ -18,14 +18,3 @@ import Foundation
 import ASN1Kit
 
 @_exported import ASN1Kit
-
-// FIXME remove when decoder completed
-
-public func __ASN1DumpEncodedData(_ data: Data) {
-    do {
-        let asn1 = try ASN1Kit.ASN1Decoder.decode(asn1: data)
-        print("ASN.1: \(asn1)")
-    } catch {
-        print("Error \(error)")
-    }
-}

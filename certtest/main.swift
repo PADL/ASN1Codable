@@ -139,9 +139,7 @@ func test() -> Void {
         let berData = try ASN1Encoder().encode(valueToEncode)
         print("BER: \(berData.toHexString())")
         
-        //print("TBS save: \(String(describing: t._save?.toHexString()))")
-
-        __ASN1DumpEncodedData(berData)
+        dumpEncodedData(berData)
         
         let decoder = ASN1Decoder()
         let value = try decoder.decode(type(of: valueToEncode), from: berData)
@@ -150,9 +148,7 @@ func test() -> Void {
         print("Extensions \(value.tbsCertificate.extensions)")
         
         // reencode as JSON
-        
-        let jsonData = try String(data: JSONEncoder().encode(value), encoding: .utf8)
-        print("JSON: \(jsonData)")
+        dumpJSONData(value)
     } catch {
         print("failed to encode or decode - \(error)")
         return
@@ -160,3 +156,22 @@ func test() -> Void {
 }
 
 test()
+
+func dumpEncodedData(_ data: Data) {
+    do {
+        let asn1 = try ASN1Kit.ASN1Decoder.decode(asn1: data)
+        print("ASN.1: \(asn1)")
+    } catch {
+        print("Error \(error)")
+    }
+}
+
+func dumpJSONData(_ value: any Encodable) {
+    do {
+        if let jsonData = try String(data: JSONEncoder().encode(value), encoding: .utf8) {
+            print("JSON: \(jsonData)")
+        }
+    } catch {
+        print("Error \(error)")
+    }
+}
