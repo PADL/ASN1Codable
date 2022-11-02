@@ -155,10 +155,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         } else if let type = type as? any (Decodable & ASN1TaggedProperty).Type {
             value = try self.decodeTaggedProperty(type, from: object) as! T
         } else if let type = type as? ASN1DecodableType.Type {
-            value = try self.mappingASN1Error(ASN1DecodableType.self) {
-                // FIXME check this doesn't need to be a runtime check rather than an assert
-                return try decodePrimitiveValue(type, from: object)
-            } as! T
+            value = try decodePrimitiveValue(type, from: object) as! T
         } else {
             value = try self.decodeConstructedValue(type, from: object)
         }
@@ -247,15 +244,10 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         
         let decoder = ASN1DecoderImpl(object: object, codingPath: self.codingPath,
                                       userInfo: self.userInfo, context: self.context)
-
-        return try self.mappingASN1Error(type) {
-            let value = try T(from: decoder)
-            
-            if var value = value as? ASN1PreserveBinary {
-                value._save = object.save
-            }
-            
-            return value
+        let value = try T(from: decoder)
+        
+        if var value = value as? ASN1PreserveBinary {
+            value._save = object.save
         }
     }
 }
