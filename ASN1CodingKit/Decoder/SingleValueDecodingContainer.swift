@@ -249,6 +249,8 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         if var value = value as? ASN1PreserveBinary {
             value._save = object.save
         }
+        
+        return value
     }
 }
 
