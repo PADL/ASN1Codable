@@ -36,6 +36,16 @@ public struct GeneralizedTime: Codable, ASN1CodableType {
     public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
         return try wrappedValue.asn1encode(tag: .universal(.generalizedTime))
     }
+    
+    public func encode(to encoder: Encoder) throws {
+        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+        try self.wrappedValue.encode(to: encoder)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+        self.wrappedValue = try Date(from: decoder)
+    }
 }
 
 @propertyWrapper
@@ -56,5 +66,15 @@ public struct UTCTime: Codable, ASN1CodableType {
 
     public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
         return try wrappedValue.asn1encode(tag: .universal(.utcTime))
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+        try self.wrappedValue.encode(to: encoder)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+        self.wrappedValue = try Date(from: decoder)
     }
 }

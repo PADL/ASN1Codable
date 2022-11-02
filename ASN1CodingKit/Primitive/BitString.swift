@@ -24,7 +24,7 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, ASN1Coda
     public var endIndex: Data.Index { self.wrappedValue.endIndex }
     public var regions: CollectionOfOne<BitString> { CollectionOfOne(self) }
 
-    private var wrappedValue: Data
+    public var wrappedValue: Data
 
     public init() {
         self.wrappedValue = Data()
@@ -62,5 +62,15 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, ASN1Coda
 
     public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
         return try self.wrappedValue.asn1bitStringEncode(unused: 0, tag: tag)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+        try self.wrappedValue.encode(to: encoder)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+        self.wrappedValue = try Data(from: decoder)
     }
 }

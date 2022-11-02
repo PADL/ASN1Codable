@@ -148,6 +148,11 @@ func test() -> Void {
         
         print("Decoded value: \(value)")
         print("Extensions \(value.tbsCertificate.extensions)")
+        
+        // reencode as JSON
+        
+        let jsonData = try String(data: JSONEncoder().encode(value), encoding: .utf8)
+        print("JSON: \(jsonData)")
     } catch {
         print("failed to encode or decode - \(error)")
         return

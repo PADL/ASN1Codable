@@ -35,6 +35,16 @@ extension ASN1TaggedProperty {
     public var projectedValue: any ASN1TaggedProperty {
         return self
     }
+    
+    public func encode(to encoder: Encoder) throws {
+        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+        try self.wrappedValue.encode(to: encoder)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+        try self.init(wrappedValue: Value(from: decoder))
+    }
 }
 
 extension KeyedDecodingContainer {
@@ -46,3 +56,4 @@ extension KeyedDecodingContainer {
         return U(wrappedValue: nil)
     }
 }
+
