@@ -22,13 +22,7 @@ extension ASN1DecoderImpl {
         private(set) var object: ASN1Object
 
         var codingPath: [CodingKey]
-        var userInfo: [CodingUserInfoKey: Any]
-        
-        // because of the way the type system works (specifically the lack of reflection
-        // on types themselves), we can't take the encoder shortcut of directly burrowing
-        // through wrapped values. Instead we need to keep a stack of tags and tagging
-        // modes as decoder context, and then apply once we hit a concrete wrapped value.
-        
+        var userInfo: [CodingUserInfoKey: Any]        
         var didEncode: Bool = false
         var context: ASN1DecodingContext
 
