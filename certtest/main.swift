@@ -123,14 +123,13 @@ func test() -> Void {
     let extensions = [inhibitAnyPolicy, subjectAltName]
     t.extensions = extensions
     
-    let sw = SignatureWrapper(signatureValue: Data([0x01, 0x02, 0x03, 0x55, 0x66, 0xff]))
+    //let sw = SignatureWrapper(signatureValue: Data([0x01, 0x02, 0x03, 0x55, 0x66, 0xff]))
     //var tt = TestType()
-    
+    //let time = Time.utcTime(UTCTime(wrappedValue: Date()))
+
     var c = Certificate(tbsCertificate: t, signatureAlgorithm: ai)
     c.signatureValue = BitString([0x01, 0x02, 0x03, 0x55, 0x66, 0xff])
-    
-    let time = Time.utcTime(UTCTime(wrappedValue: Date()))
-    
+        
     do {
         let valueToEncode = c
         
@@ -145,7 +144,7 @@ func test() -> Void {
         let value = try decoder.decode(type(of: valueToEncode), from: berData)
         
         print("Decoded value: \(value)")
-        print("Extensions \(value.tbsCertificate.extensions)")
+        print("Extensions \(String(describing: value.tbsCertificate.extensions))")
         
         // reencode as JSON
         dumpJSONData(value)
