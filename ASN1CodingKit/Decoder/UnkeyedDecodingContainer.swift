@@ -92,28 +92,31 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         return container
     }
     
-    func decodeNil() throws -> Bool {
-        try self.validateCurrentIndex()
-        try context.validateObject(self.currentObject, codingPath: self.codingPath)
-
-        let container = self.nestedSingleValueContainer(object, context: ASN1DecodingContext())
-
-        self.containers.append(container)
-        self.currentIndex += 1
-
-        return container.decodeNil()
-    }
-
-    func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+    private func _decodingUnkeyedSingleValue<T>(_ type: T.Type?, _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
         try self.validateCurrentIndex()
         try self.context.validateObject(self.currentObject, codingPath: self.codingPath)
-
-        let container = self.nestedSingleValueContainer(self.currentObject, context: self.context.decodingSingleValue(type))
+        
+        let container = self.nestedSingleValueContainer(self.currentObject,
+                                                        context: self.context.decodingSingleValue(type))
+        
+        let value = try block(container)
         
         self.containers.append(container)
         self.currentIndex += 1
+        
+        return value
+    }
 
-        return try container.decode(type)
+    func decodeNil() throws -> Bool {
+        return try self._decodingUnkeyedSingleValue(nil) { container in
+            return container.decodeNil()
+        }
+    }
+
+    func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+        return try self._decodingUnkeyedSingleValue(nil) { container in
+            return try container.decode(type)
+        }
     }
     
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
