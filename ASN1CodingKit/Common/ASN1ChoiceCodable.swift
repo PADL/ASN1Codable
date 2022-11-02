@@ -16,8 +16,8 @@
 
 import Foundation
 
-
-// TEMPORARY
+// FIXME TEMPORARY
+// needs to be replaced with metadata introspection
 
 public protocol ASN1ChoiceCodable {
     static var allCodingKeys: [CodingKey] { get }
