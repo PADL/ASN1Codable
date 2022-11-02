@@ -23,35 +23,18 @@ public final class ASN1Decoder {
     public init() {
     }
 
-    // FIXME this loses the context of exactly what decoded incorrectly
-    
-    private func mappingASN1Error(_ block: () throws -> ASN1Object) throws -> ASN1Object {
+    public func decode<T>(_ type: T.Type, from data: Data) throws -> T where T : Decodable {
         do {
-            return try block()
-        } catch ASN1Error.malformedEncoding(let reason) {
+            let object = try ASN1Kit.ASN1Decoder.decode(asn1: data)
+            let decoder = ASN1DecoderImpl(object: object, userInfo: userInfo)
+            let box = try Box<T>(from: decoder)
+            return box.value
+        } catch let error as ASN1Error {
             let context = DecodingError.Context(codingPath: [],
-                                                debugDescription: "Malformed encoding: \(reason)")
-            throw DecodingError.dataCorrupted(context)
-        } catch ASN1Error.unsupported(let reason) {
-            let context = DecodingError.Context(codingPath: [],
-                                                debugDescription: "Unsupported: \(reason)")
-            throw DecodingError.dataCorrupted(context)
-        } catch ASN1Error.internalError(let reason) {
-            let context = DecodingError.Context(codingPath: [],
-                                                debugDescription: "Internal error: \(reason)")
-            throw DecodingError.dataCorrupted(context)
-        } catch ASN1Error.internalInconsistency(let reason) {
-            let context = DecodingError.Context(codingPath: [],
-                                                debugDescription: "Internal inconsistency: \(reason)")
+                                                debugDescription: "ASN.1 decoding error",
+                                                underlyingError: error)
             throw DecodingError.dataCorrupted(context)
         }
-    }
-
-    public func decode<T>(_ type: T.Type, from data: Data) throws -> T where T : Decodable {
-        let object = try self.mappingASN1Error { try ASN1Kit.ASN1Decoder.decode(asn1: data) }
-        let decoder = ASN1DecoderImpl(object: object, userInfo: userInfo)
-        let box = try Box<T>(from: decoder)
-        return box.value
     }
 }
 
