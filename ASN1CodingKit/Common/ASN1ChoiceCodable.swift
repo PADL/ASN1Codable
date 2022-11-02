@@ -21,5 +21,5 @@ import Foundation
 
 public protocol ASN1ChoiceCodable {
     static var allCodingKeys: [CodingKey] { get }
-    static func type(for key: CodingKey) -> Any.Type?
+    static func type(for key: CodingKey) -> Any.Type
 }

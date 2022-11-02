@@ -39,10 +39,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
         }
 
         guard let codingKey = currentEnum.allCodingKeys.first(where: {
-            guard let innerType = currentEnum.type(for: $0) else {
-                return false
-            }
-            
+            let innerType = currentEnum.type(for: $0)
             let tag = self.tag(for: innerType)
             return tag == object.tag
         }) else {

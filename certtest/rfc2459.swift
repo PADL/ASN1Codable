@@ -73,7 +73,7 @@ public enum Name: Codable, ASN1ChoiceCodable {
         return [CodingKeys.rdnSequence]
     }
     
-    public static func type(for key: any CodingKey) -> Any.Type? {
+    public static func type(for key: any CodingKey) -> Any.Type {
         let key = key as! Name.CodingKeys
         switch key {
         case .rdnSequence:
@@ -98,7 +98,7 @@ public enum Time: Codable, ASN1ChoiceCodable {
         return [CodingKeys.utcTime, CodingKeys.generalTime]
     }
     
-    public static func type(for key: any CodingKey) -> Any.Type? {
+    public static func type(for key: any CodingKey) -> Any.Type {
         let key = key as! Time.CodingKeys
         switch key {
         case .utcTime:
@@ -134,7 +134,7 @@ public enum GeneralName: Codable, ASN1ChoiceCodable {
         return [CodingKeys.rfc822Name]
     }
     
-    public static func type(for key: any CodingKey) -> Any.Type? {
+    public static func type(for key: any CodingKey) -> Any.Type {
         let key = key as! GeneralName.CodingKeys
         switch key {
         case .rfc822Name:
