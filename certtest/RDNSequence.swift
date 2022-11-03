@@ -31,7 +31,8 @@ public extension RDNSequence {
                 throw ASN1Error.malformedEncoding("Malformed RDN")
             }
             let oid = try ObjectIdentifier.from(string: rdnComponents[0])
-            let ava = AttributeTypeAndValue(type: oid, value: rdnComponents[1])
+            let directoryString = DirectoryString.ia5String(IA5String(wrappedValue: rdnComponents[1]))
+            let ava = AttributeTypeAndValue(type: oid, value: directoryString)
 
             return RelativeDistinguishedName([ava])
         }

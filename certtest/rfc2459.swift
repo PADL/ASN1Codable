@@ -37,7 +37,6 @@ public typealias AttributeValue = AnyCodable
 
 public typealias AttributeValues = Set<AttributeValue>
 
-/*
 public enum DirectoryString: Codable, Hashable {
     case ia5String(IA5String<String>)
     case printableString(PrintableString<String>)
@@ -45,9 +44,6 @@ public enum DirectoryString: Codable, Hashable {
     case utf8String(UTF8String<String>)
     case bmpString(BMPString<String>)
 }
- */
-
-typealias DirectoryString = String
 
 public struct AttributeTypeAndValue: Codable, Hashable {
     var type: AttributeType
