@@ -33,11 +33,11 @@ public enum ASN1ObjectSet {
         } else if let knownType = knownTypes[oid] {
             type = knownType
         } else {
-            type = nil
+            throw ASN1Error.unsupported("Unknown open type OID \(oid)")
         }
         
         guard let witness = type.self as? Codable.Type else {
-            throw ASN1Error.unsupported("Unknown open type OID \(oid)")
+            throw ASN1Error.unsupported("Open type OID \(oid) is not Codable")
         }
         
         return witness

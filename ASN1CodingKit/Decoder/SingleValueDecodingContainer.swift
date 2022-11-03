@@ -79,18 +79,22 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     
     private func decodeFixedWidthInteger<T>(_ type: T.Type) throws -> T where T: FixedWidthInteger {
         try self.mappingASN1Error(type) {
-            // FIXME check order of unwrapping
+            guard object.tag == .universal(.integer) else {
+                let context = DecodingError.Context(codingPath: self.codingPath,
+                                                    debugDescription: "Expected INTEGER tag when decoding \(self.object)")
+                throw DecodingError.dataCorrupted(context)
+            }
+            
             guard let data = object.data.primitive else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
                                                     debugDescription: "No data for object \(self.object)")
                 throw DecodingError.dataCorrupted(context)
             }
             
-            guard let integer = data.asn1integer else {
-                // FIXME unsigned int support
-                
+            // FIXME unsigned int support
+            guard type.bitWidth >= data.count * 8, let integer = data.asn1integer else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Integer encoded in \(self.object) too large for FixedWidthInteger")
+                                                    debugDescription: "Integer encoded in \(self.object) too large for \(type.bitWidth)-bit integer")
                 throw DecodingError.dataCorrupted(context)
             }
             

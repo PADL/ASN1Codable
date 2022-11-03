@@ -16,6 +16,7 @@
 
 import Foundation
 import ASN1CodingKit
+import BigNumber
 import AnyCodable // FIXME
 
 public enum Version: Int, Codable {
@@ -24,7 +25,7 @@ public enum Version: Int, Codable {
     case rfc3280_version_3 = 2
 }
 
-public typealias CertificateSerialNumber = Int
+public typealias CertificateSerialNumber = BInt
 
 public struct AlgorithmIdentifier: Codable {
     var algorithm: ObjectIdentifier
@@ -78,23 +79,35 @@ public struct SubjectPublicKeyInfo: Codable {
     var subjectPublicKey: BitString = BitString()
 }
 
-public let SubjectAltNameOID = ObjectIdentifier(rawValue: "2.5.29.17")!
-
 public enum GeneralName: Codable {
-    //FIXME IA5String
-    case rfc822Name(ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, String>)
+    case rfc822Name(ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, IA5String<String>>)
 }
 
 public typealias GeneralNames = [GeneralName]
-
 public typealias SkipCerts = Int32
 
+public enum KeyUsage: UInt8, Codable {
+    case digitalSignature = 0
+    case nonRepudiation = 1
+    case keyEncipherment = 2
+    case dataEncipherment = 3
+    case keyAgreement = 4
+    case keyCertSign = 5
+    case cRLSign = 6
+    case encipherOnly = 7
+    case decipherOnly = 8
+}
+
+public let KeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.15")!
+public let SubjectAltNameOID = ObjectIdentifier(rawValue: "2.5.29.17")!
 public let InhibitAnyPolicyOID = ObjectIdentifier(rawValue: "2.5.29.54")!
 
 public struct Extension: Codable {
-    private static let knownTypes: [ObjectIdentifier: Any.Type] =
-        [SubjectAltNameOID : GeneralNames.self,
-         InhibitAnyPolicyOID : SkipCerts.self]
+    private static let knownTypes: [ObjectIdentifier: Any.Type] = [
+        KeyUsageOID : ASN1RawRepresentableBitString<KeyUsage>.self,
+        SubjectAltNameOID : GeneralNames.self,
+        InhibitAnyPolicyOID : SkipCerts.self
+    ]
 
     var extnID: ObjectIdentifier
     var critical: Bool = false

@@ -95,7 +95,7 @@ func test() -> Void {
         
     t.issuerUniqueID = BitString([01, 02, 03, 04, 05])
     //t.subjectUniqueID = BitString([0xff, 02, 03, 04, 05])
-    let generalName = GeneralName.rfc822Name(ASN1ContextTagged(wrappedValue: "lukeh@padl.com"))
+    let generalName = GeneralName.rfc822Name(ASN1ContextTagged(wrappedValue: IA5String(wrappedValue: "lukeh@padl.com")))
     let generalNames = [generalName]
 
     let inhibitAnyPolicy = Extension(extnID: InhibitAnyPolicyOID,

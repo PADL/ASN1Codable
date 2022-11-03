@@ -84,7 +84,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         let keys: [Key]
         
         if let enumCodingKey = self.context.enumCodingKey(Key.self, object: self.currentObject) {
-            keys = [enumCodingKey as! Key]
+            keys = [enumCodingKey]
         } else {
             keys = self.containers.keys.map { Key(stringValue: $0)! }
         }

@@ -73,4 +73,116 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, ASN1Coda
         precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
         self.wrappedValue = try Data(from: decoder)
     }
+    
+    // FIXME use BinaryInteger
+    fileprivate init(from fixedWidthInteger: any FixedWidthInteger) throws {
+        // FIXME should not round to byte bounary
+        let bytes: [UInt8] = Swift.withUnsafeBytes(of: fixedWidthInteger.bigEndian, Array.init)
+        self.wrappedValue = Data(bytes)
+    }
 }
+
+@propertyWrapper
+public struct ASN1RawRepresentableBitString <Value>: Codable, ASN1CodableType where Value: RawRepresentable & Codable, Value.RawValue: FixedWidthInteger & Codable {
+    public var wrappedValue: Value
+    
+    public init(wrappedValue: Value) {
+        self.wrappedValue = wrappedValue
+    }
+    
+    public init() where Value: ExpressibleByNilLiteral {
+        self.wrappedValue = nil
+    }
+        
+    public init(from asn1: ASN1Kit.ASN1Object) throws {
+        let rawValue = try ASN1IntegerBitString<Value.RawValue>(from: asn1)
+        guard let value = Value(rawValue: rawValue.wrappedValue) else {
+            throw ASN1Error.malformedEncoding("Could not initialize \(Value.self) from \(rawValue)")
+        }
+        self.init(wrappedValue: value)
+    }
+    
+    public func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Kit.ASN1Object {
+        let bitString = ASN1IntegerBitString<Value.RawValue>(wrappedValue: wrappedValue.rawValue)
+        return try bitString.asn1encode(tag: tag)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+        try self.wrappedValue.encode(to: encoder)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+        self.wrappedValue = try Value(from: decoder)
+    }
+}
+
+@propertyWrapper
+public struct ASN1IntegerBitString <Value>: Codable, ASN1CodableType where Value: FixedWidthInteger & Codable {
+    public var wrappedValue: Value
+    
+    public init(wrappedValue: Value) {
+        self.wrappedValue = wrappedValue
+    }
+    
+    public init() where Value: ExpressibleByNilLiteral {
+        self.wrappedValue = nil
+    }
+        
+    public init(from asn1: ASN1Kit.ASN1Object) throws {
+        let bitString = try BitString(from: asn1)
+        
+        guard Value.bitWidth >= bitString.count * 8 else {
+            throw ASN1Error.malformedEncoding("Integer encoded in \(asn1) too large for \(Value.bitWidth)-bit integer")
+        }
+        
+        self.wrappedValue = Value(bitString.withUnsafeBytes { $0.load(as: Value.self) })
+    }
+    
+    public func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Kit.ASN1Object {
+        let bitString = try BitString(from: self.wrappedValue)
+        return try bitString.asn1encode(tag: tag)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+        try self.wrappedValue.encode(to: encoder)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+        self.wrappedValue = try Value(from: decoder)
+    }
+}
+
+/*
+ public var wrappedValue: Date
+ 
+ public init(wrappedValue: Date) {
+     self.wrappedValue = wrappedValue
+ }
+ 
+ public init(from asn1: ASN1Object) throws {
+     if asn1.tag == .universal(.generalizedTime) {
+         try self.wrappedValue = Date(from: asn1)
+     } else {
+         throw ASN1Error.malformedEncoding("Invalid tag \(asn1.tag) for GeneralizedTime")
+     }
+ }
+
+ public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
+     return try wrappedValue.asn1encode(tag: .universal(.generalizedTime))
+ }
+ 
+ public func encode(to encoder: Encoder) throws {
+     precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+     try self.wrappedValue.encode(to: encoder)
+ }
+ 
+ public init(from decoder: Decoder) throws {
+     precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+     self.wrappedValue = try Date(from: decoder)
+ }
+
+ */
