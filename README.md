@@ -2,7 +2,7 @@
 
 ASN1CodingKit is a Swift framework for encoding Codable types using ASN.1. It is intended to be the glue between an ASN.1 compiler that generates Swift types from an ASN.1 module, and [ASN1Kit](https://github.com/gematik/ASN1Kit) which provides the raw encoding.
 
-Note that it is presently a work in progress: it is not ready for production (or even testing) use. In particular the implementation of CHOICE requires Swift runtime support which is not yet available.
+Note that it is presently a work in progress: it is not ready for production (or even testing) use.
 
 ## Example
 
