@@ -79,38 +79,85 @@ public struct SubjectPublicKeyInfo: Codable {
     var subjectPublicKey: BitString = BitString()
 }
 
+public struct OtherName: Codable {
+    private static let knownTypes: [ObjectIdentifier: Any.Type] = [:
+    ]
+
+    var type_id: ObjectIdentifier
+    var value: any Codable
+    
+    enum CodingKeys: CodingKey {
+        case type_id
+        case value
+    }
+
+    public init(type_id: ObjectIdentifier,
+                value: any Codable) {
+        self.type_id = type_id
+        self.value = value
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.type_id = try container.decode(ObjectIdentifier.self, forKey: .type_id)
+        
+        let witness = try ASN1ObjectSet.type(for: self.type_id,
+                                             in: Self.self,
+                                             with: Self.knownTypes,
+                                             userInfo: decoder.userInfo)
+        let berData = try container.decode(Data.self, forKey: .value)
+        let innerDecoder = ASN1Decoder()
+        self.value = try innerDecoder.decode(witness, from: berData)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.type_id, forKey: .type_id)
+        
+        let innerEncoder = ASN1Encoder()
+        let berData = try innerEncoder.encode(self.value)
+        try container.encode(berData, forKey: .value)
+    }
+}
+
 public enum GeneralName: Codable {
+    case otherName(ASN1ContextTagged<ASN1TagNumber$0, ASN1ImplicitTagging, OtherName>)
     case rfc822Name(ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, IA5String<String>>)
 }
 
 public typealias GeneralNames = [GeneralName]
 public typealias SkipCerts = Int32
 
-public enum KeyUsage: UInt8, Codable {
-    case digitalSignature = 0
-    case nonRepudiation = 1
-    case keyEncipherment = 2
-    case dataEncipherment = 3
-    case keyAgreement = 4
-    case keyCertSign = 5
-    case cRLSign = 6
-    case encipherOnly = 7
-    case decipherOnly = 8
+struct KeyUsage: OptionSet, Codable {
+    let rawValue: UInt
+    
+    static let digitalSignature = KeyUsage(rawValue: 1 << 0)
+    static let nonRepudiation = KeyUsage(rawValue: 1 << 1)
+    static let keyEncipherment = KeyUsage(rawValue: 1 << 2)
+    static let dataEncipherment = KeyUsage(rawValue: 1 << 3)
+    static let keyAgreement = KeyUsage(rawValue: 1 << 4)
+    static let keyCertSign = KeyUsage(rawValue: 1 << 5)
+    static let cRLSign = KeyUsage(rawValue: 1 << 6)
+    static let encipherOnly = KeyUsage(rawValue: 1 << 7)
+    static let decipherOnly = KeyUsage(rawValue: 1 << 8)
 }
 
 public let KeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.15")!
+public let ExtKeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.37")!
 public let SubjectAltNameOID = ObjectIdentifier(rawValue: "2.5.29.17")!
 public let InhibitAnyPolicyOID = ObjectIdentifier(rawValue: "2.5.29.54")!
 
 public struct Extension: Codable {
     private static let knownTypes: [ObjectIdentifier: Any.Type] = [
         KeyUsageOID : ASN1RawRepresentableBitString<KeyUsage>.self,
+        ExtKeyUsageOID : [ObjectIdentifier].self,
         SubjectAltNameOID : GeneralNames.self,
         InhibitAnyPolicyOID : SkipCerts.self
     ]
 
     var extnID: ObjectIdentifier
-    var critical: Bool = false
+    var critical: Bool? = false
     var extnValue: any Codable
     
     enum CodingKeys: CodingKey {
@@ -130,7 +177,7 @@ public struct Extension: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        self.extnID = try container.decode(ObjectIdentifier.self, forKey: .extnID)
+        self.extnID = try container.decode(ObjectIdentifier.self, forKey: .extnID)        
         self.critical = try container.decode(Bool.self, forKey: .critical)
         
         let witness = try ASN1ObjectSet.type(for: self.extnID,

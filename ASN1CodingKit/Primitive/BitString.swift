@@ -137,7 +137,10 @@ public struct ASN1IntegerBitString <Value>: Codable, ASN1CodableType where Value
             throw ASN1Error.malformedEncoding("Integer encoded in \(asn1) too large for \(Value.bitWidth)-bit integer")
         }
         
-        self.wrappedValue = Value(bitString.withUnsafeBytes { $0.load(as: Value.self) })
+        var data = Data(count: Value.bitWidth / 8)
+        data.replaceSubrange(data.endIndex - bitString.wrappedValue.count..<data.endIndex, with: bitString.wrappedValue)
+
+        self.wrappedValue = Value(data.withUnsafeBytes { $0.load(as: Value.self) }).bigEndian
     }
     
     public func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Kit.ASN1Object {
@@ -155,34 +158,3 @@ public struct ASN1IntegerBitString <Value>: Codable, ASN1CodableType where Value
         self.wrappedValue = try Value(from: decoder)
     }
 }
-
-/*
- public var wrappedValue: Date
- 
- public init(wrappedValue: Date) {
-     self.wrappedValue = wrappedValue
- }
- 
- public init(from asn1: ASN1Object) throws {
-     if asn1.tag == .universal(.generalizedTime) {
-         try self.wrappedValue = Date(from: asn1)
-     } else {
-         throw ASN1Error.malformedEncoding("Invalid tag \(asn1.tag) for GeneralizedTime")
-     }
- }
-
- public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
-     return try wrappedValue.asn1encode(tag: .universal(.generalizedTime))
- }
- 
- public func encode(to encoder: Encoder) throws {
-     precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
-     try self.wrappedValue.encode(to: encoder)
- }
- 
- public init(from decoder: Decoder) throws {
-     precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
-     self.wrappedValue = try Date(from: decoder)
- }
-
- */
