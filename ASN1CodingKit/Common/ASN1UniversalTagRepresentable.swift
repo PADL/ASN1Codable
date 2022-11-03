@@ -26,35 +26,3 @@ protocol ASN1UniversalTagRepresentable {
 extension Optional: ASN1UniversalTagRepresentable where Wrapped: ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Kit.ASN1Tag { return Wrapped.tagNo }
 }
-
-extension Bool: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .boolean }
-}
-
-extension Int: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
-}
-
-extension UInt: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
-}
-
-extension Data: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .octetString }
-}
-
-extension ObjectIdentifier: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .objectIdentifier }
-}
-
-extension Array: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .sequence }
-}
-
-extension Set: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .set }
-}
-
-extension String: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .utf8String }
-}

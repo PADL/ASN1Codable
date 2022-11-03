@@ -90,16 +90,16 @@ struct ASN1DecodingContext: ASN1CodingContext {
         if object.constructed, object.tag.isUniversal {
             if self.encodeAsSet && object.tag != .universal(.set) {
                 let context = DecodingError.Context(codingPath: codingPath,
-                                                    debugDescription: "Expected a SET, but received tag \(object.tag)")
+                                                    debugDescription: "Expected \(ASN1DecodedTag.universal(.set)), but received tag \(object.tag)")
                 throw DecodingError.dataCorrupted(context)
             } else if object.tag != .universal(.sequence) {
                 let context = DecodingError.Context(codingPath: codingPath,
-                                                    debugDescription: "Expected a SEQUENCE, but received tag \(object.tag)")
+                                                    debugDescription: "Expected a \(ASN1DecodedTag.universal(.sequence)), but received tag \(object.tag)")
                 throw DecodingError.dataCorrupted(context)
             }
         } else if self.enumCodingState != .enum {
             let context = DecodingError.Context(codingPath: codingPath,
-                                                debugDescription: "Expected a SET or SEQUENCE, instead received tag \(object.tag)")
+                                                debugDescription: "Expected a set or sequence, instead received tag \(object.tag)")
             throw DecodingError.dataCorrupted(context)
         }
     }

@@ -162,8 +162,8 @@ struct KeyUsage: OptionSet, Codable {
 typealias KeyIdentifier = Data
 
 public struct BasicConstraints: Codable {
-    var cA: Bool?
-    var pathLenConstraint: Int?
+    @DecodableDefault.False var cA: Bool
+    @DecodableDefault.Zero var pathLenConstraint: Int
 }
 
 public let KeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.15")!

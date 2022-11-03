@@ -87,7 +87,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         try self.mappingASN1Error(type) {
             guard self.object.tag == .universal(.integer) else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Expected INTEGER tag when decoding \(self.object)")
+                                                    debugDescription: "Expected \(ASN1DecodedTag.universal(.integer)) tag when decoding \(self.object)")
                 throw DecodingError.typeMismatch(type, context)
             }
             
@@ -227,7 +227,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         } else {
             guard object.constructed else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Expected EXPLICIT tag \(tag) to wrap constructed type")
+                                                    debugDescription: "Expected explicit tag \(tag) to wrap constructed type")
                 throw DecodingError.typeMismatch(type, context)
             }
             

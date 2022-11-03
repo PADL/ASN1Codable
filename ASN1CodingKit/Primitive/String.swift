@@ -17,6 +17,10 @@
 import Foundation
 import ASN1Kit
 
+extension String: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .utf8String }
+}
+
 public protocol ExpressibleByString: Equatable, Hashable {
     init(_ string: String)
 }

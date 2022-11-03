@@ -61,6 +61,8 @@
 		D3D13E8229134A2B00218279 /* BigNumber in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E8129134A2B00218279 /* BigNumber */; };
 		D3D13E8429134A4B00218279 /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8329134A4B00218279 /* Integer.swift */; };
 		D3D13E872913722700218279 /* rfc2459.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC5B290E8AAF00540132 /* rfc2459.swift */; };
+		D3D13E8929146B7400218279 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8829146B7400218279 /* Base.swift */; };
+		D3D13E8B29146BBA00218279 /* DecodableDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8A29146BBA00218279 /* DecodableDefault.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -169,6 +171,8 @@
 		D3D13E7B2913434200218279 /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
 		D3D13E7D291343A500218279 /* ParseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseCommand.swift; sourceTree = "<group>"; };
 		D3D13E8329134A4B00218279 /* Integer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Integer.swift; sourceTree = "<group>"; };
+		D3D13E8829146B7400218279 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
+		D3D13E8A29146BBA00218279 /* DecodableDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodableDefault.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -311,6 +315,7 @@
 		D351DC78290E8AF700540132 /* Primitive */ = {
 			isa = PBXGroup;
 			children = (
+				D3D13E8829146B7400218279 /* Base.swift */,
 				D351DC79290E8AF700540132 /* Time.swift */,
 				D351DC7A290E8AF700540132 /* BitString.swift */,
 				D351DC7B290E8AF700540132 /* String.swift */,
@@ -325,6 +330,7 @@
 				D351DC7F290E8AF700540132 /* ASN1ApplicationTagged.swift */,
 				D351DC80290E8AF700540132 /* ASN1PrivateTagged.swift */,
 				D351DC84290E8AF700540132 /* ASN1ContextTagged.swift */,
+				D3D13E8A29146BBA00218279 /* DecodableDefault.swift */,
 			);
 			path = PropertyWrappers;
 			sourceTree = "<group>";
@@ -527,6 +533,7 @@
 				D351DCDA290ECE3200540132 /* Box.swift in Sources */,
 				D351DC99290E8AF700540132 /* String.swift in Sources */,
 				D351DC8E290E8AF700540132 /* ASN1UserInfoKeys.swift in Sources */,
+				D3D13E8929146B7400218279 /* Base.swift in Sources */,
 				D351DC8C290E8AF700540132 /* ASN1TagNumberRepresentable.swift in Sources */,
 				D351DC92290E8AF700540132 /* SingleValueEncodingContainer.swift in Sources */,
 				D33AC5D72910F789003190DC /* ASN1DecodingContext.swift in Sources */,
@@ -543,6 +550,7 @@
 				D33AC5DF29121744003190DC /* ASN1NullObject.swift in Sources */,
 				D351DC8A290E8AF700540132 /* ASN1PreserveBinary.swift in Sources */,
 				D351DC8F290E8AF700540132 /* ASN1CodingKit.docc in Sources */,
+				D3D13E8B29146BBA00218279 /* DecodableDefault.swift in Sources */,
 				D351DC93290E8AF700540132 /* KeyedEncodingContainer.swift in Sources */,
 				D33AC5D52910F626003190DC /* ASN1UniversalTagRepresentable.swift in Sources */,
 				D351DC90290E8AF700540132 /* UnkeyedEncodingContainer.swift in Sources */,
