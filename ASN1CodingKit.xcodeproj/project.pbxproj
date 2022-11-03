@@ -10,7 +10,6 @@
 		D33AC5D52910F626003190DC /* ASN1UniversalTagRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D42910F626003190DC /* ASN1UniversalTagRepresentable.swift */; };
 		D33AC5D72910F789003190DC /* ASN1DecodingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D62910F789003190DC /* ASN1DecodingContext.swift */; };
 		D33AC5D92910F796003190DC /* ASN1EncodingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D82910F796003190DC /* ASN1EncodingContext.swift */; };
-		D33AC5DB2911172A003190DC /* ASN1ChoiceCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5DA2911172A003190DC /* ASN1ChoiceCodable.swift */; };
 		D33AC5DD29120492003190DC /* OptionalProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5DC29120492003190DC /* OptionalProtocol.swift */; };
 		D33AC5DF29121744003190DC /* ASN1NullObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5DE29121744003190DC /* ASN1NullObject.swift */; };
 		D351DC35290E849200540132 /* ASN1CodingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1CodingKit.framework */; };
@@ -52,6 +51,7 @@
 		D399B208290FB1120010B730 /* ASN1Tagging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D399B207290FB1120010B730 /* ASN1Tagging.swift */; };
 		D3D13E61291339FA00218279 /* ASN1Kit in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E60291339FA00218279 /* ASN1Kit */; };
 		D3D13E6429133A2200218279 /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6329133A2200218279 /* AnyCodable */; };
+		D3D13E6729133AB600218279 /* Echo in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6629133AB600218279 /* Echo */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,7 +87,6 @@
 		D33AC5D42910F626003190DC /* ASN1UniversalTagRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1UniversalTagRepresentable.swift; sourceTree = "<group>"; };
 		D33AC5D62910F789003190DC /* ASN1DecodingContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecodingContext.swift; sourceTree = "<group>"; };
 		D33AC5D82910F796003190DC /* ASN1EncodingContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1EncodingContext.swift; sourceTree = "<group>"; };
-		D33AC5DA2911172A003190DC /* ASN1ChoiceCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1ChoiceCodable.swift; sourceTree = "<group>"; };
 		D33AC5DC29120492003190DC /* OptionalProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalProtocol.swift; sourceTree = "<group>"; };
 		D33AC5DE29121744003190DC /* ASN1NullObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1NullObject.swift; sourceTree = "<group>"; };
 		D351DC2A290E849200540132 /* ASN1CodingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASN1CodingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,6 +137,7 @@
 			files = (
 				D3D13E6429133A2200218279 /* AnyCodable in Frameworks */,
 				D3D13E61291339FA00218279 /* ASN1Kit in Frameworks */,
+				D3D13E6729133AB600218279 /* Echo in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,7 +224,6 @@
 		D351DC65290E8AF700540132 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				D33AC5DA2911172A003190DC /* ASN1ChoiceCodable.swift */,
 				D351DC68290E8AF700540132 /* ASN1CodingContext.swift */,
 				D351DCB8290EAC2500540132 /* ASN1CodingKit.swift */,
 				D33AC5DE29121744003190DC /* ASN1NullObject.swift */,
@@ -321,6 +320,7 @@
 			packageProductDependencies = (
 				D3D13E60291339FA00218279 /* ASN1Kit */,
 				D3D13E6329133A2200218279 /* AnyCodable */,
+				D3D13E6629133AB600218279 /* Echo */,
 			);
 			productName = ASN1CodingKit;
 			productReference = D351DC2A290E849200540132 /* ASN1CodingKit.framework */;
@@ -396,6 +396,7 @@
 			packageReferences = (
 				D3D13E5F291339FA00218279 /* XCRemoteSwiftPackageReference "ASN1Kit" */,
 				D3D13E6229133A2200218279 /* XCRemoteSwiftPackageReference "AnyCodable" */,
+				D3D13E6529133AB600218279 /* XCRemoteSwiftPackageReference "Echo" */,
 			);
 			productRefGroup = D351DC2B290E849200540132 /* Products */;
 			projectDirPath = "";
@@ -464,7 +465,6 @@
 				D351DCA0290E8AF700540132 /* ASN1ContextTagged.swift in Sources */,
 				D351DCB9290EAC2500540132 /* ASN1CodingKit.swift in Sources */,
 				D351DC88290E8AF700540132 /* ASN1CodingContext.swift in Sources */,
-				D33AC5DB2911172A003190DC /* ASN1ChoiceCodable.swift in Sources */,
 				D351DC95290E8AF700540132 /* ASN1Encoder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -836,6 +836,14 @@
 				minimumVersion = 0.6.7;
 			};
 		};
+		D3D13E6529133AB600218279 /* XCRemoteSwiftPackageReference "Echo" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Azoy/Echo";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -848,6 +856,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D3D13E6229133A2200218279 /* XCRemoteSwiftPackageReference "AnyCodable" */;
 			productName = AnyCodable;
+		};
+		D3D13E6629133AB600218279 /* Echo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3D13E6529133AB600218279 /* XCRemoteSwiftPackageReference "Echo" */;
+			productName = Echo;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -63,50 +63,13 @@ public typealias RelativeDistinguishedName = Set<AttributeTypeAndValue>
 
 public typealias RDNSequence = [RelativeDistinguishedName]
 
-public enum Name: Codable, ASN1ChoiceCodable {
-    // FIXME temporary
-    enum CodingKeys: CodingKey {
-        case rdnSequence
-    }
-
-    public static var allCodingKeys: [CodingKey] {
-        return [CodingKeys.rdnSequence]
-    }
-    
-    public static func type(for key: any CodingKey) -> Any.Type {
-        let key = key as! Name.CodingKeys
-        switch key {
-        case .rdnSequence:
-            return RDNSequence.self
-        }
-    }
-    
+public enum Name: Codable {
     case rdnSequence(RDNSequence)
 }
 
-public enum Time: Codable, ASN1ChoiceCodable {
+public enum Time: Codable {
     case utcTime(UTCTime)
     case generalTime(GeneralizedTime)
-    
-    // FIXME temporary
-    enum CodingKeys: CodingKey {
-        case utcTime
-        case generalTime
-    }
-
-    public static var allCodingKeys: [CodingKey] {
-        return [CodingKeys.utcTime, CodingKeys.generalTime]
-    }
-    
-    public static func type(for key: any CodingKey) -> Any.Type {
-        let key = key as! Time.CodingKeys
-        switch key {
-        case .utcTime:
-            return UTCTime.self
-        case .generalTime:
-            return GeneralizedTime.self
-        }
-    }
 }
 
 public struct Validity: Codable {
@@ -121,26 +84,9 @@ public struct SubjectPublicKeyInfo: Codable {
 
 public let SubjectAltNameOID = ObjectIdentifier(rawValue: "2.5.29.17")!
 
-public enum GeneralName: Codable, ASN1ChoiceCodable {
+public enum GeneralName: Codable {
     //FIXME IA5String
     case rfc822Name(ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, String>)
-    
-    // FIXME temporary
-    enum CodingKeys: CodingKey {
-        case rfc822Name
-    }
-
-    public static var allCodingKeys: [CodingKey] {
-        return [CodingKeys.rfc822Name]
-    }
-    
-    public static func type(for key: any CodingKey) -> Any.Type {
-        let key = key as! GeneralName.CodingKeys
-        switch key {
-        case .rfc822Name:
-            return ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, String>.self
-        }
-    }
 }
 
 public typealias GeneralNames = [GeneralName]

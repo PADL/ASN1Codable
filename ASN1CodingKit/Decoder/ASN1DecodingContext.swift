@@ -15,6 +15,7 @@
 //
 
 import Foundation
+import Echo
 
 struct ASN1DecodingContext: ASN1CodingContext {
     var enumCodingState: ASN1EnumCodingState = .none
@@ -33,69 +34,25 @@ struct ASN1DecodingContext: ASN1CodingContext {
         }
     }
     
-    func enumCodingKey(_ object: ASN1Object) -> CodingKey? {
-        guard let currentEnum = self.currentEnumType as? ASN1ChoiceCodable.Type else {
-            return nil
-        }
+    func enumCodingKey<Key>(_ keyType: Key.Type, object: ASN1Object) -> Key? where Key: CodingKey {
+        guard let currentEnum = self.currentEnumType,
+              let metadata = reflect(currentEnum) as? EnumMetadata,
+              let enumCase = metadata.descriptor.fields.records.first(where: {
+            guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
+                return false
+            }
 
-        guard let codingKey = currentEnum.allCodingKeys.first(where: {
-            let innerType = currentEnum.type(for: $0)
-            let tag = self.tag(for: innerType)
-            return tag == object.tag
+            return self.tag(for: fieldType) == object.tag
         }) else {
             return nil
         }
-        
-        return codingKey
+            
+        // FIXME does not work with custom coding keys
+        return Key(stringValue: enumCase.name)
     }
 
-    /*
-     Consider a CHOICE such as
-     
-             Time ::= CHOICE {
-                  utcTime        UTCTime,
-                  generalTime    GeneralizedTime
-             }
-     
-     or
-     
-             TESTChoice1 ::= CHOICE {
-                     i1[1]   INTEGER (-2147483648..2147483647),
-                     i2[2]   INTEGER (-2147483648..2147483647),
-                     ...
-             }
-
-     CHOICE is encoded as the selected type with the discriminant implied by
-     the tag of the encoded item (which must be unique).
-     
-             public enum Time: Codable {
-                 case utcTime(UTCTime)
-                 case generalTime(GeneralizedTime)
-             }
-
-     We need to map the tag to both the coding key (e.g. utcTime above) and the
-     type (UTCTime).
-     
-     We could enhance codingKeys on enum types to return a custom coding key,
-     for example:
-
-        struct ASN1CodingKey: CodingKey {
-            var type: Any.Type
-        }
-     
-        enum CodingKey: CodingKeys {
-            case utcTime = ASN1CodingKey(type: UTCTime.self, stringValue: "utcTime")
-            case generalTime = ASN1CodingKey(type: GeneralizedTime.self, stringValue: "generalTime")
-        }
-     
-     i.e. we need to take type T and look at mirror.children and for each label and type
-     
-     */
-
-    // FIXME this is a completely unsupported and fragile hack
     private static func isEnum<T>(_ type: T.Type) -> Bool {
-        let ptr = unsafeBitCast(T.self as Any.Type, to: UnsafeRawPointer.self)
-        return ptr.load(as: Int.self) == 513
+        return reflect(type) is EnumMetadata
     }
 
     func decodingSingleValue<T>(_ type: T.Type?) -> Self {

@@ -115,7 +115,7 @@ func test() -> Void {
     c.signatureValue = BitString([0x01, 0x02, 0x03, 0x55, 0x66, 0xff])
         
     do {
-        let valueToEncode = testValue
+        let valueToEncode = c
         
         print("Encoding value: \(valueToEncode)")
         
