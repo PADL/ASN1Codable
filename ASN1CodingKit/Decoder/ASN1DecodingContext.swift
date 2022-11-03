@@ -22,7 +22,11 @@ struct ASN1DecodingContext: ASN1CodingContext {
     var encodeAsSet = false
     var currentEnumType: Any.Type?
     
-    private func tag(for type: Any.Type) -> ASN1DecodedTag {
+    func tag(for type: Any.Type) -> ASN1DecodedTag {
+        if let type = type as? OptionalProtocol.Type {
+            return self.tag(for: type.wrappedType)
+        }
+
         if let type = type as? ASN1UniversalTagRepresentable.Type {
             return .universal(type.tagNo)
         } else if let type = type as? ASN1TaggedTypeRepresentable.Type, let tag = type.tag {
@@ -82,8 +86,8 @@ struct ASN1DecodingContext: ASN1CodingContext {
         guard container else {
             return
         }
-        
-        if object.constructed {
+                
+        if object.constructed, object.tag.isUniversal {
             if self.encodeAsSet && object.tag != .universal(.set) {
                 let context = DecodingError.Context(codingPath: codingPath,
                                                     debugDescription: "Expected a SET, but received tag \(object.tag)")

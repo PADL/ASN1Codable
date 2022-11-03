@@ -79,8 +79,29 @@ public struct SubjectPublicKeyInfo: Codable {
     var subjectPublicKey: BitString = BitString()
 }
 
+public let PKIXonPKINITSan = ObjectIdentifier(rawValue: "1.3.6.1.5.2.2")!
+
+public typealias Realm = GeneralString<String>
+public typealias NAME_TYPE = Int
+
+public struct PrincipalName: Codable {
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, NAME_TYPE>
+    var name_type: NAME_TYPE = 0
+    
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1AutomaticTagging, [GeneralString<String>]>
+    var name_string: [GeneralString<String>] = []
+}
+public struct KRB5PrincipalName: Codable {
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, Realm>
+    var realm: GeneralString<String> = GeneralString<String>(wrappedValue: "")
+
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1AutomaticTagging, PrincipalName>
+    var principalName: PrincipalName = PrincipalName()
+}
+
 public struct OtherName: Codable {
-    private static let knownTypes: [ObjectIdentifier: Any.Type] = [:
+    private static let knownTypes: [ObjectIdentifier: Any.Type] = [
+        PKIXonPKINITSan : ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, KRB5PrincipalName>.self
     ]
 
     var type_id: ObjectIdentifier
@@ -106,18 +127,13 @@ public struct OtherName: Codable {
                                              in: Self.self,
                                              with: Self.knownTypes,
                                              userInfo: decoder.userInfo)
-        let berData = try container.decode(Data.self, forKey: .value)
-        let innerDecoder = ASN1Decoder()
-        self.value = try innerDecoder.decode(witness, from: berData)
+        self.value = try container.decode(witness, forKey: .value)
     }
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.type_id, forKey: .type_id)
-        
-        let innerEncoder = ASN1Encoder()
-        let berData = try innerEncoder.encode(self.value)
-        try container.encode(berData, forKey: .value)
+        try container.encode(self.value, forKey: .value)
     }
 }
 
@@ -143,16 +159,27 @@ struct KeyUsage: OptionSet, Codable {
     static let decipherOnly = KeyUsage(rawValue: 1 << 8)
 }
 
+typealias KeyIdentifier = Data
+
+public struct BasicConstraints: Codable {
+    var cA: Bool?
+    var pathLenConstraint: Int?
+}
+
 public let KeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.15")!
 public let ExtKeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.37")!
+public let SubjectKeyIdentifierOID = ObjectIdentifier(rawValue: "2.5.29.14")!
 public let SubjectAltNameOID = ObjectIdentifier(rawValue: "2.5.29.17")!
+public let BasicConstraintsOID = ObjectIdentifier(rawValue: "2.5.29.19")!
 public let InhibitAnyPolicyOID = ObjectIdentifier(rawValue: "2.5.29.54")!
 
 public struct Extension: Codable {
     private static let knownTypes: [ObjectIdentifier: Any.Type] = [
         KeyUsageOID : ASN1RawRepresentableBitString<KeyUsage>.self,
         ExtKeyUsageOID : [ObjectIdentifier].self,
+        SubjectKeyIdentifierOID : KeyIdentifier.self,
         SubjectAltNameOID : GeneralNames.self,
+        BasicConstraintsOID : BasicConstraints.self,
         InhibitAnyPolicyOID : SkipCerts.self
     ]
 
@@ -177,8 +204,8 @@ public struct Extension: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        self.extnID = try container.decode(ObjectIdentifier.self, forKey: .extnID)        
-        self.critical = try container.decode(Bool.self, forKey: .critical)
+        self.extnID = try container.decode(ObjectIdentifier.self, forKey: .extnID)
+        self.critical = try container.decode(Bool?.self, forKey: .critical)
         
         let witness = try ASN1ObjectSet.type(for: self.extnID,
                                              in: Self.self,
@@ -203,6 +230,22 @@ public struct Extension: Codable {
 // must be class to support ASN1PreserveBinary on encode
 
 public class TBSCertificate: Codable, ASN1PreserveBinary {
+    // MBZ before encode
+    public var _save: Data? = nil
+
+    enum CodingKeys: CodingKey {
+        case version
+        case serialNumber
+        case signature
+        case issuer
+        case validity
+        case subject
+        case subjectPublicKeyInfo
+        case issuerUniqueID
+        case subjectUniqueID
+        case extensions
+    }
+    
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, Version?>
     var version: Version?
     var serialNumber: CertificateSerialNumber
@@ -220,9 +263,6 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
     
     @ASN1ContextTagged<ASN1TagNumber$3, ASN1ExplicitTagging, [Extension]?>
     var extensions: [Extension]?
-
-    // MBZ before encode
-    public var _save: Data? = nil
 
     public init(version: Version? = nil,
                 serialNumber: CertificateSerialNumber,

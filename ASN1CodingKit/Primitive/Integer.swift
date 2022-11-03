@@ -33,3 +33,7 @@ extension BInt: ASN1EncodableType {
         return data.asn1encode(tag: .universal(.integer))
     }
 }
+
+extension BInt: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .integer }
+}

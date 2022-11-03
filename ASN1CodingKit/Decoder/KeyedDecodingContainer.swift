@@ -126,7 +126,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         // the remaining wrapped objects; pad the object set with null instances.
 
         // FIXME check _save?
-        
+                
         if self.isAtEnd {
             object = ASN1NullObject
         } else {
@@ -139,15 +139,25 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
         
-        let value = try block(container)
-        
-        // ignore OPTIONAL values
-        if !self._isNilOrWrappedNil(value) {
-            self.containers[key.stringValue] = container
-            self.currentIndex += 1
+        do {
+            let value = try block(container)
+            
+            // ignore OPTIONAL values
+            if !self._isNilOrWrappedNil(value) {
+                self.containers[key.stringValue] = container
+                self.currentIndex += 1
+            }
+            
+            return value
+        } catch {
+            let isOptional = type is OptionalProtocol.Type
+
+            if isOptional, let error = error as? DecodingError, case .typeMismatch(_, _) = error {
+                return Optional<Decodable>(nilLiteral: ()) as! T
+            } else {
+                throw error
+            }
         }
-        
-        return value
     }
     
     func decodeNil(forKey key: Key) throws -> Bool {
@@ -155,9 +165,15 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             return container.decodeNil()
         }
     }
+    
+    func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
+        return try _decodingKeyedSingleValue(type, forKey: key) { container in
+            return try container.decode(type)
+        }
+    }
         
     func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
-        return try _decodingKeyedSingleValue(nil, forKey: key) { container in
+        return try _decodingKeyedSingleValue(type, forKey: key) { container in
             return try container.decode(type)
         }
     }

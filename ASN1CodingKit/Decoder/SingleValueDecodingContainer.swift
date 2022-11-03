@@ -59,6 +59,12 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     
     func decode(_ type: Bool.Type) throws -> Bool {
         return try self.mappingASN1Error(type) {
+            guard self.object.tag == .universal(.boolean) else {
+                let context = DecodingError.Context(codingPath: self.codingPath,
+                                                    debugDescription: "Expected BOOLEAN tag when decoding \(self.object)")
+                throw DecodingError.dataCorrupted(context)
+            }
+
             return try Bool(from: self.object)
         }
     }
@@ -79,10 +85,10 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     
     private func decodeFixedWidthInteger<T>(_ type: T.Type) throws -> T where T: FixedWidthInteger {
         try self.mappingASN1Error(type) {
-            guard object.tag == .universal(.integer) else {
+            guard self.object.tag == .universal(.integer) else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
                                                     debugDescription: "Expected INTEGER tag when decoding \(self.object)")
-                throw DecodingError.dataCorrupted(context)
+                throw DecodingError.typeMismatch(type, context)
             }
             
             guard let data = object.data.primitive else {
@@ -159,7 +165,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         } else if let type = type as? any (Decodable & ASN1TaggedProperty).Type {
             value = try self.decodeTaggedProperty(type, from: object) as! T
         } else if let type = type as? ASN1DecodableType.Type {
-            value = try decodePrimitiveValue(type, from: object) as! T
+            value = try decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
         } else {
             value = try self.decodeConstructedValue(type, from: object)
         }
@@ -177,7 +183,15 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         return T(wrappedValue: wrappedValue)
     }
     
-    private func decodePrimitiveValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: ASN1DecodableType {
+    private func decodePrimitiveValue<T>(_ type: T.Type, from object: ASN1Object, verifiedTag: Bool = false) throws -> T where T: ASN1DecodableType {
+        let expectedTag = self.context.tag(for: type)
+        
+        guard verifiedTag || (self.object.tag.isUniversal && self.object.tag == expectedTag) else {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Expected \(expectedTag) when decoding \(self.object)")
+            throw DecodingError.typeMismatch(type, context)
+        }
+        
         return try T(from: object)
     }
     
@@ -209,19 +223,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         if tag.isUniversal {
             return try self.decode(type, from: object, skipTaggedValues: true)
         } else if tagging == .implicit {
-            guard !object.constructed else {
-                let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Expected IMPLICIT tag \(tag) to wrap primitive type")
-                throw DecodingError.typeMismatch(type, context)
-            }
-            
-            guard let type = type as? ASN1UniversalTagRepresentable.Type else {
-                let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Could not find appropriate primitive tag for implicitly encoded \(type)")
-                throw DecodingError.typeMismatch(type, context)
-            }
-
-            unwrappedObject = ASN1Kit.create(tag: .universal(type.tagNo), data: object.data)
+            unwrappedObject = ASN1Kit.create(tag: self.context.tag(for: type), data: object.data)
         } else {
             guard object.constructed else {
                 let context = DecodingError.Context(codingPath: self.codingPath,

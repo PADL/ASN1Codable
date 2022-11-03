@@ -82,6 +82,10 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, ASN1Coda
     }
 }
 
+extension BitString: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .bitString }
+}
+
 @propertyWrapper
 public struct ASN1RawRepresentableBitString <Value>: Codable, ASN1CodableType where Value: RawRepresentable & Codable, Value.RawValue: FixedWidthInteger & Codable {
     public var wrappedValue: Value
@@ -116,6 +120,10 @@ public struct ASN1RawRepresentableBitString <Value>: Codable, ASN1CodableType wh
         precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
         self.wrappedValue = try Value(from: decoder)
     }
+}
+
+extension ASN1RawRepresentableBitString: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .bitString }
 }
 
 @propertyWrapper
@@ -157,4 +165,8 @@ public struct ASN1IntegerBitString <Value>: Codable, ASN1CodableType where Value
         precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
         self.wrappedValue = try Value(from: decoder)
     }
+}
+
+extension ASN1IntegerBitString: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .bitString }
 }

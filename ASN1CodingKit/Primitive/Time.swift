@@ -78,3 +78,11 @@ public struct UTCTime: Codable, ASN1CodableType {
         self.wrappedValue = try Date(from: decoder)
     }
 }
+
+extension GeneralizedTime: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .generalizedTime }
+}
+
+extension UTCTime: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .utcTime }
+}

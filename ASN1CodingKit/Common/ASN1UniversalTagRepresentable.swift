@@ -39,8 +39,8 @@ extension UInt: ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Tag { return .integer }
 }
 
-extension BitString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .bitString }
+extension Data: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .octetString }
 }
 
 extension ObjectIdentifier: ASN1UniversalTagRepresentable {
@@ -57,32 +57,4 @@ extension Set: ASN1UniversalTagRepresentable {
 
 extension String: ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Tag { return .utf8String }
-}
-
-extension GeneralizedTime: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .generalizedTime }
-}
-
-extension UTCTime: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .utcTime }
-}
-
-extension IA5String: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .ia5String }
-}
-
-extension UTF8String: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .utf8String }
-}
-
-extension UniversalString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .universalString }
-}
-
-extension BMPString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .bmpString }
-}
-
-extension PrintableString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .printableString }
 }
