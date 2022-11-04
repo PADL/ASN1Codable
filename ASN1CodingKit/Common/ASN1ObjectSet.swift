@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import AnyCodable
 import ASN1Kit
 
 private typealias ASN1ObjectSetTypeDictionary = [String: [ObjectIdentifier: Codable.Type]]

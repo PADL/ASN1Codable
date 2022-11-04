@@ -17,7 +17,7 @@
 import Foundation
 import ASN1CodingKit
 import BigNumber
-import AnyCodable // FIXME
+import AnyCodable
 
 public enum Version: Int, Codable {
     case rfc3280_version_1 = 0
@@ -118,19 +118,27 @@ public enum GeneralName: Codable {
 public typealias GeneralNames = [GeneralName]
 public typealias SkipCerts = Int32
 
-struct KeyUsage: OptionSet, Codable {
-    let rawValue: UInt
+public struct KeyUsageOptionSet: OptionSet, Codable {
+    public let rawValue: UInt
     
-    static let digitalSignature = KeyUsage(rawValue: 1 << 0)
-    static let nonRepudiation = KeyUsage(rawValue: 1 << 1)
-    static let keyEncipherment = KeyUsage(rawValue: 1 << 2)
-    static let dataEncipherment = KeyUsage(rawValue: 1 << 3)
-    static let keyAgreement = KeyUsage(rawValue: 1 << 4)
-    static let keyCertSign = KeyUsage(rawValue: 1 << 5)
-    static let cRLSign = KeyUsage(rawValue: 1 << 6)
-    static let encipherOnly = KeyUsage(rawValue: 1 << 7)
-    static let decipherOnly = KeyUsage(rawValue: 1 << 8)
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+    
+    static let digitalSignature = KeyUsageOptionSet(rawValue: 1 << 0)
+    static let nonRepudiation = KeyUsageOptionSet(rawValue: 1 << 1)
+    static let keyEncipherment = KeyUsageOptionSet(rawValue: 1 << 2)
+    static let dataEncipherment = KeyUsageOptionSet(rawValue: 1 << 3)
+    static let keyAgreement = KeyUsageOptionSet(rawValue: 1 << 4)
+    static let keyCertSign = KeyUsageOptionSet(rawValue: 1 << 5)
+    static let cRLSign = KeyUsageOptionSet(rawValue: 1 << 6)
+    static let encipherOnly = KeyUsageOptionSet(rawValue: 1 << 7)
+    static let decipherOnly = KeyUsageOptionSet(rawValue: 1 << 8)
 }
+
+public typealias KeyUsage = ASN1RawRepresentableBitString<KeyUsageOptionSet>
+
+public typealias ExtKeyUsage = [ObjectIdentifier]
 
 typealias KeyIdentifier = Data
 
@@ -148,8 +156,8 @@ public let InhibitAnyPolicyOID = ObjectIdentifier(rawValue: "2.5.29.54")!
 
 public struct Extension: ASN1ObjectSetRepresentable {
     public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
-        KeyUsageOID : ASN1RawRepresentableBitString<KeyUsage>.self,
-        ExtKeyUsageOID : [ObjectIdentifier].self,
+        KeyUsageOID : KeyUsage.self,
+        ExtKeyUsageOID : ExtKeyUsage.self,
         SubjectKeyIdentifierOID : KeyIdentifier.self,
         SubjectAltNameOID : GeneralNames.self,
         BasicConstraintsOID : BasicConstraints.self,
@@ -167,9 +175,12 @@ public struct Extension: ASN1ObjectSetRepresentable {
 // must be class to support ASN1PreserveBinary on encode
 
 public class TBSCertificate: Codable, ASN1PreserveBinary {
-    // MBZ before encode
     public var _save: Data? = nil
 
+    // Note to compiler implementor: CodingKeys must be specified for all
+    // ASN.1 fields whenever a decoration (including _save) is used, to
+    // avoid the encoding of the decorated types
+    
     enum CodingKeys: CodingKey {
         case version
         case serialNumber
