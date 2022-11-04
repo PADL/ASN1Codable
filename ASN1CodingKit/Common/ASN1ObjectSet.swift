@@ -44,35 +44,6 @@ public struct ASN1ObjectSetType: Codable {
 }
 
 @propertyWrapper
-public struct ASN1ObjectSetCriticalFlag: Codable {
-    public var wrappedValue: Bool
-
-    public init(wrappedValue: Bool) {
-        self.wrappedValue = wrappedValue
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(wrappedValue)
-    }
-
-    // FIXME allow CRITICAL to be TRUE by default
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        if let wrappedValue = try container.decode(Bool?.self) {
-            self.wrappedValue = wrappedValue
-        } else {
-            self.wrappedValue = false
-        }
-        
-        if let decoder = decoder as? ASN1DecoderImpl,
-           let objectSetDecodingContext = decoder.context.objectSetDecodingContext {
-            objectSetDecodingContext.critical = self.wrappedValue
-        }
-    }
-}
-
-@propertyWrapper
 public struct ASN1ObjectSetValue: Codable {
     public typealias Value = Any
     
@@ -102,14 +73,9 @@ public struct ASN1ObjectSetValue: Codable {
             if let type = objectSetDecodingContext.type(decoder) {
                 value = try innerDecoder.decode(type, from: berData)
             } else {
-                if objectSetDecodingContext.critical {
-                    let context = DecodingError.Context(codingPath: decoder.codingPath,
-                                                        debugDescription: "Unknown critical type for OID \(String(describing: objectSetDecodingContext.oid))")
-                    throw DecodingError.dataCorrupted(context)
-                }
-                
-                // else just return the data
-                value = berData
+                let context = DecodingError.Context(codingPath: decoder.codingPath,
+                                                    debugDescription: "Unknown type for OID \(String(describing: objectSetDecodingContext.oid))")
+                throw DecodingError.dataCorrupted(context)
             }
             
             self.wrappedValue = value

@@ -166,8 +166,8 @@ public struct Extension: ASN1ObjectSetRepresentable {
     
     @ASN1ObjectSetType
     var extnID: ObjectIdentifier
-    @ASN1ObjectSetCriticalFlag
-    var critical: Bool = false
+    @DecodableDefault.False
+    var critical: Bool
     @ASN1ObjectSetValue
     var extnValue: Any
 }
