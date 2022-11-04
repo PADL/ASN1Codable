@@ -148,9 +148,6 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     }
 
     func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
-        // FIXME
-        self.context = self.context.decodingSingleValue(type)
-        
         return try self.mappingASN1Error(type) {
             return try self.decode(type, from: self.object)
         }
@@ -159,6 +156,9 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     private func decode<T>(_ type: T.Type, from object: ASN1Object, skipTaggedValues: Bool = false) throws -> T where T : Decodable {
         let value: T
         
+        // FIXME
+        self.context = self.context.decodingSingleValue(type)
+
         if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
             value = try self.decodeTaggedValue(type, from: object) as! T
         } else if let type = type as? any (Decodable & ASN1TaggedProperty).Type {
@@ -199,8 +199,6 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                                  tag: ASN1DecodedTag?,
                                  tagging: ASN1Tagging,
                                  skipTaggedValues: Bool = false) throws -> T where T: Decodable {
-        let unwrappedObject: ASN1Object
-
         guard let tag = tag else {
             // FIXME should this happen? precondition check?
             return try self.decode(type, from: object, skipTaggedValues: skipTaggedValues)
@@ -217,28 +215,28 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                                                 debugDescription: "Expected tag \(tag) but received \(object.tag)")
             throw DecodingError.typeMismatch(type, context)
         }
-        
-        if tag.isUniversal {
-            return try self.decode(type, from: object, skipTaggedValues: true)
-        } else if tagging == .implicit {
-            unwrappedObject = ASN1Kit.create(tag: self.context.tag(for: type), data: object.data)
-        } else {
-            guard object.constructed else {
-                let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Expected explicit tag \(tag) to wrap constructed type")
-                throw DecodingError.typeMismatch(type, context)
-            }
-            
-            guard let items = object.data.items, items.count == 1, let object = object.data.items!.first else {
+                
+        let unwrappedObject: ASN1Object
+        let innerTag = tagging == .implicit ? self.context.tag(for: type) : tag
+
+        if object.constructed {
+            guard let items = object.data.items, items.count == 1, let firstObject = object.data.items!.first else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
                                                     debugDescription: "Tag \(tag) for single value container must wrap a single value only")
                 throw DecodingError.typeMismatch(type, context)
             }
-            
-            unwrappedObject = object
+            unwrappedObject = firstObject
+        } else if innerTag.isUniversal {
+            unwrappedObject = tagging == .implicit ? ASN1Kit.create(tag: innerTag, data: object.data) : object
+        } else {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Expected universal tag \(innerTag) for primitive object \(object)")
+            throw DecodingError.typeMismatch(type, context)
         }
         
-        return try self.decode(type, from: unwrappedObject, skipTaggedValues: skipTaggedValues)
+        let verifiedUniversalTag = !object.constructed && tag.isUniversal
+        
+        return try self.decode(type, from: unwrappedObject, skipTaggedValues: verifiedUniversalTag || skipTaggedValues)
     }
 
     private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T : Decodable {
@@ -265,6 +263,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             let isOptional = type is OptionalProtocol.Type
 
             if isOptional, let error = error as? DecodingError, case .typeMismatch(_, _) = error {
+                //print("Error decoding optional \(object) of type \(type): \(error)")
                 return Optional<Decodable>.init(nilLiteral: ()) as! T
             } else {
                 throw error

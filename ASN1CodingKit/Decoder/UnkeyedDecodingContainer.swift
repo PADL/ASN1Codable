@@ -96,10 +96,18 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
     
     private func _decodingUnkeyedSingleValue<T>(_ type: T.Type?, _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
-        try self.validateCurrentIndex()
-        try self.context.validateObject(self.currentObject, codingPath: self.codingPath)
+        let object: ASN1Object
         
-        let container = self.nestedSingleValueContainer(self.currentObject,
+        if let type = type, self.context.typeHasMember(type, withImplicitTag: self.object.tag) {
+            object = self.object
+        } else {
+            try self.validateCurrentIndex()
+            object = self.currentObject
+        }
+        
+        try self.context.validateObject(object, codingPath: self.codingPath)
+
+        let container = self.nestedSingleValueContainer(object,
                                                         context: self.context.decodingSingleValue(type))
         
         var decoded: Bool = false
@@ -121,7 +129,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
-        return try self._decodingUnkeyedSingleValue(nil) { container in
+        return try self._decodingUnkeyedSingleValue(type) { container in
             return try container.decode(type)
         }
     }

@@ -28,14 +28,37 @@ struct ASN1DecodingContext: ASN1CodingContext {
             return self.tag(for: type.wrappedType)
         }
 
-        if let type = type as? ASN1UniversalTagRepresentable.Type {
-            return .universal(type.tagNo)
-        } else if let type = type as? ASN1TaggedTypeRepresentable.Type, let tag = type.tag {
-            return tag
+        let tag: ASN1DecodedTag
+        
+        if let type = type as? ASN1TaggedTypeRepresentable.Type, let typeTag = type.tag {
+            tag = typeTag
+        } else if let type = type as? ASN1UniversalTagRepresentable.Type {
+            tag = .universal(type.tagNo)
         } else if type is Set<AnyHashable>.Type || type is ASN1EncodeAsSetType.Type {
-            return .universal(.set)
+            tag = .universal(.set)
         } else {
-            return .universal(.sequence)
+            tag = .universal(.sequence)
+        }
+        
+        return tag
+    }
+    
+    func typeHasMember<T>(_ type: T.Type, withImplicitTag implicitTag: ASN1DecodedTag) -> Bool where T: Decodable {
+        guard let metadata = reflect(type) as? EnumMetadata else {
+            return false
+        }
+        
+        return metadata.descriptor.fields.records.contains {
+              guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
+                  return false
+              }
+              
+              guard let wrappedFieldType = fieldType as? any ASN1TaggedProperty.Type,
+                    wrappedFieldType.tagging == .implicit else {
+                  return false
+              }
+
+              return implicitTag == wrappedFieldType.tag
         }
     }
     
@@ -43,15 +66,14 @@ struct ASN1DecodingContext: ASN1CodingContext {
         guard let currentEnum = self.currentEnumType,
               let metadata = reflect(currentEnum) as? EnumMetadata,
               let enumCase = metadata.descriptor.fields.records.first(where: {
-            guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
-                return false
-            }
-
-            return self.tag(for: fieldType) == object.tag
-        }) else {
+                  guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
+                      return false
+                  }
+                  return self.tag(for: fieldType) == object.tag
+              }) else {
             return nil
         }
-            
+
         // FIXME does not work with custom coding keys
         return Key(stringValue: enumCase.name)
     }
@@ -84,6 +106,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     func validateObject(_ object: ASN1Object,
                         container: Bool = false,
                         codingPath: [CodingKey]) throws {
+        // FIXME check constructed anyway?
         guard container else {
             return
         }

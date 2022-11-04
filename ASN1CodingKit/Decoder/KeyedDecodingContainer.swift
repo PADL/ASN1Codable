@@ -111,21 +111,23 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     // FIXME do we need decodeIfPresent? perhaps not if OPTIONAL values must be tagged
     // but perhaps if the last value is OPTIONAL
     
-    
     private func _decodingKeyedSingleValue<T>(_ type: T.Type?, forKey key: Key, _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
         let object: ASN1Object
         
         // if we've reached the end of the SEQUENCE or SET, we still need to initialise
         // the remaining wrapped objects; pad the object set with null instances.
 
-        // FIXME check _save?
-                
         if self.isAtEnd {
             object = ASN1NullObject
         } else {
+            if let type = type, self.context.typeHasMember(type, withImplicitTag: self.object.tag) {
+                object = self.object
+            } else {
+                object = self.currentObject
+            }
+            
             try self.validateCurrentIndex()
-            try self.context.validateObject(self.currentObject, codingPath: self.codingPath)
-            object = self.currentObject
+            try self.context.validateObject(object, codingPath: self.codingPath)
         }
         
         let container = self.nestedSingleValueContainer(object,

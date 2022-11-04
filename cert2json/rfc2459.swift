@@ -113,6 +113,11 @@ public struct OtherName: ASN1ObjectSetRepresentable {
 public enum GeneralName: Codable {
     case otherName(ASN1ContextTagged<ASN1TagNumber$0, ASN1ImplicitTagging, OtherName>)
     case rfc822Name(ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, IA5String<String>>)
+    case dNSName(ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, IA5String<String>>)
+    case directoryName(ASN1ContextTagged<ASN1TagNumber$4, ASN1ImplicitTagging, Name>)
+    case uniformResourceIdentifier(ASN1ContextTagged<ASN1TagNumber$6, ASN1ImplicitTagging, IA5String<String>>)
+    case iPAddress(ASN1ContextTagged<ASN1TagNumber$7, ASN1ImplicitTagging, Data>)
+    case registeredID(ASN1ContextTagged<ASN1TagNumber$8, ASN1ImplicitTagging, ObjectIdentifier>)
 }
 
 public typealias GeneralNames = [GeneralName]
@@ -147,11 +152,23 @@ public struct BasicConstraints: Codable {
     @DecodableDefault.Zero var pathLenConstraint: Int
 }
 
+public struct AuthorityKeyIdentifier: Codable {
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1ImplicitTagging, Data?>
+    var keyIdentifier: Data?
+
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, GeneralNames?>
+    var authorityCertIssuer: GeneralNames?
+
+    @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, Int?>
+    var authorityCertSerialNumber: Int?
+}
+
 public let KeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.15")!
 public let ExtKeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.37")!
 public let SubjectKeyIdentifierOID = ObjectIdentifier(rawValue: "2.5.29.14")!
 public let SubjectAltNameOID = ObjectIdentifier(rawValue: "2.5.29.17")!
 public let BasicConstraintsOID = ObjectIdentifier(rawValue: "2.5.29.19")!
+public let AuthorityKeyIdentifierOID = ObjectIdentifier(rawValue: "2.5.29.35")!
 public let InhibitAnyPolicyOID = ObjectIdentifier(rawValue: "2.5.29.54")!
 
 public struct Extension: ASN1ObjectSetRepresentable {
@@ -161,6 +178,7 @@ public struct Extension: ASN1ObjectSetRepresentable {
         SubjectKeyIdentifierOID : KeyIdentifier.self,
         SubjectAltNameOID : GeneralNames.self,
         BasicConstraintsOID : BasicConstraints.self,
+        AuthorityKeyIdentifierOID : AuthorityKeyIdentifier.self,
         InhibitAnyPolicyOID : SkipCerts.self
     ]
     
