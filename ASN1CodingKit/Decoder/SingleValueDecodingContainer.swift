@@ -61,7 +61,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         return try self.mappingASN1Error(type) {
             guard self.object.tag == .universal(.boolean) else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Expected BOOLEAN tag when decoding \(self.object)")
+                                                    debugDescription: "Expected \(ASN1DecodedTag.universal(.boolean)) tag when decoding \(self.object)")
                 throw DecodingError.dataCorrupted(context)
             }
 
@@ -211,7 +211,6 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             // FIXME should we check for ASN1NullObject instead
             // FIXME are we potentailly squashing real tag mismatch errors
             if (object.isNull || tag.isUniversal == false), type is any OptionalProtocol.Type {
-                // FIXME keep trying until we find a tag that matches
                 return Optional<Decodable>.init(nilLiteral: ()) as! T
             }
             
@@ -248,16 +247,31 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         
         // FIXME does the fact we need to do this perhaps represent a misarchitecture?
         // e.g. should codingKeys represent the tags?
+
+        if let type = type as? ASN1ObjectSetRepresentable.Type {
+            self.context.objectSetDecodingContext = ASN1ObjectSetDecodingContext(objectSetType: type)
+        }
         
         let decoder = ASN1DecoderImpl(object: object, codingPath: self.codingPath,
                                       userInfo: self.userInfo, context: self.context)
-        let value = try T(from: decoder)
         
-        if var value = value as? ASN1PreserveBinary {
-            value._save = object.save
+        do {
+            let value = try T(from: decoder)
+            
+            if var value = value as? ASN1PreserveBinary {
+                value._save = object.save
+            }
+            
+            return value
+        } catch {
+            let isOptional = type is OptionalProtocol.Type
+
+            if isOptional, let error = error as? DecodingError, case .typeMismatch(_, _) = error {
+                return Optional<Decodable>.init(nilLiteral: ()) as! T
+            } else {
+                throw error
+            }
         }
-        
-        return value
     }
 }
 

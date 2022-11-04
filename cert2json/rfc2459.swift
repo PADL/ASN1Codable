@@ -99,42 +99,15 @@ public struct KRB5PrincipalName: Codable {
     var principalName: PrincipalName = PrincipalName()
 }
 
-public struct OtherName: Codable {
-    private static let knownTypes: [ObjectIdentifier: Any.Type] = [
+public struct OtherName: ASN1ObjectSetRepresentable {
+    public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
         PKIXonPKINITSan : ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, KRB5PrincipalName>.self
     ]
 
-    var type_id: ObjectIdentifier
-    var value: any Codable
-    
-    enum CodingKeys: CodingKey {
-        case type_id
-        case value
-    }
-
-    public init(type_id: ObjectIdentifier,
-                value: any Codable) {
-        self.type_id = type_id
-        self.value = value
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        self.type_id = try container.decode(ObjectIdentifier.self, forKey: .type_id)
-        
-        let witness = try ASN1ObjectSet.type(for: self.type_id,
-                                             in: Self.self,
-                                             with: Self.knownTypes,
-                                             userInfo: decoder.userInfo)
-        self.value = try container.decode(witness, forKey: .value)
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.type_id, forKey: .type_id)
-        try container.encode(self.value, forKey: .value)
-    }
+    @ASN1ObjectSetType
+    public var type_id: ObjectIdentifier
+    @ASN1ObjectSetValue
+    public var value: Any
 }
 
 public enum GeneralName: Codable {
@@ -173,8 +146,8 @@ public let SubjectAltNameOID = ObjectIdentifier(rawValue: "2.5.29.17")!
 public let BasicConstraintsOID = ObjectIdentifier(rawValue: "2.5.29.19")!
 public let InhibitAnyPolicyOID = ObjectIdentifier(rawValue: "2.5.29.54")!
 
-public struct Extension: Codable {
-    private static let knownTypes: [ObjectIdentifier: Any.Type] = [
+public struct Extension: ASN1ObjectSetRepresentable {
+    public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
         KeyUsageOID : ASN1RawRepresentableBitString<KeyUsage>.self,
         ExtKeyUsageOID : [ObjectIdentifier].self,
         SubjectKeyIdentifierOID : KeyIdentifier.self,
@@ -182,49 +155,13 @@ public struct Extension: Codable {
         BasicConstraintsOID : BasicConstraints.self,
         InhibitAnyPolicyOID : SkipCerts.self
     ]
-
+    
+    @ASN1ObjectSetType
     var extnID: ObjectIdentifier
-    var critical: Bool? = false
-    var extnValue: any Codable
-    
-    enum CodingKeys: CodingKey {
-        case extnID
-        case critical
-        case extnValue
-    }
-
-    public init(extnID: ObjectIdentifier,
-                critical: Bool = false,
-                extnValue: any Codable) {
-        self.extnID = extnID
-        self.critical = critical
-        self.extnValue = extnValue
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        self.extnID = try container.decode(ObjectIdentifier.self, forKey: .extnID)
-        self.critical = try container.decode(Bool?.self, forKey: .critical)
-        
-        let witness = try ASN1ObjectSet.type(for: self.extnID,
-                                             in: Self.self,
-                                             with: Self.knownTypes,
-                                             userInfo: decoder.userInfo)
-        let berData = try container.decode(Data.self, forKey: .extnValue)
-        let innerDecoder = ASN1Decoder()
-        self.extnValue = try innerDecoder.decode(witness, from: berData)
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.extnID, forKey: .extnID)
-        try container.encode(self.critical, forKey: .critical)
-        
-        let innerEncoder = ASN1Encoder()
-        let berData = try innerEncoder.encode(self.extnValue)
-        try container.encode(berData, forKey: .extnValue)
-    }
+    @ASN1ObjectSetCriticalFlag
+    var critical: Bool = false
+    @ASN1ObjectSetValue
+    var extnValue: Any
 }
 
 // must be class to support ASN1PreserveBinary on encode

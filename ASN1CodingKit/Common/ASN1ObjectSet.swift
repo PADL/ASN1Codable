@@ -15,31 +15,145 @@
 //
 
 import Foundation
+import AnyCodable
 import ASN1Kit
 
-public enum ASN1ObjectSet {
-    private typealias ASN1ObjectSetTypeDictionary = [String: [ObjectIdentifier: Any.Type]]
+private typealias ASN1ObjectSetTypeDictionary = [String: [ObjectIdentifier: Codable.Type]]
 
-    public static func type(for oid: ObjectIdentifier,
-                            in objectSetType: Any.Type,
-                            with knownTypes: [ObjectIdentifier: Any.Type],
-                            userInfo: [CodingUserInfoKey: Any]) throws -> Codable.Type {
-        let type: Any.Type?
+@propertyWrapper
+public struct ASN1ObjectSetType: Codable {
+    public var wrappedValue: ObjectIdentifier
+
+    public init(wrappedValue: ObjectIdentifier) {
+        self.wrappedValue = wrappedValue
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(wrappedValue)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        self.wrappedValue = try container.decode(ObjectIdentifier.self)
         
-        if let typeDict = userInfo[CodingUserInfoKey.ASN1ObjectSetTypeDictionary] as? ASN1ObjectSetTypeDictionary,
+        if let decoder = decoder as? ASN1DecoderImpl,
+           let objectSetDecodingContext = decoder.context.objectSetDecodingContext {
+            objectSetDecodingContext.oid = wrappedValue
+        }
+    }
+}
+
+@propertyWrapper
+public struct ASN1ObjectSetCriticalFlag: Codable {
+    public var wrappedValue: Bool
+
+    public init(wrappedValue: Bool) {
+        self.wrappedValue = wrappedValue
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(wrappedValue)
+    }
+
+    // FIXME allow CRITICAL to be TRUE by default
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let wrappedValue = try container.decode(Bool?.self) {
+            self.wrappedValue = wrappedValue
+        } else {
+            self.wrappedValue = false
+        }
+        
+        if let decoder = decoder as? ASN1DecoderImpl,
+           let objectSetDecodingContext = decoder.context.objectSetDecodingContext {
+            objectSetDecodingContext.critical = self.wrappedValue
+        }
+    }
+}
+
+@propertyWrapper
+public struct ASN1ObjectSetValue: Codable {
+    public typealias Value = Any
+    
+    public var wrappedValue: Value
+
+    public init(wrappedValue: Value) {
+        self.wrappedValue = wrappedValue
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        
+        if let wrappedValue = self.wrappedValue as? Encodable {
+            try container.encode(wrappedValue)
+        }
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        
+        if let decoder = decoder as? ASN1DecoderImpl,
+           let objectSetDecodingContext = decoder.context.objectSetDecodingContext {
+            let berData = try container.decode(Data.self)
+            let innerDecoder = ASN1Decoder()
+            let value: any Codable
+            
+            if let type = objectSetDecodingContext.type(decoder) {
+                value = try innerDecoder.decode(type, from: berData)
+            } else {
+                if objectSetDecodingContext.critical {
+                    let context = DecodingError.Context(codingPath: decoder.codingPath,
+                                                        debugDescription: "Unknown critical type for OID \(String(describing: objectSetDecodingContext.oid))")
+                    throw DecodingError.dataCorrupted(context)
+                }
+                
+                // else just return the data
+                value = berData
+            }
+            
+            self.wrappedValue = value
+        } else {
+            self.wrappedValue = try container.decode(Data.self)
+        }
+    }
+}
+
+class ASN1ObjectSetDecodingContext {
+    let objectSetType: ASN1ObjectSetRepresentable.Type
+    var oid: ObjectIdentifier?
+    var critical: Bool = false
+    
+    init(objectSetType: ASN1ObjectSetRepresentable.Type) {
+        self.objectSetType = objectSetType
+    }
+    
+    func type(_ decoder: ASN1DecoderImpl) -> Codable.Type? {
+        let type: Codable.Type?
+        
+        guard let oid = self.oid else {
+            return nil
+        }
+        
+        if let typeDict = decoder.userInfo[CodingUserInfoKey.ASN1ObjectSetTypeDictionary] as? ASN1ObjectSetTypeDictionary,
            let typeDict = typeDict[String(reflecting: objectSetType)],
            let userType = typeDict[oid] {
             type = userType
-        } else if let knownType = knownTypes[oid] {
+        } else if let knownType = objectSetType.knownTypes[oid] {
             type = knownType
         } else {
-            throw ASN1Error.unsupported("Unknown open type OID \(oid)")
+            type = nil
         }
-        
-        guard let witness = type.self as? Codable.Type else {
-            throw ASN1Error.unsupported("Open type OID \(oid) is not Codable")
-        }
-        
-        return witness
+        return type
     }
 }
+
+// this tells the encoder to encoder in an OCTET STRING
+public protocol ASN1ObjectSetRepresentable: Codable {
+    static var knownTypes: [ObjectIdentifier: Codable.Type] { get }
+}
+
+public protocol ASN1ObjectSetCodable: Codable {
+}
+

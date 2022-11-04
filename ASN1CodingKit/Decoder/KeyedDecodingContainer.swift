@@ -62,6 +62,12 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     private func validateCurrentIndex() throws {
+        if !self.object.constructed && self.context.enumCodingState == .none {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Expected constructed object")
+            throw DecodingError.dataCorrupted(context)
+        }
+
         if self.isAtEnd {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Already at end of ASN.1 object")
@@ -83,6 +89,12 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     var allKeys: [Key] {
         let keys: [Key]
         
+        do {
+            try self.validateCurrentIndex()
+        } catch {
+            return []
+        }
+        
         if let enumCodingKey = self.context.enumCodingKey(Key.self, object: self.currentObject) {
             keys = [enumCodingKey]
         } else {
@@ -95,29 +107,10 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     func contains(_ key: Key) -> Bool {
         return self.containers.keys.contains(key.stringValue)
     }
-    
-    private func _isNilOrWrappedNil<T>(_ value: T) -> Bool where T : Decodable {
-        let wrappedValue: any Decodable
         
-        // FIXME check non-wrapped optionals? because we need to wrap them to disambiguate in ASN.1
-        
-        if let value = value as? any ASN1TaggedProperty {
-            wrappedValue = value.wrappedValue
-        } else {
-            wrappedValue = value
-        }
-        
-        if let wrappedValue = wrappedValue as? ExpressibleByNilLiteral,
-            let wrappedValue = wrappedValue as? Optional<Decodable>,
-            case .none = wrappedValue {
-            return true
-        } else {
-            return false
-        }
-    }
-    
     // FIXME do we need decodeIfPresent? perhaps not if OPTIONAL values must be tagged
     // but perhaps if the last value is OPTIONAL
+    
     
     private func _decodingKeyedSingleValue<T>(_ type: T.Type?, forKey key: Key, _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
         let object: ASN1Object
@@ -139,25 +132,16 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
         
-        do {
-            let value = try block(container)
-            
-            // ignore OPTIONAL values
-            if !self._isNilOrWrappedNil(value) {
-                self.containers[key.stringValue] = container
-                self.currentIndex += 1
-            }
-            
-            return value
-        } catch {
-            let isOptional = type is OptionalProtocol.Type
-
-            if isOptional, let error = error as? DecodingError, case .typeMismatch(_, _) = error {
-                return Optional<Decodable>(nilLiteral: ()) as! T
-            } else {
-                throw error
-            }
+        var decoded: Bool = false
+        
+        let value = try ASN1DecoderImpl._decodingSingleValue(type, container: container, decoded: &decoded, block: block)
+        
+        if decoded {
+            self.containers[key.stringValue] = container
+            self.currentIndex += 1
         }
+        
+        return value
     }
     
     func decodeNil(forKey key: Key) throws -> Bool {

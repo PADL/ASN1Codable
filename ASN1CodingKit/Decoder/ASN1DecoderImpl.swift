@@ -73,3 +73,50 @@ extension ASN1DecoderImpl: Decoder {
         return container
     }
 }
+
+extension ASN1DecoderImpl {
+    static func _isNilOrWrappedNil<T>(_ value: T) -> Bool where T : Decodable {
+        let wrappedValue: any Decodable
+        
+        // FIXME check non-wrapped optionals? because we need to wrap them to disambiguate in ASN.1
+        
+        if let value = value as? any ASN1TaggedProperty {
+            wrappedValue = value.wrappedValue
+        } else {
+            wrappedValue = value
+        }
+        
+        if let wrappedValue = wrappedValue as? ExpressibleByNilLiteral,
+            let wrappedValue = wrappedValue as? Optional<Decodable>,
+            case .none = wrappedValue {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    static func _decodingSingleValue<T>(_ type: T.Type?,
+                                        container: ASN1DecoderImpl.SingleValueContainer,
+                                        decoded: inout Bool,
+                                        block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
+        decoded = false
+        
+        do {
+            let value = try block(container)
+            
+            if !ASN1DecoderImpl._isNilOrWrappedNil(value) {
+                decoded = true
+            }
+            
+            return value
+        } catch {
+            let isOptional = type is OptionalProtocol.Type
+
+            if isOptional, let error = error as? DecodingError, case .typeMismatch(_, _) = error {
+                return () as! T
+            } else {
+                throw error
+            }
+        }
+    }
+}

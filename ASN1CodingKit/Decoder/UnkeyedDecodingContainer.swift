@@ -78,6 +78,9 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     private func validateCurrentIndex() throws {
+        if !self.object.constructed && self.context.enumCodingState == .none {
+            throw DecodingError.dataCorruptedError(in: self, debugDescription: "Expected constructed object")
+        }
         if self.isAtEnd {
             throw DecodingError.dataCorruptedError(in: self, debugDescription: "Already at end of ASN.1 object")
         }
@@ -99,10 +102,14 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         let container = self.nestedSingleValueContainer(self.currentObject,
                                                         context: self.context.decodingSingleValue(type))
         
-        let value = try block(container)
+        var decoded: Bool = false
         
-        self.containers.append(container)
-        self.currentIndex += 1
+        let value = try ASN1DecoderImpl._decodingSingleValue(type, container: container, decoded: &decoded, block: block)
+        
+        if decoded {
+            self.containers.append(container)
+            self.currentIndex += 1
+        }
         
         return value
     }
