@@ -34,15 +34,25 @@ public extension DecodableDefault {
     struct Wrapper<Source: DecodableDefaultSource> {
         public typealias Value = Source.Value
         public var wrappedValue: Value
+        public var isDefaultValue: Bool
         
         public init() {
             self.wrappedValue = Source.defaultValue
+            self.isDefaultValue = true
         }
         
         public init(wrappedValue: Value) {
             self.wrappedValue = wrappedValue
+            self.isDefaultValue = false
         }
     }
+}
+
+public protocol DecodableDefaultRepresentable {
+    var isDefaultValue: Bool { get }
+}
+
+extension DecodableDefault.Wrapper: DecodableDefaultRepresentable {
 }
 
 public extension KeyedDecodingContainer {
@@ -58,8 +68,10 @@ extension DecodableDefault.Wrapper: Decodable {
         let container = try decoder.singleValueContainer()
         if let wrappedValue = try container.decode(Value?.self) {
             self.wrappedValue = wrappedValue
+            self.isDefaultValue = false
         } else {
             self.wrappedValue = Source.defaultValue
+            self.isDefaultValue = true
         }
     }
 }

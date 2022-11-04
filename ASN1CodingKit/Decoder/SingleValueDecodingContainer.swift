@@ -23,7 +23,6 @@ extension ASN1DecoderImpl {
 
         var codingPath: [CodingKey]
         var userInfo: [CodingUserInfoKey: Any]        
-        var didEncode: Bool = false
         var context: ASN1DecodingContext
 
         private var defaultTagging: ASN1Tagging {
@@ -254,14 +253,13 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         
         let decoder = ASN1DecoderImpl(object: object, codingPath: self.codingPath,
                                       userInfo: self.userInfo, context: self.context)
-        
         do {
             let value = try T(from: decoder)
             
             if var value = value as? ASN1PreserveBinary {
                 value._save = object.save
             }
-            
+                        
             return value
         } catch {
             let isOptional = type is OptionalProtocol.Type

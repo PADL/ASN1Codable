@@ -75,11 +75,9 @@ public struct ASN1ObjectSetValue: Codable {
             if let type = objectSetDecodingContext.type(decoder) {
                 value = try innerDecoder.decode(type, from: berData)
             } else {
-                let context = DecodingError.Context(codingPath: decoder.codingPath,
-                                                    debugDescription: "Unknown type for OID \(String(describing: objectSetDecodingContext.oid))")
-                throw DecodingError.dataCorrupted(context)
+                value = berData
             }
-            
+                        
             self.wrappedValue = value
         } else {
             self.wrappedValue = try container.decode(Data.self)
@@ -90,7 +88,6 @@ public struct ASN1ObjectSetValue: Codable {
 class ASN1ObjectSetDecodingContext {
     let objectSetType: ASN1ObjectSetRepresentable.Type
     var oid: ObjectIdentifier?
-    var critical: Bool = false
     
     init(objectSetType: ASN1ObjectSetRepresentable.Type) {
         self.objectSetType = objectSetType

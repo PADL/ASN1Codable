@@ -22,7 +22,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     var encodeAsSet = false
     var currentEnumType: Any.Type?
     var objectSetDecodingContext: ASN1ObjectSetDecodingContext?
-    
+
     func tag(for type: Any.Type) -> ASN1DecodedTag {
         if let type = type as? OptionalProtocol.Type {
             return self.tag(for: type.wrappedType)
