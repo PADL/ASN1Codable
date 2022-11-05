@@ -256,8 +256,9 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         // FIXME does the fact we need to do this perhaps represent a misarchitecture?
         // e.g. should codingKeys represent the tags?
 
-        if let type = type as? ASN1ObjectSetRepresentable.Type {
-            self.context.objectSetDecodingContext = ASN1ObjectSetDecodingContext(objectSetType: type)
+        if let type = type as? ASN1ObjectSetCodable.Type {
+            self.context.objectSetDecodingContext = ASN1ObjectSetDecodingContext(objectSetType: type,
+                                                                                 encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
         }
 
         let decoder = ASN1DecoderImpl(object: object, codingPath: self.codingPath,

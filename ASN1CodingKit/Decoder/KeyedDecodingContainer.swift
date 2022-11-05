@@ -113,7 +113,6 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     private func _currentObject(_ type: Decodable.Type?) throws -> ASN1Object {
         let object: ASN1Object
         
-        
         // if we've reached the end of the SEQUENCE or SET, we still need to initialise
         // the remaining wrapped objects; pad the object set with null instances.
         if self.isAtEnd {
@@ -163,7 +162,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
         let object = try self._currentObject(type)
 
-        if object.constructed, object.data.items?.count == 0 {
+        if object.isNull || (object.constructed && object.data.items?.count == 0) {
             // FIXME set self.containers
             self.currentIndex += 1
             return nil

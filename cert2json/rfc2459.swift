@@ -17,7 +17,6 @@
 import Foundation
 import ASN1CodingKit
 import BigNumber
-import AnyCodable
 
 public enum Version: Int, Codable {
     case rfc3280_version_1 = 0
@@ -27,23 +26,16 @@ public enum Version: Int, Codable {
 
 public typealias CertificateSerialNumber = BInt
 
-public struct AlgorithmIdentifier: Codable {
+public let sha256WithRSAEncryptionOID = ObjectIdentifier(rawValue: "1.2.840.113549.1.1.11")!
+
+public struct AlgorithmIdentifier: ASN1ObjectSetCodable {
+    public static let knownTypes: [ObjectIdentifier: Codable.Type] = [:]
+
+    @ASN1ObjectSetType
     var algorithm: ObjectIdentifier
-    var parameters: AnyCodable?
-}
-
-public typealias AttributeType = ObjectIdentifier
-
-public typealias AttributeValue = AnyCodable
-
-public typealias AttributeValues = Set<AttributeValue>
-
-public enum DirectoryString: Codable, Hashable {
-    case ia5String(IA5String<String>)
-    case printableString(PrintableString<String>)
-    case universalString(UniversalString<String>)
-    case utf8String(UTF8String<String>)
-    case bmpString(BMPString<String>)
+    
+    @ASN1ObjectSetValue
+    var parameters: (any Codable)?
 }
 
 public struct AttributeTypeAndValue: Codable, Hashable {
@@ -51,9 +43,28 @@ public struct AttributeTypeAndValue: Codable, Hashable {
     var value: DirectoryString
 }
 
-public struct Attribute: Codable, Hashable {
-    var type: AttributeTypeAndValue
-    var value: AttributeValues
+public typealias AttributeType = ObjectIdentifier
+public typealias AttributeValue = any Codable & Hashable
+
+/*
+public struct Attribute: ASN1ObjectSetCodable {
+    public static let knownTypes: [ObjectIdentifier: Codable.Type] = [:]
+
+    @ASN1ObjectSetType
+    var type: AttributeType
+    
+    var value: Set<ASN1ObjectSetValue<AttributeValue>>
+}
+
+public typealias Attributes = [Attribute]
+ */
+
+public enum DirectoryString: Codable, Hashable {
+    case ia5String(IA5String<String>)
+    case printableString(PrintableString<String>)
+    case universalString(UniversalString<String>)
+    case utf8String(UTF8String<String>)
+    case bmpString(BMPString<String>)
 }
 
 public typealias RelativeDistinguishedName = Set<AttributeTypeAndValue>
@@ -105,19 +116,12 @@ public struct HardwareModuleName: Codable {
     var hwSerialNumber: Data
 }
 
-public struct OtherName: ASN1ObjectSetRepresentable {
+public struct OtherName: ASN1ObjectSetCodable {
     public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
         PKIXonPKINITSan : KRB5PrincipalName.self,
         PKIXonHardwareModuleName : HardwareModuleName.self
     ]
 
-    enum CodingKeys: CodingKey {
-        case type_id
-        case value
-    }
-    
-    static var valueKey: CodingKeys = .value
-    
     @ASN1ObjectSetType
     public var type_id: ObjectIdentifier
     
@@ -137,25 +141,25 @@ public enum GeneralName: Codable {
 public typealias GeneralNames = [GeneralName]
 public typealias SkipCerts = Int32
 
-public struct KeyUsageOptionSet: OptionSet, Codable {
+public struct _KeyUsage: OptionSet, Codable {
     public let rawValue: UInt
     
     public init(rawValue: UInt) {
         self.rawValue = rawValue
     }
     
-    static let digitalSignature = KeyUsageOptionSet(rawValue: 1 << 0)
-    static let nonRepudiation = KeyUsageOptionSet(rawValue: 1 << 1)
-    static let keyEncipherment = KeyUsageOptionSet(rawValue: 1 << 2)
-    static let dataEncipherment = KeyUsageOptionSet(rawValue: 1 << 3)
-    static let keyAgreement = KeyUsageOptionSet(rawValue: 1 << 4)
-    static let keyCertSign = KeyUsageOptionSet(rawValue: 1 << 5)
-    static let cRLSign = KeyUsageOptionSet(rawValue: 1 << 6)
-    static let encipherOnly = KeyUsageOptionSet(rawValue: 1 << 7)
-    static let decipherOnly = KeyUsageOptionSet(rawValue: 1 << 8)
+    static let digitalSignature = _KeyUsage(rawValue: 1 << 0)
+    static let nonRepudiation = _KeyUsage(rawValue: 1 << 1)
+    static let keyEncipherment = _KeyUsage(rawValue: 1 << 2)
+    static let dataEncipherment = _KeyUsage(rawValue: 1 << 3)
+    static let keyAgreement = _KeyUsage(rawValue: 1 << 4)
+    static let keyCertSign = _KeyUsage(rawValue: 1 << 5)
+    static let cRLSign = _KeyUsage(rawValue: 1 << 6)
+    static let encipherOnly = _KeyUsage(rawValue: 1 << 7)
+    static let decipherOnly = _KeyUsage(rawValue: 1 << 8)
 }
 
-public typealias KeyUsage = ASN1RawRepresentableBitString<KeyUsageOptionSet>
+public typealias KeyUsage = ASN1RawRepresentableBitString<_KeyUsage>
 
 public typealias ExtKeyUsage = [ObjectIdentifier]
 
@@ -184,8 +188,75 @@ public struct AuthorityInfoAccess: Codable {
 
 public typealias AuthorityInfoAccessSyntax = [AuthorityInfoAccess]
 
-//typealias AttributeSet =
-//typealias SubjectDirectoryAttributes = [AttributeSet]
+//CRLDistributionPointsOID
+
+public struct _DistributionPointReasonFlags: OptionSet, Codable {
+    public let rawValue: UInt
+    
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+    
+    static let unused = _DistributionPointReasonFlags(rawValue: 1 << 0)
+    static let keyCompromise = _DistributionPointReasonFlags(rawValue: 1 << 1)
+    static let cACompromise = _DistributionPointReasonFlags(rawValue: 1 << 2)
+    static let affiliationChanged = _DistributionPointReasonFlags(rawValue: 1 << 3)
+    static let superseded = _DistributionPointReasonFlags(rawValue: 1 << 4)
+    static let cessationOfOperation = _DistributionPointReasonFlags(rawValue: 1 << 5)
+    static let certificateHold = _DistributionPointReasonFlags(rawValue: 1 << 6)
+    static let privilegeWithdrawn = _DistributionPointReasonFlags(rawValue: 1 << 7)
+    static let aACompromise = _DistributionPointReasonFlags(rawValue: 1 << 8)
+}
+
+public typealias DistributionPointReasonFlags = ASN1RawRepresentableBitString<_DistributionPointReasonFlags>
+
+public enum DistributionPointName: Codable {
+    case fullName(ASN1ContextTagged<ASN1TagNumber$0, ASN1ImplicitTagging, GeneralNames>)
+    case nameRelativeToCRLIssuer(ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, RelativeDistinguishedName>)
+}
+
+public struct DistributionPoint: Codable {
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1ImplicitTagging, DistributionPointName?>
+    var distributionPoint: DistributionPointName?
+    
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, DistributionPointReasonFlags?>
+    var reasons: DistributionPointReasonFlags?
+
+    @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, GeneralNames?>
+    var cRLIssuer: GeneralNames?
+}
+
+typealias CRLDistributionPoints = [DistributionPoint]
+
+public struct PrivateKeyUsagePeriod: Codable {
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1ImplicitTagging, GeneralizedTime?>
+    var notBefore: GeneralizedTime?
+    
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, GeneralizedTime?>
+    var notAfter: GeneralizedTime?
+}
+
+public typealias CertPolicyId = ObjectIdentifier
+public typealias PolicyQualifierId = ObjectIdentifier
+
+public struct PolicyQualifierInfo: ASN1ObjectSetCodable {
+    public static let knownTypes: [ObjectIdentifier: Codable.Type] = [:]
+
+    @ASN1ObjectSetType
+    var policyQualifierId: PolicyQualifierId
+    
+    @ASN1ObjectSetValue
+    var qualifier: (any Codable)?
+}
+
+public typealias PolicyQualifierInfos = [PolicyQualifierInfo]
+
+public struct PolicyInformation: Codable {
+    var policyIdentifier: CertPolicyId
+    var policyQualifiers: PolicyQualifierInfos?
+}
+
+typealias CertificatePolicies = [PolicyInformation]
 
 public let SubjectDirectoryAttributesOID = ObjectIdentifier(rawValue: "2.5.29.9")!
 public let KeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.15")!
@@ -193,17 +264,21 @@ public let ExtKeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.37")!
 public let SubjectKeyIdentifierOID = ObjectIdentifier(rawValue: "2.5.29.14")!
 public let SubjectAltNameOID = ObjectIdentifier(rawValue: "2.5.29.17")!
 public let BasicConstraintsOID = ObjectIdentifier(rawValue: "2.5.29.19")!
+public let CRLDistributionPointsOID = ObjectIdentifier(rawValue: "2.5.29.31")!
+public let CertificatePoliciesOID = ObjectIdentifier(rawValue: "2.5.29.32")!
 public let AuthorityKeyIdentifierOID = ObjectIdentifier(rawValue: "2.5.29.35")!
 public let InhibitAnyPolicyOID = ObjectIdentifier(rawValue: "2.5.29.54")!
 public let AuthorityInfoAccessOID = ObjectIdentifier(rawValue: "1.3.6.1.5.5.7.1.1")!
 
-public struct Extension: ASN1ObjectSetRepresentable {
+public struct Extension: ASN1ObjectSetOctetStringCodable {
     public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
         KeyUsageOID : KeyUsage.self,
         ExtKeyUsageOID : ExtKeyUsage.self,
         SubjectKeyIdentifierOID : KeyIdentifier.self,
         SubjectAltNameOID : GeneralNames.self,
         BasicConstraintsOID : BasicConstraints.self,
+        CRLDistributionPointsOID : CRLDistributionPoints.self,
+        CertificatePoliciesOID : CertificatePolicies.self,
         AuthorityKeyIdentifierOID : AuthorityKeyIdentifier.self,
         InhibitAnyPolicyOID : SkipCerts.self,
         AuthorityInfoAccessOID : AuthorityInfoAccessSyntax.self
@@ -213,8 +288,8 @@ public struct Extension: ASN1ObjectSetRepresentable {
     var extnID: ObjectIdentifier
     @DecodableDefault.False
     var critical: Bool
-    @ASN1OctetStringObjectSetValue
-    var extnValue: Any
+    @ASN1ObjectSetValue
+    var extnValue: (any Codable)?
 }
 
 // must be class to support ASN1PreserveBinary on encode

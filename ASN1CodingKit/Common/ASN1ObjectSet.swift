@@ -16,6 +16,7 @@
 
 import Foundation
 import ASN1Kit
+import AnyCodable
 
 private typealias ASN1ObjectSetTypeDictionary = [String: [ObjectIdentifier: Codable.Type]]
 
@@ -38,17 +39,22 @@ public struct ASN1ObjectSetType: Codable {
         
         if let decoder = decoder as? ASN1DecoderImpl,
            let objectSetDecodingContext = decoder.context.objectSetDecodingContext {
+            precondition(objectSetDecodingContext.oid == nil)
             objectSetDecodingContext.oid = wrappedValue
         }
     }
 }
 
 @propertyWrapper
-public struct ASN1OctetStringObjectSetValue: Codable {
-    public typealias Value = Any
+public struct ASN1ObjectSetValue: Codable {
+    public typealias Value = (any Codable)?
     
     public var wrappedValue: Value
 
+    public init() {
+        self.wrappedValue = nil
+    }
+    
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
@@ -56,98 +62,57 @@ public struct ASN1OctetStringObjectSetValue: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         
-        if let wrappedValue = self.wrappedValue as? Encodable {
+        if let wrappedValue = self.wrappedValue {
             try container.encode(wrappedValue)
+        } else {
+            try container.encodeNil()
         }
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
+
+        guard let decoder = decoder as? ASN1DecoderImpl else {
+            self.wrappedValue = try container.decode(AnyCodable.self)
+            return
+        }
         
-        if let decoder = decoder as? ASN1DecoderImpl,
-           let objectSetDecodingContext = decoder.context.objectSetDecodingContext,
-           let oid = objectSetDecodingContext.oid {
+        guard let objectSetDecodingContext = decoder.context.objectSetDecodingContext,
+              let type = objectSetDecodingContext.type(decoder) else {
+            self.wrappedValue = nil
+            return
+        }
+        
+        if objectSetDecodingContext.encodeAsOctetString {
             let berData = try container.decode(Data.self)
             let innerDecoder = ASN1Decoder()
-            let value: any Codable
+                
+            self.wrappedValue = try innerDecoder.decode(type, from: berData)
+        } else {
+            let value = try container.decode(type)
             
-            defer { decoder.context.objectSetDecodingContext = nil }
-            
-            if let type = objectSetDecodingContext.type(decoder) {
-                do {
-                    value = try innerDecoder.decode(type, from: berData)
-                } catch {
-                    debugPrint("Failed to decode object set of type \(type) for OID \(oid): \(error)")
-                    throw error
-                }
-            } else {
-                debugPrint("Unknown object set OID \(oid)")
-                value = berData
-            }
-                        
             self.wrappedValue = value
-        } else {
-            self.wrappedValue = try container.decode(Data.self)
         }
-    }
-}
-
-@propertyWrapper
-public struct ASN1ObjectSetValue: Codable {
-    public typealias Value = Any
-    
-    public var wrappedValue: Value
-
-    public init(wrappedValue: Value) {
-        self.wrappedValue = wrappedValue
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
         
-        if let wrappedValue = self.wrappedValue as? Encodable {
-            try container.encode(wrappedValue)
-        }
-    }
-
-    public init(from decoder: Decoder) throws {
-        if let decoder = decoder as? ASN1DecoderImpl,
-           let objectSetDecodingContext = decoder.context.objectSetDecodingContext,
-           let oid = objectSetDecodingContext.oid {
-            if let type = objectSetDecodingContext.type(decoder) {
-                do {
-                    let container = try decoder.singleValueContainer()
-                    let value = try container.decode(type)
-                    self.wrappedValue = value
-                } catch {
-                    debugPrint("Failed to decode object set of type \(type) for OID \(String(describing: objectSetDecodingContext.oid)): \(error)")
-                    throw error
-                }
-            } else {
-                let context = DecodingError.Context(codingPath: decoder.codingPath,
-                                                    debugDescription: "No registered type for OID \(oid)")
-                throw DecodingError.dataCorrupted(context)
-            }
-        } else {
-            let context = DecodingError.Context(codingPath: decoder.codingPath,
-                                                debugDescription: "Only ASN.1 decoder can decode non-octet string object set values")
-            throw DecodingError.dataCorrupted(context)
-        }
+        decoder.context.objectSetDecodingContext = nil
     }
 }
 
 class ASN1ObjectSetDecodingContext {
-    let objectSetType: ASN1ObjectSetRepresentable.Type
+    let objectSetType: ASN1ObjectSetCodable.Type
     var oid: ObjectIdentifier?
+    let encodeAsOctetString: Bool
     
-    init(objectSetType: ASN1ObjectSetRepresentable.Type) {
+    init(objectSetType: ASN1ObjectSetCodable.Type, encodeAsOctetString: Bool) {
         self.objectSetType = objectSetType
+        self.encodeAsOctetString = encodeAsOctetString
     }
     
     func type(_ decoder: ASN1DecoderImpl) -> Codable.Type? {
         let type: Codable.Type?
         
         guard let oid = self.oid else {
+            debugPrint("Object set type must come before value")
             return nil
         }
         
@@ -158,6 +123,7 @@ class ASN1ObjectSetDecodingContext {
         } else if let knownType = objectSetType.knownTypes[oid] {
             type = knownType
         } else {
+            debugPrint("Unknown object set OID \(oid)")
             type = nil
         }
         return type
@@ -165,10 +131,9 @@ class ASN1ObjectSetDecodingContext {
 }
 
 // this tells the encoder to encoder in an OCTET STRING
-public protocol ASN1ObjectSetRepresentable: Codable {
+public protocol ASN1ObjectSetCodable: Codable {
     static var knownTypes: [ObjectIdentifier: Codable.Type] { get }
 }
 
-public protocol ASN1ObjectSetCodable: Codable {
+public protocol ASN1ObjectSetOctetStringCodable: ASN1ObjectSetCodable {
 }
-
