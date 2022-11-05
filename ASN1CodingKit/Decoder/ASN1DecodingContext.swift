@@ -134,7 +134,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
             }
         } else if self.enumCodingState != .enum {
             let context = DecodingError.Context(codingPath: codingPath,
-                                                debugDescription: "Expected a set or sequence, instead received tag \(object.tag)")
+                                                debugDescription: "Expected a constructed type, instead received tag \(object.tag)")
             throw DecodingError.dataCorrupted(context)
         }
     }
