@@ -27,6 +27,7 @@ public enum Version: Int, Codable {
 public typealias CertificateSerialNumber = BInt
 
 public let sha256WithRSAEncryptionOID = ObjectIdentifier(rawValue: "1.2.840.113549.1.1.11")!
+public let rsaEncryptionOID = ObjectIdentifier(rawValue: "1.2.840.113549.1.1.1")!
 
 public struct AlgorithmIdentifier: ASN1ObjectSetCodable {
     public static let knownTypes: [ObjectIdentifier: Codable.Type] = [:]
@@ -186,8 +187,8 @@ public struct AuthorityKeyIdentifier: Codable {
     @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, GeneralNames?>
     var authorityCertIssuer: GeneralNames?
 
-    @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, Int?>
-    var authorityCertSerialNumber: Int?
+    @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, CertificateSerialNumber?>
+    var authorityCertSerialNumber: CertificateSerialNumber?
 }
 
 public struct _DistributionPointReasonFlags: OptionSet, Codable {
