@@ -40,8 +40,8 @@ public typealias AttributeValues = Set<AttributeValue>
 
 public enum DirectoryString: Codable, Hashable {
     case ia5String(IA5String<String>)
-    //case printableString(PrintableString<String>)
-    //case universalString(UniversalString<String>)
+    case printableString(PrintableString<String>)
+    case universalString(UniversalString<String>)
     case utf8String(UTF8String<String>)
     case bmpString(BMPString<String>)
 }
@@ -80,6 +80,7 @@ public struct SubjectPublicKeyInfo: Codable {
 }
 
 public let PKIXonPKINITSan = ObjectIdentifier(rawValue: "1.3.6.1.5.2.2")!
+public let PKIXonHardwareModuleName = ObjectIdentifier(rawValue: "1.3.6.1.5.5.7.8.4")!
 
 public typealias Realm = GeneralString<String>
 public typealias NAME_TYPE = Int
@@ -99,15 +100,28 @@ public struct KRB5PrincipalName: Codable {
     var principalName: PrincipalName = PrincipalName()
 }
 
+public struct HardwareModuleName: Codable {
+    var hwType: ObjectIdentifier
+    var hwSerialNumber: Data
+}
+
 public struct OtherName: ASN1ObjectSetRepresentable {
     public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
-        PKIXonPKINITSan : ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, KRB5PrincipalName>.self
+        PKIXonPKINITSan : KRB5PrincipalName.self,
+        PKIXonHardwareModuleName : HardwareModuleName.self
     ]
 
+    enum CodingKeys: CodingKey {
+        case type_id
+        case value
+    }
+    
+    static var valueKey: CodingKeys = .value
+    
     @ASN1ObjectSetType
     public var type_id: ObjectIdentifier
-    @ASN1ObjectSetValue
-    public var value: Any
+    
+    public var value: ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, ASN1ObjectSetValue>
 }
 
 public enum GeneralName: Codable {
@@ -163,6 +177,13 @@ public struct AuthorityKeyIdentifier: Codable {
     var authorityCertSerialNumber: Int?
 }
 
+public struct AuthorityInfoAccess: Codable {
+    var accessMethod: ObjectIdentifier
+    var accessLocation: GeneralName
+}
+
+public typealias AuthorityInfoAccessSyntax = [AuthorityInfoAccess]
+
 public let KeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.15")!
 public let ExtKeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.37")!
 public let SubjectKeyIdentifierOID = ObjectIdentifier(rawValue: "2.5.29.14")!
@@ -170,6 +191,7 @@ public let SubjectAltNameOID = ObjectIdentifier(rawValue: "2.5.29.17")!
 public let BasicConstraintsOID = ObjectIdentifier(rawValue: "2.5.29.19")!
 public let AuthorityKeyIdentifierOID = ObjectIdentifier(rawValue: "2.5.29.35")!
 public let InhibitAnyPolicyOID = ObjectIdentifier(rawValue: "2.5.29.54")!
+public let AuthorityInfoAccessOID = ObjectIdentifier(rawValue: "1.3.6.1.5.5.7.1.1")!
 
 public struct Extension: ASN1ObjectSetRepresentable {
     public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
@@ -179,14 +201,15 @@ public struct Extension: ASN1ObjectSetRepresentable {
         SubjectAltNameOID : GeneralNames.self,
         BasicConstraintsOID : BasicConstraints.self,
         AuthorityKeyIdentifierOID : AuthorityKeyIdentifier.self,
-        InhibitAnyPolicyOID : SkipCerts.self
+        InhibitAnyPolicyOID : SkipCerts.self,
+        AuthorityInfoAccessOID : AuthorityInfoAccessSyntax.self
     ]
     
     @ASN1ObjectSetType
     var extnID: ObjectIdentifier
     @DecodableDefault.False
     var critical: Bool
-    @ASN1ObjectSetValue
+    @ASN1OctetStringObjectSetValue
     var extnValue: Any
 }
 

@@ -139,6 +139,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         let container = self.nestedSingleValueContainer(object,
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
+
         let value = try ASN1DecoderImpl._decodingSingleValue(type, container: container, decoded: &decoded, block: block)
         
         if decoded {

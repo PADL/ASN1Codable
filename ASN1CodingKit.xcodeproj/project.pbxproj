@@ -993,8 +993,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Azoy/Echo";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.1;
+				branch = main;
+				kind = branch;
 			};
 		};
 		D3D13E782913431500218279 /* XCRemoteSwiftPackageReference "Commandant" */ = {

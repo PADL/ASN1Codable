@@ -80,6 +80,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
                   guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
                       return false
                   }
+                  
                   return Self.tag(for: fieldType) == object.tag
               }) else {
             return nil
@@ -89,7 +90,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
         return Key(stringValue: enumCase.name)
     }
 
-    private static func isEnum<T>(_ type: T.Type) -> Bool {
+    static func isEnum<T>(_ type: T.Type) -> Bool {
         return reflect(lookThroughOptional(type)) is EnumMetadata
     }
 

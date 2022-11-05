@@ -26,9 +26,7 @@ protocol ASN1DecodingContainer {
 
 extension ASN1DecodingContainer {
     var currentObject: ASN1Object {
-        if self.context.enumCodingState != .none {
-            return self.object
-        } else if self.object.isNull {
+        if self.context.enumCodingState != .none || self.object.isNull {
             return self.object
         } else {
             precondition(self.object.constructed)

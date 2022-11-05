@@ -218,16 +218,26 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                 
         let unwrappedObject: ASN1Object
         let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : tag
-
+        
         if object.constructed {
-            guard let items = object.data.items, items.count == 1, let firstObject = object.data.items!.first else {
-                let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Tag \(tag) for single value container must wrap a single value only")
-                throw DecodingError.typeMismatch(type, context)
+            // FIXME something is very wrong here
+            if tagging == .implicit && !ASN1DecodingContext.isEnum(type) {
+                unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
+            } else {
+                guard let items = object.data.items, items.count == 1, let firstObject = object.data.items!.first else {
+                    let context = DecodingError.Context(codingPath: self.codingPath,
+                                                        debugDescription: "Tag \(tag) for single value container must wrap a single value only")
+                    throw DecodingError.typeMismatch(type, context)
+                }
+                unwrappedObject = firstObject
             }
-            unwrappedObject = firstObject
         } else if innerTag.isUniversal {
-            unwrappedObject = tagging == .implicit ? ASN1Kit.create(tag: innerTag, data: object.data) : object
+            if tagging == .implicit {
+                unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
+                // FIXME propagate save
+            } else {
+                unwrappedObject = object
+            }
         } else {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected universal tag \(innerTag) for primitive object \(object)")
@@ -248,7 +258,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         if let type = type as? ASN1ObjectSetRepresentable.Type {
             self.context.objectSetDecodingContext = ASN1ObjectSetDecodingContext(objectSetType: type)
         }
-        
+
         let decoder = ASN1DecoderImpl(object: object, codingPath: self.codingPath,
                                       userInfo: self.userInfo, context: self.context)
         do {
@@ -263,7 +273,6 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             let isOptional = type is OptionalProtocol.Type
 
             if isOptional, let error = error as? DecodingError, case .typeMismatch(_, _) = error {
-                //print("Error decoding optional \(object) of type \(type): \(error)")
                 return Optional<Decodable>.init(nilLiteral: ()) as! T
             } else {
                 throw error

@@ -44,7 +44,7 @@ public struct ASN1ObjectSetType: Codable {
 }
 
 @propertyWrapper
-public struct ASN1ObjectSetValue: Codable {
+public struct ASN1OctetStringObjectSetValue: Codable {
     public typealias Value = Any
     
     public var wrappedValue: Value
@@ -65,7 +65,8 @@ public struct ASN1ObjectSetValue: Codable {
         let container = try decoder.singleValueContainer()
         
         if let decoder = decoder as? ASN1DecoderImpl,
-           let objectSetDecodingContext = decoder.context.objectSetDecodingContext {
+           let objectSetDecodingContext = decoder.context.objectSetDecodingContext,
+           let oid = objectSetDecodingContext.oid {
             let berData = try container.decode(Data.self)
             let innerDecoder = ASN1Decoder()
             let value: any Codable
@@ -75,16 +76,64 @@ public struct ASN1ObjectSetValue: Codable {
             if let type = objectSetDecodingContext.type(decoder) {
                 do {
                     value = try innerDecoder.decode(type, from: berData)
+                    debugPrint("Decoded object set \(type) to \(value)")
                 } catch {
+                    debugPrint("Failed to decode object set of type \(type) for OID \(oid): \(error)")
                     throw error
                 }
             } else {
+                debugPrint("Unknown object set OID \(oid)")
                 value = berData
             }
                         
             self.wrappedValue = value
         } else {
             self.wrappedValue = try container.decode(Data.self)
+        }
+    }
+}
+
+@propertyWrapper
+public struct ASN1ObjectSetValue: Codable {
+    public typealias Value = Any
+    
+    public var wrappedValue: Value
+
+    public init(wrappedValue: Value) {
+        self.wrappedValue = wrappedValue
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        
+        if let wrappedValue = self.wrappedValue as? Encodable {
+            try container.encode(wrappedValue)
+        }
+    }
+
+    public init(from decoder: Decoder) throws {
+        if let decoder = decoder as? ASN1DecoderImpl,
+           let objectSetDecodingContext = decoder.context.objectSetDecodingContext,
+           let oid = objectSetDecodingContext.oid {
+            if let type = objectSetDecodingContext.type(decoder) {
+                do {
+                    let container = try decoder.singleValueContainer()
+                    let value = try container.decode(type)
+                    debugPrint("Decoded object set \(type) to \(value)")
+                    self.wrappedValue = value
+                } catch {
+                    debugPrint("Failed to decode object set of type \(type) for OID \(String(describing: objectSetDecodingContext.oid)): \(error)")
+                    throw error
+                }
+            } else {
+                let context = DecodingError.Context(codingPath: decoder.codingPath,
+                                                    debugDescription: "No registered type for OID \(oid)")
+                throw DecodingError.dataCorrupted(context)
+            }
+        } else {
+            let context = DecodingError.Context(codingPath: decoder.codingPath,
+                                                debugDescription: "Only ASN.1 decoder can decode non-octet string object set values")
+            throw DecodingError.dataCorrupted(context)
         }
     }
 }
