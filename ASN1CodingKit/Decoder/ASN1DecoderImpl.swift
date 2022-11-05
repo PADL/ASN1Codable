@@ -111,7 +111,7 @@ extension ASN1DecoderImpl {
         
         do {
             let value = try block(container)
-
+            
             if !_isNilOrWrappedNil(value) && !_isDefaultValue(value) {
                 decoded = true
             }

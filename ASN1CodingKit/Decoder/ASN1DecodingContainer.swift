@@ -28,6 +28,8 @@ extension ASN1DecodingContainer {
     var currentObject: ASN1Object {
         if self.context.enumCodingState != .none {
             return self.object
+        } else if self.object.isNull {
+            return self.object
         } else {
             precondition(self.object.constructed)
             precondition(self.currentIndex < self.object.data.items!.count)

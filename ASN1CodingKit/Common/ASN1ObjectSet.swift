@@ -73,7 +73,11 @@ public struct ASN1ObjectSetValue: Codable {
             defer { decoder.context.objectSetDecodingContext = nil }
             
             if let type = objectSetDecodingContext.type(decoder) {
-                value = try innerDecoder.decode(type, from: berData)
+                do {
+                    value = try innerDecoder.decode(type, from: berData)
+                } catch {
+                    throw error
+                }
             } else {
                 value = berData
             }

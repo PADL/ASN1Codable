@@ -183,7 +183,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     }
     
     private func decodePrimitiveValue<T>(_ type: T.Type, from object: ASN1Object, verifiedTag: Bool = false) throws -> T where T: ASN1DecodableType {
-        let expectedTag = self.context.tag(for: type)
+        let expectedTag = ASN1DecodingContext.tag(for: type)
         
         guard verifiedTag || (self.object.tag.isUniversal && self.object.tag == expectedTag) else {
             let context = DecodingError.Context(codingPath: self.codingPath,
@@ -217,7 +217,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         }
                 
         let unwrappedObject: ASN1Object
-        let innerTag = tagging == .implicit ? self.context.tag(for: type) : tag
+        let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : tag
 
         if object.constructed {
             guard let items = object.data.items, items.count == 1, let firstObject = object.data.items!.first else {

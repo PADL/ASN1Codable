@@ -68,7 +68,10 @@ struct ParseCommand: CommandProtocol {
             let decoder = ASN1Decoder()
             let cert = try decoder.decode(Certificate.self, from: data)
             
-            guard let jsonData = try String(data: JSONEncoder().encode(cert), encoding: .utf8) else {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+
+            guard let jsonData = try String(data: encoder.encode(cert), encoding: .utf8) else {
                 return .failure(.encodingError)
             }
 

@@ -23,10 +23,8 @@ struct ASN1DecodingContext: ASN1CodingContext {
     var currentEnumType: Any.Type?
     var objectSetDecodingContext: ASN1ObjectSetDecodingContext?
 
-    func tag(for type: Any.Type) -> ASN1DecodedTag {
-        if let type = type as? OptionalProtocol.Type {
-            return self.tag(for: type.wrappedType)
-        }
+    static func tag(for type: Any.Type) -> ASN1DecodedTag {
+        let type = lookThroughOptional(type)
 
         let tag: ASN1DecodedTag
         
@@ -43,33 +41,46 @@ struct ASN1DecodingContext: ASN1CodingContext {
         return tag
     }
     
-    func typeHasMember<T>(_ type: T.Type, withImplicitTag implicitTag: ASN1DecodedTag) -> Bool where T: Decodable {
-        guard let metadata = reflect(type) as? EnumMetadata else {
+    private static func lookThroughOptional(_ type: Any.Type) -> Any.Type {
+        let unwrappedType: Any.Type
+
+        // look through optional
+        if let wrappedType = type as? OptionalProtocol.Type {
+            unwrappedType = wrappedType.wrappedType
+        } else {
+            unwrappedType = type
+        }
+
+        return unwrappedType
+    }
+    
+    static func enumTypeHasMember<T>(_ type: T.Type, tag: ASN1DecodedTag, tagging: ASN1Tagging = .automatic) -> Bool where T: Decodable {
+        guard let metadata = reflect(Self.lookThroughOptional(type)) as? EnumMetadata else {
             return false
         }
         
         return metadata.descriptor.fields.records.contains {
-              guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
+              guard let fieldType = metadata.type(of: $0.mangledTypeName),
+                    let wrappedFieldType = fieldType as? any ASN1TaggedProperty.Type else {
                   return false
               }
-              
-              guard let wrappedFieldType = fieldType as? any ASN1TaggedProperty.Type,
-                    wrappedFieldType.tagging == .implicit else {
-                  return false
-              }
-
-              return implicitTag == wrappedFieldType.tag
+            
+            if tagging != .automatic && wrappedFieldType.tagging != tagging {
+                return false
+            }
+            
+            return tag == wrappedFieldType.tag
         }
     }
     
     func enumCodingKey<Key>(_ keyType: Key.Type, object: ASN1Object) -> Key? where Key: CodingKey {
         guard let currentEnum = self.currentEnumType,
-              let metadata = reflect(currentEnum) as? EnumMetadata,
+              let metadata = reflect(Self.lookThroughOptional(currentEnum)) as? EnumMetadata,
               let enumCase = metadata.descriptor.fields.records.first(where: {
                   guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
                       return false
                   }
-                  return self.tag(for: fieldType) == object.tag
+                  return Self.tag(for: fieldType) == object.tag
               }) else {
             return nil
         }
@@ -79,7 +90,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     }
 
     private static func isEnum<T>(_ type: T.Type) -> Bool {
-        return reflect(type) is EnumMetadata
+        return reflect(lookThroughOptional(type)) is EnumMetadata
     }
 
     func decodingSingleValue<T>(_ type: T.Type?) -> Self {

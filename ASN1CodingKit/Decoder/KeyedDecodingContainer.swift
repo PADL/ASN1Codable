@@ -62,7 +62,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     private func validateCurrentIndex() throws {
-        if !self.object.constructed && self.context.enumCodingState == .none {
+        if !self.object.constructed && self.context.enumCodingState == .none && !self.object.isNull {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected constructed object")
             throw DecodingError.dataCorrupted(context)
@@ -100,42 +100,45 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         } else {
             keys = self.containers.keys.map { Key(stringValue: $0)! }
         }
-        
+
         return keys
     }
     
     func contains(_ key: Key) -> Bool {
         return self.containers.keys.contains(key.stringValue)
     }
-        
-    // FIXME do we need decodeIfPresent? perhaps not if OPTIONAL values must be tagged
-    // but perhaps if the last value is OPTIONAL
     
-    private func _decodingKeyedSingleValue<T>(_ type: T.Type?, forKey key: Key, _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
+    private func _currentObject(_ type: Decodable.Type?) throws -> ASN1Object {
         let object: ASN1Object
+        
         
         // if we've reached the end of the SEQUENCE or SET, we still need to initialise
         // the remaining wrapped objects; pad the object set with null instances.
-
         if self.isAtEnd {
             object = ASN1NullObject
         } else {
-            if let type = type, self.context.typeHasMember(type, withImplicitTag: self.object.tag) {
+            if let type = type,
+               ASN1DecodingContext.enumTypeHasMember(type, tag: self.object.tag, tagging: .implicit) {
                 object = self.object
             } else {
                 object = self.currentObject
             }
-            
+
             try self.validateCurrentIndex()
             try self.context.validateObject(object, codingPath: self.codingPath)
         }
+
+        return object
+    }
         
+    private func _decodingKeyedSingleValue<T>(_ type: T.Type?,
+                                              forKey key: Key,
+                                              object: ASN1Object,
+                                              _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
+        var decoded: Bool = false
         let container = self.nestedSingleValueContainer(object,
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
-        
-        var decoded: Bool = false
-        
         let value = try ASN1DecoderImpl._decodingSingleValue(type, container: container, decoded: &decoded, block: block)
         
         if decoded {
@@ -147,19 +150,31 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
     
     func decodeNil(forKey key: Key) throws -> Bool {
-        return try _decodingKeyedSingleValue(nil, forKey: key) { container in
+        let object = try self._currentObject(nil)
+        
+        return try _decodingKeyedSingleValue(nil, forKey: key, object: object) { container in
             return container.decodeNil()
         }
     }
     
     func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
-        return try _decodingKeyedSingleValue(type, forKey: key) { container in
+        let object = try self._currentObject(type)
+
+        if object.constructed, object.data.items?.count == 0 {
+            // FIXME set self.containers
+            self.currentIndex += 1
+            return nil
+        }
+        
+        return try _decodingKeyedSingleValue(type, forKey: key, object: object) { container in
             return try container.decode(type)
         }
     }
-        
+
     func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
-        return try _decodingKeyedSingleValue(type, forKey: key) { container in
+        let object = try self._currentObject(type)
+
+        return try _decodingKeyedSingleValue(type, forKey: key, object: object) { container in
             return try container.decode(type)
         }
     }

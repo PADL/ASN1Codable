@@ -98,7 +98,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     private func _decodingUnkeyedSingleValue<T>(_ type: T.Type?, _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
         let object: ASN1Object
         
-        if let type = type, self.context.typeHasMember(type, withImplicitTag: self.object.tag) {
+        if let type = type, ASN1DecodingContext.enumTypeHasMember(type, tag: self.object.tag, tagging: .implicit) {
             object = self.object
         } else {
             try self.validateCurrentIndex()
