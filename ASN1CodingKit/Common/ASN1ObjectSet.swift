@@ -98,6 +98,26 @@ public struct ASN1ObjectSetValue: Codable {
     }
 }
 
+@propertyWrapper
+public struct ASN1AnyObjectSetValue: Codable, Hashable {
+    public typealias Value = AnyCodable
+    
+    public var wrappedValue: Value
+    
+    public init(wrappedValue: Value) {
+        self.wrappedValue = wrappedValue
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(wrappedValue)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        self.wrappedValue = AnyCodable(try(ASN1ObjectSetValue(from: decoder)))
+    }
+}
+
 class ASN1ObjectSetDecodingContext {
     let objectSetType: ASN1ObjectSetCodable.Type
     var oid: ObjectIdentifier?

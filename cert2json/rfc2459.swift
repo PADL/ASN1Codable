@@ -38,26 +38,36 @@ public struct AlgorithmIdentifier: ASN1ObjectSetCodable {
     var parameters: (any Codable)?
 }
 
+public struct TPMSpecification: Codable {
+    @UTF8String
+    var family: String = ""
+
+    var level: Int32
+    var revision: Int32
+}
+public let TPMSpecificationOID = ObjectIdentifier(rawValue: "2.23.133.2.16")!
+
 public struct AttributeTypeAndValue: Codable, Hashable {
     var type: AttributeType
     var value: DirectoryString
 }
 
 public typealias AttributeType = ObjectIdentifier
-public typealias AttributeValue = any Codable & Hashable
+public typealias AttributeValue = ASN1AnyObjectSetValue // type erased
 
-/*
 public struct Attribute: ASN1ObjectSetCodable {
-    public static let knownTypes: [ObjectIdentifier: Codable.Type] = [:]
+    public static let knownTypes: [ObjectIdentifier: Codable.Type] =
+        [TPMSpecificationOID : TPMSpecification.self]
 
     @ASN1ObjectSetType
     var type: AttributeType
     
-    var value: Set<ASN1ObjectSetValue<AttributeValue>>
+    var value: Set<AttributeValue>
 }
 
 public typealias Attributes = [Attribute]
- */
+
+public typealias SubjectDirectoryAttributes = [Attribute]
 
 public enum DirectoryString: Codable, Hashable {
     case ia5String(IA5String<String>)
@@ -139,7 +149,6 @@ public enum GeneralName: Codable {
 }
 
 public typealias GeneralNames = [GeneralName]
-public typealias SkipCerts = Int32
 
 public struct _KeyUsage: OptionSet, Codable {
     public let rawValue: UInt
@@ -180,15 +189,6 @@ public struct AuthorityKeyIdentifier: Codable {
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, Int?>
     var authorityCertSerialNumber: Int?
 }
-
-public struct AuthorityInfoAccess: Codable {
-    var accessMethod: ObjectIdentifier
-    var accessLocation: GeneralName
-}
-
-public typealias AuthorityInfoAccessSyntax = [AuthorityInfoAccess]
-
-//CRLDistributionPointsOID
 
 public struct _DistributionPointReasonFlags: OptionSet, Codable {
     public let rawValue: UInt
@@ -258,6 +258,15 @@ public struct PolicyInformation: Codable {
 
 typealias CertificatePolicies = [PolicyInformation]
 
+public typealias SkipCerts = Int32
+
+public struct AuthorityInfoAccess: Codable {
+    var accessMethod: ObjectIdentifier
+    var accessLocation: GeneralName
+}
+
+public typealias AuthorityInfoAccessSyntax = [AuthorityInfoAccess]
+
 public let SubjectDirectoryAttributesOID = ObjectIdentifier(rawValue: "2.5.29.9")!
 public let KeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.15")!
 public let ExtKeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.37")!
@@ -272,6 +281,7 @@ public let AuthorityInfoAccessOID = ObjectIdentifier(rawValue: "1.3.6.1.5.5.7.1.
 
 public struct Extension: ASN1ObjectSetOctetStringCodable {
     public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
+        SubjectDirectoryAttributesOID : SubjectDirectoryAttributes.self,
         KeyUsageOID : KeyUsage.self,
         ExtKeyUsageOID : ExtKeyUsage.self,
         SubjectKeyIdentifierOID : KeyIdentifier.self,
@@ -354,3 +364,6 @@ public struct Certificate: Codable {
     var signatureAlgorithm: AlgorithmIdentifier
     var signatureValue: BitString = BitString()
 }
+
+
+
