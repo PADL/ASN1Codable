@@ -135,7 +135,7 @@ public struct OtherName: ASN1ObjectSetCodable {
 
     @ASN1ObjectSetType
     public var type_id: ObjectIdentifier
-    
+
     public var value: ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, ASN1ObjectSetValue>
 }
 
@@ -365,6 +365,3 @@ public struct Certificate: Codable {
     var signatureAlgorithm: AlgorithmIdentifier
     var signatureValue: BitString = BitString()
 }
-
-
-

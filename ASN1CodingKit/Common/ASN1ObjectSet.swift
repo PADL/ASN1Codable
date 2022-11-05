@@ -109,8 +109,7 @@ public struct ASN1AnyObjectSetValue: Codable, Hashable {
     }
     
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(wrappedValue)
+        try wrappedValue.encode(to: encoder)
     }
     
     public init(from decoder: Decoder) throws {
