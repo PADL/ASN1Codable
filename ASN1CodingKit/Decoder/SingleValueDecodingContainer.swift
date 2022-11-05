@@ -222,6 +222,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         if object.constructed {
             // FIXME something is very wrong here
             if tagging == .implicit && !ASN1DecodingContext.isEnum(type) {
+                // FIXME propagate save
                 unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
             } else {
                 guard let items = object.data.items, items.count == 1, let firstObject = object.data.items!.first else {
@@ -233,8 +234,8 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             }
         } else if innerTag.isUniversal {
             if tagging == .implicit {
-                unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
                 // FIXME propagate save
+                unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
             } else {
                 unwrappedObject = object
             }
@@ -283,7 +284,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
 
 // meaningless but allows us to conform to the rest of the protocol
 extension ASN1DecoderImpl.SingleValueContainer {
-    var currentObject: ASN1Object {
+    func currentObject() throws -> ASN1Object {
         return self.object
     }
     

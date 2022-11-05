@@ -184,6 +184,10 @@ public struct AuthorityInfoAccess: Codable {
 
 public typealias AuthorityInfoAccessSyntax = [AuthorityInfoAccess]
 
+//typealias AttributeSet =
+//typealias SubjectDirectoryAttributes = [AttributeSet]
+
+public let SubjectDirectoryAttributesOID = ObjectIdentifier(rawValue: "2.5.29.9")!
 public let KeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.15")!
 public let ExtKeyUsageOID = ObjectIdentifier(rawValue: "2.5.29.37")!
 public let SubjectKeyIdentifierOID = ObjectIdentifier(rawValue: "2.5.29.14")!

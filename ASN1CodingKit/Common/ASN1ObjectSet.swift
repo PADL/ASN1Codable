@@ -76,7 +76,6 @@ public struct ASN1OctetStringObjectSetValue: Codable {
             if let type = objectSetDecodingContext.type(decoder) {
                 do {
                     value = try innerDecoder.decode(type, from: berData)
-                    debugPrint("Decoded object set \(type) to \(value)")
                 } catch {
                     debugPrint("Failed to decode object set of type \(type) for OID \(oid): \(error)")
                     throw error
@@ -119,7 +118,6 @@ public struct ASN1ObjectSetValue: Codable {
                 do {
                     let container = try decoder.singleValueContainer()
                     let value = try container.decode(type)
-                    debugPrint("Decoded object set \(type) to \(value)")
                     self.wrappedValue = value
                 } catch {
                     debugPrint("Failed to decode object set of type \(type) for OID \(String(describing: objectSetDecodingContext.oid)): \(error)")

@@ -102,7 +102,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
             object = self.object
         } else {
             try self.validateCurrentIndex()
-            object = self.currentObject
+            object = try self.currentObject()
         }
         
         try self.context.validateObject(object, codingPath: self.codingPath)
@@ -136,9 +136,10 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
         try self.validateCurrentIndex()
-        try self.context.validateObject(self.currentObject, container: true, codingPath: self.codingPath)
+        let currentObject = try self.currentObject()
+        try self.context.validateObject(currentObject, container: true, codingPath: self.codingPath)
 
-        let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: self.currentObject,
+        let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: currentObject,
                                                                       codingPath: self.nestedCodingPath,
                                                                       userInfo: self.userInfo,
                                                                       context: self.context.decodingNestedContainer())
@@ -151,9 +152,10 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     
     func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
         try self.validateCurrentIndex()
-        try self.context.validateObject(self.currentObject, container: true, codingPath: self.codingPath)
+        let currentObject = try self.currentObject()
+        try self.context.validateObject(currentObject, container: true, codingPath: self.codingPath)
 
-        let container = try ASN1DecoderImpl.UnkeyedContainer(object: self.currentObject,
+        let container = try ASN1DecoderImpl.UnkeyedContainer(object: currentObject,
                                                              codingPath: self.nestedCodingPath,
                                                              userInfo: self.userInfo,
                                                              context: self.context.decodingNestedContainer())

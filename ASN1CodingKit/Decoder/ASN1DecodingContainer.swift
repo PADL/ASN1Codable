@@ -20,12 +20,12 @@ import ASN1Kit
 protocol ASN1DecodingContainer {
     var object: ASN1Object { get }
     var context: ASN1DecodingContext { get set }
-    var currentObject: ASN1Object { get }
+    func currentObject() throws -> ASN1Object 
     var currentIndex: Int { get }
 }
 
 extension ASN1DecodingContainer {
-    var currentObject: ASN1Object {
+    func currentObject() throws -> ASN1Object {
         if self.context.enumCodingState != .none || self.object.isNull {
             return self.object
         } else {
