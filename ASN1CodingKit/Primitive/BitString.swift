@@ -74,12 +74,12 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, ASN1Coda
         self.wrappedValue = try Data(from: decoder)
     }
     
-    // FIXME use BinaryInteger
-    fileprivate init(from fixedWidthInteger: any FixedWidthInteger) throws {
+    fileprivate init(from binaryInteger: any BinaryInteger) throws {
         // FIXME should not round to byte bounary
-        let integer = Swift.withUnsafeBytes(of: Int(fixedWidthInteger).bigEndian) { Data($0) }
-        self.wrappedValue = integer.advanced(by: integer.count - fixedWidthInteger.bitWidth / 8)
+        let integer = Swift.withUnsafeBytes(of: Int(binaryInteger).bigEndian) { Data($0) }
+        self.wrappedValue = integer.advanced(by: integer.count - binaryInteger.bitWidth / 8)
     }
+
 }
 
 extension BitString: ASN1UniversalTagRepresentable {

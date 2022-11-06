@@ -148,7 +148,7 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     }
     
     func encode<T: Encodable>(_ value: T) throws {
-        self.context.encodingSingleValue(value) // FIXME
+        self.context = self.context.encodingSingleValue(value) // FIXME
 
         return try self.mappingASN1Error(value) {
             self.object = try encode(value)
