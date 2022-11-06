@@ -80,7 +80,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
                   guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
                       return false
                   }
-                  
+
                   return Self.tag(for: fieldType) == object.tag
               }) else {
             return nil

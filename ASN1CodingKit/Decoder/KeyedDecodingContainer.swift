@@ -52,8 +52,12 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             return items.count
         })
     }
+
+    private var isEmptySequence: Bool {
+        return self.object.constructed && self.object.data.items?.count == 0
+    }
     
-    var isAtEnd: Bool {
+    private var isAtEnd: Bool {
         guard let count = self.count else {
             return true
         }
@@ -64,13 +68,13 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     private func validateCurrentIndex() throws {
         if !self.object.constructed && self.context.enumCodingState == .none && !self.object.isNull {
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Expected constructed object")
+                                                debugDescription: "Keyed container expected constructed object")
             throw DecodingError.dataCorrupted(context)
         }
 
-        if self.isAtEnd {
+        if !self.isEmptySequence, self.isAtEnd {
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Already at end of ASN.1 object")
+                                                debugDescription: "Keyed container already at end of ASN.1 object")
             throw DecodingError.dataCorrupted(context)
         }
     }
@@ -110,21 +114,23 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return self.containers.keys.contains(key.stringValue)
     }
     
-    private func _currentObject(_ type: Decodable.Type?) throws -> ASN1Object {
+    private func currentObject(_ type: Decodable.Type?) throws -> ASN1Object {
         let object: ASN1Object
         
-        // if we've reached the end of the SEQUENCE or SET, we still need to initialise
-        // the remaining wrapped objects; pad the object set with null instances.
-        if self.isAtEnd {
+        if self.context.enumCodingState == .enumCase {
+            object = self.object
+            /*
+        } else if let type = type,
+           ASN1DecodingContext.enumTypeHasMember(type, tag: self.object.tag, tagging: .implicit) {
+            object = self.object
+             */
+        } else if self.isAtEnd {
+            // if we've reached the end of the SEQUENCE or SET, we still need to initialise
+            // the remaining wrapped objects; pad the object set with null instances.
             object = ASN1NullObject
         } else {
-            if let type = type,
-               ASN1DecodingContext.enumTypeHasMember(type, tag: self.object.tag, tagging: .implicit) {
-                object = self.object
-            } else {
-                object = try self.currentObject()
-            }
-
+            // return object at current index
+            object = try self.currentObject()
             try self.validateCurrentIndex()
             try self.context.validateObject(object, codingPath: self.codingPath)
         }
@@ -132,10 +138,10 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return object
     }
         
-    private func _decodingKeyedSingleValue<T>(_ type: T.Type?,
-                                              forKey key: Key,
-                                              object: ASN1Object,
-                                              _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
+    private func decodingKeyedSingleValue<T>(_ type: T.Type?,
+                                             forKey key: Key,
+                                             object: ASN1Object,
+                                             _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
         var decoded: Bool = false
         let container = self.nestedSingleValueContainer(object,
                                                         forKey: key,
@@ -152,31 +158,31 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
     
     func decodeNil(forKey key: Key) throws -> Bool {
-        let object = try self._currentObject(nil)
+        let object = try self.currentObject(nil)
         
-        return try _decodingKeyedSingleValue(nil, forKey: key, object: object) { container in
+        return try decodingKeyedSingleValue(nil, forKey: key, object: object) { container in
             return container.decodeNil()
         }
     }
     
     func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
-        let object = try self._currentObject(type)
+        let object = try self.currentObject(type)
 
-        if object.isNull || (object.constructed && object.data.items?.count == 0) {
+        if object.isNull {
             // FIXME set self.containers
             self.currentIndex += 1
             return nil
         }
-        
-        return try _decodingKeyedSingleValue(type, forKey: key, object: object) { container in
+
+        return try decodingKeyedSingleValue(type, forKey: key, object: object) { container in
             return try container.decode(type)
         }
     }
 
     func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
-        let object = try self._currentObject(type)
+        let object = try self.currentObject(type)
 
-        return try _decodingKeyedSingleValue(type, forKey: key, object: object) { container in
+        return try decodingKeyedSingleValue(type, forKey: key, object: object) { container in
             return try container.decode(type)
         }
     }

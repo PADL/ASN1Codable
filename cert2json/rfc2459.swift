@@ -331,7 +331,7 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
     var signature: AlgorithmIdentifier
     var issuer: Name
     var validity: Validity
-    var subject: Name?
+    var subject: Name
     var subjectPublicKeyInfo: SubjectPublicKeyInfo
     
     @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, BitString?>

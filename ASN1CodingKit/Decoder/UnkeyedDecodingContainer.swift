@@ -79,10 +79,10 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 
     private func validateCurrentIndex() throws {
         if !self.object.constructed && self.context.enumCodingState == .none {
-            throw DecodingError.dataCorruptedError(in: self, debugDescription: "Expected constructed object")
+            throw DecodingError.dataCorruptedError(in: self, debugDescription: "Unkeyed container expected constructed object")
         }
         if self.isAtEnd {
-            throw DecodingError.dataCorruptedError(in: self, debugDescription: "Already at end of ASN.1 object")
+            throw DecodingError.dataCorruptedError(in: self, debugDescription: "Unkeyed container already at end of ASN.1 object")
         }
     }
     
@@ -95,7 +95,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         return container
     }
     
-    private func _currentObject(_ type: Decodable.Type?) throws -> ASN1Object {
+    private func currentObject(_ type: Decodable.Type?) throws -> ASN1Object {
         let object: ASN1Object
         
         // if we've reached the end of the SEQUENCE or SET, we still need to initialise
@@ -116,9 +116,9 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         return object
     }
 
-    private func _decodingUnkeyedSingleValue<T>(_ type: T.Type?,
-                                                object: ASN1Object,
-                                                _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
+    private func decodingUnkeyedSingleValue<T>(_ type: T.Type?,
+                                               object: ASN1Object,
+                                               _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
         var decoded: Bool = false
         let container = self.nestedSingleValueContainer(object,
                                                         context: self.context.decodingSingleValue(type))
@@ -134,33 +134,17 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     func decodeNil() throws -> Bool {
-        let object = try self._currentObject(nil)
+        let object = try self.currentObject(nil)
 
-        return try self._decodingUnkeyedSingleValue(nil, object: object) { container in
+        return try self.decodingUnkeyedSingleValue(nil, object: object) { container in
             return container.decodeNil()
         }
     }
-    
-    /*
-    func decodeIfPresent<T>(_ type: T.Type) throws -> T? where T : Decodable {
-        let object = try self._currentObject(type)
 
-        if object.isNull || (object.constructed && object.data.items?.count == 0) {
-            // FIXME set self.containers
-            self.currentIndex += 1
-            return nil
-        }
-
-        return try self._decodingUnkeyedSingleValue(type, object: object) { container in
-            return try container.decode(type)
-        }
-    }
-     */
-    
     func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
-        let object = try self._currentObject(type)
+        let object = try self.currentObject(type)
 
-        return try self._decodingUnkeyedSingleValue(type, object: object) { container in
+        return try self.decodingUnkeyedSingleValue(type, object: object) { container in
             return try container.decode(type)
         }
     }

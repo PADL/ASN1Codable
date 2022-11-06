@@ -82,19 +82,24 @@ public struct ASN1ObjectSetValue: Codable {
             self.wrappedValue = nil
             return
         }
-        
-        if objectSetDecodingContext.encodeAsOctetString {
-            let berData = try container.decode(Data.self)
-            let innerDecoder = ASN1Decoder()
+
+        defer { decoder.context.objectSetDecodingContext = nil }
+
+        do {
+            if objectSetDecodingContext.encodeAsOctetString {
+                let berData = try container.decode(Data.self)
+                let innerDecoder = ASN1Decoder()
                 
-            self.wrappedValue = try innerDecoder.decode(type, from: berData)
-        } else {
-            let value = try container.decode(type)
-            
-            self.wrappedValue = value
+                self.wrappedValue = try innerDecoder.decode(type, from: berData)
+            } else {
+                let value = try container.decode(type)
+                
+                self.wrappedValue = value
+            }
+        } catch {
+            debugPrint("Failed to decode object set type \(type): \(error)")
+            throw error
         }
-        
-        decoder.context.objectSetDecodingContext = nil
     }
 }
 

@@ -177,6 +177,10 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
             } else {
                 return object.wrap(with: tag, constructed: tagging != .implicit)
             }
+            
+            if tagging == .implicit, ASN1DecodingContext.isEnum(type(of: value)) {
+                debugPrint("Warning: value \(value) is an implicitly encoded enum")
+            }
         }
         
         return object
