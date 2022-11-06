@@ -63,6 +63,7 @@
 		D3D13E8929146B7400218279 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8829146B7400218279 /* Base.swift */; };
 		D3D13E8B29146BBA00218279 /* DecodableDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8A29146BBA00218279 /* DecodableDefault.swift */; };
 		D3FB2D9D29183E2000BC72AF /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2D9C29183E2000BC72AF /* Null.swift */; };
+		D3FB2DA12918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -173,6 +174,7 @@
 		D3D13E8829146B7400218279 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		D3D13E8A29146BBA00218279 /* DecodableDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodableDefault.swift; sourceTree = "<group>"; };
 		D3FB2D9C29183E2000BC72AF /* Null.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Null.swift; sourceTree = "<group>"; };
+		D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1ImplicitlyWrappedObject.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -304,6 +306,7 @@
 				D351DC75290E8AF700540132 /* ASN1EncoderImpl.swift */,
 				D351DC72290E8AF700540132 /* ASN1EncodingContainer.swift */,
 				D33AC5D82910F796003190DC /* ASN1EncodingContext.swift */,
+				D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */,
 				D351DC73290E8AF700540132 /* SingleValueEncodingContainer.swift */,
 				D351DC74290E8AF700540132 /* KeyedEncodingContainer.swift */,
 				D351DC71290E8AF700540132 /* UnkeyedEncodingContainer.swift */,
@@ -554,6 +557,7 @@
 				D351DC93290E8AF700540132 /* KeyedEncodingContainer.swift in Sources */,
 				D33AC5D52910F626003190DC /* ASN1UniversalTagRepresentable.swift in Sources */,
 				D351DC90290E8AF700540132 /* UnkeyedEncodingContainer.swift in Sources */,
+				D3FB2DA12918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift in Sources */,
 				D33AC5D92910F796003190DC /* ASN1EncodingContext.swift in Sources */,
 				D351DC9C290E8AF700540132 /* ASN1PrivateTagged.swift in Sources */,
 				D33AC5DD29120492003190DC /* OptionalProtocol.swift in Sources */,

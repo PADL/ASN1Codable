@@ -166,21 +166,23 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     private func encodeTagged<T: Encodable>(_ value: T, tag: ASN1DecodedTag?, tagging: ASN1Tagging, skipTaggedValues: Bool = false) throws -> ASN1Object? {
         let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
         let tagging = tagging == .default ? self.context.taggingEnvironment : tagging
-
+        
         if let object = object, let tag = tag {
+            let wrappedObject: ASN1Object
+            
             if tag.isUniversal {
                 precondition(value is ASN1EncodableType)
-                return try (value as! ASN1EncodableType).asn1encode(tag: tag)
+                wrappedObject = try (value as! ASN1EncodableType).asn1encode(tag: tag)
             } else if tagging == .implicit, ASN1DecodingContext.isEnum(type(of: value)) {
-                // FIXME something is very wrong here
-                precondition(object.data.items?.count == 1)
-                return object.data.items!.first!.wrap(with: tag, constructed: false)
+                wrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: tag)
             } else {
-                return object.wrap(with: tag, constructed: tagging != .implicit)
+                wrappedObject = object.wrap(with: tag, constructed: tagging != .implicit)
             }
+            
+            return wrappedObject
+        } else {
+            return object
         }
-        
-        return object
     }
     
     private func encodeTaggedValue<T: Encodable & ASN1TaggedType>(_ value: T) throws -> ASN1Object? {
