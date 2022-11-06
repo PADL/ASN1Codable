@@ -80,7 +80,7 @@ extension ASN1DecoderImpl {
         
         // FIXME check non-wrapped optionals? because we need to wrap them to disambiguate in ASN.1
         
-        if let value = value as? any ASN1TaggedProperty {
+        if let value = value as? any ASN1TaggedWrappedValue {
             wrappedValue = value.wrappedValue
         } else {
             wrappedValue = value

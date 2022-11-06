@@ -161,7 +161,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
 
         if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
             value = try self.decodeTaggedValue(type, from: object) as! T
-        } else if let type = type as? any (Decodable & ASN1TaggedProperty).Type {
+        } else if let type = type as? any (Decodable & ASN1TaggedWrappedValue).Type {
             value = try self.decodeTaggedProperty(type, from: object) as! T
         } else if let type = type as? ASN1DecodableType.Type {
             value = try decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
@@ -176,7 +176,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         return try self.decodeTagged(type, from: object, tag: T.tag, tagging: T.tagging, skipTaggedValues: true)
     }
     
-    private func decodeTaggedProperty<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedProperty {
+    private func decodeTaggedProperty<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedWrappedValue {
         let wrappedValue = try self.decodeTagged(type.Value, from: object, tag: T.tag, tagging: T.tagging)
         
         return T(wrappedValue: wrappedValue)

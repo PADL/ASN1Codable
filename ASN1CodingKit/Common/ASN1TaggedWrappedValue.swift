@@ -17,22 +17,22 @@
 import Foundation
 import ASN1Kit
 
-public protocol ASN1TaggedProperty: Codable, ASN1TaggedTypeRepresentable {
+public protocol ASN1TaggedWrappedValue: Codable, ASN1TaggedTypeRepresentable {
     static var tag: ASN1DecodedTag? { get }
     static var tagging: ASN1Tagging { get }
 
     associatedtype Value: Codable
     
     var wrappedValue: Value { get set }
-    var projectedValue: any ASN1TaggedProperty { get }
+    var projectedValue: any ASN1TaggedWrappedValue { get }
 
     init(wrappedValue: Value)
 }
 
-extension ASN1TaggedProperty {
+extension ASN1TaggedWrappedValue {
     public static var tag: ASN1DecodedTag? { return nil }
     
-    public var projectedValue: any ASN1TaggedProperty {
+    public var projectedValue: any ASN1TaggedWrappedValue {
         return self
     }
     
@@ -48,7 +48,7 @@ extension ASN1TaggedProperty {
 }
 
 extension KeyedDecodingContainer {
-    func decode<T: ExpressibleByNilLiteral, U: ASN1TaggedProperty>(_ type: U.Type, forKey key: K) throws -> any ASN1TaggedProperty where U.Value == T {
+    func decode<T: ExpressibleByNilLiteral, U: ASN1TaggedWrappedValue>(_ type: U.Type, forKey key: K) throws -> any ASN1TaggedWrappedValue where U.Value == T {
         if let value = try self.decodeIfPresent(type, forKey: key) {
             return value
         }

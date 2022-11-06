@@ -61,7 +61,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
         
         return metadata.descriptor.fields.records.contains {
               guard let fieldType = metadata.type(of: $0.mangledTypeName),
-                    let wrappedFieldType = fieldType as? any ASN1TaggedProperty.Type else {
+                    let wrappedFieldType = fieldType as? any ASN1TaggedWrappedValue.Type else {
                   return false
               }
             

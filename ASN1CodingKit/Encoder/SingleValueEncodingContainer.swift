@@ -156,8 +156,8 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         
         if !skipTaggedValues, let value = value as? ASN1TaggedType {
             object = try self.encodeTaggedValue(value)
-        } else if let value = value as? any (Encodable & ASN1TaggedProperty) {
-            object = try self.encodeTaggedProperty(value)
+        } else if let value = value as? any (Encodable & ASN1TaggedWrappedValue) {
+            object = try self.encodeTaggedWrappedValue(value)
         } else if let value = value as? ASN1EncodableType {
             object = try self.encodePrimitiveValue(value)
         } else {
@@ -177,12 +177,12 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
             } else {
                 return object.wrap(with: tag, constructed: tagging != .implicit)
             }
-            
-            if tagging == .implicit, ASN1DecodingContext.isEnum(type(of: value)) {
-                debugPrint("Warning: value \(value) is an implicitly encoded enum")
-            }
         }
         
+        if tagging == .implicit, ASN1DecodingContext.isEnum(type(of: value)) {
+            debugPrint("Warning: value \(value) is an implicitly encoded enum")
+        }
+
         return object
     }
     
@@ -190,7 +190,7 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         return try self.encodeTagged(value, tag: T.tag, tagging: T.tagging, skipTaggedValues: true)
     }
     
-    private func encodeTaggedProperty<T: Encodable & ASN1TaggedProperty>(_ value: T) throws -> ASN1Object? {
+    private func encodeTaggedWrappedValue<T: Encodable & ASN1TaggedWrappedValue>(_ value: T) throws -> ASN1Object? {
         return try self.encodeTagged(value.wrappedValue, tag: T.tag, tagging: T.tagging)
     }
     
