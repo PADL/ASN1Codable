@@ -64,6 +64,7 @@
 		D3D13E8B29146BBA00218279 /* DecodableDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8A29146BBA00218279 /* DecodableDefault.swift */; };
 		D3FB2D9D29183E2000BC72AF /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2D9C29183E2000BC72AF /* Null.swift */; };
 		D3FB2DA12918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */; };
+		D3FB2DA72918641900BC72AF /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = D3FB2DA62918641900BC72AF /* Algorithms */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -209,6 +210,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3FB2DA72918641900BC72AF /* Algorithms in Frameworks */,
 				D3D13E7A2913431500218279 /* Commandant in Frameworks */,
 				D3D13E73291342DB00218279 /* ASN1CodingKit.framework in Frameworks */,
 			);
@@ -453,6 +455,7 @@
 			name = cert2json;
 			packageProductDependencies = (
 				D3D13E792913431500218279 /* Commandant */,
+				D3FB2DA62918641900BC72AF /* Algorithms */,
 			);
 			productName = cert2json;
 			productReference = D3D13E6C291342D500218279 /* cert2json */;
@@ -498,6 +501,7 @@
 				D3D13E6529133AB600218279 /* XCRemoteSwiftPackageReference "Echo" */,
 				D3D13E782913431500218279 /* XCRemoteSwiftPackageReference "Commandant" */,
 				D3D13E8029134A2B00218279 /* XCRemoteSwiftPackageReference "Swift-BigInt" */,
+				D3FB2DA52918641900BC72AF /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 			);
 			productRefGroup = D351DC2B290E849200540132 /* Products */;
 			projectDirPath = "";
@@ -1017,6 +1021,14 @@
 				kind = branch;
 			};
 		};
+		D3FB2DA52918641900BC72AF /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1044,6 +1056,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D3D13E8029134A2B00218279 /* XCRemoteSwiftPackageReference "Swift-BigInt" */;
 			productName = BigNumber;
+		};
+		D3FB2DA62918641900BC72AF /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3FB2DA52918641900BC72AF /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

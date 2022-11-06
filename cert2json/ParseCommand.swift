@@ -14,10 +14,9 @@
 // limitations under the License.
 //
 
-import ASN1Kit
 import ASN1CodingKit
 import Commandant
-import DataKit
+import Algorithms
 import Foundation
 
 struct ParseCommand: CommandProtocol {
@@ -83,7 +82,8 @@ struct ParseCommand: CommandProtocol {
                 
                 if options.reencode {
                     print("-----BEGIN CERTIFICATE-----")
-                    print("\(encoded.base64EncodedString())")
+                    let chunks = encoded.base64EncodedString().chunks(ofCount: 64)
+                    chunks.forEach( { print($0) })
                     print("-----END CERTIFICATE-----")
                 }
             }
