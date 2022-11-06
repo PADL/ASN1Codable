@@ -19,7 +19,7 @@ import ASN1Kit
 
 public protocol ASN1TaggedWrappedValue: Codable, ASN1TaggedTypeRepresentable {
     static var tag: ASN1DecodedTag? { get }
-    static var tagging: ASN1Tagging { get }
+    static var tagging: ASN1Tagging? { get }
 
     associatedtype Value: Codable
     

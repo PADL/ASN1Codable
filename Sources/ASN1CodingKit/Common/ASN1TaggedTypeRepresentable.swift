@@ -19,10 +19,10 @@ import ASN1Kit
 
 public protocol ASN1TaggedTypeRepresentable {
     static var tag: ASN1DecodedTag? { get }
-    static var tagging: ASN1Tagging { get }
+    static var tagging: ASN1Tagging? { get }
 }
 
 public extension ASN1TaggedTypeRepresentable {
     static var tag: ASN1DecodedTag? { return nil }
-    static var tagging: ASN1Tagging { return .default }
+    static var tagging: ASN1Tagging? { nil }
 }

@@ -20,7 +20,7 @@ import ASN1Kit
 @propertyWrapper
 public struct ASN1ContextTagged <Tag, Tagging, Value>: Codable, ASN1TaggedWrappedValue where Tag: ASN1TagNumberRepresentable, Tagging: ASN1TaggingRepresentable, Value: Codable {
     public static var tagNumber: Tag.Type { return Tag.self }
-    public static var tagging: ASN1Tagging { return Tagging.tagging }
+    public static var tagging: ASN1Tagging? { return Tagging.tagging }
 
     public var wrappedValue: Value
     

@@ -207,7 +207,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     private func decodeTagged<T>(_ type: T.Type,
                                  from object: ASN1Object,
                                  tag: ASN1DecodedTag?,
-                                 tagging: ASN1Tagging,
+                                 tagging: ASN1Tagging?,
                                  skipTaggedValues: Bool = false) throws -> T where T: Decodable {
         guard let tag = tag else {
             // FIXME should this happen? precondition check?
@@ -227,7 +227,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         }
                 
         let unwrappedObject: ASN1Object
-        let tagging = tagging == .default ? self.context.taggingEnvironment : tagging
+        let tagging = tagging ?? self.context.taggingEnvironment
         let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : tag
         
         if object.constructed {
