@@ -21,7 +21,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     var enumCodingState: ASN1EnumCodingState = .none
     var encodeAsSet = false
     var currentEnumType: Any.Type?
-    var objectSetDecodingContext: ASN1ObjectSetDecodingContext?
+    var objectSetCodingContext: ASN1ObjectSetCodingContext?
 
     static func tag(for type: Any.Type) -> ASN1DecodedTag {
         let type = lookThroughOptional(type)

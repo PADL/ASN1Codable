@@ -14,9 +14,6 @@
 // limitations under the License.
 //
 
-// FIXME this really needs to go so we can be less stateful
-// FIXME should it be a class
-
 import Foundation
 
 enum ASN1EnumCodingState {
@@ -28,6 +25,7 @@ enum ASN1EnumCodingState {
 protocol ASN1CodingContext {
     var enumCodingState: ASN1EnumCodingState { get set }
     var encodeAsSet: Bool { get set }
+    var objectSetCodingContext: ASN1ObjectSetCodingContext? { get set }
 }
 
 extension ASN1CodingContext {

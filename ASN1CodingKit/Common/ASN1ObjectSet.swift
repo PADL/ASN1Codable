@@ -33,9 +33,9 @@ public struct ASN1ObjectSetType: Codable {
         try container.encode(self.wrappedValue)
     
         if let encoder = encoder as? ASN1EncoderImpl,
-           let objectSetEncodingContext = encoder.context.objectSetEncodingContext {
-            precondition(objectSetEncodingContext.oid == nil)
-            objectSetEncodingContext.oid = self.wrappedValue
+           let objectSetCodingContext = encoder.context.objectSetCodingContext {
+            precondition(objectSetCodingContext.oid == nil)
+            objectSetCodingContext.oid = self.wrappedValue
         }
     }
 
@@ -44,9 +44,9 @@ public struct ASN1ObjectSetType: Codable {
         self.wrappedValue = try container.decode(ObjectIdentifier.self)
         
         if let decoder = decoder as? ASN1DecoderImpl,
-           let objectSetDecodingContext = decoder.context.objectSetDecodingContext {
-            precondition(objectSetDecodingContext.oid == nil)
-            objectSetDecodingContext.oid = wrappedValue
+           let objectSetCodingContext = decoder.context.objectSetCodingContext {
+            precondition(objectSetCodingContext.oid == nil)
+            objectSetCodingContext.oid = wrappedValue
         }
     }
 }
@@ -77,12 +77,12 @@ public struct ASN1ObjectSetValue: Codable {
             return
         }
 
-        guard let objectSetEncodingContext = encoder.context.objectSetEncodingContext else {
+        guard let objectSetCodingContext = encoder.context.objectSetCodingContext else {
             return
         }
 
         do {
-            if objectSetEncodingContext.encodeAsOctetString {
+            if objectSetCodingContext.encodeAsOctetString {
                 let innerEncoder = ASN1Encoder()
                 
                 let berData: Data
@@ -114,16 +114,16 @@ public struct ASN1ObjectSetValue: Codable {
             return
         }
         
-        guard let objectSetDecodingContext = decoder.context.objectSetDecodingContext,
-              let type = objectSetDecodingContext.type(decoder) else {
+        guard let objectSetCodingContext = decoder.context.objectSetCodingContext,
+              let type = objectSetCodingContext.type(decoder) else {
             self.wrappedValue = nil
             return
         }
 
-        defer { decoder.context.objectSetDecodingContext = nil }
+        defer { decoder.context.objectSetCodingContext = nil }
 
         do {
-            if objectSetDecodingContext.encodeAsOctetString {
+            if objectSetCodingContext.encodeAsOctetString {
                 let berData = try container.decode(Data.self)
                 let innerDecoder = ASN1Decoder()
                 
@@ -161,7 +161,7 @@ public struct ASN1AnyObjectSetValue: Codable, Hashable {
     }
 }
 
-class ASN1ObjectSetDecodingContext {
+class ASN1ObjectSetCodingContext {
     let objectSetType: ASN1ObjectSetCodable.Type
     var oid: ObjectIdentifier?
     let encodeAsOctetString: Bool
@@ -190,17 +190,6 @@ class ASN1ObjectSetDecodingContext {
             type = nil
         }
         return type
-    }
-}
-
-class ASN1ObjectSetEncodingContext {
-    let objectSetType: ASN1ObjectSetCodable.Type
-    var oid: ObjectIdentifier?
-    let encodeAsOctetString: Bool
-    
-    init(objectSetType: ASN1ObjectSetCodable.Type, encodeAsOctetString: Bool) {
-        self.objectSetType = objectSetType
-        self.encodeAsOctetString = encodeAsOctetString
     }
 }
 

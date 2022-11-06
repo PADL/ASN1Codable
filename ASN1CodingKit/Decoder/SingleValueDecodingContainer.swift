@@ -257,8 +257,8 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         // e.g. should codingKeys represent the tags?
 
         if let type = type as? ASN1ObjectSetCodable.Type {
-            self.context.objectSetDecodingContext = ASN1ObjectSetDecodingContext(objectSetType: type,
-                                                                                 encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
+            self.context.objectSetCodingContext = ASN1ObjectSetCodingContext(objectSetType: type,
+                                                                             encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
         }
 
         let decoder = ASN1DecoderImpl(object: object, codingPath: self.codingPath,

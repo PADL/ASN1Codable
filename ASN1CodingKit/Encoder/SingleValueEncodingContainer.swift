@@ -208,8 +208,8 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         
         if let value = value as? ASN1ObjectSetCodable {
             let type = type(of: value)
-            self.context.objectSetEncodingContext = ASN1ObjectSetEncodingContext(objectSetType: type,
-                                                                                 encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
+            self.context.objectSetCodingContext = ASN1ObjectSetCodingContext(objectSetType: type,
+                                                                             encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
         }
 
         let encoder = ASN1EncoderImpl(codingPath: self.codingPath,
