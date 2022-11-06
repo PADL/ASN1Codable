@@ -174,14 +174,6 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     private func encodeTagged<T: Encodable>(_ value: T, tag: ASN1DecodedTag?, tagging: ASN1Tagging, skipTaggedValues: Bool = false) throws -> ASN1Object? {
         let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
         
-        // FIXME something is very wrong here
-        //if tagging == .implicit && !ASN1DecodingContext.isEnum(type) {
-
-        if tagging == .implicit, ASN1DecodingContext.isEnum(type(of: value)) {
-            debugPrint("Warning: value \(value) is an implicitly encoded enum")
-        }
-
-
         if let object = object, let tag = tag {
             if tag.isUniversal {
                 precondition(value is ASN1EncodableType)
