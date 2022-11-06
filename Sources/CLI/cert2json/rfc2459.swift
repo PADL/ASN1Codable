@@ -26,12 +26,14 @@ public enum Version: Int, Codable {
 
 public typealias CertificateSerialNumber = BInt
 
+public let sha1WithRSAEncryptionOID = ObjectIdentifier(rawValue: "1.2.840.113549.1.1.5")!
 public let sha256WithRSAEncryptionOID = ObjectIdentifier(rawValue: "1.2.840.113549.1.1.11")!
 public let rsaEncryptionOID = ObjectIdentifier(rawValue: "1.2.840.113549.1.1.1")!
 
 public struct AlgorithmIdentifier: ASN1ObjectSetCodable {
     public static let knownTypes: [ObjectIdentifier: Codable.Type] =
-        [sha256WithRSAEncryptionOID : Null.self,
+          [sha1WithRSAEncryptionOID : Null.self,
+         sha256WithRSAEncryptionOID : Null.self,
                    rsaEncryptionOID : Null.self]
 
     @ASN1ObjectSetType
@@ -310,6 +312,7 @@ public let CertificatePoliciesOID = ObjectIdentifier(rawValue: "2.5.29.32")!
 public let AuthorityKeyIdentifierOID = ObjectIdentifier(rawValue: "2.5.29.35")!
 public let InhibitAnyPolicyOID = ObjectIdentifier(rawValue: "2.5.29.54")!
 public let AuthorityInfoAccessOID = ObjectIdentifier(rawValue: "1.3.6.1.5.5.7.1.1")!
+public let NetscapeCertificateCommentOID = ObjectIdentifier(rawValue: "2.16.840.1.113730.1.13")!
 
 public struct Extension: ASN1ObjectSetOctetStringCodable {
     public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
@@ -323,7 +326,8 @@ public struct Extension: ASN1ObjectSetOctetStringCodable {
         CertificatePoliciesOID : CertificatePolicies.self,
         AuthorityKeyIdentifierOID : AuthorityKeyIdentifier.self,
         InhibitAnyPolicyOID : SkipCerts.self,
-        AuthorityInfoAccessOID : AuthorityInfoAccessSyntax.self
+        AuthorityInfoAccessOID : AuthorityInfoAccessSyntax.self,
+        NetscapeCertificateCommentOID : DirectoryString.self
     ]
     
     @ASN1ObjectSetType
