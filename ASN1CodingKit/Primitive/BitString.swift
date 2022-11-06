@@ -78,7 +78,7 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, ASN1Coda
     fileprivate init(from fixedWidthInteger: any FixedWidthInteger) throws {
         // FIXME should not round to byte bounary
         let integer = Swift.withUnsafeBytes(of: Int(fixedWidthInteger).bigEndian) { Data($0) }
-        self.wrappedValue = integer.advanced(by: i.count - fixedWidthInteger.bitWidth / 8)
+        self.wrappedValue = integer.advanced(by: integer.count - fixedWidthInteger.bitWidth / 8)
     }
 }
 
