@@ -159,7 +159,7 @@ public struct ASN1AnyObjectSetValue: Codable, Hashable {
     }
 }
 
-class ASN1ObjectSetCodingContext {
+final class ASN1ObjectSetCodingContext {
     let objectSetType: ASN1ObjectSetCodable.Type
     var oid: ObjectIdentifier?
     let encodeAsOctetString: Bool

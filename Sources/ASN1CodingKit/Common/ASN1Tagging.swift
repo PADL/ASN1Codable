@@ -19,6 +19,7 @@ import Foundation
 public enum ASN1Tagging {
     case explicit
     case implicit
+    case automatic
 }
 
 public protocol ASN1TaggingRepresentable {

@@ -85,7 +85,16 @@ struct ExplicitAutoType: Codable, ASN1ContextTaggedType {
     var name = "John"
     var age = 25
 }
-let automatic = ImplicitAutoType()
+
+struct AutoType: Codable {
+    var name = "John"
+    
+    //@ASN1ContextTagged<ASN1TagNumber$2, ASN1DefaultTagging, Int>
+    var age = 25
+}
+
+
+let automatic: AutoType? = AutoType()
 
 let foobar = Set(["Hello", "World!"])
 
@@ -131,13 +140,16 @@ func test() -> Void {
         
         print("Encoding value: \(valueToEncode)")
         
-        let berData = try ASN1Encoder().encode(valueToEncode)
+        let asn1Encoder = ASN1Encoder()
+        asn1Encoder.taggingEnvironment = .automatic
+        let berData = try asn1Encoder.encode(valueToEncode)
         print("BER: \(berData.toHexString())")
         
         dumpEncodedData(berData)
         
-        let decoder = ASN1Decoder()
-        let value = try decoder.decode(type(of: valueToEncode), from: berData)
+        let asn1Decoder = ASN1Decoder()
+        asn1Decoder.taggingEnvironment = asn1Encoder.taggingEnvironment
+        let value = try asn1Decoder.decode(type(of: valueToEncode), from: berData)
         
         print("Decoded value: \(value)")
         //print("Extensions \(String(describing: value.tbsCertificate.extensions))")

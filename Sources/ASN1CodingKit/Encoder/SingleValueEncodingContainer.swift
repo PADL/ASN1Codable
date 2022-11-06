@@ -153,6 +153,8 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
             object = try self.encodeTaggedValue(value)
         } else if let value = value as? any (Encodable & ASN1TaggedWrappedValue) {
             object = try self.encodeTaggedWrappedValue(value)
+        } else if !skipTaggedValues, self.context.automaticTaggingContext != nil {
+            object = try self.encodeAutomaticallyTaggedValue(value)
         } else if let value = value as? ASN1EncodableType {
             object = try self.encodePrimitiveValue(value)
         } else {
@@ -192,6 +194,12 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         return try self.encodeTagged(value.wrappedValue, tag: T.tag, tagging: T.tagging)
     }
     
+    private func encodeAutomaticallyTaggedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
+        let taggingContext = self.context.automaticTaggingContext!
+        let tag: ASN1DecodedTag = .taggedTag(taggingContext.nextTag())
+        return try self.encodeTagged(value, tag: tag, tagging: .implicit, skipTaggedValues: true)
+    }
+    
     private func encodePrimitiveValue<T: ASN1EncodableType>(_ value: T) throws -> ASN1Object? {
         return try value.asn1encode(tag: nil)
     }
@@ -199,6 +207,12 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     private func encodeConstructedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
         // FIXME sort struct set fields by encoding
         self.context.encodeAsSet = value is Set<AnyHashable> || value is ASN1EncodeAsSetType
+        
+        if self.context.taggingEnvironment == .automatic {
+            self.context.automaticTaggingContext = ASN1AutomaticTaggingContext(type(of: value))
+        } else {
+            self.context.automaticTaggingContext = nil
+        }
         
         if let value = value as? ASN1ObjectSetCodable {
             let type = type(of: value)

@@ -65,6 +65,7 @@
 		D3FB2D9D29183E2000BC72AF /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2D9C29183E2000BC72AF /* Null.swift */; };
 		D3FB2DA12918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */; };
 		D3FB2DA72918641900BC72AF /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = D3FB2DA62918641900BC72AF /* Algorithms */; };
+		D3FB2DAA29187C2800BC72AF /* ASN1AutomaticTaggingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2DA929187C2800BC72AF /* ASN1AutomaticTaggingContext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -176,6 +177,7 @@
 		D3D13E8A29146BBA00218279 /* DecodableDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodableDefault.swift; sourceTree = "<group>"; };
 		D3FB2D9C29183E2000BC72AF /* Null.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Null.swift; sourceTree = "<group>"; };
 		D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1ImplicitlyWrappedObject.swift; sourceTree = "<group>"; };
+		D3FB2DA929187C2800BC72AF /* ASN1AutomaticTaggingContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1AutomaticTaggingContext.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -284,6 +286,7 @@
 		D351DC65290E8AF700540132 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				D3FB2DA929187C2800BC72AF /* ASN1AutomaticTaggingContext.swift */,
 				D351DC68290E8AF700540132 /* ASN1CodingContext.swift */,
 				D351DCB8290EAC2500540132 /* ASN1CodingKit.swift */,
 				D33AC5DE29121744003190DC /* ASN1NullObject.swift */,
@@ -567,6 +570,7 @@
 				D33AC5DF29121744003190DC /* ASN1NullObject.swift in Sources */,
 				D351DC8A290E8AF700540132 /* ASN1PreserveBinary.swift in Sources */,
 				D351DC8F290E8AF700540132 /* ASN1CodingKit.docc in Sources */,
+				D3FB2DAA29187C2800BC72AF /* ASN1AutomaticTaggingContext.swift in Sources */,
 				D3D13E8B29146BBA00218279 /* DecodableDefault.swift in Sources */,
 				D351DC93290E8AF700540132 /* KeyedEncodingContainer.swift in Sources */,
 				D33AC5D52910F626003190DC /* ASN1UniversalTagRepresentable.swift in Sources */,

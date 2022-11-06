@@ -29,6 +29,7 @@ protocol ASN1CodingContext {
     var enumCodingState: ASN1EnumCodingState { get set }
     var encodeAsSet: Bool { get set }
     var objectSetCodingContext: ASN1ObjectSetCodingContext? { get set }
+    var automaticTaggingContext: ASN1AutomaticTaggingContext? { get set }
 }
 
 extension ASN1CodingContext {

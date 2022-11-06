@@ -25,6 +25,7 @@ struct ASN1EncodingContext: ASN1CodingContext {
     var enumCodingState: ASN1EnumCodingState = .none
     var encodeAsSet = false
     var objectSetCodingContext: ASN1ObjectSetCodingContext?
+    var automaticTaggingContext: ASN1AutomaticTaggingContext?
 
     private static func isEnum<T>(_ value: T) -> Bool {
         let reflection = Mirror(reflecting: value)
