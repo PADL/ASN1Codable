@@ -13,7 +13,7 @@
 		D33AC5DD29120492003190DC /* OptionalProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5DC29120492003190DC /* OptionalProtocol.swift */; };
 		D33AC5DF29121744003190DC /* ASN1NullObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5DE29121744003190DC /* ASN1NullObject.swift */; };
 		D351DC35290E849200540132 /* ASN1CodingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1CodingKit.framework */; };
-		D351DC3A290E849200540132 /* ASN1CodingKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC39290E849200540132 /* ASN1CodingKitTests.swift */; };
+		D351DC3A290E849200540132 /* ASN1CodingKitTests in Sources */ = {isa = PBXBuildFile; fileRef = D351DC39290E849200540132 /* ASN1CodingKitTests */; };
 		D351DC61290E8AAF00540132 /* RDNSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC5C290E8AAF00540132 /* RDNSequence.swift */; };
 		D351DC62290E8AAF00540132 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC5E290E8AAF00540132 /* main.swift */; };
 		D351DC63290E8AAF00540132 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC5F290E8AAF00540132 /* Helpers.swift */; };
@@ -131,7 +131,7 @@
 		D33AC5DE29121744003190DC /* ASN1NullObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1NullObject.swift; sourceTree = "<group>"; };
 		D351DC2A290E849200540132 /* ASN1CodingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASN1CodingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC34290E849200540132 /* ASN1CodingKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ASN1CodingKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D351DC39290E849200540132 /* ASN1CodingKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1CodingKitTests.swift; sourceTree = "<group>"; };
+		D351DC39290E849200540132 /* ASN1CodingKitTests */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ASN1CodingKitTests; path = ../Tests/ASN1CodingKitTests; sourceTree = "<group>"; };
 		D351DC4B290E8A4A00540132 /* certtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = certtest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC5B290E8AAF00540132 /* rfc2459.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = rfc2459.swift; sourceTree = "<group>"; };
 		D351DC5C290E8AAF00540132 /* RDNSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RDNSequence.swift; sourceTree = "<group>"; };
@@ -222,10 +222,9 @@
 		D351DC20290E849200540132 = {
 			isa = PBXGroup;
 			children = (
+				D3FB2DA8291866F800BC72AF /* CLI */,
 				D351DC2C290E849200540132 /* ASN1CodingKit */,
 				D351DC38290E849200540132 /* ASN1CodingKitTests */,
-				D351DC4C290E8A4A00540132 /* certtest */,
-				D3D13E6D291342D500218279 /* cert2json */,
 				D351DC2B290E849200540132 /* Products */,
 				D351DC44290E898300540132 /* Frameworks */,
 			);
@@ -252,13 +251,14 @@
 				D351DC78290E8AF700540132 /* Primitive */,
 				D351DC7E290E8AF700540132 /* PropertyWrappers */,
 			);
-			path = ASN1CodingKit;
+			name = ASN1CodingKit;
+			path = Sources/ASN1CodingKit;
 			sourceTree = "<group>";
 		};
 		D351DC38290E849200540132 /* ASN1CodingKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				D351DC39290E849200540132 /* ASN1CodingKitTests.swift */,
+				D351DC39290E849200540132 /* ASN1CodingKitTests */,
 			);
 			path = ASN1CodingKitTests;
 			sourceTree = "<group>";
@@ -363,6 +363,16 @@
 				D351DC5B290E8AAF00540132 /* rfc2459.swift */,
 			);
 			path = cert2json;
+			sourceTree = "<group>";
+		};
+		D3FB2DA8291866F800BC72AF /* CLI */ = {
+			isa = PBXGroup;
+			children = (
+				D351DC4C290E8A4A00540132 /* certtest */,
+				D3D13E6D291342D500218279 /* cert2json */,
+			);
+			name = CLI;
+			path = Sources/CLI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -583,7 +593,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D351DC3A290E849200540132 /* ASN1CodingKitTests.swift in Sources */,
+				D351DC3A290E849200540132 /* ASN1CodingKitTests in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
