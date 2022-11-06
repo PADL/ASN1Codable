@@ -122,7 +122,9 @@ extension DecodableDefault.Wrapper: Hashable where Value: Hashable {}
 
 extension DecodableDefault.Wrapper: Encodable where Value: Encodable {
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(wrappedValue)
+        if !self.isDefaultValue {
+            var container = encoder.singleValueContainer()
+            try container.encode(wrappedValue)
+        }
     }
 }

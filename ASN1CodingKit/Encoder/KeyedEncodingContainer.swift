@@ -53,10 +53,18 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
         try container.encodeNil()
     }
     
+    func encodeIfPresent<T>(_ value: T?, forKey key: Key) throws where T : Encodable {
+        var container = self.nestedSingleValueContainer(forKey: key, context: context.encodingSingleValue(value))
+
+        if let value = value {
+            try container.encode(value)
+        } else {
+            try container.encodeNil()
+        }
+    }
+    
     func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
-        var context = ASN1EncodingContext()
-        context.encodingSingleValue(value)
-        var container = self.nestedSingleValueContainer(forKey: key, context: context)
+        var container = self.nestedSingleValueContainer(forKey: key, context: context.encodingSingleValue(value))
         try container.encode(value)
     }
     

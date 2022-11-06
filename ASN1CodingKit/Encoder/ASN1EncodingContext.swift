@@ -21,18 +21,23 @@ import ASN1Kit
 struct ASN1EncodingContext: ASN1CodingContext {
     var enumCodingState: ASN1EnumCodingState = .none
     var encodeAsSet = false
-    
+    var objectSetEncodingContext: ASN1ObjectSetEncodingContext?
+
     private static func isEnum<T>(_ value: T) -> Bool {
         let reflection = Mirror(reflecting: value)
         return reflection.displayStyle == .enum
     }
 
-    mutating func encodingSingleValue<T>(_ value: T) {
+    func encodingSingleValue<T>(_ value: T) -> Self {
+        var context = self
+
         if Self.isEnum(value) {
-            self.enumCodingState = .enum
+            context.enumCodingState = .enum
         } else {
-            self.enumCodingState = .none
+            context.enumCodingState = .none
         }
+        
+        return context
     }
     
     mutating func encodingNestedContainer() {

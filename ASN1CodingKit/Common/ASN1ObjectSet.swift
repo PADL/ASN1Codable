@@ -30,7 +30,13 @@ public struct ASN1ObjectSetType: Codable {
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(wrappedValue)
+        try container.encode(self.wrappedValue)
+    
+        if let encoder = encoder as? ASN1EncoderImpl,
+           let objectSetEncodingContext = encoder.context.objectSetEncodingContext {
+            precondition(objectSetEncodingContext.oid == nil)
+            objectSetEncodingContext.oid = self.wrappedValue
+        }
     }
 
     public init(from decoder: Decoder) throws {
@@ -62,10 +68,41 @@ public struct ASN1ObjectSetValue: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         
-        if let wrappedValue = self.wrappedValue {
-            try container.encode(wrappedValue)
-        } else {
-            try container.encodeNil()
+        guard let encoder = encoder as? ASN1EncoderImpl else {
+            if let wrappedValue = self.wrappedValue {
+                try container.encode(AnyCodable(wrappedValue))
+            } else {
+                try container.encodeNil()
+            }
+            return
+        }
+
+        guard let objectSetEncodingContext = encoder.context.objectSetEncodingContext else {
+            return
+        }
+
+        do {
+            if objectSetEncodingContext.encodeAsOctetString {
+                let innerEncoder = ASN1Encoder()
+                
+                let berData: Data
+                if let wrappedValue = self.wrappedValue {
+                    berData = try innerEncoder.encode(wrappedValue)
+                } else {
+                    berData = Data() // XXX honour NULL encoding preference
+                }
+
+                try container.encode(berData)
+            } else {
+                if let wrappedValue = self.wrappedValue {
+                    try container.encode(wrappedValue)
+                } else {
+                    try container.encodeNil()
+                }
+            }
+        } catch {
+            debugPrint("Failed to encode object set value \(String(describing: self.wrappedValue)): \(error)")
+            throw error
         }
     }
 
@@ -153,6 +190,17 @@ class ASN1ObjectSetDecodingContext {
             type = nil
         }
         return type
+    }
+}
+
+class ASN1ObjectSetEncodingContext {
+    let objectSetType: ASN1ObjectSetCodable.Type
+    var oid: ObjectIdentifier?
+    let encodeAsOctetString: Bool
+    
+    init(objectSetType: ASN1ObjectSetCodable.Type, encodeAsOctetString: Bool) {
+        self.objectSetType = objectSetType
+        self.encodeAsOctetString = encodeAsOctetString
     }
 }
 

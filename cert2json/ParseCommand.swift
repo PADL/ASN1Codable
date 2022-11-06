@@ -78,8 +78,12 @@ struct ParseCommand: CommandProtocol {
             print("\(jsonData)")
 
             let encoder2 = ASN1Encoder()
+            //encoder2.userInfo[CodingUserInfoKey.ASN1EncodeNilAsNull] = true
             let encoded = try encoder2.encode(cert)
-            
+            print("-----BEGIN CERTIFICATE-----")
+            print("\(encoded.base64EncodedString())")
+            print("-----END CERTIFICATE-----")
+
             return .success(())
         } catch let error {
             return .failure(.decodingError(error))

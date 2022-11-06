@@ -75,9 +75,7 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
     }
     
     func encode<T>(_ value: T) throws where T : Encodable {
-        var context = ASN1EncodingContext()
-        context.encodingSingleValue(value)
-        var container = self.nestedSingleValueContainer(context: context)
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
     
