@@ -48,6 +48,7 @@ public struct TPMSpecification: Codable {
     var level: Int32
     var revision: Int32
 }
+
 public let TPMSpecificationOID = ObjectIdentifier(rawValue: "2.23.133.2.16")!
 
 public struct AttributeTypeAndValue: Codable, Hashable {
@@ -116,6 +117,7 @@ public struct PrincipalName: Codable {
     @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, [GeneralString<String>]>
     var name_string: [GeneralString<String>] = []
 }
+
 public struct KRB5PrincipalName: Codable {
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Realm>
     var realm: GeneralString<String> = GeneralString<String>(wrappedValue: "")
