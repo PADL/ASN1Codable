@@ -1,6 +1,7 @@
 .DS_Store
 /.build
 *.xcarchive/
+xcshareddata/
 /Packages
 
 # Generated documentation
@@ -95,3 +96,5 @@ iOSInjectionProject/
 devops
 
 Cartfile.resolved
+*.swo
+*.swp
