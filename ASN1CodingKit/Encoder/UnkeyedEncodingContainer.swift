@@ -59,12 +59,16 @@ extension ASN1EncoderImpl {
 }
 
 extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
+    private func addContainer(_ container: ASN1EncodingContainer) {
+        self.containers.append(container)
+    }
+
     func nestedUnkeyedContainer() -> UnkeyedEncodingContainer {
         let container = ASN1EncoderImpl.UnkeyedContainer(codingPath: self.nestedCodingPath,
                                                          userInfo: self.userInfo,
                                                          context: self.context)
         container.context.encodingNestedContainer()
-        self.containers.append(container)
+        self.addContainer(container)
         
         return container
     }
@@ -81,7 +85,7 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
     
     private func nestedSingleValueContainer(context: ASN1EncodingContext) -> SingleValueEncodingContainer {
         let container = ASN1EncoderImpl.SingleValueContainer(codingPath: self.nestedCodingPath, userInfo: self.userInfo, context: context)
-        self.containers.append(container)
+        self.addContainer(container)
 
         return container
     }
@@ -91,7 +95,8 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
                                                                   userInfo: self.userInfo,
                                                                   context: self.context)
         container.context.encodingNestedContainer()
-        self.containers.append(container)
+        self.addContainer(container)
+        
         return KeyedEncodingContainer(container)
     }
     

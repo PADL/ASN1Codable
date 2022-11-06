@@ -114,16 +114,11 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return self.containers.keys.contains(key.stringValue)
     }
     
-    private func currentObject(_ type: Decodable.Type?) throws -> ASN1Object {
+    private func currentObject(for type: Decodable.Type?) throws -> ASN1Object {
         let object: ASN1Object
         
         if self.context.enumCodingState == .enumCase {
             object = self.object
-            /*
-        } else if let type = type,
-           ASN1DecodingContext.enumTypeHasMember(type, tag: self.object.tag, tagging: .implicit) {
-            object = self.object
-             */
         } else if self.isAtEnd {
             // if we've reached the end of the SEQUENCE or SET, we still need to initialise
             // the remaining wrapped objects; pad the object set with null instances.
@@ -137,6 +132,11 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
         return object
     }
+    
+    private func addContainer(_ container: ASN1DecodingContainer, forKey key: Key) {
+        self.containers[key.stringValue] = container
+        self.currentIndex += 1
+    }
         
     private func decodingKeyedSingleValue<T>(_ type: T.Type?,
                                              forKey key: Key,
@@ -147,18 +147,17 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
 
-        let value = try ASN1DecoderImpl._decodingSingleValue(type, container: container, decoded: &decoded, block: block)
+        let value = try ASN1DecoderImpl.decodingSingleValue(type, container: container, decoded: &decoded, block: block)
         
         if decoded {
-            self.containers[key.stringValue] = container
-            self.currentIndex += 1
+            self.addContainer(container, forKey: key)
         }
         
         return value
     }
     
     func decodeNil(forKey key: Key) throws -> Bool {
-        let object = try self.currentObject(nil)
+        let object = try self.currentObject(for: nil)
         
         return try decodingKeyedSingleValue(nil, forKey: key, object: object) { container in
             return container.decodeNil()
@@ -166,7 +165,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
     
     func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
-        let object = try self.currentObject(type)
+        let object = try self.currentObject(for: type)
 
         if object.isNull {
             // FIXME set self.containers
@@ -180,7 +179,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
-        let object = try self.currentObject(type)
+        let object = try self.currentObject(for: type)
 
         return try decodingKeyedSingleValue(type, forKey: key, object: object) { container in
             return try container.decode(type)
@@ -196,8 +195,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                                                       codingPath: self.nestedCodingPath(forKey: key),
                                                                       userInfo: self.userInfo,
                                                                       context: self.context.decodingNestedContainer())
-        self.containers[key.stringValue] = container
-        self.currentIndex += 1
+        
+        self.addContainer(container, forKey: key)
 
         return KeyedDecodingContainer(container)
     }
@@ -211,8 +210,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                                              codingPath: self.nestedCodingPath(forKey: key),
                                                              userInfo: self.userInfo,
                                                              context: self.context.decodingNestedContainer())
-        self.containers[key.stringValue] = container
-        self.currentIndex += 1
+
+        self.addContainer(container, forKey: key)
 
         return container
     }

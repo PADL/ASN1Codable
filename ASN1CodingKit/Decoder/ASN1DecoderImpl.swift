@@ -86,7 +86,7 @@ extension ASN1DecoderImpl: Decoder {
 }
 
 extension ASN1DecoderImpl {
-    private static func _isNilOrWrappedNil<T>(_ value: T) -> Bool where T : Decodable {
+    private static func isNilOrWrappedNil<T>(_ value: T) -> Bool where T : Decodable {
         let wrappedValue: any Decodable
         
         // FIXME check non-wrapped optionals? because we need to wrap them to disambiguate in ASN.1
@@ -106,7 +106,7 @@ extension ASN1DecoderImpl {
         }
     }
     
-    private static func _isDefaultValue<T>(_ value: T) -> Bool where T : Decodable {
+    private static func isDefaultValue<T>(_ value: T) -> Bool where T : Decodable {
         guard let value = value as? DecodableDefaultRepresentable else {
             return false
         }
@@ -114,7 +114,7 @@ extension ASN1DecoderImpl {
         return value.isDefaultValue
     }
     
-    static func _decodingSingleValue<T>(_ type: T.Type?,
+    static func decodingSingleValue<T>(_ type: T.Type?,
                                         container: ASN1DecoderImpl.SingleValueContainer,
                                         decoded: inout Bool,
                                         block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
@@ -123,7 +123,7 @@ extension ASN1DecoderImpl {
         do {
             let value = try block(container)
             
-            if !_isNilOrWrappedNil(value) && !_isDefaultValue(value) {
+            if !self.isNilOrWrappedNil(value) && !self.isDefaultValue(value) {
                 decoded = true
             }
 

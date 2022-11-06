@@ -39,12 +39,16 @@ extension ASN1EncoderImpl {
 }
 
 extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
+    private func addContainer(_ container: ASN1EncodingContainer) {
+        self.containers.append(container)
+    }
+    
     private func nestedSingleValueContainer(forKey key: Key,
                                             context: ASN1EncodingContext) -> SingleValueEncodingContainer {
         let container = ASN1EncoderImpl.SingleValueContainer(codingPath: self.nestedCodingPath(forKey: key),
                                                              userInfo: self.userInfo,
                                                              context: context)
-        self.containers.append(container)
+        self.addContainer(container)
         return container
     }
     
@@ -73,7 +77,7 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
                                                          userInfo: self.userInfo,
                                                          context: self.context)
         container.context.encodingNestedContainer()
-        self.containers.append(container)
+        self.addContainer(container)
 
         return container
     }
@@ -84,7 +88,7 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
                                                                   userInfo: self.userInfo,
                                                                   context: self.context)
         container.context.encodingNestedContainer()
-        self.containers.append(container)
+        self.addContainer(container)
 
         return KeyedEncodingContainer(container)
     }
