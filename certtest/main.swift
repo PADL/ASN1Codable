@@ -99,9 +99,9 @@ func test() -> Void {
     let generalNames = [generalName]
 
     let inhibitAnyPolicy = Extension(extnID: InhibitAnyPolicyOID,
-                                     extnValue: SkipCerts(1))
+                                     extnValue: ASN1ObjectSetValue(wrappedValue: SkipCerts(1)))
     let subjectAltName = Extension(extnID: SubjectAltNameOID,
-                                   extnValue: generalNames)
+                                   extnValue: ASN1ObjectSetValue(wrappedValue: generalNames))
     
     let extensions = [inhibitAnyPolicy, subjectAltName]
     t.extensions = extensions
