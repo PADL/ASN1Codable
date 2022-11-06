@@ -108,17 +108,17 @@ public typealias Realm = GeneralString<String>
 public typealias NAME_TYPE = Int
 
 public struct PrincipalName: Codable {
-    @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, NAME_TYPE>
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, NAME_TYPE>
     var name_type: NAME_TYPE = 0
     
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1AutomaticTagging, [GeneralString<String>]>
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, [GeneralString<String>]>
     var name_string: [GeneralString<String>] = []
 }
 public struct KRB5PrincipalName: Codable {
-    @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, Realm>
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Realm>
     var realm: GeneralString<String> = GeneralString<String>(wrappedValue: "")
 
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1AutomaticTagging, PrincipalName>
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, PrincipalName>
     var principalName: PrincipalName = PrincipalName()
 }
 
@@ -136,7 +136,7 @@ public struct OtherName: ASN1ObjectSetCodable {
     @ASN1ObjectSetType
     public var type_id: ObjectIdentifier
 
-    public var value: ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, ASN1ObjectSetValue>
+    public var value: ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, ASN1ObjectSetValue>
 }
 
 public enum GeneralName: Codable {
@@ -325,7 +325,7 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
         case extensions
     }
     
-    @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, Version?>
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Version?>
     var version: Version?
     var serialNumber: CertificateSerialNumber
     var signature: AlgorithmIdentifier

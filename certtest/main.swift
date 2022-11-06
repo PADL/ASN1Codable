@@ -20,32 +20,32 @@ import ASN1CodingKit
 public struct TestStruct: Codable, ASN1TaggedType, ASN1EncodeAsSetType {
     public static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self
 
-    @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, Int>
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>
     public var version: Int = 1
 
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1AutomaticTagging, Data>
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, Data>
     public var data: Data = Data()
     
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString>
     var bitString = BitString([0x02, 0x03, 0xcc])
 
-    @ASN1ContextTagged<ASN1TagNumber$3, ASN1AutomaticTagging, UTCTime>
+    @ASN1ContextTagged<ASN1TagNumber$3, ASN1DefaultTagging, UTCTime>
     @UTCTime
     public var utcTime = Date()
 
-    @ASN1ContextTagged<ASN1TagNumber$4, ASN1AutomaticTagging, PrintableString<String>>
+    @ASN1ContextTagged<ASN1TagNumber$4, ASN1DefaultTagging, PrintableString<String>>
     @PrintableString
     public var foobar = "hello world"
     
-    @ASN1ContextTagged<ASN1TagNumber$5, ASN1AutomaticTagging, Array<String>>
+    @ASN1ContextTagged<ASN1TagNumber$5, ASN1DefaultTagging, Array<String>>
     var anArray = ["Hello", "ASN.1", "Coding", "Kit"]
 
-    @ASN1ContextTagged<ASN1TagNumber$6, ASN1AutomaticTagging, Set<String>>
+    @ASN1ContextTagged<ASN1TagNumber$6, ASN1DefaultTagging, Set<String>>
     var aSet = Set(["A", "Set"])
 }
 
 struct SignatureWrapper: Codable {
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1AutomaticTagging, Data>
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, Data>
     var signatureValue: Data = Data()
     
     var someString = "hello, world"
@@ -56,14 +56,14 @@ let ts = TestStruct()
 struct TestType: Codable, ASN1ApplicationTaggedType {
     static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self
     
-    @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, UInt>
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, UInt>
     var someInteger: UInt = 0
 
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1AutomaticTagging, GeneralizedTime>
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, GeneralizedTime>
     @GeneralizedTime
     var someTime: Date = Date()
     
-    @ASN1ContextTagged<ASN1TagNumber$2, ASN1AutomaticTagging, PrintableString<String?>>
+    @ASN1ContextTagged<ASN1TagNumber$2, ASN1DefaultTagging, PrintableString<String?>>
     @PrintableString
     var someString: String? = nil
 }

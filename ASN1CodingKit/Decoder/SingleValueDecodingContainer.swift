@@ -26,7 +26,7 @@ extension ASN1DecoderImpl {
         var context: ASN1DecodingContext
 
         private var defaultTagging: ASN1Tagging {
-            return (self.userInfo[CodingUserInfoKey.ASN1TaggingEnvironment] as? ASN1Tagging) ?? .automatic
+            return (self.userInfo[CodingUserInfoKey.ASN1TaggingEnvironment] as? ASN1Tagging) ?? .explicit
         }
         
         init(object: ASN1Object, codingPath: [CodingKey], userInfo: [CodingUserInfoKey : Any],

@@ -19,7 +19,7 @@ import Foundation
 public enum ASN1Tagging {
     case explicit
     case implicit
-    case automatic
+    case `default`
 }
 
 public protocol ASN1TaggingRepresentable {
@@ -40,6 +40,6 @@ public enum ASN1ImplicitTagging: ASN1TaggingRepresentable {
 public protocol ASN1ImplicitlyTaggedType: ASN1TaggedType {
 }
 
-public enum ASN1AutomaticTagging: ASN1TaggingRepresentable {
-    public static var tagging: ASN1Tagging { return .automatic }
+public enum ASN1DefaultTagging: ASN1TaggingRepresentable {
+    public static var tagging: ASN1Tagging { return .default }
 }

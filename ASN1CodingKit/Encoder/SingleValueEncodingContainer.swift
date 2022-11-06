@@ -28,7 +28,7 @@ extension ASN1EncoderImpl {
         var didEncode: Bool = false
 
         private var defaultTaggingMode: ASN1Tagging {
-            return (self.userInfo[CodingUserInfoKey.ASN1TaggingEnvironment] as? ASN1Tagging) ?? .automatic
+            return (self.userInfo[CodingUserInfoKey.ASN1TaggingEnvironment] as? ASN1Tagging) ?? .explicit
         }
         
         private(set) var object: ASN1Object? {

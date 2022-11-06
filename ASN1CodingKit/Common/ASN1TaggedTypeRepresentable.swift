@@ -24,5 +24,5 @@ public protocol ASN1TaggedTypeRepresentable {
 
 public extension ASN1TaggedTypeRepresentable {
     static var tag: ASN1DecodedTag? { return nil }
-    static var tagging: ASN1Tagging { return .automatic }
+    static var tagging: ASN1Tagging { return .default }
 }

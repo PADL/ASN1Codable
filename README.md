@@ -10,14 +10,14 @@ Note that it is presently a work in progress: it is not ready for production (or
 struct TestType: Codable, ASN1ApplicationTaggedType {
     static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self
     
-    @ASN1ContextTagged<ASN1TagNumber$0, ASN1AutomaticTagging, UInt>
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, UInt>
     var someInteger: UInt = 0
 
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1AutomaticTagging, GeneralizedTime>
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, GeneralizedTime>
     @GeneralizedTime
     var someTime: Date = Date()
     
-    @ASN1ContextTagged<ASN1TagNumber$2, ASN1AutomaticTagging, PrintableString<String?>>
+    @ASN1ContextTagged<ASN1TagNumber$2, ASN1DefaultTagging, PrintableString<String?>>
     @PrintableString
     var someString: String? = nil
 }
