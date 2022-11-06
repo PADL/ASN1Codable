@@ -22,7 +22,7 @@ public struct Null {
 extension Null: ASN1DecodableType, Codable {
     public init(from asn1: ASN1Object) throws {
         guard asn1.tag == .universal(.null) else {
-            throw ASN1Error.malformedEncoding("ASN.1 object has incorret tag \(asn1.tag)")
+            throw ASN1Error.malformedEncoding("ASN.1 object has incorrect tag \(asn1.tag)")
         }
     }
 }

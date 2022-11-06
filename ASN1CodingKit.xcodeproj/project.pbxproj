@@ -58,7 +58,7 @@
 		D3D13E7E291343A500218279 /* ParseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E7D291343A500218279 /* ParseCommand.swift */; };
 		D3D13E7F291348C100218279 /* rfc2459.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC5B290E8AAF00540132 /* rfc2459.swift */; };
 		D3D13E8229134A2B00218279 /* BigNumber in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E8129134A2B00218279 /* BigNumber */; };
-		D3D13E8429134A4B00218279 /* Integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8329134A4B00218279 /* Integer.swift */; };
+		D3D13E8429134A4B00218279 /* BInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8329134A4B00218279 /* BInt.swift */; };
 		D3D13E872913722700218279 /* rfc2459.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC5B290E8AAF00540132 /* rfc2459.swift */; };
 		D3D13E8929146B7400218279 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8829146B7400218279 /* Base.swift */; };
 		D3D13E8B29146BBA00218279 /* DecodableDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8A29146BBA00218279 /* DecodableDefault.swift */; };
@@ -171,7 +171,7 @@
 		D3D13E6E291342D500218279 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D3D13E7B2913434200218279 /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
 		D3D13E7D291343A500218279 /* ParseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseCommand.swift; sourceTree = "<group>"; };
-		D3D13E8329134A4B00218279 /* Integer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Integer.swift; sourceTree = "<group>"; };
+		D3D13E8329134A4B00218279 /* BInt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BInt.swift; sourceTree = "<group>"; };
 		D3D13E8829146B7400218279 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		D3D13E8A29146BBA00218279 /* DecodableDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodableDefault.swift; sourceTree = "<group>"; };
 		D3FB2D9C29183E2000BC72AF /* Null.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Null.swift; sourceTree = "<group>"; };
@@ -323,7 +323,7 @@
 				D351DC79290E8AF700540132 /* Time.swift */,
 				D351DC7A290E8AF700540132 /* BitString.swift */,
 				D351DC7B290E8AF700540132 /* String.swift */,
-				D3D13E8329134A4B00218279 /* Integer.swift */,
+				D3D13E8329134A4B00218279 /* BInt.swift */,
 				D3FB2D9C29183E2000BC72AF /* Null.swift */,
 			);
 			path = Primitive;
@@ -580,7 +580,7 @@
 				D351DC94290E8AF700540132 /* ASN1EncoderImpl.swift in Sources */,
 				D351DC8D290E8AF700540132 /* ASN1TaggedType.swift in Sources */,
 				D351DC9B290E8AF700540132 /* ASN1ApplicationTagged.swift in Sources */,
-				D3D13E8429134A4B00218279 /* Integer.swift in Sources */,
+				D3D13E8429134A4B00218279 /* BInt.swift in Sources */,
 				D399B208290FB1120010B730 /* ASN1Tagging.swift in Sources */,
 				D351DCA0290E8AF700540132 /* ASN1ContextTagged.swift in Sources */,
 				D351DCB9290EAC2500540132 /* ASN1CodingKit.swift in Sources */,
