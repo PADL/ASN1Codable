@@ -177,6 +177,33 @@ public typealias ExtKeyUsage = [ObjectIdentifier]
 
 typealias KeyIdentifier = Data
 
+// NB: DecodableDefault is a convenience for users not using an ASN.1
+// compiler. If you're building a compiler, prefix the instance variable
+// with an underscore, map it using CodingKeys to the real name, and
+// implement a getter that returns the default value. See below.
+
+/*
+public struct BasicConstraints: Codable {
+    var _cA: Bool?
+    var _pathLenConstraint: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case _cA = "cA"
+        case _pathLenConstraint = "pathLenConstraint"
+    }
+    
+    var cA: Bool {
+        get { return self._cA ?? false }
+        set { self._cA = newValue }
+    }
+    
+    var pathLenConstraint: Int {
+        get { return self._pathLenConstraint ?? 0 }
+        set { self._pathLenConstraint = newValue }
+    }
+}
+ */
+
 public struct BasicConstraints: Codable {
     @DecodableDefault.False var cA: Bool
     @DecodableDefault.Zero var pathLenConstraint: Int
@@ -314,8 +341,8 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
     // ASN.1 fields whenever a decoration (including _save) is used, to
     // avoid the encoding of the decorated types
     
-    enum CodingKeys: CodingKey {
-        case version
+    enum CodingKeys: String, CodingKey {
+        case _version = "version"
         case serialNumber
         case signature
         case issuer
@@ -327,8 +354,18 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
         case extensions
     }
     
+    // this is another, more flexible way of implementing defaults and is what should be emitted by the compiler
+    var version: Version {
+        get {
+            return self._version ?? .rfc3280_version_1
+        }
+        set {
+            self._version = newValue
+        }
+    }
+    
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Version?>
-    var version: Version?
+    var _version: Version?
     var serialNumber: CertificateSerialNumber
     var signature: AlgorithmIdentifier
     var issuer: Name
@@ -352,7 +389,7 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
                 validity: Validity,
                 subject: Name,
                 subjectPublicKeyInfo: SubjectPublicKeyInfo) {
-        self.version = version
+        self._version = version
         self.serialNumber = serialNumber
         self.signature = signature
         self.issuer = issuer
