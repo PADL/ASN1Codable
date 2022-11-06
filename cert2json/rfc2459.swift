@@ -152,9 +152,9 @@ public enum GeneralName: Codable {
 public typealias GeneralNames = [GeneralName]
 
 public struct _KeyUsage: OptionSet, Codable {
-    public let rawValue: UInt
+    public let rawValue: UInt16
     
-    public init(rawValue: UInt) {
+    public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
     
