@@ -68,22 +68,26 @@ struct ParseCommand: CommandProtocol {
             let decoder = ASN1Decoder()
             let cert = try decoder.decode(Certificate.self, from: data)
             
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
+            let jsonEncoder = JSONEncoder()
+            jsonEncoder.outputFormatting = .prettyPrinted
 
-            guard let jsonData = try String(data: encoder.encode(cert), encoding: .utf8) else {
+            guard let jsonData = try String(data: jsonEncoder.encode(cert), encoding: .utf8) else {
                 return .failure(.encodingError)
             }
 
             print("\(jsonData)")
 
-            let encoder2 = ASN1Encoder()
-            //encoder2.userInfo[CodingUserInfoKey.ASN1EncodeNilAsNull] = true
-            let encoded = try encoder2.encode(cert)
-            print("-----BEGIN CERTIFICATE-----")
-            print("\(encoded.base64EncodedString())")
-            print("-----END CERTIFICATE-----")
-
+            if options.reencode {
+                let asn1Encoder = ASN1Encoder()
+                let encoded = try asn1Encoder.encode(cert)
+                
+                if options.reencode {
+                    print("-----BEGIN CERTIFICATE-----")
+                    print("\(encoded.base64EncodedString())")
+                    print("-----END CERTIFICATE-----")
+                }
+            }
+            
             return .success(())
         } catch let error {
             return .failure(.decodingError(error))
@@ -93,15 +97,15 @@ struct ParseCommand: CommandProtocol {
     struct Options: OptionsProtocol {
         let file: String
         let string: String
-        let verbose: Bool
+        let reencode: Bool
 
         static func create(_ file: String) -> (String) -> (Bool) -> Options {
-            return { (string: String) in { (verbose: Bool) in
-                    Options(
-                            file: file,
-                            string: string,
-                            verbose: verbose)
-                }
+            return { (string: String) in { (reencode: Bool) in
+                Options(
+                    file: file,
+                    string: string,
+                    reencode: reencode)
+            }
             }
         }
 
@@ -110,7 +114,7 @@ struct ParseCommand: CommandProtocol {
             return create
                     <*> m <| Option(key: "file", defaultValue: "", usage: "path to PEM encoded file")
                     <*> m <| Option(key: "string", defaultValue: "", usage: "string passed as ASN.1 encoded base64")
-                    <*> m <| Option(key: "verbose", defaultValue: false, usage: "show verbose logging")
+                    <*> m <| Option(key: "reencode", defaultValue: false, usage: "re-encode to ASN.1")
         }
     }
 }
