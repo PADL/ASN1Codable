@@ -30,7 +30,9 @@ public let sha256WithRSAEncryptionOID = ObjectIdentifier(rawValue: "1.2.840.1135
 public let rsaEncryptionOID = ObjectIdentifier(rawValue: "1.2.840.113549.1.1.1")!
 
 public struct AlgorithmIdentifier: ASN1ObjectSetCodable {
-    public static let knownTypes: [ObjectIdentifier: Codable.Type] = [:]
+    public static let knownTypes: [ObjectIdentifier: Codable.Type] =
+        [sha256WithRSAEncryptionOID : Null.self,
+                   rsaEncryptionOID : Null.self]
 
     @ASN1ObjectSetType
     var algorithm: ObjectIdentifier

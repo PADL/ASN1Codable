@@ -22,7 +22,4 @@ extension CodingUserInfoKey {
     
     // [String: [ObjectIdentifier: Any.Type]] mapping string representation of types to OID:type dictionaries
     public static var ASN1ObjectSetTypeDictionary = CodingUserInfoKey(rawValue: "ASN1ObjectSetTypeDictionaryUserInfoKey")!
-    
-    // bool if absent values should be encoded as NULL rather than omitted
-    public static var ASN1EncodeNilAsNull = CodingUserInfoKey(rawValue: "ASN1EncodeNilAsNullInfoKey")!
 }

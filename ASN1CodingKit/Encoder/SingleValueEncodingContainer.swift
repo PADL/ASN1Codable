@@ -70,10 +70,6 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         
     func encodeNil() throws {
         preconditionCanEncodeNewValue()
-        if let encodeNilAsNull = self.userInfo[CodingUserInfoKey.ASN1EncodeNilAsNull] as? Bool,
-           encodeNilAsNull {
-            self.object = ASN1NullObject
-        }
         self.didEncode = true
     }
         

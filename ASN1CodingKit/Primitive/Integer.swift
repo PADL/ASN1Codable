@@ -21,7 +21,7 @@ import BigNumber
 extension BInt: ASN1DecodableType {
     public init(from asn1: ASN1Object) throws {
         guard let data = asn1.data.primitive, asn1.tag == .universal(.integer) else {
-            throw ASN1Error.malformedEncoding("ASN.1 Object is not properly formatted")
+            throw ASN1Error.malformedEncoding("ASN.1 object has incorret tag \(asn1.tag)")
         }
         self.init(bytes: Array(data))
     }
