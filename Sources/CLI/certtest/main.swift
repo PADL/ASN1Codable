@@ -73,6 +73,20 @@ testValue.someInteger = 1234
 testValue.someTime = Date()
 testValue.someString = "Hello"
 
+//https://www.oss.com/asn1/resources/asn1-made-simple/asn1-quick-reference/asn1-tags.html
+struct ImplicitAutoType: Codable, ASN1ContextTaggedType, ASN1ImplicitlyTaggedType {
+    static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$0.self
+    var name = "John"
+    var age = 25
+}
+
+struct ExplicitAutoType: Codable, ASN1ContextTaggedType {
+    static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$0.self
+    var name = "John"
+    var age = 25
+}
+let automatic = ImplicitAutoType()
+
 let foobar = Set(["Hello", "World!"])
 
 func test() -> Void {
@@ -113,7 +127,7 @@ func test() -> Void {
     c.signatureValue = BitString([0x01, 0x02, 0x03, 0x55, 0x66, 0xff])
         
     do {
-        let valueToEncode = c
+        let valueToEncode = automatic
         
         print("Encoding value: \(valueToEncode)")
         
@@ -149,7 +163,9 @@ func dumpEncodedData(_ data: Data) {
 
 func dumpJSONData(_ value: any Encodable) {
     do {
-        if let jsonData = try String(data: JSONEncoder().encode(value), encoding: .utf8) {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        if let jsonData = try String(data: encoder.encode(value), encoding: .utf8) {
             print("JSON: \(jsonData)")
         }
     } catch {
