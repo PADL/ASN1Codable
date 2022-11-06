@@ -18,8 +18,8 @@ import Foundation
 import ASN1Kit
 
 public final class ASN1Encoder {
-    public var userInfo: [CodingUserInfoKey: Any] = [:]
-    public var taggingEnvironment: ASN1Tagging?
+    public let userInfo: [CodingUserInfoKey: Any] = [:]
+    public let taggingEnvironment: ASN1Tagging? = nil
 
     public init() {
     }
