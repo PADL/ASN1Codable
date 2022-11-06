@@ -86,20 +86,34 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                 throw DecodingError.typeMismatch(type, context)
             }
             
-            guard let data = object.data.primitive else {
+            guard let data = object.data.primitive, !data.isEmpty else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "No data for object \(self.object)")
+                                                    debugDescription: "Missing data for object \(self.object)")
                 throw DecodingError.dataCorrupted(context)
             }
             
-            // FIXME unsigned int support
-            guard type.bitWidth >= data.count * 8, let integer = data.asn1integer else {
+            guard type.bitWidth >= data.count * 8 else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
                                                     debugDescription: "Integer encoded in \(self.object) too large for \(type.bitWidth)-bit integer")
                 throw DecodingError.dataCorrupted(context)
             }
-            
-            return T(integer)
+        
+            // FIXME can FixedWidthInteger be larger than platform integer?
+            if T.isSigned {
+                guard let value = data.asn1integer else {
+                    let context = DecodingError.Context(codingPath: self.codingPath,
+                                                        debugDescription: "Integer encoded in \(self.object) too large for platform signed integer")
+                    throw DecodingError.dataCorrupted(context)
+                }
+                return T(value)
+            } else {
+                guard let value = data.unsignedIntValue else {
+                    let context = DecodingError.Context(codingPath: self.codingPath,
+                                                        debugDescription: "Integer encoded in \(self.object) too large for platform unsigned integer")
+                    throw DecodingError.dataCorrupted(context)
+                }
+                return T(value)
+            }
         }
     }
 
