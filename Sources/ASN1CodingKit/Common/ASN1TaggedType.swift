@@ -26,8 +26,7 @@ public protocol ASN1TaggedType: ASN1TaggedTypeRepresentable, Codable {
 public protocol ASN1EncodeAsSetType: ASN1TaggedType {
 }
 
-// FIXME make internal
-public extension ASN1TaggedType {
+extension ASN1TaggedType {
     static var tagNumber: ASN1TagNumberRepresentable.Type? {
         return nil
     }
@@ -49,5 +48,4 @@ public extension ASN1TaggedType {
             return nil
         }
     }
-    
 }
