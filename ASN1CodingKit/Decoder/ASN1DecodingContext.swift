@@ -19,6 +19,8 @@ import Echo
 
 struct ASN1DecodingContext: ASN1CodingContext {
     var taggingEnvironment: ASN1Tagging = .explicit
+    var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
+    
     var enumCodingState: ASN1EnumCodingState = .none
     var encodeAsSet = false
     var currentEnumType: Any.Type?

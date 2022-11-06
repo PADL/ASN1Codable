@@ -20,12 +20,15 @@ import ASN1Kit
 public final class ASN1Encoder {
     public let userInfo: [CodingUserInfoKey: Any] = [:]
     public let taggingEnvironment: ASN1Tagging? = nil
+    public let objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
 
     public init() {
     }
     
     public func encode<T: Encodable>(_ value: T) throws -> Data {
-        let encoder = ASN1EncoderImpl(userInfo: self.userInfo, taggingEnvironment: self.taggingEnvironment)
+        let encoder = ASN1EncoderImpl(userInfo: self.userInfo,
+                                      taggingEnvironment: self.taggingEnvironment,
+                                      objectSetTypeDictionary: objectSetTypeDictionary)
         let box = Box(value) // needed to encode containing structure
         try box.encode(to: encoder)
         guard let object = encoder.object else {

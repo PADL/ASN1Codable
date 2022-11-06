@@ -20,6 +20,8 @@ import ASN1Kit
 
 struct ASN1EncodingContext: ASN1CodingContext {
     var taggingEnvironment: ASN1Tagging = .explicit
+    var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
+    
     var enumCodingState: ASN1EnumCodingState = .none
     var encodeAsSet = false
     var objectSetCodingContext: ASN1ObjectSetCodingContext?

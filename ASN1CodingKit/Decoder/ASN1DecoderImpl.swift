@@ -28,15 +28,12 @@ internal final class ASN1DecoderImpl {
     init(object: ASN1Object,
          codingPath: [CodingKey] = [],
          userInfo: [CodingUserInfoKey: Any] = [:],
-         taggingEnvironment: ASN1Tagging? = nil) {
+         taggingEnvironment: ASN1Tagging? = nil,
+         objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil) {
         self.object = object
         self.codingPath = codingPath
         self.userInfo = userInfo
-        if let taggingEnvironment = taggingEnvironment, taggingEnvironment != .default {
-            self.context = ASN1DecodingContext(taggingEnvironment: taggingEnvironment)
-        } else {
-            self.context = ASN1DecodingContext()
-        }
+        self.context = ASN1DecodingContext(taggingEnvironment: taggingEnvironment ?? .explicit, objectSetTypeDictionary: objectSetTypeDictionary)
     }
     
     init(object: ASN1Object,

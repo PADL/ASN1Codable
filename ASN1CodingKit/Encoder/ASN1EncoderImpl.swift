@@ -26,14 +26,11 @@ internal final class ASN1EncoderImpl {
     
     init(codingPath: [CodingKey] = [],
          userInfo: [CodingUserInfoKey: Any] = [:],
-         taggingEnvironment: ASN1Tagging? = nil) {
+         taggingEnvironment: ASN1Tagging? = nil,
+         objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil) {
         self.codingPath = codingPath
         self.userInfo = userInfo
-        if let taggingEnvironment = taggingEnvironment, taggingEnvironment != .default {
-            self.context = ASN1EncodingContext(taggingEnvironment: taggingEnvironment)
-        } else {
-            self.context = ASN1EncodingContext()
-        }
+        self.context = ASN1EncodingContext(taggingEnvironment: taggingEnvironment ?? .explicit, objectSetTypeDictionary: objectSetTypeDictionary)
     }
     
     init(codingPath: [CodingKey] = [],

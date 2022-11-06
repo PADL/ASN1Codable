@@ -177,7 +177,7 @@ class ASN1ObjectSetCodingContext {
             return nil
         }
         
-        if let typeDict = decoder.userInfo[CodingUserInfoKey.ASN1ObjectSetTypeDictionary] as? ASN1ObjectSetTypeDictionary,
+        if let typeDict = decoder.context.objectSetTypeDictionary,
            let typeDict = typeDict[String(reflecting: objectSetType)],
            let userType = typeDict[oid] {
             type = userType
