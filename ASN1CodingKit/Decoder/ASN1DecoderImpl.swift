@@ -23,7 +23,21 @@ internal final class ASN1DecoderImpl {
     let object: ASN1Object
     let codingPath: [CodingKey]
     let userInfo: [CodingUserInfoKey: Any]
-    var context: ASN1DecodingContext
+    let context: ASN1DecodingContext
+    
+    init(object: ASN1Object,
+         codingPath: [CodingKey] = [],
+         userInfo: [CodingUserInfoKey: Any] = [:],
+         taggingEnvironment: ASN1Tagging? = nil) {
+        self.object = object
+        self.codingPath = codingPath
+        self.userInfo = userInfo
+        if let taggingEnvironment = taggingEnvironment, taggingEnvironment != .default {
+            self.context = ASN1DecodingContext(taggingEnvironment: taggingEnvironment)
+        } else {
+            self.context = ASN1DecodingContext()
+        }
+    }
     
     init(object: ASN1Object,
          codingPath: [CodingKey] = [],

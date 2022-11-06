@@ -120,8 +120,6 @@ public struct ASN1ObjectSetValue: Codable {
             return
         }
 
-        defer { decoder.context.objectSetCodingContext = nil }
-
         do {
             if objectSetCodingContext.encodeAsOctetString {
                 let berData = try container.decode(Data.self)

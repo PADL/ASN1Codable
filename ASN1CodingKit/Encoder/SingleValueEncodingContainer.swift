@@ -27,10 +27,6 @@ extension ASN1EncoderImpl {
         var context: ASN1EncodingContext
         var didEncode: Bool = false
 
-        private var defaultTaggingMode: ASN1Tagging {
-            return (self.userInfo[CodingUserInfoKey.ASN1TaggingEnvironment] as? ASN1Tagging) ?? .explicit
-        }
-        
         private(set) var object: ASN1Object? {
             get {
                 return self._object
@@ -169,7 +165,8 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     
     private func encodeTagged<T: Encodable>(_ value: T, tag: ASN1DecodedTag?, tagging: ASN1Tagging, skipTaggedValues: Bool = false) throws -> ASN1Object? {
         let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
-        
+        let tagging = tagging == .default ? self.context.taggingEnvironment : tagging
+
         if let object = object, let tag = tag {
             if tag.isUniversal {
                 precondition(value is ASN1EncodableType)

@@ -16,25 +16,9 @@
 
 import Foundation
 
-enum ASN1EnumCodingState {
-    case none
-    case `enum`
-    case enumCase
-}
-
-protocol ASN1CodingContext {
-    var taggingEnvironment: ASN1Tagging { get }
-    var enumCodingState: ASN1EnumCodingState { get set }
-    var encodeAsSet: Bool { get set }
-    var objectSetCodingContext: ASN1ObjectSetCodingContext? { get set }
-}
-
-extension ASN1CodingContext {
-    mutating func nextEnumCodingState() {
-        if self.enumCodingState == .enum {
-            self.enumCodingState = .enumCase
-        } else {
-            self.enumCodingState = .none
-        }
-    }
+struct ASN1CodingFlags: OptionSet {
+    let rawValue: UInt
+    
+    static let implicitTagging = ASN1CodingFlags(rawValue: 1 << 0)
+    
 }

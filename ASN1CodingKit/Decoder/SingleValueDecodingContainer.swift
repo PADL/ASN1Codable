@@ -25,10 +25,6 @@ extension ASN1DecoderImpl {
         var userInfo: [CodingUserInfoKey: Any]        
         var context: ASN1DecodingContext
 
-        private var defaultTagging: ASN1Tagging {
-            return (self.userInfo[CodingUserInfoKey.ASN1TaggingEnvironment] as? ASN1Tagging) ?? .explicit
-        }
-        
         init(object: ASN1Object, codingPath: [CodingKey], userInfo: [CodingUserInfoKey : Any],
              context: ASN1DecodingContext = ASN1DecodingContext()) {
             self.object = object
@@ -217,6 +213,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         }
                 
         let unwrappedObject: ASN1Object
+        let tagging = tagging == .default ? self.context.taggingEnvironment : tagging
         let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : tag
         
         if object.constructed {

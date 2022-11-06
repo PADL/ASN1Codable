@@ -19,12 +19,13 @@ import ASN1Kit
 
 public final class ASN1Encoder {
     public var userInfo: [CodingUserInfoKey: Any] = [:]
+    public var taggingEnvironment: ASN1Tagging?
 
     public init() {
     }
     
     public func encode<T: Encodable>(_ value: T) throws -> Data {
-        let encoder = ASN1EncoderImpl(userInfo: self.userInfo)
+        let encoder = ASN1EncoderImpl(userInfo: self.userInfo, taggingEnvironment: self.taggingEnvironment)
         let box = Box(value) // needed to encode containing structure
         try box.encode(to: encoder)
         guard let object = encoder.object else {

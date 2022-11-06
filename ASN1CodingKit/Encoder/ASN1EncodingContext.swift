@@ -19,6 +19,7 @@ import Foundation
 import ASN1Kit
 
 struct ASN1EncodingContext: ASN1CodingContext {
+    var taggingEnvironment: ASN1Tagging = .explicit
     var enumCodingState: ASN1EnumCodingState = .none
     var encodeAsSet = false
     var objectSetCodingContext: ASN1ObjectSetCodingContext?

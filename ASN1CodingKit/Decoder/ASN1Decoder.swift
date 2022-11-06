@@ -19,6 +19,7 @@ import ASN1Kit
 
 public final class ASN1Decoder {
     public var userInfo: [CodingUserInfoKey: Any] = [:]
+    public var taggingEnvironment: ASN1Tagging?
 
     public init() {
     }
@@ -26,7 +27,7 @@ public final class ASN1Decoder {
     public func decode<T>(_ type: T.Type, from data: Data) throws -> T where T : Decodable {
         do {
             let object = try ASN1Kit.ASN1Decoder.decode(asn1: data)
-            let decoder = ASN1DecoderImpl(object: object, userInfo: userInfo)
+            let decoder = ASN1DecoderImpl(object: object, userInfo: userInfo, taggingEnvironment: taggingEnvironment)
             let box = try Box<T>(from: decoder)
             return box.value
         } catch let error as ASN1Error {
