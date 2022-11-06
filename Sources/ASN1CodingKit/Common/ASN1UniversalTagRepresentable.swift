@@ -17,8 +17,6 @@
 import Foundation
 import ASN1Kit
 
-// FIXME probably a less destructive way to do this
-
 protocol ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Tag { get }
 }
