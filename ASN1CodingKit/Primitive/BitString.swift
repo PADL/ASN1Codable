@@ -75,11 +75,11 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, ASN1Coda
     }
     
     fileprivate init(from binaryInteger: any BinaryInteger) throws {
-        // FIXME should not round to byte bounary
-        let integer = Swift.withUnsafeBytes(of: Int(binaryInteger).bigEndian) { Data($0) }
-        self.wrappedValue = integer.advanced(by: integer.count - binaryInteger.bitWidth / 8)
+        // FIXME should not round to byte boundary
+        let data = Swift.withUnsafeBytes(of: Int(binaryInteger).bigEndian) { Data($0) }
+        let index = data.firstIndex { $0 != 0 }
+        self.wrappedValue = data.advanced(by: index ?? 0)
     }
-
 }
 
 extension BitString: ASN1UniversalTagRepresentable {
