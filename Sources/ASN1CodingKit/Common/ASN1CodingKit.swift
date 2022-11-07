@@ -18,3 +18,11 @@ import Foundation
 import ASN1Kit
 
 @_exported import ASN1Kit
+
+public protocol ASN1ExtensibleType {
+    
+}
+
+public extension CodingUserInfoKey {
+    static var ASN1ExplicitExtensibilityMarkerRequired: Self { return Self(rawValue: "ASN1ExplicitExtensibilityMarkerRequired")! }
+}

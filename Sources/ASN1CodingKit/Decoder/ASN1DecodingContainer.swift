@@ -21,6 +21,7 @@ protocol ASN1DecodingContainer {
     var object: ASN1Object { get }
     var context: ASN1DecodingContext { get set }
     var currentIndex: Int { get }
+    var numberOfKeyedObjectsDecoded: Int? { get }
     
     func currentObject() throws -> ASN1Object
 }
@@ -34,5 +35,9 @@ extension ASN1DecodingContainer {
             precondition(self.currentIndex < self.object.data.items!.count)
             return self.object.data.items![self.currentIndex]
         }
+    }
+    
+    var numberOfKeyedObjectsDecoded: Int? {
+        return nil
     }
 }

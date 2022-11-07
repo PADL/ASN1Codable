@@ -291,10 +291,12 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         do {
             let value = try T(from: decoder)
             
+            try self.validateExtensibility(type, from: sortedObject, with: decoder)
+            
             if var value = value as? ASN1PreserveBinary {
                 value._save = sortedObject.save
             }
-                        
+            
             return value
         } catch {
             let isOptional = type is OptionalProtocol.Type
@@ -304,6 +306,24 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             } else {
                 throw error
             }
+        }
+    }
+    
+    private var explicitExtensibilityMarkerRequired: Bool {
+        return (self.userInfo[CodingUserInfoKey.ASN1ExplicitExtensibilityMarkerRequired] as? Bool) ?? false
+    }
+    
+    private func validateExtensibility<T>(_ type: T.Type, from object: ASN1Object, with decoder: ASN1DecoderImpl) throws where T : Decodable {
+        if self.explicitExtensibilityMarkerRequired,
+           type is (any ASN1ExtensibleType).Type == false,
+           let container = decoder.container,
+           container.object.constructed,
+           let items = container.object.data.items,
+           let numberOfKeyedObjectsDecoded = container.numberOfKeyedObjectsDecoded,
+           numberOfKeyedObjectsDecoded < items.count {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Expected no more than \(numberOfKeyedObjectsDecoded) items when decoding \(type); received \(items.count)")
+            throw DecodingError.typeMismatch(type, context)
         }
     }
 }

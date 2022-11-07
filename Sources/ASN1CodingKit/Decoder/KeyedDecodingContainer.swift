@@ -53,6 +53,10 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         })
     }
 
+    var numberOfKeyedObjectsDecoded: Int? {
+        return self.count
+    }
+    
     private var isEmptySequence: Bool {
         return self.object.constructed && self.object.data.items?.count == 0
     }
