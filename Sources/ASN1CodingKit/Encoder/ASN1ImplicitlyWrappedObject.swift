@@ -30,6 +30,7 @@ internal struct ASN1ImplicitlyWrappedObject: ASN1Object {
             self.data = ASN1Data.constructed([object])
         }
         self.tag = tag
+        self.save = object.save
     }
     
     var length: Int {
