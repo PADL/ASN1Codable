@@ -31,7 +31,7 @@ public let sha256WithRSAEncryptionOID = ObjectIdentifier(rawValue: "1.2.840.1135
 public let rsaEncryptionOID = ObjectIdentifier(rawValue: "1.2.840.113549.1.1.1")!
 
 public struct AlgorithmIdentifier: ASN1ObjectSetCodable {
-    public static let knownTypes: [ObjectIdentifier: Codable.Type] =
+    public static let knownTypes: [AnyHashable: Codable.Type] =
           [sha1WithRSAEncryptionOID : Null.self,
          sha256WithRSAEncryptionOID : Null.self,
                    rsaEncryptionOID : Null.self]
@@ -62,7 +62,7 @@ public typealias AttributeType = ObjectIdentifier
 public typealias AttributeValue = ASN1AnyObjectSetValue // type erased
 
 public struct Attribute: ASN1ObjectSetCodable {
-    public static let knownTypes: [ObjectIdentifier: Codable.Type] =
+    public static let knownTypes: [AnyHashable: Codable.Type] =
         [TPMSpecificationOID : TPMSpecification.self]
 
     @ASN1ObjectSetType
@@ -134,7 +134,7 @@ public struct HardwareModuleName: Codable {
 }
 
 public struct OtherName: ASN1ObjectSetCodable {
-    public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
+    public static let knownTypes: [AnyHashable: Codable.Type] = [
         PKIXonPKINITSan : KRB5PrincipalName.self,
         PKIXonHardwareModuleName : HardwareModuleName.self
     ]
@@ -274,7 +274,7 @@ public typealias CertPolicyId = ObjectIdentifier
 public typealias PolicyQualifierId = ObjectIdentifier
 
 public struct PolicyQualifierInfo: ASN1ObjectSetCodable {
-    public static let knownTypes: [ObjectIdentifier: Codable.Type] = [:]
+    public static let knownTypes: [AnyHashable: Codable.Type] = [:]
 
     @ASN1ObjectSetType
     var policyQualifierId: PolicyQualifierId
@@ -315,7 +315,7 @@ public let AuthorityInfoAccessOID = ObjectIdentifier(rawValue: "1.3.6.1.5.5.7.1.
 public let NetscapeCertificateCommentOID = ObjectIdentifier(rawValue: "2.16.840.1.113730.1.13")!
 
 public struct Extension: ASN1ObjectSetOctetStringCodable {
-    public static let knownTypes: [ObjectIdentifier: Codable.Type] = [
+    public static let knownTypes: [AnyHashable: Codable.Type] = [
         SubjectDirectoryAttributesOID : SubjectDirectoryAttributes.self,
         KeyUsageOID : KeyUsage.self,
         ExtKeyUsageOID : ExtKeyUsage.self,

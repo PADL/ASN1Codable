@@ -66,6 +66,7 @@
 		D3FB2DA12918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */; };
 		D3FB2DA72918641900BC72AF /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = D3FB2DA62918641900BC72AF /* Algorithms */; };
 		D3FB2DAA29187C2800BC72AF /* ASN1AutomaticTaggingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2DA929187C2800BC72AF /* ASN1AutomaticTaggingContext.swift */; };
+		D3FB2DAC2918958400BC72AF /* ASN1Object+Sorting.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2DAB2918958400BC72AF /* ASN1Object+Sorting.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -178,6 +179,7 @@
 		D3FB2D9C29183E2000BC72AF /* Null.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Null.swift; sourceTree = "<group>"; };
 		D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1ImplicitlyWrappedObject.swift; sourceTree = "<group>"; };
 		D3FB2DA929187C2800BC72AF /* ASN1AutomaticTaggingContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1AutomaticTaggingContext.swift; sourceTree = "<group>"; };
+		D3FB2DAB2918958400BC72AF /* ASN1Object+Sorting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ASN1Object+Sorting.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -291,6 +293,7 @@
 				D351DCB8290EAC2500540132 /* ASN1CodingKit.swift */,
 				D33AC5DE29121744003190DC /* ASN1NullObject.swift */,
 				D351DC69290E8AF700540132 /* ASN1ObjectSet.swift */,
+				D3FB2DAB2918958400BC72AF /* ASN1Object+Sorting.swift */,
 				D351DC6A290E8AF700540132 /* ASN1PreserveBinary.swift */,
 				D351DC6C290E8AF700540132 /* ASN1TagNumberRepresentable.swift */,
 				D351DC6D290E8AF700540132 /* ASN1TaggedType.swift */,
@@ -585,6 +588,7 @@
 				D351DC8D290E8AF700540132 /* ASN1TaggedType.swift in Sources */,
 				D351DC9B290E8AF700540132 /* ASN1ApplicationTagged.swift in Sources */,
 				D3D13E8429134A4B00218279 /* BInt.swift in Sources */,
+				D3FB2DAC2918958400BC72AF /* ASN1Object+Sorting.swift in Sources */,
 				D399B208290FB1120010B730 /* ASN1Tagging.swift in Sources */,
 				D351DCA0290E8AF700540132 /* ASN1ContextTagged.swift in Sources */,
 				D351DCB9290EAC2500540132 /* ASN1CodingKit.swift in Sources */,

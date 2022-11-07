@@ -18,14 +18,14 @@ import Foundation
 import ASN1CodingKit
 
 public struct TestStruct: Codable, ASN1TaggedType, ASN1EncodeAsSetType {
-    public static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self
+    public static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self    
 
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>
     public var version: Int = 1
 
     @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, Data>
     public var data: Data = Data()
-    
+
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString>
     var bitString = BitString([0x02, 0x03, 0xcc])
 
@@ -100,6 +100,7 @@ struct AutoType: Codable {
 }
 
 
+
 let automatic: AutoType = AutoType()
 
 
@@ -143,7 +144,7 @@ func test() -> Void {
     c.signatureValue = BitString([0x01, 0x02, 0x03, 0x55, 0x66, 0xff])
         
     do {
-        let valueToEncode = automatic
+        let valueToEncode = ts
         
         print("Encoding value: \(String(describing: valueToEncode))")
         

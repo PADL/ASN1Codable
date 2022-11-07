@@ -202,7 +202,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     private func decodePrimitiveValue<T>(_ type: T.Type, from object: ASN1Object, verifiedTag: Bool = false) throws -> T where T: ASN1DecodableType {
         let expectedTag = ASN1DecodingContext.tag(for: type)
         
-        guard verifiedTag || (self.object.tag.isUniversal && self.object.tag == expectedTag) else {
+        guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected \(expectedTag) when decoding \(self.object)")
             throw DecodingError.typeMismatch(type, context)
@@ -268,7 +268,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     }
 
     private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T : Decodable {
-        context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1EncodeAsSetType.Type
+        self.context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1EncodeAsSetType.Type
         
         if self.context.taggingEnvironment == .automatic {
             self.context.automaticTaggingContext = ASN1AutomaticTaggingContext(type)
@@ -284,13 +284,15 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                                                                              encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
         }
 
-        let decoder = ASN1DecoderImpl(object: object, codingPath: self.codingPath,
+        let sortedObject = self.context.encodeAsSet ? object.sorted : object
+
+        let decoder = ASN1DecoderImpl(object: sortedObject, codingPath: self.codingPath,
                                       userInfo: self.userInfo, context: self.context)
         do {
             let value = try T(from: decoder)
             
             if var value = value as? ASN1PreserveBinary {
-                value._save = object.save
+                value._save = sortedObject.save
             }
                         
             return value

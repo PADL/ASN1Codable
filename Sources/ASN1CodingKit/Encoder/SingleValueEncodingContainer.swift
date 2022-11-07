@@ -228,6 +228,10 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
             // Note this requires the value to be a class
             value._save = try object.serialize()
         }
+        
+        if self.context.encodeAsSet {
+            return encoder.object?.sorted
+        }
     
         return encoder.object
     }
