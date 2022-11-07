@@ -18,6 +18,10 @@ import Foundation
 import ASN1Kit
 import Echo
 
+/// A class that tracks state when automatic tagging is used.
+///
+/// Automatic tagging assigns a new implicit tag for each structure
+/// or enum field.
 final class ASN1AutomaticTaggingContext: CustomStringConvertible {
     private var tagNo: UInt
     private var enumMetadata: EnumMetadata?

@@ -32,11 +32,13 @@ extension ASN1DecodingContainer {
         if self.context.enumCodingState != .none || self.object.isNull {
             return self.object
         } else {
+            // FIXME should any of these still be precondition failures?
+            
             guard self.object.constructed,
                   let items = self.object.data.items,
                   self.currentIndex < items.count else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Object \(self.object) is not constructed or has less than \(self.currentIndex) items")
+                                                    debugDescription: "Object \(self.object) is not constructed, or has less than \(self.currentIndex) items")
                 throw DecodingError.dataCorrupted(context)
             }
             

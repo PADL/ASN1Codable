@@ -17,7 +17,7 @@
 import Foundation
 import ASN1Kit
 
-fileprivate extension ASN1DecodedTag {
+private extension ASN1DecodedTag {
     var tagType: UInt8 {
         switch self {
         case .universal(_):

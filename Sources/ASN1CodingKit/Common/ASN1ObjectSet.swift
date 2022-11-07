@@ -20,6 +20,8 @@ import AnyCodable
 
 public typealias ASN1ObjectSetTypeDictionary = [String: [AnyHashable: Codable.Type]]
 
+/// Represents a key, typically an `Int` or `ObjectIdentifier`, that is used as a
+/// discriminant in encoding an object set.
 @propertyWrapper
 public struct ASN1ObjectSetType<ValueType>: Codable where ValueType : Codable & Hashable {
     public var wrappedValue: ValueType
@@ -51,6 +53,7 @@ public struct ASN1ObjectSetType<ValueType>: Codable where ValueType : Codable & 
     }
 }
 
+/// Represents an open typed value.
 @propertyWrapper
 public struct ASN1ObjectSetValue: Codable {
     public typealias Value = (any Codable)?
@@ -140,6 +143,7 @@ public struct ASN1ObjectSetValue: Codable {
     }
 }
 
+/// Represents a type-erased object set value.
 @propertyWrapper
 public struct ASN1AnyObjectSetValue: Codable, Hashable {
     public typealias Value = AnyCodable
@@ -195,7 +199,6 @@ final class ASN1ObjectSetCodingContext {
     }
 }
 
-// this tells the encoder to encoder in an OCTET STRING
 public protocol ASN1ObjectSetCodable: Codable {
     static var knownTypes: [AnyHashable: Codable.Type] { get }
 }

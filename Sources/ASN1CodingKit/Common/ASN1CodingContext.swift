@@ -22,6 +22,8 @@ enum ASN1EnumCodingState {
     case enumCase
 }
 
+/// A protocol containing context for encoding or decoding a type, that is shared between
+/// diffferent types of encoding or decoding containers. This is implemented as a value type.
 protocol ASN1CodingContext {
     var taggingEnvironment: ASN1Tagging { get }
     var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? { get }
