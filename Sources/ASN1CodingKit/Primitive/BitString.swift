@@ -74,7 +74,7 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, ASN1Coda
         self.wrappedValue = try Data(from: decoder)
     }
     
-    fileprivate init(from binaryInteger: any BinaryInteger) throws {
+    init(from binaryInteger: any BinaryInteger) throws {
         // FIXME should not round to byte boundary
         let data = Swift.withUnsafeBytes(of: Int(binaryInteger).bigEndian) { Data($0) }
         let index = data.firstIndex { $0 != 0 }

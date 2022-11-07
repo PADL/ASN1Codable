@@ -157,25 +157,23 @@ public enum GeneralName: Codable {
 
 public typealias GeneralNames = [GeneralName]
 
-public struct _KeyUsage: OptionSet, Codable {
-    public let rawValue: UInt16
+public struct KeyUsage: OptionSet, Codable {
+    public var rawValue: UInt16
     
     public init(rawValue: UInt16) {
         self.rawValue = rawValue
     }
     
-    static let digitalSignature = _KeyUsage(rawValue: 1 << 0)
-    static let nonRepudiation = _KeyUsage(rawValue: 1 << 1)
-    static let keyEncipherment = _KeyUsage(rawValue: 1 << 2)
-    static let dataEncipherment = _KeyUsage(rawValue: 1 << 3)
-    static let keyAgreement = _KeyUsage(rawValue: 1 << 4)
-    static let keyCertSign = _KeyUsage(rawValue: 1 << 5)
-    static let cRLSign = _KeyUsage(rawValue: 1 << 6)
-    static let encipherOnly = _KeyUsage(rawValue: 1 << 7)
-    static let decipherOnly = _KeyUsage(rawValue: 1 << 8)
+    static let digitalSignature = KeyUsage(rawValue: 1 << 0)
+    static let nonRepudiation = KeyUsage(rawValue: 1 << 1)
+    static let keyEncipherment = KeyUsage(rawValue: 1 << 2)
+    static let dataEncipherment = KeyUsage(rawValue: 1 << 3)
+    static let keyAgreement = KeyUsage(rawValue: 1 << 4)
+    static let keyCertSign = KeyUsage(rawValue: 1 << 5)
+    static let cRLSign = KeyUsage(rawValue: 1 << 6)
+    static let encipherOnly = KeyUsage(rawValue: 1 << 7)
+    static let decipherOnly = KeyUsage(rawValue: 1 << 8)
 }
-
-public typealias KeyUsage = ASN1RawRepresentableBitString<_KeyUsage>
 
 public typealias ExtKeyUsage = [ObjectIdentifier]
 
@@ -224,25 +222,23 @@ public struct AuthorityKeyIdentifier: Codable {
     var authorityCertSerialNumber: CertificateSerialNumber?
 }
 
-public struct _DistributionPointReasonFlags: OptionSet, Codable {
-    public let rawValue: UInt
-    
+public struct DistributionPointReasonFlags: OptionSet, Codable {
+    public var rawValue: UInt
+
     public init(rawValue: UInt) {
         self.rawValue = rawValue
     }
     
-    static let unused = _DistributionPointReasonFlags(rawValue: 1 << 0)
-    static let keyCompromise = _DistributionPointReasonFlags(rawValue: 1 << 1)
-    static let cACompromise = _DistributionPointReasonFlags(rawValue: 1 << 2)
-    static let affiliationChanged = _DistributionPointReasonFlags(rawValue: 1 << 3)
-    static let superseded = _DistributionPointReasonFlags(rawValue: 1 << 4)
-    static let cessationOfOperation = _DistributionPointReasonFlags(rawValue: 1 << 5)
-    static let certificateHold = _DistributionPointReasonFlags(rawValue: 1 << 6)
-    static let privilegeWithdrawn = _DistributionPointReasonFlags(rawValue: 1 << 7)
-    static let aACompromise = _DistributionPointReasonFlags(rawValue: 1 << 8)
+    static let unused = DistributionPointReasonFlags(rawValue: 1 << 0)
+    static let keyCompromise = DistributionPointReasonFlags(rawValue: 1 << 1)
+    static let cACompromise = DistributionPointReasonFlags(rawValue: 1 << 2)
+    static let affiliationChanged = DistributionPointReasonFlags(rawValue: 1 << 3)
+    static let superseded = DistributionPointReasonFlags(rawValue: 1 << 4)
+    static let cessationOfOperation = DistributionPointReasonFlags(rawValue: 1 << 5)
+    static let certificateHold = DistributionPointReasonFlags(rawValue: 1 << 6)
+    static let privilegeWithdrawn = DistributionPointReasonFlags(rawValue: 1 << 7)
+    static let aACompromise = DistributionPointReasonFlags(rawValue: 1 << 8)
 }
-
-public typealias DistributionPointReasonFlags = ASN1RawRepresentableBitString<_DistributionPointReasonFlags>
 
 public enum DistributionPointName: Codable {
     case fullName(ASN1ContextTagged<ASN1TagNumber$0, ASN1ImplicitTagging, GeneralNames>)
@@ -253,8 +249,8 @@ public struct DistributionPoint: Codable {
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1ImplicitTagging, DistributionPointName?>
     var distributionPoint: DistributionPointName?
     
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, DistributionPointReasonFlags?>
-    var reasons: DistributionPointReasonFlags?
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, ASN1RawRepresentableBitString<DistributionPointReasonFlags>?>
+    var reasons: ASN1RawRepresentableBitString<DistributionPointReasonFlags>?
 
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, GeneralNames?>
     var cRLIssuer: GeneralNames?
@@ -317,7 +313,7 @@ public let NetscapeCertificateCommentOID = ObjectIdentifier(rawValue: "2.16.840.
 public struct Extension: ASN1ObjectSetOctetStringCodable {
     public static let knownTypes: [AnyHashable: Codable.Type] = [
         SubjectDirectoryAttributesOID : SubjectDirectoryAttributes.self,
-        KeyUsageOID : KeyUsage.self,
+        KeyUsageOID : ASN1RawRepresentableBitString<KeyUsage>.self,
         ExtKeyUsageOID : ExtKeyUsage.self,
         SubjectKeyIdentifierOID : KeyIdentifier.self,
         SubjectAltNameOID : GeneralNames.self,
