@@ -196,8 +196,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     
     private func decodeAutomaticallyTaggedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable {
         let taggingContext = self.context.automaticTaggingContext!
-        let tag: ASN1DecodedTag = .taggedTag(taggingContext.nextTag())
-        return try self.decodeTagged(type, from: object, tag: tag, tagging: .implicit, skipTaggedValues: true)
+        return try self.decodeTagged(type, from: object, tag: taggingContext.nextTag(), tagging: taggingContext.tagging, skipTaggedValues: true)
     }
 
     private func decodePrimitiveValue<T>(_ type: T.Type, from object: ASN1Object, verifiedTag: Bool = false) throws -> T where T: ASN1DecodableType {

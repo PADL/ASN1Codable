@@ -78,20 +78,22 @@ struct ASN1DecodingContext: ASN1CodingContext {
     }
     
     func enumCodingKey<Key>(_ keyType: Key.Type, object: ASN1Object) -> Key? where Key: CodingKey {
-        guard let currentEnum = self.currentEnumType,
+        if let currentEnum = self.currentEnumType,
               let metadata = reflect(Self.lookThroughOptional(currentEnum)) as? EnumMetadata,
-              let enumCase = metadata.descriptor.fields.records.first(where: {
-                  guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
-                      return false
-                  }
-
-                  return Self.tag(for: fieldType) == object.tag
-              }) else {
+           let enumCase = metadata.descriptor.fields.records.first(where: {
+               guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
+                   return false
+               }
+               
+               return Self.tag(for: fieldType) == object.tag
+           }) {
+            // FIXME does not work with custom coding keys
+            return Key(stringValue: enumCase.name)
+        } else if let taggingContext = self.automaticTaggingContext {
+            return taggingContext.selectTag(object.tag)
+        } else {
             return nil
         }
-
-        // FIXME does not work with custom coding keys
-        return Key(stringValue: enumCase.name)
     }
 
     static func isEnum<T>(_ type: T.Type) -> Bool {

@@ -81,6 +81,7 @@ public struct ASN1ObjectSetValue: Codable {
             return
         }
 
+        // FIXME set tagging environment to EXPLICIT then restore
         do {
             if objectSetCodingContext.encodeAsOctetString {
                 let innerEncoder = ASN1Encoder()
@@ -114,6 +115,7 @@ public struct ASN1ObjectSetValue: Codable {
             return
         }
         
+        // FIXME set tagging environment to EXPLICIT then restore
         guard let objectSetCodingContext = decoder.context.objectSetCodingContext,
               let type = objectSetCodingContext.type(decoder) else {
             self.wrappedValue = nil

@@ -86,15 +86,22 @@ struct ExplicitAutoType: Codable, ASN1ContextTaggedType {
     var age = 25
 }
 
+enum AutoEnum: Codable {
+    case C1(String)
+    case C2(Int)
+    case C3(ObjectIdentifier)
+}
+
+let autoEnum = AutoEnum.C3(ObjectIdentifier(rawValue: "1.2.3.4.5.6")!)
 struct AutoType: Codable {
     var name = "John"
-    
-    //@ASN1ContextTagged<ASN1TagNumber$2, ASN1DefaultTagging, Int>
     var age = 25
+    var oid = autoEnum
 }
 
 
-let automatic: AutoType? = AutoType()
+let automatic: AutoType = AutoType()
+
 
 let foobar = Set(["Hello", "World!"])
 
@@ -138,7 +145,7 @@ func test() -> Void {
     do {
         let valueToEncode = automatic
         
-        print("Encoding value: \(valueToEncode)")
+        print("Encoding value: \(String(describing: valueToEncode))")
         
         let asn1Encoder = ASN1Encoder()
         asn1Encoder.taggingEnvironment = .automatic
@@ -151,7 +158,7 @@ func test() -> Void {
         asn1Decoder.taggingEnvironment = asn1Encoder.taggingEnvironment
         let value = try asn1Decoder.decode(type(of: valueToEncode), from: berData)
         
-        print("Decoded value: \(value)")
+        print("Decoded value: \(String(describing: value))")
         //print("Extensions \(String(describing: value.tbsCertificate.extensions))")
         
         // reencode as JSON

@@ -196,8 +196,7 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     
     private func encodeAutomaticallyTaggedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
         let taggingContext = self.context.automaticTaggingContext!
-        let tag: ASN1DecodedTag = .taggedTag(taggingContext.nextTag())
-        return try self.encodeTagged(value, tag: tag, tagging: .implicit, skipTaggedValues: true)
+        return try self.encodeTagged(value, tag: taggingContext.nextTag(), tagging: taggingContext.tagging, skipTaggedValues: true)
     }
     
     private func encodePrimitiveValue<T: ASN1EncodableType>(_ value: T) throws -> ASN1Object? {

@@ -86,7 +86,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                                              codingPath: self.nestedCodingPath(forKey: key),
                                                              userInfo: self.userInfo,
                                                              context: context)
-        
+                
         return container
     }
     

@@ -20,31 +20,81 @@ import Echo
 
 final class ASN1AutomaticTaggingContext: CustomStringConvertible {
     private var tagNo: UInt
+    private var enumMetadata: EnumMetadata?
     
     init?<T>(_ type: T.Type) {
         // this is expensive, so use automatic tags sparingly, or have the compiler do the job
-        guard let metadata = reflect(type) as? StructMetadata else {
-            return nil
-        }
-        
-        let hasTaggedFields = metadata.descriptor.fields.records.contains {
-            guard let fieldType = metadata.type(of: $0.mangledTypeName),
-                  let wrappedFieldType = fieldType as? any ASN1TaggedWrappedValue.Type else {
-                return false
+        if let metadata = reflect(type) as? StructMetadata {
+            let hasTaggedFields = metadata.descriptor.fields.records.contains {
+                guard let fieldType = metadata.type(of: $0.mangledTypeName),
+                      let wrappedFieldType = fieldType as? any ASN1TaggedWrappedValue.Type else {
+                    return false
+                }
+                return wrappedFieldType.tag != nil
             }
-            return wrappedFieldType.tag != nil
-        }
-        
-        guard !hasTaggedFields else {
-            return nil
+            
+            guard !hasTaggedFields else {
+                return nil
+            }
+        } else if let metadata = reflect(type) as? EnumMetadata {
+            let hasTaggedFields = metadata.descriptor.fields.records.contains {
+                guard let fieldType = metadata.type(of: $0.mangledTypeName),
+                      let wrappedFieldType = fieldType as? any ASN1TaggedWrappedValue.Type else {
+                    return false
+                }
+                return wrappedFieldType.tag != nil
+            }
+            
+            guard !hasTaggedFields else {
+                return nil
+            }
+
+            self.enumMetadata = metadata
         }
         
         self.tagNo = 0
     }
     
-    func nextTag() -> UInt {
+    func selectTag<Key>(_ key: Key) where Key : CodingKey {
+        guard let metadata = self.enumMetadata else {
+            return
+        }
+        
+        precondition(self.tagNo == 0)
+        
+        guard let index = metadata.descriptor.fields.records.firstIndex(where: { $0.name == key.stringValue }) else {
+            return
+        }
+        
+        self.tagNo = UInt(index)
+    }
+    
+    func selectTag<Key>(_ tag: ASN1DecodedTag) -> Key? where Key : CodingKey {
+        guard let metadata = self.enumMetadata else {
+            return nil
+        }
+        
+        precondition(self.tagNo == 0)
+        
+        guard case .taggedTag(let tagNo) = tag else {
+            return nil
+        }
+        
+        guard tagNo < metadata.descriptor.fields.records.count else {
+            return nil
+        }
+        
+        self.tagNo = tagNo
+        return Key(stringValue: metadata.descriptor.fields.records[Int(tagNo)].name)
+    }
+    
+    func nextTag() -> ASN1DecodedTag {
         defer { self.tagNo += 1 }
-        return self.tagNo
+        return .taggedTag(self.tagNo)
+    }
+    
+    var tagging: ASN1Tagging {
+        return self.enumMetadata != nil ? .explicit : .implicit
     }
     
     var description: String {
