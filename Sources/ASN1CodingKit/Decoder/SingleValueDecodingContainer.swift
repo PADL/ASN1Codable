@@ -299,9 +299,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             
             return value
         } catch {
-            let isOptional = type is OptionalProtocol.Type
-
-            if isOptional, let error = error as? DecodingError, case .typeMismatch(_, _) = error {
+            if self.isWrongTypeForOptional(type, error) {
                 return self.nilLiteral(type)
             } else {
                 throw error
@@ -325,6 +323,16 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                                                 debugDescription: "Expected no more than \(numberOfKeyedObjectsDecoded) items when decoding \(type); received \(items.count)")
             throw DecodingError.typeMismatch(type, context)
         }
+    }
+    
+    private func isWrongTypeForOptional<T>(_ type: T.Type, _ error: Error) -> Bool {
+        guard type is OptionalProtocol.Type,
+              let error = error as? DecodingError,
+              case .typeMismatch(_, _) = error else {
+            return false
+        }
+        
+        return true
     }
     
     private func nilLiteral<T>(_ type: T.Type) -> T {
