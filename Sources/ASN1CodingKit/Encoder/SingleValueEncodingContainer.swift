@@ -205,7 +205,7 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     
     private func encodeConstructedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
         // FIXME sort struct set fields by encoding
-        self.context.encodeAsSet = value is Set<AnyHashable> || value is ASN1EncodeAsSetType
+        self.context.encodeAsSet = value is Set<AnyHashable> || value is ASN1SetCodable
         
         if self.context.taggingEnvironment == .automatic {
             self.context.automaticTaggingContext = ASN1AutomaticTaggingContext(type(of: value))

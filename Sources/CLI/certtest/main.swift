@@ -17,7 +17,7 @@
 import Foundation
 import ASN1CodingKit
 
-public struct TestStruct: Codable, ASN1TaggedType, ASN1EncodeAsSetType {
+public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
     public static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self    
 
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>

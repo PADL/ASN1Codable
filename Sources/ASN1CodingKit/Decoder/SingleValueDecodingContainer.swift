@@ -268,7 +268,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     }
 
     private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T : Decodable {
-        self.context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1EncodeAsSetType.Type
+        self.context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1SetCodable.Type
         
         if self.context.taggingEnvironment == .automatic {
             self.context.automaticTaggingContext = ASN1AutomaticTaggingContext(type)
