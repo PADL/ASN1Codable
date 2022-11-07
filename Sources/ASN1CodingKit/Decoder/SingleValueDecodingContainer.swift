@@ -239,7 +239,6 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : tag
         
         if object.constructed {
-            // FIXME something is very wrong here
             if tagging == .implicit && !ASN1DecodingContext.isEnum(type) {
                 // FIXME propagate save
                 unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
