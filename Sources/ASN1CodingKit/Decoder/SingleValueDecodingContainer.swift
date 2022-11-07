@@ -225,7 +225,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             // FIXME should we check for ASN1NullObject instead
             // FIXME are we potentailly squashing real tag mismatch errors
             if (object.isNull || tag.isUniversal == false), type is any OptionalProtocol.Type {
-                return Optional<Decodable>.init(nilLiteral: ()) as! T
+                return self.nilLiteral(type)
             }
             
             let context = DecodingError.Context(codingPath: self.codingPath,
@@ -302,7 +302,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             let isOptional = type is OptionalProtocol.Type
 
             if isOptional, let error = error as? DecodingError, case .typeMismatch(_, _) = error {
-                return Optional<Decodable>.init(nilLiteral: ()) as! T
+                return self.nilLiteral(type)
             } else {
                 throw error
             }
@@ -325,6 +325,11 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                                                 debugDescription: "Expected no more than \(numberOfKeyedObjectsDecoded) items when decoding \(type); received \(items.count)")
             throw DecodingError.typeMismatch(type, context)
         }
+    }
+    
+    private func nilLiteral<T>(_ type: T.Type) -> T {
+        precondition(type is any OptionalProtocol.Type)
+        return Optional<Decodable>.init(nilLiteral: ()) as! T
     }
 }
 
