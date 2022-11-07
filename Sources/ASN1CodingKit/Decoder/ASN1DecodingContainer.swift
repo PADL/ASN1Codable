@@ -18,6 +18,7 @@ import Foundation
 import ASN1Kit
 
 protocol ASN1DecodingContainer {
+    var codingPath: [CodingKey] { get }
     var object: ASN1Object { get }
     var context: ASN1DecodingContext { get set }
     var currentIndex: Int { get }
@@ -31,8 +32,14 @@ extension ASN1DecodingContainer {
         if self.context.enumCodingState != .none || self.object.isNull {
             return self.object
         } else {
-            precondition(self.object.constructed)
-            precondition(self.currentIndex < self.object.data.items!.count)
+            guard self.object.constructed,
+                  let items = self.object.data.items,
+                  self.currentIndex < items.count else {
+                let context = DecodingError.Context(codingPath: self.codingPath,
+                                                    debugDescription: "Object \(self.object) is not constructed or has less than \(self.currentIndex) items")
+                throw DecodingError.dataCorrupted(context)
+            }
+            
             return self.object.data.items![self.currentIndex]
         }
     }
