@@ -16,10 +16,13 @@
 
 import Foundation
 import ASN1CodingKit
+import BigNumber
 
 public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
     public static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self    
 
+    
+    /*
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>
     public var version: Int = 1
 
@@ -28,15 +31,19 @@ public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
 
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString>
     var bitString = BitString([0x02, 0x03, 0xcc])
+     */
 
-    @ASN1ContextTagged<ASN1TagNumber$3, ASN1DefaultTagging, UTCTime>
+
+    @ASN1ContextTagged<ASN1TagNumber$3, ASN1DefaultTagging, UTCTime<Date?>>
     @UTCTime
-    public var utcTime = Date()
+    public var utcTime: Date? = nil
 
+    /*
     @ASN1ContextTagged<ASN1TagNumber$4, ASN1DefaultTagging, PrintableString<String>>
     @PrintableString
     public var foobar = "hello world"
-    
+
+    /*
     @ASN1ContextTagged<ASN1TagNumber$5, ASN1DefaultTagging, Array<String>>
     var anArray = ["Hello", "ASN.1", "Coding", "Kit"]
 
@@ -146,9 +153,11 @@ func test() -> Void {
     let generalName = GeneralName.rfc822Name(ASN1ContextTagged(wrappedValue: IA5String(wrappedValue: "lukeh@padl.com")))
     let generalNames = [generalName]
 
-    let inhibitAnyPolicy = Extension(extnID: InhibitAnyPolicyOID,
+    let inhibitAnyPolicy = Extension(extnID: id_x509_ce_inhibitAnyPolicy,
+                                     critical: false,
                                      extnValue: ASN1ObjectSetValue(wrappedValue: SkipCerts(1)))
-    let subjectAltName = Extension(extnID: SubjectAltNameOID,
+    let subjectAltName = Extension(extnID: id_x509_ce_subjectAltName,
+                                   critical: false,
                                    extnValue: ASN1ObjectSetValue(wrappedValue: generalNames))
     
     let extensions = [inhibitAnyPolicy, subjectAltName]
@@ -161,12 +170,12 @@ func test() -> Void {
     c.signatureValue = BitString([0x01, 0x02, 0x03, 0x55, 0x66, 0xff])
         
     do {
-        let valueToEncode = setTest
+        let valueToEncode = ts
         
         print("Encoding value: \(String(describing: valueToEncode))")
         
         let asn1Encoder = ASN1Encoder()
-        asn1Encoder.taggingEnvironment = .automatic
+        //asn1Encoder.taggingEnvironment = .automatic
         let berData = try asn1Encoder.encode(valueToEncode)
         print("BER: \(berData.toHexString())")
         

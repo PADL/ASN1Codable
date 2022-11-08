@@ -1,36 +1,55 @@
 # ASN1CodingKit
 
-ASN1CodingKit is a Swift framework for encoding Codable types using ASN.1. It is intended to be the glue between an ASN.1 compiler that generates Swift types from an ASN.1 module, and [ASN1Kit](https://github.com/gematik/ASN1Kit) which provides the raw encoding.
+ASN1CodingKit is a Swift framework for encoding Codable types using ASN.1. The types can either be defined directly in Swift, or they can be generated from the ASN.1 using a translator that reads the output of [Heimdal's](https://github.com/heimdal/heimdal) `asn1compile` tool. The underlying ASN.1 encoding is provided by the [ASN1Kit](https://github.com/gematik/ASN1Kit) library.
 
 Note that it is presently a work in progress: it is not ready for production (or even testing) use.
 
 ## Example
 
-```swift
-struct TestType: Codable, ASN1ApplicationTaggedType {
-    static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self
-    
-    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, UInt>
-    var someInteger: UInt = 0
-
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, GeneralizedTime>
-    @GeneralizedTime
-    var someTime: Date = Date()
-    
-    @ASN1ContextTagged<ASN1TagNumber$2, ASN1DefaultTagging, PrintableString<String?>>
-    @PrintableString
-    var someString: String? = nil
+```asn1
+DirectoryString ::= CHOICE {
+        ia5String       IA5String,
+        printableString PrintableString,
+        universalString UniversalString,
+        utf8String      UTF8String,
+        bmpString       BMPString
 }
 
-var testValue = TestType()
-testValue.someInteger = 1234
-testValue.someTime = Date()
-testValue.someString = "Hello"
+AttributeValues ::= SET OF AttributeValue
+
+Attribute ::= SEQUENCE {
+        type    AttributeType,
+        value   AttributeValues
+}
 ```
 
-Note there are some limitations with property wrappers and optionals, particularly when the wrapper is nested. We may replace the property wrappers with a variation on CodingKey.
+becomes:
+
+```swift
+enum DirectoryString: Codable {
+	case ia5String(IA5String<String>)
+	case printableString(PrintableString<String>)
+	case universalString(UniversalString<String>)
+	case utf8String(UTF8String<String>)
+	case bmpString(BMPString<String>)
+}
+
+typealias AttributeValues = Set<AttributeValue>
+
+struct Attribute: Codable {
+	enum CodingKeys: String, CodingKey {
+		case type
+		case value
+	}
+
+	var type: AttributeType
+	var value: AttributeValues
+}
+```
+
+You can use the encoder and decoder as follows:
 
 ```
-let berData = try ASN1Encoder().encode(testValue)
-let decodedValue = try ASN1Decoder().decode(TestType.self, from: berData)
+let berData = try ASN1Encoder().encode(someValue)
+let decodedValue = try ASN1Decoder().decode(AType.self, from: berData)
 ```

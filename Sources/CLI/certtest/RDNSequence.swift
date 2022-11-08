@@ -17,7 +17,7 @@
 import Foundation
 import ASN1CodingKit
 
-public extension RDNSequence {
+extension RDNSequence {
     static func parse(dn: String) throws -> RDNSequence {
         let dnComponents = dn.components(separatedBy: "/")
 
