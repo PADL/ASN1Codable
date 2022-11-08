@@ -16,10 +16,13 @@
 
 import Foundation
 import ASN1CodingKit
+import BigNumber
 
 public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
     public static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self    
 
+    
+    /*
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>
     public var version: Int = 1
 
@@ -28,20 +31,33 @@ public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
 
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString>
     var bitString = BitString([0x02, 0x03, 0xcc])
+     */
 
-    @ASN1ContextTagged<ASN1TagNumber$3, ASN1DefaultTagging, UTCTime>
+
+    @ASN1ContextTagged<ASN1TagNumber$3, ASN1DefaultTagging, UTCTime<Date?>>
     @UTCTime
-    public var utcTime = Date()
+    public var utcTime: Date? = nil
 
+    /*
     @ASN1ContextTagged<ASN1TagNumber$4, ASN1DefaultTagging, PrintableString<String>>
     @PrintableString
     public var foobar = "hello world"
-    
+
+    /*
     @ASN1ContextTagged<ASN1TagNumber$5, ASN1DefaultTagging, Array<String>>
     var anArray = ["Hello", "ASN.1", "Coding", "Kit"]
 
     @ASN1ContextTagged<ASN1TagNumber$6, ASN1DefaultTagging, Set<String>>
     var aSet = Set(["A", "Set"])
+*/
+    
+//    @UTCTime
+//    public var time: Date?
+     */
+    
+    @ASN1ContextTagged<ASN1TagNumber$7, ASN1DefaultTagging, GeneralString<String?>>
+    @GeneralString
+    public var barbar: String? = "hello"
 }
 
 struct SignatureWrapper: Codable {
@@ -152,12 +168,12 @@ func test() -> Void {
     c.signatureValue = BitString([0x01, 0x02, 0x03, 0x55, 0x66, 0xff])
         
     do {
-        let valueToEncode = color
+        let valueToEncode = ts
         
         print("Encoding value: \(String(describing: valueToEncode))")
         
         let asn1Encoder = ASN1Encoder()
-        asn1Encoder.taggingEnvironment = .automatic
+        //asn1Encoder.taggingEnvironment = .automatic
         let berData = try asn1Encoder.encode(valueToEncode)
         print("BER: \(berData.toHexString())")
         

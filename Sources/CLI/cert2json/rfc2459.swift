@@ -20,9 +20,9 @@ import BigNumber
 
 public typealias Version = Int
 
-public let rfc3280_version_1 = 0
-public let rfc3280_version_2 = 1
-public let rfc3280_version_3 = 2
+public let rfc3280_version_1: Version = 0
+public let rfc3280_version_2: Version = 1
+public let rfc3280_version_3: Version = 2
 
 public typealias CertificateSerialNumber = BInt
 
@@ -92,8 +92,8 @@ public enum Name: Codable {
 }
 
 public enum Time: Codable {
-    case utcTime(UTCTime)
-    case generalTime(GeneralizedTime)
+    case utcTime(UTCTime<Date>)
+    case generalTime(GeneralizedTime<Date>)
 }
 
 public struct Validity: Codable {
@@ -142,7 +142,9 @@ public struct OtherName: ASN1ObjectSetCodable {
     @ASN1ObjectSetType
     public var type_id: ObjectIdentifier
 
-    public var value: ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, ASN1ObjectSetValue>
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, ASN1ObjectSetValue>
+    public var value: ASN1ObjectSetValue = ASN1ObjectSetValue()
+    //public var value: ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, ASN1ObjectSetValue>
 }
 
 public enum GeneralName: Codable {
@@ -259,11 +261,11 @@ public struct DistributionPoint: Codable {
 typealias CRLDistributionPoints = [DistributionPoint]
 
 public struct PrivateKeyUsagePeriod: Codable {
-    @ASN1ContextTagged<ASN1TagNumber$0, ASN1ImplicitTagging, GeneralizedTime?>
-    var notBefore: GeneralizedTime?
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1ImplicitTagging, GeneralizedTime<Date>?>
+    var notBefore: GeneralizedTime<Date>?
     
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, GeneralizedTime?>
-    var notAfter: GeneralizedTime?
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, GeneralizedTime<Date>?>
+    var notAfter: GeneralizedTime<Date>?
 }
 
 public typealias CertPolicyId = ObjectIdentifier

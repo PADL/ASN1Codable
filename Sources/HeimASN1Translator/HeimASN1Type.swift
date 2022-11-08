@@ -1,0 +1,281 @@
+//
+// Copyright (c) 2022 PADL Software Pty Ltd
+//
+// Licensed under the Apache License, Version 2.0 (the License);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an 'AS IS' BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+import Foundation
+import ASN1Kit
+import AnyCodable
+
+protocol HeimASN1SwiftTypeRepresentable {
+    var swiftType: String? { get }
+}
+
+indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, HeimASN1TagRepresentable {
+    case universal(HeimASN1UniversalType)
+    case typeDef(HeimASN1TypeDef)
+    case typeRef(String)
+    
+    static func == (lhs: HeimASN1Type, rhs: HeimASN1Type) -> Bool {
+        return lhs.name == rhs.name
+    }
+
+    var universalTypeValue: HeimASN1UniversalType? {
+        if case .universal(let type) = self {
+            return type
+        } else {
+            return nil
+        }
+    }
+    
+    var typeDefValue: HeimASN1TypeDef? {
+        if case .typeDef(let type) = self {
+            return type
+        } else {
+            return nil
+        }
+    }
+    
+    var typeRefValue: String? {
+        if case .typeRef(let type) = self {
+            return type
+        } else {
+            return nil
+        }
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+
+        do {
+            let type = try container.decode(HeimASN1UniversalType.self)
+            self = .universal(type)
+        } catch {
+            do {
+                let ref = try container.decode(String.self)
+                self = .typeRef(ref)
+            } catch {
+                do {
+                    let constructed = try container.decode(HeimASN1TypeDef.self)
+                    self = .typeDef(constructed)
+                } catch {
+                    throw error
+                }
+            }
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+    }
+    
+    private func cTypeToSwiftType(_ cType: String) -> String? {
+        switch cType {
+        case "heim_integer":
+            return "BInt"
+        case "int64_t":
+            return "Int64"
+        case "int":
+            return "Int32"
+        case "uint64_t":
+            return "UInt64"
+        case "unsigned int":
+            return "UInt32"
+        default:
+            return nil
+        }
+    }
+    
+    var swiftType: String? {
+        switch self {
+        case .typeDef(let type):
+            if type.tag == .universal(.integer), let cType = type.cType, let swiftType = cTypeToSwiftType(cType) {
+                return swiftType
+            } else {
+                return type.swiftType
+            }
+        case .universal(let type):
+            return type.swiftType
+        case .typeRef(let type):
+            return type == "HEIM_ANY" ? "AnyCodable" : type
+        }
+    }
+    
+    var name: String {
+        switch self {
+        case .typeDef(let type):
+            return type.name
+        case .universal(let type):
+            return type.rawValue
+        case .typeRef(let type):
+            return type
+        }
+    }
+    
+    var tag: ASN1DecodedTag? {
+        switch self {
+        case .typeDef(let type):
+            return type.tag
+        case .universal(let type):
+            return type.tag
+        case .typeRef(let type):
+            if let type = self.typeDefValue?.translator?.typeDefsByName[type] {
+                return type.tag
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    private func emitTypeDef(_ typeDef: HeimASN1TypeDef, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+        typeDef.parent = containingTypeDef
+        
+        if containingTypeDef.isTypeDef ?? false {
+            try emitTypeDefDefinition(typeDef, containingTypeDef: containingTypeDef, &outputStream)
+        } else {
+            try emitTypeDefField(typeDef, containingTypeDef: containingTypeDef, &outputStream)
+        }
+    }
+
+    private func emitTypeDefField(_ typeDef: HeimASN1TypeDef, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+        let isChoice = containingTypeDef.parent?.tTypeUniversalValue == .choice
+        
+        if isChoice {
+            let fieldDescriptor = HeimASN1FieldDescriptor(containingTypeDef)
+            outputStream.write("\tcase \(containingTypeDef.generatedName)(\(fieldDescriptor.swiftType!))\n")
+        } else {
+            let fieldDescriptor = HeimASN1FieldDescriptor(typeDef)
+            let disablePropertyWrappers = containingTypeDef.translator?.disablePropertyWrappers ?? false
+            if disablePropertyWrappers {
+                outputStream.write("\t\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(fieldDescriptor.swiftType!)")
+            } else {
+                try fieldDescriptor.emit(&outputStream)
+                outputStream.write("\t\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(fieldDescriptor.bareSwiftType)")
+                if fieldDescriptor.needsInitialValue {
+                    outputStream.write(" = \(fieldDescriptor.initialValue)")
+                }
+            }
+            outputStream.write("\n")
+        }
+    }
+
+    private func swiftType(containingTypeDef: HeimASN1TypeDef) -> String {
+        let fieldDescriptor = HeimASN1FieldDescriptor(containingTypeDef)
+        return fieldDescriptor.swiftType!
+    }
+
+    private func emitSwiftTypeAlias(containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) {
+        if !(containingTypeDef.translator?.typeRefExists(containingTypeDef.generatedName) ?? false) {
+            let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
+            outputStream.write("\(containingTypeDef.visibility)typealias \(containingTypeDef.generatedName) = \(swiftType)\n")
+            containingTypeDef.translator?.cacheTypeRef(containingTypeDef.generatedName)
+        }
+    }
+    
+    private func emitTypeDefDefinition(_ typeDef: HeimASN1TypeDef, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+        let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
+        
+        if containingTypeDef.tag == .universal(.enumerated) {
+            outputStream.write("\(containingTypeDef.visibility)enum \(containingTypeDef.generatedName): \(containingTypeDef.swiftConformances(swiftType)) {\n")
+            try typeDef.members?.forEach {
+                if let member = $0.typeDefValue {
+                    member.parent = typeDef
+                    try member.emit(&outputStream)
+                } else if let member = $0.dictionaryValue?.first {
+                    outputStream.write("\tcase \(member.key) = \(member.value)\n")
+                }
+            }
+            outputStream.write("}\n")
+        } else {
+            if containingTypeDef.isTaggedType == false {
+                self.emitSwiftTypeAlias(containingTypeDef: containingTypeDef, &outputStream)
+            }
+
+            try typeDef.emit(&outputStream)
+        }
+    }
+    
+    private func wrappedInitializer(containingTypeDef: HeimASN1TypeDef, value: AnyCodable) -> String {
+        if let grandParent = containingTypeDef.grandParent {
+            let fieldDescriptor = HeimASN1FieldDescriptor(grandParent)
+            precondition(!fieldDescriptor.hasNestedWrappers)
+            
+            if fieldDescriptor.isInitializedWithWrappedValue {
+                let quotedValue: String
+                if value.value is String {
+                    quotedValue = "\"\(value)\""
+                } else {
+                    quotedValue = "\(value)"
+                }
+                
+                return "\(fieldDescriptor.swiftType!)(wrappedValue: \(quotedValue))"
+            }
+        }
+        
+        return "\(value)"
+    }
+    
+    private func emitUniversal(_ universal: HeimASN1UniversalType, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+        //let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
+        let swiftType = self.swiftType!
+
+        switch universal {
+        case .objectIdentifier:
+            if let oidStringValue = containingTypeDef.oidStringValue {
+                outputStream.write("\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(swiftType)\(containingTypeDef.optional ?? false ? "?" : "")")
+                outputStream.write(" = ObjectIdentifier(rawValue: \"\(oidStringValue)\")!\n")
+            }
+            break
+        case .integer:
+            try containingTypeDef.members?.forEach {
+                if let member = $0.typeDefValue {
+                    member.parent = typeDefValue
+                    try member.emit(&outputStream)
+                } else if let member = $0.dictionaryValue?.first {
+                    let value = wrappedInitializer(containingTypeDef: containingTypeDef, value: member.value)
+                    outputStream.write("\(containingTypeDef.visibility)let \(member.key): \(containingTypeDef.generatedName) = \(value)\n")
+                }
+            }
+            break
+        default:
+            self.emitSwiftTypeAlias(containingTypeDef: containingTypeDef, &outputStream)
+            break
+        }
+    }
+
+    private func emitTypeRef(_ ref: String, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+        if containingTypeDef.isTypeDef ?? false {
+            self.emitSwiftTypeAlias(containingTypeDef: containingTypeDef, &outputStream)
+        } else if containingTypeDef.parent?.tTypeUniversalValue == .choice {
+            outputStream.write("\tcase \(containingTypeDef.generatedName)(\(ref))\n")
+        } else {
+            outputStream.write("/// unhandled type ref \(ref)\n")
+        }
+    }
+
+    func emitType(containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+        switch self {
+        case .typeDef(let type):
+            precondition(type.parent != nil)
+            type.tType?.typeDefValue?.parent = containingTypeDef
+            try self.emitTypeDef(type, containingTypeDef: containingTypeDef, &outputStream)
+            break
+        case .universal(let type):
+            try self.emitUniversal(type, containingTypeDef: containingTypeDef, &outputStream)
+            break
+        case .typeRef(let type):
+            try self.emitTypeRef(type, containingTypeDef: containingTypeDef, &outputStream)
+            break
+        }
+    }
+}

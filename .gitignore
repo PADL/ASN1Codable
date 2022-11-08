@@ -98,3 +98,5 @@ devops
 Cartfile.resolved
 *.swo
 *.swp
+
+Sources/CLI/TemporaryCompilerOutputChecker/Output.swift
