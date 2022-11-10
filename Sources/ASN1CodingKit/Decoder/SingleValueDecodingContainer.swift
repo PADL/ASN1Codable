@@ -80,9 +80,11 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     
     private func decodeFixedWidthInteger<T>(_ type: T.Type) throws -> T where T: FixedWidthInteger {
         try self.mappingASN1Error(type) {
-            guard self.object.tag == .universal(.integer) else {
+            let expectedTag: ASN1DecodedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
+
+            guard self.object.tag == expectedTag else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Expected \(ASN1DecodedTag.universal(.integer)) tag when decoding \(self.object)")
+                                                    debugDescription: "Expected \(expectedTag) tag when decoding \(self.object)")
                 throw DecodingError.typeMismatch(type, context)
             }
             
@@ -269,7 +271,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
 
     private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T : Decodable {
         self.context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1SetCodable.Type
-        
+
         if self.context.taggingEnvironment == .automatic {
             self.context.automaticTaggingContext = ASN1AutomaticTaggingContext(type)
         } else {

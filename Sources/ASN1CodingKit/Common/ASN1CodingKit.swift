@@ -20,7 +20,6 @@ import ASN1Kit
 @_exported import ASN1Kit
 
 public protocol ASN1ExtensibleType {
-    
 }
 
 public extension CodingUserInfoKey {

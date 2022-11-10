@@ -106,6 +106,14 @@ let automatic: AutoType = AutoType()
 
 let foobar = Set(["Hello", "World!"])
 
+public enum Color: Int, Codable {
+    case red = 0
+    case blue = 1
+    case yellow = 2
+}
+
+let color = Color.blue
+
 func test() -> Void {
     let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
     let ai = AlgorithmIdentifier(algorithm: oi)
@@ -122,7 +130,7 @@ func test() -> Void {
                            validity: validity,
                            subject: subject,
                            subjectPublicKeyInfo: spki)
-    t.version = Version.rfc3280_version_3
+    t.version = rfc3280_version_3
         
     t.issuerUniqueID = BitString([01, 02, 03, 04, 05])
     //t.subjectUniqueID = BitString([0xff, 02, 03, 04, 05])
@@ -144,7 +152,7 @@ func test() -> Void {
     c.signatureValue = BitString([0x01, 0x02, 0x03, 0x55, 0x66, 0xff])
         
     do {
-        let valueToEncode = ts
+        let valueToEncode = color
         
         print("Encoding value: \(String(describing: valueToEncode))")
         

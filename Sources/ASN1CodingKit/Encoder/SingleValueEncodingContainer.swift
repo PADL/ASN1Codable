@@ -93,7 +93,9 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     
     private func encodeFixedWithInteger<T>(_ value: T) throws where T: FixedWidthInteger {
         try self.mappingASN1Error(value) {
-            let object = T.isSigned ? try Int(value).asn1encode(tag: nil) : try UInt(value).asn1encode(tag: nil)
+            let tag: ASN1DecodedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
+            
+            let object = T.isSigned ? try Int(value).asn1encode(tag: tag) : try UInt(value).asn1encode(tag: tag)
             self.object = object
         }
     }

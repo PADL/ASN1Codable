@@ -18,11 +18,11 @@ import Foundation
 import ASN1CodingKit
 import BigNumber
 
-public enum Version: Int, Codable {
-    case rfc3280_version_1 = 0
-    case rfc3280_version_2 = 1
-    case rfc3280_version_3 = 2
-}
+public typealias Version = Int
+
+public let rfc3280_version_1 = 0
+public let rfc3280_version_2 = 1
+public let rfc3280_version_3 = 2
 
 public typealias CertificateSerialNumber = BInt
 
@@ -295,6 +295,19 @@ public struct AuthorityInfoAccess: Codable {
     var accessLocation: GeneralName
 }
 
+public enum CRLReason: Int, Codable {
+    case unspecified = 0
+    case keyCompromise = 1
+    case cACompromise = 2
+    case affiliationChanged = 3
+    case superseded = 4
+    case cessationOfOperation = 5
+    case certificateHold = 6
+    case removeFromCRL = 8
+    case privilegeWithdrawn = 9
+    case aACompromise = 10
+}
+
 public typealias AuthorityInfoAccessSyntax = [AuthorityInfoAccess]
 
 public let SubjectDirectoryAttributesOID = ObjectIdentifier(rawValue: "2.5.29.9")!
@@ -359,7 +372,7 @@ public class TBSCertificate: Codable, ASN1PreserveBinary {
     // this is another, more flexible way of implementing defaults and is what should be emitted by the compiler
     var version: Version {
         get {
-            return self._version ?? .rfc3280_version_1
+            return self._version ?? 1
         }
         set {
             self._version = newValue
