@@ -189,7 +189,8 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                 value = try self.decode(wrappedType, from: object, skipTaggedValues: skipTaggedValues) as! T
             } catch {
                 if self.isWrongTypeForOptional(type, error) {
-                    value = self.nilLiteral(type)
+                    let type = type as! any OptionalProtocol.Type
+                    value = self.nilLiteral(type) as! T
                 } else {
                     throw error
                 }
@@ -239,15 +240,13 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         }
                 
         guard object.tag == tag else {
-            if type is any OptionalProtocol.Type {
-                return self.nilLiteral(type)
-            } else if let type = type as? any ASN1TaggedWrappedValue.Type, isWrappedOptional(type) {
-                return self.wrappedNilLiteral(type) as! T
+            if self.isOptionalOrWrappedOptional(type) {
+                return self.possiblyWrappedNilLiteral(type)
+            } else {
+                let context = DecodingError.Context(codingPath: self.codingPath,
+                                                    debugDescription: "Expected tag \(tag) but received \(object.tag)")
+                throw DecodingError.typeMismatch(type, context)
             }
-
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Expected tag \(tag) but received \(object.tag)")
-            throw DecodingError.typeMismatch(type, context)
         }
                 
         let unwrappedObject: ASN1Object
@@ -341,8 +340,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         return true
     }
     
-    private func nilLiteral<T>(_ type: T.Type) -> T {
-        precondition(type is any OptionalProtocol.Type)
+    private func nilLiteral<T: OptionalProtocol>(_ type: T.Type) -> T {
         return Optional<Decodable>.init(nilLiteral: ()) as! T
     }
     
@@ -355,14 +353,34 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         
         return wrappedType is OptionalProtocol.Type
     }
-    
+        
+    private func isOptionalOrWrappedOptional<T: Decodable>(_ type: T.Type) -> Bool {
+        if type is any OptionalProtocol.Type {
+            return true
+        } else if let type = type as? any ASN1TaggedWrappedValue.Type {
+            return self.isWrappedOptional(type)
+        } else {
+            return false
+        }
+    }
+
     private func wrappedNilLiteral<T: ASN1TaggedWrappedValue>(_ type: T.Type) -> T {
         if let wrappedType = type.Value as? any ASN1TaggedWrappedValue.Type {
             return T(wrappedValue: self.wrappedNilLiteral(wrappedType) as! T.Value)
-        } else if type.Value is any OptionalProtocol.Type {
-            return T(wrappedValue: self.nilLiteral(type.Value))
+        } else if let wrappedType = type.Value as? any OptionalProtocol.Type {
+            return T(wrappedValue: self.nilLiteral(wrappedType) as! T.Value)
         } else {
             fatalError("Non-optional final type passed to wrappedNilLiteral")
+        }
+    }
+    
+    private func possiblyWrappedNilLiteral<T: Decodable>(_ type: T.Type) -> T {
+        if let type = type as? any ASN1TaggedWrappedValue.Type {
+            return self.wrappedNilLiteral(type) as! T
+        } else if let type = type as? any OptionalProtocol.Type {
+            return self.nilLiteral(type) as! T
+        } else {
+            fatalError("possiblyWrappedNilLiteral() called with non-optional type hierarchy")
         }
     }
 }
