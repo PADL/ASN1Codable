@@ -37,30 +37,8 @@ extension Optional: ExpressibleByString where Wrapped == String {
     }
 }
 
-extension Optional: ASN1DecodableType where Wrapped == String {
-    public init(from asn1: ASN1Object) throws {
-        if asn1.isNull {
-            self = nil
-        } else {
-            self = try Wrapped(from: asn1)
-        }
-    }
-}
-
-extension Optional: ASN1EncodableType where Wrapped == String {
-    public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
-        switch self {
-        case .none:
-            return ASN1Kit.create(tag: ASN1DecodedTag.universal(.null),
-                                  data: ASN1Data.primitive(Data()))
-        case .some(let value):
-            return try value.asn1encode(tag: tag)
-        }
-    }
-}
-
 @propertyWrapper
-public struct GeneralString<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct GeneralString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -76,8 +54,12 @@ public struct GeneralString<Value: Codable & ExpressibleByString & ASN1CodableTy
     }
 }
 
+extension GeneralString: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .generalString }
+}
+
 @propertyWrapper
-public struct IA5String<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct IA5String<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -93,8 +75,12 @@ public struct IA5String<Value: Codable & ExpressibleByString & ASN1CodableType>:
     }
 }
 
+extension IA5String: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .ia5String }
+}
+
 @propertyWrapper
-public struct UTF8String<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct UTF8String<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -110,8 +96,12 @@ public struct UTF8String<Value: Codable & ExpressibleByString & ASN1CodableType>
     }
 }
 
+extension UTF8String: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .utf8String }
+}
+
 @propertyWrapper
-public struct UniversalString<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct UniversalString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -127,8 +117,12 @@ public struct UniversalString<Value: Codable & ExpressibleByString & ASN1Codable
     }
 }
 
+extension UniversalString: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .universalString }
+}
+
 @propertyWrapper
-public struct BMPString<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct BMPString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -144,8 +138,12 @@ public struct BMPString<Value: Codable & ExpressibleByString & ASN1CodableType>:
     }
 }
 
+extension BMPString: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .bmpString }
+}
+
 @propertyWrapper
-public struct PrintableString<Value: Codable & ExpressibleByString & ASN1CodableType>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct PrintableString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -159,26 +157,6 @@ public struct PrintableString<Value: Codable & ExpressibleByString & ASN1Codable
     public static var tag: ASN1DecodedTag? {
         return .universal(.printableString)
     }
-}
-
-extension GeneralString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .generalString }
-}
-
-extension IA5String: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .ia5String }
-}
-
-extension UTF8String: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .utf8String }
-}
-
-extension UniversalString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .universalString }
-}
-
-extension BMPString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .bmpString }
 }
 
 extension PrintableString: ASN1UniversalTagRepresentable {

@@ -179,6 +179,17 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             value = try self.decodeAutomaticallyTaggedValue(type, from: object)
         } else if let type = type as? ASN1DecodableType.Type {
             value = try decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
+        } else if let optionalType = type as? OptionalProtocol.Type,
+                  let wrappedType = optionalType.wrappedType as? Decodable.Type {
+            do {
+                value = try self.decode(wrappedType, from: object, skipTaggedValues: skipTaggedValues) as! T
+            } catch {
+                if self.isWrongTypeForOptional(type, error) {
+                    value = self.nilLiteral(type)
+                } else {
+                    throw error
+                }
+            }
         } else {
             value = try self.decodeConstructedValue(type, from: object)
         }
@@ -278,9 +289,6 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             self.context.automaticTaggingContext = nil
         }
 
-        // FIXME does the fact we need to do this perhaps represent a misarchitecture?
-        // e.g. should codingKeys represent the tags?
-
         if let type = type as? ASN1ObjectSetCodable.Type {
             self.context.objectSetCodingContext = ASN1ObjectSetCodingContext(objectSetType: type,
                                                                              encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
@@ -290,23 +298,15 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
 
         let decoder = ASN1DecoderImpl(object: sortedObject, codingPath: self.codingPath,
                                       userInfo: self.userInfo, context: self.context)
-        do {
-            let value = try T(from: decoder)
+        let value = try T(from: decoder)
             
-            try self.validateExtensibility(type, from: sortedObject, with: decoder)
-            
-            if var value = value as? ASN1PreserveBinary {
-                value._save = sortedObject.save
-            }
-            
-            return value
-        } catch {
-            if self.isWrongTypeForOptional(type, error) {
-                return self.nilLiteral(type)
-            } else {
-                throw error
-            }
+        try self.validateExtensibility(type, from: sortedObject, with: decoder)
+        
+        if var value = value as? ASN1PreserveBinary {
+            value._save = sortedObject.save
         }
+        
+        return value
     }
     
     private var explicitExtensibilityMarkerRequired: Bool {

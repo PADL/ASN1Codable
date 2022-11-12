@@ -17,70 +17,58 @@
 import Foundation
 import ASN1Kit
 
-@propertyWrapper
-public struct GeneralizedTime: Codable, ASN1CodableType {
-    public var wrappedValue: Date
-    
-    public init(wrappedValue: Date) {
-        self.wrappedValue = wrappedValue
-    }
-    
-    public init(from asn1: ASN1Object) throws {
-        if asn1.tag == .universal(.generalizedTime) {
-            try self.wrappedValue = Date(from: asn1)
-        } else {
-            throw ASN1Error.malformedEncoding("Invalid tag \(asn1.tag) for GeneralizedTime")
-        }
-    }
+public protocol ExpressibleByDate: Equatable, Hashable {
+    init(_ date: Date)
+}
 
-    public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
-        return try wrappedValue.asn1encode(tag: .universal(.generalizedTime))
+extension Date: ExpressibleByDate {
+    public init(_ date: Date) {
+        self = date
     }
-    
-    public func encode(to encoder: Encoder) throws {
-        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
-        try self.wrappedValue.encode(to: encoder)
-    }
-    
-    public init(from decoder: Decoder) throws {
-        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
-        self.wrappedValue = try Date(from: decoder)
+}
+
+extension Optional: ExpressibleByDate where Wrapped == Date {
+    public init(_ date: Date) {
+        self = date
     }
 }
 
 @propertyWrapper
-public struct UTCTime: Codable, ASN1CodableType {
-    public var wrappedValue: Date
+public struct GeneralizedTime<Value: Codable & ExpressibleByDate>: Codable, ASN1TaggedWrappedValue {
+    public var wrappedValue: Value
     
-    public init(wrappedValue: Date) {
+    public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
     
-    public init(from asn1: ASN1Object) throws {
-        if asn1.tag == .universal(.utcTime) {
-            try self.wrappedValue = Date(from: asn1)
-        } else {
-            throw ASN1Error.malformedEncoding("Invalid tag \(asn1.tag) for UTCTime")
-        }
-    }
-
-    public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
-        return try wrappedValue.asn1encode(tag: .universal(.utcTime))
+    public init() where Value: ExpressibleByNilLiteral {
+        self.wrappedValue = nil
     }
     
-    public func encode(to encoder: Encoder) throws {
-        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
-        try self.wrappedValue.encode(to: encoder)
-    }
-    
-    public init(from decoder: Decoder) throws {
-        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
-        self.wrappedValue = try Date(from: decoder)
+    public static var tag: ASN1DecodedTag? {
+        return .universal(.generalizedTime)
     }
 }
 
 extension GeneralizedTime: ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Tag { return .generalizedTime }
+}
+
+@propertyWrapper
+public struct UTCTime<Value: Codable & ExpressibleByDate>: Codable, ASN1TaggedWrappedValue {
+    public var wrappedValue: Value
+    
+    public init(wrappedValue: Value) {
+        self.wrappedValue = wrappedValue
+    }
+    
+    public init() where Value: ExpressibleByNilLiteral {
+        self.wrappedValue = nil
+    }
+    
+    public static var tag: ASN1DecodedTag? {
+        return .universal(.utcTime)
+    }
 }
 
 extension UTCTime: ASN1UniversalTagRepresentable {
