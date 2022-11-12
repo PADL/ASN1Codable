@@ -35,6 +35,10 @@ extension ASN1DecoderImpl {
     }
 }
 
+fileprivate extension ASN1TaggedWrappedValue {
+    static var wrappedType: Value.Type { return Value.self }
+}
+
 extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     private func mappingASN1Error<T>(_ type: T.Type, _ block: () throws -> T) throws -> T {
         do {
@@ -233,14 +237,14 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
             // FIXME should this happen? precondition check?
             return try self.decode(type, from: object, skipTaggedValues: skipTaggedValues)
         }
-        
+                
         guard object.tag == tag else {
-            // FIXME should we check for ASN1NullObject instead
-            // FIXME are we potentailly squashing real tag mismatch errors
-            if (object.isNull || tag.isUniversal == false), type is any OptionalProtocol.Type {
+            if type is any OptionalProtocol.Type {
                 return self.nilLiteral(type)
+            } else if let type = type as? any ASN1TaggedWrappedValue.Type, isWrappedOptional(type) {
+                return self.wrappedNilLiteral(type) as! T
             }
-            
+
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected tag \(tag) but received \(object.tag)")
             throw DecodingError.typeMismatch(type, context)
@@ -340,6 +344,26 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     private func nilLiteral<T>(_ type: T.Type) -> T {
         precondition(type is any OptionalProtocol.Type)
         return Optional<Decodable>.init(nilLiteral: ()) as! T
+    }
+    
+    private func isWrappedOptional<T: ASN1TaggedWrappedValue>(_ type: T.Type) -> Bool {
+        var wrappedType: Codable.Type = type
+        
+        while wrappedType is any ASN1TaggedWrappedValue.Type {
+            wrappedType = (wrappedType as! any ASN1TaggedWrappedValue.Type).wrappedType
+        }
+        
+        return wrappedType is OptionalProtocol.Type
+    }
+    
+    private func wrappedNilLiteral<T: ASN1TaggedWrappedValue>(_ type: T.Type) -> T {
+        if let wrappedType = type.Value as? any ASN1TaggedWrappedValue.Type {
+            return T(wrappedValue: self.wrappedNilLiteral(wrappedType) as! T.Value)
+        } else if type.Value is any OptionalProtocol.Type {
+            return T(wrappedValue: self.nilLiteral(type.Value))
+        } else {
+            fatalError("Non-optional final type passed to wrappedNilLiteral")
+        }
     }
 }
 
