@@ -34,7 +34,7 @@ extension Optional: ExpressibleByDate where Wrapped == Date {
 }
 
 @propertyWrapper
-public struct GeneralizedTime<Value: Codable & ExpressibleByDate>: Codable, ASN1TaggedWrappedValue {
+public struct GeneralizedTime<Value: Codable & ExpressibleByDate>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
@@ -55,7 +55,7 @@ extension GeneralizedTime: ASN1UniversalTagRepresentable {
 }
 
 @propertyWrapper
-public struct UTCTime<Value: Codable & ExpressibleByDate>: Codable, ASN1TaggedWrappedValue {
+public struct UTCTime<Value: Codable & ExpressibleByDate>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
     
     public init(wrappedValue: Value) {
