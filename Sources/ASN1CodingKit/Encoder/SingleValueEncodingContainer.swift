@@ -232,7 +232,7 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         }
         
         if self.context.encodeAsSet {
-            return encoder.object?.sorted
+            return encoder.object?.sortedByTag
         } else {
             return encoder.object
         }

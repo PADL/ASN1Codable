@@ -42,6 +42,13 @@ public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
 
     @ASN1ContextTagged<ASN1TagNumber$6, ASN1DefaultTagging, Set<String>>
     var aSet = Set(["A", "Set"])
+    
+//    @UTCTime
+//    public var time: Date?
+    
+    @ASN1ContextTagged<ASN1TagNumber$7, ASN1DefaultTagging, GeneralString<String?>>
+    @GeneralString
+    public var barbar: String? = "hello"
 }
 
 struct SignatureWrapper: Codable {
@@ -114,6 +121,8 @@ public enum Color: Int, Codable {
 
 let color = Color.blue
 
+let setTest = Set(arrayLiteral: "surely this is the biggest value", "B", "a", "CCC")
+
 func test() -> Void {
     let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
     let ai = AlgorithmIdentifier(algorithm: oi)
@@ -152,7 +161,7 @@ func test() -> Void {
     c.signatureValue = BitString([0x01, 0x02, 0x03, 0x55, 0x66, 0xff])
         
     do {
-        let valueToEncode = color
+        let valueToEncode = setTest
         
         print("Encoding value: \(String(describing: valueToEncode))")
         

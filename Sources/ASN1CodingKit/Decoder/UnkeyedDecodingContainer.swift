@@ -32,7 +32,8 @@ extension ASN1DecoderImpl {
              codingPath: [CodingKey],
              userInfo: [CodingUserInfoKey : Any],
              context: ASN1DecodingContext) throws {
-            self.object = object.tag == .universal(.set) ? object.sorted : object
+            // there's no point sorting SET OF on decode because the Swift type is unordered
+            self.object = object
             self.codingPath = codingPath
             self.userInfo = userInfo
             self.context = context

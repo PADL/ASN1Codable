@@ -46,7 +46,7 @@ private extension ASN1DecodedTag {
 }
 
 extension ASN1Object {
-    var sorted: ASN1Object {
+    var sortedByTag: ASN1Object {
         guard self.constructed, self.tag == .universal(.set), let items = self.data.items else {
             return self
         }
@@ -62,6 +62,36 @@ extension ASN1Object {
             }
         })
         
+        return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
+    }
+    
+    var sortedByEncodedValue: ASN1Object {
+        guard self.constructed, self.tag == .universal(.set), let items = self.data.items else {
+            return self
+        }
+
+        let sorted = items.sorted(by: { lhs, rhs in
+            do {
+                let lhs_serialized = try lhs.serialize()
+                let rhs_serialized = try rhs.serialize()
+                
+                if lhs_serialized.count == rhs_serialized.count {
+                    let cmp = lhs_serialized.withUnsafeBytes { lhs_bytes in
+                        rhs_serialized.withUnsafeBytes { rhs_bytes in
+                            return memcmp(lhs_bytes.bindMemory(to: UInt8.self).baseAddress,
+                                          rhs_bytes.bindMemory(to: UInt8.self).baseAddress,
+                                          lhs_serialized.count)
+                        }
+                    }
+                    return cmp > 0
+                } else {
+                    return lhs_serialized.count < rhs_serialized.count
+                }
+            } catch {
+                return false
+            }
+        })
+
         return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
     }
 }

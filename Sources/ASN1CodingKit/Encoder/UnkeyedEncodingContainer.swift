@@ -116,7 +116,7 @@ extension ASN1EncoderImpl.UnkeyedContainer {
             let values = self.containers.compactMap { $0.object }
             
             if self.context.encodeAsSet {
-                object = ASN1Kit.create(tag: .universal(.set), data: .constructed(values)).sorted
+                object = ASN1Kit.create(tag: .universal(.set), data: .constructed(values)).sortedByEncodedValue
             } else {
                 object = ASN1Kit.create(tag: .universal(.sequence), data: .constructed(values))
             }
