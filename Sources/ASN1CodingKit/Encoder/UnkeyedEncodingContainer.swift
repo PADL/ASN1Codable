@@ -115,8 +115,11 @@ extension ASN1EncoderImpl.UnkeyedContainer {
         } else {
             let values = self.containers.compactMap { $0.object }
             
-            object = ASN1Kit.create(tag: self.context.encodeAsSet ? .universal(.set) : .universal(.sequence),
-                                    data: .constructed(values))
+            if self.context.encodeAsSet {
+                object = ASN1Kit.create(tag: .universal(.set), data: .constructed(values)).sorted
+            } else {
+                object = ASN1Kit.create(tag: .universal(.sequence), data: .constructed(values))
+            }
         }
         
         return object

@@ -32,7 +32,7 @@ extension ASN1DecoderImpl {
              codingPath: [CodingKey],
              userInfo: [CodingUserInfoKey : Any],
              context: ASN1DecodingContext) throws {
-            self.object = object
+            self.object = object.tag == .universal(.set) ? object.sorted : object
             self.codingPath = codingPath
             self.userInfo = userInfo
             self.context = context

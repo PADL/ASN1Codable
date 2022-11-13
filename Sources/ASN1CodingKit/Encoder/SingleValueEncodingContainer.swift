@@ -233,8 +233,8 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         
         if self.context.encodeAsSet {
             return encoder.object?.sorted
+        } else {
+            return encoder.object
         }
-    
-        return encoder.object
     }
 }
