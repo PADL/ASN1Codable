@@ -100,7 +100,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
         return reflect(lookThroughOptional(type)) is EnumMetadata
     }
 
-    func decodingSingleValue<T>(_ type: T.Type?) -> Self {
+    func decodingSingleValue<T>(_ type: T.Type?) -> Self where T: Decodable {
         var context = self
         context.nextEnumCodingState()
 
