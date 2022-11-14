@@ -278,7 +278,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         } else if containingTypeDef.parent?.tTypeUniversalValue == .choice {
             outputStream.write("\tcase \(containingTypeDef.generatedName)(\(ref))\n")
         } else {
-            outputStream.write("/// unhandled type ref \(ref)\n")
+            fatalError("unhandled type ref \(ref)")
         }
     }
 

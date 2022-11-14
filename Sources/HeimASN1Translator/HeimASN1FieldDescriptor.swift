@@ -61,7 +61,6 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     /// values explicitly). The latter is accessed through the normal swiftType property.
 
     func emit(_ outputStream: inout OutputStream) throws {
-        //outputStream.write("\t//// \(self.description)\n")
         self.propertyWrappers.forEach {
             outputStream.write("\t@\($0)\n")
         }
