@@ -962,7 +962,7 @@
 "ttype":
 {"name":"GeneralName","gen_name":"dNSName","is_type":true,"exported":false,"typedef":false,"ttype":"IA5String","ctype":"heim_ia5_string"}
 }
-,{"name":"GeneralName","gen_name":"directoryName","is_type":true,"exported":false,"typedef":false,"choicetagenv":"IMPLICIT","tagclass":"CONTEXT","tagvalue":4,"tagenv":"EXPLICIT",
+,{"name":"GeneralName","gen_name":"directoryName","is_type":true,"exported":false,"typedef":false,"desired_tagenv":"IMPLICIT","tagclass":"CONTEXT","tagvalue":4,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"GeneralName","gen_name":"directoryName","is_type":true,"exported":true,"typedef":false,"ttype":"Name","alias":true
 }
@@ -1199,7 +1199,7 @@
 {"name":"DistributionPoint","gen_name":"DistributionPoint","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DistributionPoint","gen_name":"DistributionPoint","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct DistributionPoint","members":[
-{"name":"distributionPoint","gen_name":"distributionPoint","optional":true,"defval":null,"type":{"name":"DistributionPoint","gen_name":"*distributionPoint","is_type":true,"exported":false,"typedef":false,"choicetagenv":"IMPLICIT","tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
+{"name":"distributionPoint","gen_name":"distributionPoint","optional":true,"defval":null,"type":{"name":"DistributionPoint","gen_name":"*distributionPoint","is_type":true,"exported":false,"typedef":false,"desired_tagenv":"IMPLICIT","tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DistributionPoint","gen_name":"*distributionPoint","is_type":true,"exported":true,"typedef":false,"ttype":"DistributionPointName","alias":true
 }
