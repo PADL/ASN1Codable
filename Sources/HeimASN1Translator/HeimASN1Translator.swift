@@ -96,7 +96,7 @@ public final class HeimASN1Translator {
         outputStream.write("import Foundation\n")
         outputStream.write("import BigNumber\n")
         outputStream.write("import AnyCodable\n")
-        outputStream.write("import ASN1CodingKit\n")
+        outputStream.write("import ASN1Codable\n")
         outputStream.write("\n")
 
         var start: Data.Index = 0

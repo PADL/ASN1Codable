@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-import ASN1CodingKit
+import ASN1Codable
 import Commandant
 import Algorithms
 import Foundation

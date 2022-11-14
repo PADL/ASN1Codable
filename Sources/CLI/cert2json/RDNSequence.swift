@@ -15,7 +15,7 @@
 //
 
 import Foundation
-import ASN1CodingKit
+import ASN1Codable
 
 extension RDNSequence {
     static func parse(dn: String) throws -> RDNSequence {

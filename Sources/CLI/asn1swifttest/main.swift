@@ -15,7 +15,7 @@
 //
 
 import Foundation
-import ASN1CodingKit
+import ASN1Codable
 import BigNumber
 
 public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {

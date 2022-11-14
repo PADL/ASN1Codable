@@ -37,12 +37,12 @@ extension ASN1TaggedWrappedValue {
     }
     
     public func encode(to encoder: Encoder) throws {
-        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+        precondition(!(encoder is ASN1Codable.ASN1EncoderImpl))
         try self.wrappedValue.encode(to: encoder)
     }
     
     public init(from decoder: Decoder) throws {
-        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+        precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
         try self.init(wrappedValue: Value(from: decoder))
     }
 }

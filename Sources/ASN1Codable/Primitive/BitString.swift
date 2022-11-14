@@ -65,12 +65,12 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, Equatabl
     }
     
     public func encode(to encoder: Encoder) throws {
-        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+        precondition(!(encoder is ASN1Codable.ASN1EncoderImpl))
         try self.wrappedValue.encode(to: encoder)
     }
     
     public init(from decoder: Decoder) throws {
-        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+        precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
         self.wrappedValue = try Data(from: decoder)
     }
     
@@ -112,12 +112,12 @@ public struct ASN1RawRepresentableBitString <Value>: Codable, ASN1CodableType wh
     }
 
     public func encode(to encoder: Encoder) throws {
-        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+        precondition(!(encoder is ASN1Codable.ASN1EncoderImpl))
         try self.wrappedValue.encode(to: encoder)
     }
     
     public init(from decoder: Decoder) throws {
-        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+        precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
         self.wrappedValue = try Value(from: decoder)
     }
 }
@@ -157,12 +157,12 @@ public struct ASN1IntegerBitString <Value>: Codable, ASN1CodableType where Value
     }
 
     public func encode(to encoder: Encoder) throws {
-        precondition(!(encoder is ASN1CodingKit.ASN1EncoderImpl))
+        precondition(!(encoder is ASN1Codable.ASN1EncoderImpl))
         try self.wrappedValue.encode(to: encoder)
     }
     
     public init(from decoder: Decoder) throws {
-        precondition(!(decoder is ASN1CodingKit.ASN1DecoderImpl))
+        precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
         self.wrappedValue = try Value(from: decoder)
     }
 }
