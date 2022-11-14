@@ -50,6 +50,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     var preserve: Bool?
     var decorate: [HeimASN1Decoration]?
     var defaultValue: AnyCodable?
+    var choiceTaggingEnvironment: HeimASN1TaggingEnvironment?
     weak var parent: HeimASN1TypeDef?
     weak var translator: HeimASN1Translator?
     
@@ -83,6 +84,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         case preserve = "preserve"
         case decorate = "decorate"
         case defaultValue = "defval"
+        case choiceTaggingEnvironment = "choicetagenv"
     }
     
     required init(from decoder: Decoder) throws {
@@ -113,6 +115,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         self.preserve  = try container.decodeIfPresent(Bool.self, forKey: .preserve)
         self.decorate = try container.decodeIfPresent([HeimASN1Decoration].self, forKey: .decorate)
         self.defaultValue = try container.decodeIfPresent(AnyCodable.self, forKey: .defaultValue)
+        self.choiceTaggingEnvironment = try container.decodeIfPresent(HeimASN1TaggingEnvironment.self, forKey: .choiceTaggingEnvironment)
         self.translator = decoder.userInfo[HeimASN1TranslatorUserInfoKey] as? HeimASN1Translator
     }
     

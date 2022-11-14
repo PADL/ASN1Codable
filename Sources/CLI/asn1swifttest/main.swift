@@ -38,7 +38,6 @@ public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
     @UTCTime
     public var utcTime: Date? = nil
 
-    /*
     @ASN1ContextTagged<ASN1TagNumber$4, ASN1DefaultTagging, PrintableString<String>>
     @PrintableString
     public var foobar = "hello world"
@@ -49,9 +48,7 @@ public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
 
     @ASN1ContextTagged<ASN1TagNumber$6, ASN1DefaultTagging, Set<String>>
     var aSet = Set(["A", "Set"])
-    
-//    @UTCTime
-//    public var time: Date?
+    */
     
     @ASN1ContextTagged<ASN1TagNumber$7, ASN1DefaultTagging, GeneralString<String?>>
     @GeneralString
@@ -132,43 +129,6 @@ let setTest = Set(arrayLiteral: "surely this is the biggest value", "B", "a", "C
 
 func test() -> Void {
     let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
-    let ai = AlgorithmIdentifier(algorithm: oi)
-    let issuer = Name.rdnSequence(try! RDNSequence.parse(dn: "/2.5.4.6=AU/2.5.4.10=PADL Software Pty Ltd/2.5.4.3=PADL CA"))
-    let subject = Name.rdnSequence(try! RDNSequence.parse(dn: "/2.5.4.6=AU/2.5.4.10=PADL Software Pty Ltd/2.5.4.3=Luke Howard"))
-    let validity = Validity(notBefore: Time.utcTime(UTCTime(wrappedValue: Date.distantPast)),
-                            notAfter: Time.utcTime(UTCTime(wrappedValue: Date.distantFuture)))
-    var spki = SubjectPublicKeyInfo(algorithm: try! AlgorithmIdentifier(algorithm: ObjectIdentifier.from(string: "1.2.840.113549.1.1.1")))
-    spki.subjectPublicKey = BitString([01, 02, 03])
-
-    let t = TBSCertificate(serialNumber: 1234,
-                           signature: ai,
-                           issuer: issuer,
-                           validity: validity,
-                           subject: subject,
-                           subjectPublicKeyInfo: spki)
-    t.version = rfc3280_version_3
-        
-    t.issuerUniqueID = BitString([01, 02, 03, 04, 05])
-    //t.subjectUniqueID = BitString([0xff, 02, 03, 04, 05])
-    let generalName = GeneralName.rfc822Name(ASN1ContextTagged(wrappedValue: IA5String(wrappedValue: "lukeh@padl.com")))
-    let generalNames = [generalName]
-
-    let inhibitAnyPolicy = Extension(extnID: id_x509_ce_inhibitAnyPolicy,
-                                     critical: false,
-                                     extnValue: ASN1ObjectSetValue(wrappedValue: SkipCerts(1)))
-    let subjectAltName = Extension(extnID: id_x509_ce_subjectAltName,
-                                   critical: false,
-                                   extnValue: ASN1ObjectSetValue(wrappedValue: generalNames))
-    
-    let extensions = [inhibitAnyPolicy, subjectAltName]
-    t.extensions = extensions
-    
-    //let sw = SignatureWrapper(signatureValue: Data([0x01, 0x02, 0x03, 0x55, 0x66, 0xff]))
-    //let time = Time.utcTime(UTCTime(wrappedValue: Date()))
-
-    var c = Certificate(tbsCertificate: t, signatureAlgorithm: ai)
-    c.signatureValue = BitString([0x01, 0x02, 0x03, 0x55, 0x66, 0xff])
-        
     do {
         let valueToEncode = ts
         
