@@ -115,20 +115,6 @@
 			remoteGlobalIDString = D3FB2DCE2919C4C800BC72AF;
 			remoteInfo = asn1json2swift;
 		};
-		D30F2DF8292215CD009299A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D351DC21290E849200540132 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D3FB2DCE2919C4C800BC72AF;
-			remoteInfo = asn1json2swift;
-		};
-		D30F2DFD29221639009299A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D351DC21290E849200540132 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D3D13E6B291342D500218279;
-			remoteInfo = cert2json;
-		};
 		D351DC36290E849200540132 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D351DC21290E849200540132 /* Project object */;
@@ -637,8 +623,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D30F2DFE29221639009299A3 /* PBXTargetDependency */,
-				D30F2DF9292215CD009299A3 /* PBXTargetDependency */,
 				D351DCCD290EC5EE00540132 /* PBXTargetDependency */,
 			);
 			name = asn1swifttest;
@@ -952,16 +936,6 @@
 			isa = PBXTargetDependency;
 			target = D3FB2DCE2919C4C800BC72AF /* asn1json2swift */;
 			targetProxy = D30F2DEC2921FDD8009299A3 /* PBXContainerItemProxy */;
-		};
-		D30F2DF9292215CD009299A3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D3FB2DCE2919C4C800BC72AF /* asn1json2swift */;
-			targetProxy = D30F2DF8292215CD009299A3 /* PBXContainerItemProxy */;
-		};
-		D30F2DFE29221639009299A3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D3D13E6B291342D500218279 /* cert2json */;
-			targetProxy = D30F2DFD29221639009299A3 /* PBXContainerItemProxy */;
 		};
 		D351DC37290E849200540132 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
