@@ -295,9 +295,9 @@ extension ASN1DecoderImpl.UnkeyedContainer {
     private func decodeUnkeyedSingleValue<T>(_ type: T.Type) throws -> T where T : Decodable {
         let object = try self.currentObject(for: type)
         let container = self.nestedSingleValueContainer(object, context: self.context.decodingSingleValue(type))
-        let value: T
 
-        value = try container.decode(type)
+        let value = try container.decode(type)
+        
         if !ASN1DecoderImpl.isNilOrWrappedNil(value) {
             self.addContainer(container)
         }
@@ -310,19 +310,22 @@ extension ASN1DecoderImpl.UnkeyedContainer {
         let container = self.nestedSingleValueContainer(object, context: self.context.decodingSingleValue(type))
         let value: T?
 
-        do {
-            value = try container.decode(type)
-        } catch {
-            if let error = error as? DecodingError, case .typeMismatch(_, _) = error {
-                value = nil
-            } else {
-                throw error
+        if object.isNull {
+            value = nil
+        } else {
+            do {
+                value = try container.decode(type)
+            } catch {
+                if let error = error as? DecodingError, case .typeMismatch(_, _) = error {
+                    return nil
+                } else {
+                    throw error
+                }
             }
         }
         
-        if value != nil {
-            self.addContainer(container)
-        }
+        // value was explicit NULL or was successfully decoded
+        self.addContainer(container)
         
         return value
     }

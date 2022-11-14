@@ -338,9 +338,8 @@ extension ASN1DecoderImpl.KeyedContainer {
         let container = self.nestedSingleValueContainer(object,
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
-        let value: T
-
-        value = try container.decode(type)
+        let value = try container.decode(type)
+        
         if !ASN1DecoderImpl.isNilOrWrappedNil(value) {
             self.addContainer(container, forKey: key)
         }
@@ -362,16 +361,15 @@ extension ASN1DecoderImpl.KeyedContainer {
                 value = try container.decode(type)
             } catch {
                 if let error = error as? DecodingError, case .typeMismatch(_, _) = error {
-                    value = nil
+                    return nil
                 } else {
                     throw error
                 }
             }
         }
-        
-        if value != nil {
-            self.addContainer(container, forKey: key)
-        }
+
+        // value was explicit NULL or was successfully decoded
+        self.addContainer(container, forKey: key)
         
         return value
     }
