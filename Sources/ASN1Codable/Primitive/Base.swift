@@ -25,7 +25,39 @@ extension Int: ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Tag { return .integer }
 }
 
+extension Int8: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .integer }
+}
+
+extension Int16: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .integer }
+}
+
+extension Int32: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .integer }
+}
+
+extension Int64: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .integer }
+}
+
 extension UInt: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .integer }
+}
+
+extension UInt8: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .integer }
+}
+
+extension UInt16: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .integer }
+}
+
+extension UInt32: ASN1UniversalTagRepresentable {
+    static var tagNo: ASN1Tag { return .integer }
+}
+
+extension UInt64: ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Tag { return .integer }
 }
 

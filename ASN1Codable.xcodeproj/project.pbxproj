@@ -232,7 +232,7 @@
 		D351DC2A290E849200540132 /* ASN1Codable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASN1Codable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC34290E849200540132 /* ASN1CodableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ASN1CodableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC39290E849200540132 /* ASN1CodableTests */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ASN1CodableTests; path = ../Tests/ASN1CodableTests; sourceTree = "<group>"; };
-		D351DC4B290E8A4A00540132 /* certtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = certtest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D351DC4B290E8A4A00540132 /* asn1swifttest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = asn1swifttest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC5C290E8AAF00540132 /* RDNSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RDNSequence.swift; sourceTree = "<group>"; };
 		D351DC5D290E8AAF00540132 /* asn1bridgetest.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = asn1bridgetest.entitlements; sourceTree = "<group>"; };
 		D351DC5E290E8AAF00540132 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -379,7 +379,7 @@
 			children = (
 				D351DC2A290E849200540132 /* ASN1Codable.framework */,
 				D351DC34290E849200540132 /* ASN1CodableTests.xctest */,
-				D351DC4B290E8A4A00540132 /* certtest */,
+				D351DC4B290E8A4A00540132 /* asn1swifttest */,
 				D3D13E6C291342D500218279 /* cert2json */,
 				D3FB2DB42919C47C00BC72AF /* HeimASN1Translator.framework */,
 				D3FB2DBD2919C47C00BC72AF /* HeimASN1TranslatorTests.xctest */,
@@ -417,14 +417,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		D351DC4C290E8A4A00540132 /* asn1json2swifttest */ = {
+		D351DC4C290E8A4A00540132 /* asn1swifttest */ = {
 			isa = PBXGroup;
 			children = (
 				D351DC5D290E8AAF00540132 /* asn1bridgetest.entitlements */,
 				D351DC5F290E8AAF00540132 /* Helpers.swift */,
 				D351DC5E290E8AAF00540132 /* main.swift */,
 			);
-			path = asn1json2swifttest;
+			path = asn1swifttest;
 			sourceTree = "<group>";
 		};
 		D351DC65290E8AF700540132 /* Common */ = {
@@ -520,7 +520,7 @@
 			isa = PBXGroup;
 			children = (
 				D3FB2DD02919C4C800BC72AF /* asn1json2swift */,
-				D351DC4C290E8A4A00540132 /* asn1json2swifttest */,
+				D351DC4C290E8A4A00540132 /* asn1swifttest */,
 				D3D13E6D291342D500218279 /* cert2json */,
 			);
 			name = CLI;
@@ -626,9 +626,9 @@
 			productReference = D351DC34290E849200540132 /* ASN1CodableTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		D351DC4A290E8A4A00540132 /* certtest */ = {
+		D351DC4A290E8A4A00540132 /* asn1swifttest */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D351DC4F290E8A4A00540132 /* Build configuration list for PBXNativeTarget "certtest" */;
+			buildConfigurationList = D351DC4F290E8A4A00540132 /* Build configuration list for PBXNativeTarget "asn1swifttest" */;
 			buildPhases = (
 				D351DC47290E8A4A00540132 /* Sources */,
 				D351DC48290E8A4A00540132 /* Frameworks */,
@@ -641,9 +641,9 @@
 				D30F2DF9292215CD009299A3 /* PBXTargetDependency */,
 				D351DCCD290EC5EE00540132 /* PBXTargetDependency */,
 			);
-			name = certtest;
-			productName = certtest;
-			productReference = D351DC4B290E8A4A00540132 /* certtest */;
+			name = asn1swifttest;
+			productName = asn1swifttest;
+			productReference = D351DC4B290E8A4A00540132 /* asn1swifttest */;
 			productType = "com.apple.product-type.tool";
 		};
 		D3D13E6B291342D500218279 /* cert2json */ = {
@@ -790,7 +790,7 @@
 			targets = (
 				D351DC29290E849200540132 /* ASN1Codable */,
 				D351DC33290E849200540132 /* ASN1CodableTests */,
-				D351DC4A290E8A4A00540132 /* certtest */,
+				D351DC4A290E8A4A00540132 /* asn1swifttest */,
 				D3D13E6B291342D500218279 /* cert2json */,
 				D3FB2DB32919C47C00BC72AF /* HeimASN1Translator */,
 				D3FB2DBC2919C47C00BC72AF /* HeimASN1TranslatorTests */,
@@ -1234,7 +1234,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.padl.certtest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.padl.asn1swifttest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -1257,7 +1257,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.padl.certtest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.padl.asn1swifttest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -1443,7 +1443,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D351DC4F290E8A4A00540132 /* Build configuration list for PBXNativeTarget "certtest" */ = {
+		D351DC4F290E8A4A00540132 /* Build configuration list for PBXNativeTarget "asn1swifttest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D351DC50290E8A4A00540132 /* Debug */,

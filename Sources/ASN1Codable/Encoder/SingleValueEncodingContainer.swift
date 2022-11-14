@@ -53,33 +53,20 @@ extension ASN1EncoderImpl {
 }
 
 extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
-    private func mappingASN1Error<T>(_ value: T, _ block: () throws -> ()) throws {
-        do {
-            try block()
-        } catch let error as ASN1Error {
-            let context = EncodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "ASN.1 encoding error",
-                                                underlyingError: error)
-            throw EncodingError.invalidValue(value, context)
-        }
-    }
-        
     func encodeNil() throws {
         preconditionCanEncodeNewValue()
         self.didEncode = true
     }
-        
+    
     func encode(_ value: Bool) throws {
-        try self.mappingASN1Error(value) {
-            let object: ASN1Object = try value.asn1encode(tag: nil)
-            self.object = object
+        try self.withASN1Throwing(value) {
+            self.object = try value.asn1encode(tag: nil)
         }
     }
     
     func encode(_ value: String) throws {
-        try self.mappingASN1Error(value) {
-            let object: ASN1Object = try value.asn1encode(tag: nil)
-            self.object = object
+        try self.withASN1Throwing(value) {
+            self.object = try value.asn1encode(tag: nil)
         }
     }
     
@@ -91,60 +78,64 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         fatalError("no support for encoding floating point values")
     }
     
-    private func encodeFixedWithInteger<T>(_ value: T) throws where T: FixedWidthInteger {
-        try self.mappingASN1Error(value) {
-            let tag: ASN1DecodedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
-            
-            let object = T.isSigned ? try Int(value).asn1encode(tag: tag) : try UInt(value).asn1encode(tag: tag)
-            self.object = object
-        }
-    }
-
     func encode(_ value: Int) throws {
-        try self.encodeFixedWithInteger(value)
+        try self.encodeFixedWithIntegerValue(value)
     }
     
     func encode(_ value: Int8) throws {
-        try self.encodeFixedWithInteger(value)
+        try self.encodeFixedWithIntegerValue(value)
     }
     
     func encode(_ value: Int16) throws {
-        try self.encodeFixedWithInteger(value)
+        try self.encodeFixedWithIntegerValue(value)
     }
     
     func encode(_ value: Int32) throws {
-        try self.encodeFixedWithInteger(value)
+        try self.encodeFixedWithIntegerValue(value)
     }
     
     func encode(_ value: Int64) throws {
-        try self.encodeFixedWithInteger(value)
+        try self.encodeFixedWithIntegerValue(value)
     }
     
     func encode(_ value: UInt) throws {
-        try self.encodeFixedWithInteger(value)
+        try self.encodeFixedWithIntegerValue(value)
     }
     
     func encode(_ value: UInt8) throws {
-        try self.encodeFixedWithInteger(value)
+        try self.encodeFixedWithIntegerValue(value)
     }
     
     func encode(_ value: UInt16) throws {
-        try self.encodeFixedWithInteger(value)
+        try self.encodeFixedWithIntegerValue(value)
     }
     
     func encode(_ value: UInt32) throws {
-        try self.encodeFixedWithInteger(value)
+        try self.encodeFixedWithIntegerValue(value)
     }
     
     func encode(_ value: UInt64) throws {
-        try self.encodeFixedWithInteger(value)
+        try self.encodeFixedWithIntegerValue(value)
     }
     
     func encode<T: Encodable>(_ value: T) throws {
         self.context = self.context.encodingSingleValue(value) // FIXME
-
-        return try self.mappingASN1Error(value) {
+        
+        return try self.withASN1Throwing(value) {
             self.object = try encode(value)
+        }
+    }
+}
+
+extension ASN1EncoderImpl.SingleValueContainer {
+    private func withASN1Throwing<T>(_ value: T, _ block: () throws -> ()) throws {
+        do {
+            try block()
+        } catch let error as ASN1Error {
+            let context = EncodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "ASN.1 encoding error",
+                                                underlyingError: error)
+            throw EncodingError.invalidValue(value, context)
         }
     }
     
@@ -201,12 +192,20 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         return try self.encodeTagged(value, tag: taggingContext.nextTag(), tagging: taggingContext.tagging, skipTaggedValues: true)
     }
     
+    private func encodeFixedWithIntegerValue<T>(_ value: T) throws where T: FixedWidthInteger {
+        try self.withASN1Throwing(value) {
+            let tag: ASN1DecodedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
+            
+            let object = T.isSigned ? try Int(value).asn1encode(tag: tag) : try UInt(value).asn1encode(tag: tag)
+            self.object = object
+        }
+    }
+
     private func encodePrimitiveValue<T: ASN1EncodableType>(_ value: T) throws -> ASN1Object? {
         return try value.asn1encode(tag: nil)
     }
     
     private func encodeConstructedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
-        // FIXME sort struct set fields by encoding
         self.context.encodeAsSet = value is Set<AnyHashable> || value is ASN1SetCodable
         
         if self.context.taggingEnvironment == .automatic {

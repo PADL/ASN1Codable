@@ -755,9 +755,9 @@
 "ttype":
 {"name":"Extension","gen_name":"extnID","is_type":true,"exported":false,"typedef":false,"ttype":"OBJECT IDENTIFIER","ctype":"heim_oid"}
 }
-},{"name":"critical","gen_name":"critical","optional":false,"defval":false,"type":{"name":"Extension","gen_name":"*critical","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+},{"name":"critical","gen_name":"critical","optional":false,"defval":false,"type":{"name":"Extension","gen_name":"critical","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
-{"name":"Extension","gen_name":"*critical","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
+{"name":"Extension","gen_name":"critical","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
 },{"name":"extnValue","gen_name":"extnValue","optional":false,"type":{"name":"Extension","gen_name":"extnValue","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":4,"tagenv":"EXPLICIT",
 "ttype":
@@ -962,7 +962,7 @@
 "ttype":
 {"name":"GeneralName","gen_name":"dNSName","is_type":true,"exported":false,"typedef":false,"ttype":"IA5String","ctype":"heim_ia5_string"}
 }
-,{"name":"GeneralName","gen_name":"directoryName","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":4,"tagenv":"IMPLICIT",
+,{"name":"GeneralName","gen_name":"directoryName","is_type":true,"exported":false,"typedef":false,"choicetagenv":"IMPLICIT","tagclass":"CONTEXT","tagvalue":4,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"GeneralName","gen_name":"directoryName","is_type":true,"exported":true,"typedef":false,"ttype":"Name","alias":true
 }
@@ -1120,9 +1120,9 @@
 {"name":"BasicConstraints","gen_name":"BasicConstraints","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"BasicConstraints","gen_name":"BasicConstraints","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct BasicConstraints","members":[
-{"name":"cA","gen_name":"cA","optional":false,"defval":false,"type":{"name":"BasicConstraints","gen_name":"*cA","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+{"name":"cA","gen_name":"cA","optional":false,"defval":false,"type":{"name":"BasicConstraints","gen_name":"cA","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
-{"name":"BasicConstraints","gen_name":"*cA","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
+{"name":"BasicConstraints","gen_name":"cA","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
 },{"name":"pathLenConstraint","gen_name":"pathLenConstraint","optional":true,"defval":null,"type":{"name":"BasicConstraints","gen_name":"*pathLenConstraint","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
 "ttype":
@@ -1135,9 +1135,9 @@
 {"name":"GeneralSubtree","gen_name":"GeneralSubtree","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct GeneralSubtree","members":[
 {"name":"base","gen_name":"base","optional":false,"type":{"name":"GeneralSubtree","gen_name":"base","is_type":true,"exported":true,"typedef":false,"ttype":"GeneralName","alias":true
 }
-},{"name":"minimum","gen_name":"minimum","optional":false,"defval":0,"type":{"name":"GeneralSubtree","gen_name":"*minimum","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
+},{"name":"minimum","gen_name":"minimum","optional":false,"defval":0,"type":{"name":"GeneralSubtree","gen_name":"minimum","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
 "ttype":
-{"name":"GeneralSubtree","gen_name":"*minimum","is_type":true,"exported":true,"typedef":false,"ttype":"BaseDistance","alias":true
+{"name":"GeneralSubtree","gen_name":"minimum","is_type":true,"exported":true,"typedef":false,"ttype":"BaseDistance","alias":true
 }
 }
 },{"name":"maximum","gen_name":"maximum","optional":true,"defval":null,"type":{"name":"GeneralSubtree","gen_name":"*maximum","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
@@ -1199,7 +1199,7 @@
 {"name":"DistributionPoint","gen_name":"DistributionPoint","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DistributionPoint","gen_name":"DistributionPoint","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct DistributionPoint","members":[
-{"name":"distributionPoint","gen_name":"distributionPoint","optional":true,"defval":null,"type":{"name":"DistributionPoint","gen_name":"*distributionPoint","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
+{"name":"distributionPoint","gen_name":"distributionPoint","optional":true,"defval":null,"type":{"name":"DistributionPoint","gen_name":"*distributionPoint","is_type":true,"exported":false,"typedef":false,"choicetagenv":"IMPLICIT","tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DistributionPoint","gen_name":"*distributionPoint","is_type":true,"exported":true,"typedef":false,"ttype":"DistributionPointName","alias":true
 }
@@ -1415,11 +1415,11 @@
 {"name":"TPMSecurityAssertions","gen_name":"TPMSecurityAssertions","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"TPMSecurityAssertions","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":true,"ctype":"struct TPMSecurityAssertions","members":[
-{"name":"version","gen_name":"version","optional":false,"defval":0,"type":{"name":"TPMSecurityAssertions","gen_name":"*version","is_type":true,"exported":true,"typedef":false,"ttype":"TPMVersion","alias":true
+{"name":"version","gen_name":"version","optional":false,"defval":0,"type":{"name":"TPMSecurityAssertions","gen_name":"version","is_type":true,"exported":true,"typedef":false,"ttype":"TPMVersion","alias":true
 }
-},{"name":"fieldUpgradable","gen_name":"fieldUpgradable","optional":false,"defval":false,"type":{"name":"TPMSecurityAssertions","gen_name":"*fieldUpgradable","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+},{"name":"fieldUpgradable","gen_name":"fieldUpgradable","optional":false,"defval":false,"type":{"name":"TPMSecurityAssertions","gen_name":"fieldUpgradable","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
-{"name":"TPMSecurityAssertions","gen_name":"*fieldUpgradable","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
+{"name":"TPMSecurityAssertions","gen_name":"fieldUpgradable","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
 },{"name":"ekGenerationType","gen_name":"ekGenerationType","optional":true,"defval":null,"type":{"name":"TPMSecurityAssertions","gen_name":"*ekGenerationType","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
 "ttype":
@@ -1446,11 +1446,11 @@
 {"name":"TPMSecurityAssertions","gen_name":"*fipsLevel","is_type":true,"exported":true,"typedef":false,"ttype":"FIPSLevel","alias":true
 }
 }
-},{"name":"iso9000Certified","gen_name":"iso9000Certified","optional":false,"defval":false,"type":{"name":"TPMSecurityAssertions","gen_name":"*iso9000Certified","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":5,"tagenv":"EXPLICIT",
+},{"name":"iso9000Certified","gen_name":"iso9000Certified","optional":false,"defval":false,"type":{"name":"TPMSecurityAssertions","gen_name":"iso9000Certified","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":5,"tagenv":"EXPLICIT",
 "ttype":
-{"name":"TPMSecurityAssertions","gen_name":"*iso9000Certified","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+{"name":"TPMSecurityAssertions","gen_name":"iso9000Certified","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
-{"name":"TPMSecurityAssertions","gen_name":"*iso9000Certified","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
+{"name":"TPMSecurityAssertions","gen_name":"iso9000Certified","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
 }
 },{"name":"iso9000Uri","gen_name":"iso9000Uri","optional":true,"defval":null,"type":{"name":"TPMSecurityAssertions","gen_name":"*iso9000Uri","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":22,"tagenv":"EXPLICIT",
@@ -1504,9 +1504,9 @@
 }
 },{"name":"evaluationStatus","gen_name":"evaluationStatus","optional":false,"type":{"name":"CommonCriteriaMeasures","gen_name":"evaluationStatus","is_type":true,"exported":true,"typedef":false,"ttype":"EvaluationStatus","alias":true
 }
-},{"name":"plus","gen_name":"plus","optional":false,"defval":false,"type":{"name":"CommonCriteriaMeasures","gen_name":"*plus","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+},{"name":"plus","gen_name":"plus","optional":false,"defval":false,"type":{"name":"CommonCriteriaMeasures","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
-{"name":"CommonCriteriaMeasures","gen_name":"*plus","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
+{"name":"CommonCriteriaMeasures","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
 },{"name":"strengthOfFunction","gen_name":"strengthOfFunction","optional":true,"defval":null,"type":{"name":"CommonCriteriaMeasures","gen_name":"*strengthOfFunction","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
 "ttype":
@@ -1542,9 +1542,9 @@
 }
 },{"name":"level","gen_name":"level","optional":false,"type":{"name":"FIPSLevel","gen_name":"level","is_type":true,"exported":true,"typedef":false,"ttype":"SecurityLevel","alias":true
 }
-},{"name":"plus","gen_name":"plus","optional":false,"defval":false,"type":{"name":"FIPSLevel","gen_name":"*plus","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+},{"name":"plus","gen_name":"plus","optional":false,"defval":false,"type":{"name":"FIPSLevel","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
-{"name":"FIPSLevel","gen_name":"*plus","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
+{"name":"FIPSLevel","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
 }]}
 }

@@ -33,10 +33,11 @@ public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
     var bitString = BitString([0x02, 0x03, 0xcc])
      */
 
-
-    @ASN1ContextTagged<ASN1TagNumber$3, ASN1DefaultTagging, UTCTime<Date?>>
-    @UTCTime
-    public var utcTime: Date? = nil
+    
+    public var optint: Int? = 111
+    
+    @ASN1ContextTagged<ASN1TagNumber$3, ASN1DefaultTagging, UInt?>
+    public var whatever: UInt? = 1234
 
     @ASN1ContextTagged<ASN1TagNumber$4, ASN1DefaultTagging, PrintableString<String>>
     @PrintableString
