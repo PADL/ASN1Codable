@@ -86,7 +86,7 @@ extension ASN1DecoderImpl: Decoder {
 }
 
 extension ASN1DecoderImpl {
-    private static func isNilOrWrappedNil<T>(_ value: T) -> Bool where T : Decodable {
+    static func isNilOrWrappedNil<T>(_ value: T) -> Bool where T : Decodable {
         var wrappedValue: any Decodable = value
         
         // FIXME check non-wrapped optionals? because we need to wrap them to disambiguate in ASN.1
@@ -97,44 +97,11 @@ extension ASN1DecoderImpl {
         
         // FIXME first assignment is to silence warnings
         if let wrappedValue = wrappedValue as? ExpressibleByNilLiteral,
-            let wrappedValue = wrappedValue as? Optional<Decodable>,
-            case .none = wrappedValue {
+           let wrappedValue = wrappedValue as? Optional<Decodable>,
+           case .none = wrappedValue {
             return true
         } else {
             return false
-        }
-    }
-    
-    private static func isDefaultValue<T>(_ value: T) -> Bool where T : Decodable {
-        guard let value = value as? DecodableDefaultRepresentable else {
-            return false
-        }
-        
-        return value.isDefaultValue
-    }
-    
-    static func decodingSingleValue<T>(_ type: T.Type?,
-                                        container: ASN1DecoderImpl.SingleValueContainer,
-                                        decoded: inout Bool,
-                                        block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
-        decoded = false
-        
-        do {
-            let value = try block(container)
-            
-            if !self.isNilOrWrappedNil(value) && !self.isDefaultValue(value) {
-                decoded = true
-            }
-
-            return value
-        } catch {
-            let isOptional = type is OptionalProtocol.Type
-
-            if isOptional, let error = error as? DecodingError, case .typeMismatch(_, _) = error {
-                return () as! T
-            } else {
-                throw error
-            }
         }
     }
 }

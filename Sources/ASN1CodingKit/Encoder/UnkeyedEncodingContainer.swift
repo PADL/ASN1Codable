@@ -83,13 +83,6 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
         try container.encode(value)
     }
     
-    private func nestedSingleValueContainer(context: ASN1EncodingContext) -> SingleValueEncodingContainer {
-        let container = ASN1EncoderImpl.SingleValueContainer(codingPath: self.nestedCodingPath, userInfo: self.userInfo, context: context)
-        self.addContainer(container)
-
-        return container
-    }
-    
     func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {
         let container = ASN1EncoderImpl.KeyedContainer<NestedKey>(codingPath: self.nestedCodingPath,
                                                                   userInfo: self.userInfo,
@@ -106,6 +99,13 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
 }
 
 extension ASN1EncoderImpl.UnkeyedContainer {
+    private func nestedSingleValueContainer(context: ASN1EncodingContext) -> SingleValueEncodingContainer {
+        let container = ASN1EncoderImpl.SingleValueContainer(codingPath: self.nestedCodingPath, userInfo: self.userInfo, context: context)
+        self.addContainer(container)
+
+        return container
+    }
+    
     var object: ASN1Object? {
         let object: ASN1Object?
 

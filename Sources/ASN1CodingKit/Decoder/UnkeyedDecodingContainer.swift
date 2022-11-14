@@ -77,6 +77,176 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         return self.currentIndex >= count
     }
 
+    func decodeNil() throws -> Bool {
+        let object = try self.currentObject(for: nil)
+        let container = self.nestedSingleValueContainer(object, context: self.context)
+        let isNil = container.decodeNil()
+
+        if isNil {
+            self.addContainer(container)
+        }
+        
+        return isNil
+    }
+
+    func decodeIfPresent(_ type: Bool.Type) throws -> Bool? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: String.Type) throws -> String? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: Double.Type) throws -> Double? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: Float.Type) throws -> Float? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+
+    func decodeIfPresent(_ type: Int.Type) throws -> Int? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: Int8.Type) throws -> Int8? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: Int16.Type) throws -> Int16? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: Int32.Type) throws -> Int32? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: Int64.Type) throws -> Int64? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: UInt.Type) throws -> UInt? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: UInt8.Type) throws -> UInt8? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: UInt16.Type) throws -> UInt16? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: UInt32.Type) throws -> UInt32? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent(_ type: UInt64.Type) throws -> UInt64? {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decodeIfPresent<T>(_ type: T.Type) throws -> T? where T : Decodable {
+        return try self.decodeUnkeyedSingleValueIfPresent(type)
+    }
+    
+    func decode(_ type: Bool.Type) throws -> Bool {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: String.Type) throws -> String {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: Double.Type) throws -> Double {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: Float.Type) throws -> Float {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+
+    func decode(_ type: Int.Type) throws -> Int {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: Int8.Type) throws -> Int8 {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: Int16.Type) throws -> Int16 {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: Int32.Type) throws -> Int32 {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: Int64.Type) throws -> Int64 {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: UInt.Type) throws -> UInt {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: UInt8.Type) throws -> UInt8 {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: UInt16.Type) throws -> UInt16 {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: UInt32.Type) throws -> UInt32 {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode(_ type: UInt64.Type) throws -> UInt64 {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+        return try self.decodeUnkeyedSingleValue(type)
+    }
+    
+    func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
+        try self.validateCurrentIndex()
+        let currentObject = try self.currentObject()
+        try self.context.validateObject(currentObject, container: true, codingPath: self.codingPath)
+
+        let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: currentObject,
+                                                                      codingPath: self.nestedCodingPath,
+                                                                      userInfo: self.userInfo,
+                                                                      context: self.context.decodingNestedContainer())
+        
+        self.addContainer(container)
+
+        return KeyedDecodingContainer(container)
+    }
+    
+    func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
+        try self.validateCurrentIndex()
+        let currentObject = try self.currentObject()
+        try self.context.validateObject(currentObject, container: true, codingPath: self.codingPath)
+
+        let container = try ASN1DecoderImpl.UnkeyedContainer(object: currentObject,
+                                                             codingPath: self.nestedCodingPath,
+                                                             userInfo: self.userInfo,
+                                                             context: self.context.decodingNestedContainer())
+
+        self.addContainer(container)
+
+        return container
+    }
+    
+    func superDecoder() throws -> Decoder {
+        let context = DecodingError.Context(codingPath: self.codingPath,
+                                            debugDescription: "ASN1DecoderImpl.UnkeyedContainer does not yet support super decoders")
+        throw DecodingError.dataCorrupted(context)
+    }
+}
+
+extension ASN1DecoderImpl.UnkeyedContainer {
     private func validateCurrentIndex() throws {
         if !self.object.constructed && self.context.enumCodingState == .none {
             throw DecodingError.dataCorruptedError(in: self, debugDescription: "Unkeyed container expected constructed object")
@@ -121,71 +291,38 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         self.currentIndex += 1
     }
         
-    private func decodingUnkeyedSingleValue<T>(_ type: T.Type?,
-                                               object: ASN1Object,
-                                               _ block: (ASN1DecoderImpl.SingleValueContainer) throws -> T) throws -> T where T : Decodable {
-        var decoded: Bool = false
-        let container = self.nestedSingleValueContainer(object,
-                                                        context: self.context.decodingSingleValue(type))
-                
-        let value = try ASN1DecoderImpl.decodingSingleValue(type, container: container, decoded: &decoded, block: block)
-        
-        if decoded {
+    private func decodeUnkeyedSingleValue<T>(_ type: T.Type) throws -> T where T : Decodable {
+        let object = try self.currentObject(for: type)
+        let container = self.nestedSingleValueContainer(object, context: self.context.decodingSingleValue(type))
+        let value: T
+
+        value = try container.decode(type)
+        if !ASN1DecoderImpl.isNilOrWrappedNil(value) {
             self.addContainer(container)
         }
         
         return value
     }
-
-    func decodeNil() throws -> Bool {
-        let object = try self.currentObject(for: nil)
-
-        return try self.decodingUnkeyedSingleValue(nil, object: object) { container in
-            return container.decodeNil()
-        }
-    }
-
-    func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+    
+    private func decodeUnkeyedSingleValueIfPresent<T>(_ type: T.Type) throws -> T? where T : Decodable {
         let object = try self.currentObject(for: type)
+        let container = self.nestedSingleValueContainer(object, context: self.context.decodingSingleValue(type))
+        let value: T?
 
-        return try self.decodingUnkeyedSingleValue(type, object: object) { container in
-            return try container.decode(type)
+        do {
+            value = try container.decode(type)
+        } catch {
+            if let error = error as? DecodingError, case .typeMismatch(_, _) = error {
+                value = nil
+            } else {
+                throw error
+            }
         }
-    }
-    
-    func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
-        try self.validateCurrentIndex()
-        let currentObject = try self.currentObject()
-        try self.context.validateObject(currentObject, container: true, codingPath: self.codingPath)
-
-        let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: currentObject,
-                                                                      codingPath: self.nestedCodingPath,
-                                                                      userInfo: self.userInfo,
-                                                                      context: self.context.decodingNestedContainer())
         
-        self.addContainer(container)
-
-        return KeyedDecodingContainer(container)
-    }
-    
-    func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
-        try self.validateCurrentIndex()
-        let currentObject = try self.currentObject()
-        try self.context.validateObject(currentObject, container: true, codingPath: self.codingPath)
-
-        let container = try ASN1DecoderImpl.UnkeyedContainer(object: currentObject,
-                                                             codingPath: self.nestedCodingPath,
-                                                             userInfo: self.userInfo,
-                                                             context: self.context.decodingNestedContainer())
-
-        self.addContainer(container)
-
-        return container
-    }
-    
-    func superDecoder() throws -> Decoder {
-        let context = DecodingError.Context(codingPath: self.codingPath,
-                                            debugDescription: "ASN1DecoderImpl.UnkeyedContainer does not yet support super decoders")
-        throw DecodingError.dataCorrupted(context)
+        if value != nil {
+            self.addContainer(container)
+        }
+        
+        return value
     }
 }

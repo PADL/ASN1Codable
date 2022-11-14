@@ -43,26 +43,6 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
         self.containers.append(container)
     }
     
-    private func selectAutomaticTagForEnumCase() {
-        if self.context.enumCodingState == .enumCase,
-           let taggingContext = self.context.automaticTaggingContext,
-           let codingKey = self.codingPath.last {
-             taggingContext.selectTag(codingKey)
-         }
-    }
-    
-    private func nestedSingleValueContainer(forKey key: Key,
-                                            context: ASN1EncodingContext) -> SingleValueEncodingContainer {
-        let container = ASN1EncoderImpl.SingleValueContainer(codingPath: self.nestedCodingPath(forKey: key),
-                                                             userInfo: self.userInfo,
-                                                             context: context)
-        
-        self.selectAutomaticTagForEnumCase() // FIXME does this belong here?
-
-        self.addContainer(container)
-        return container
-    }
-    
     func encodeNil(forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: ASN1EncodingContext())
         try container.encodeNil()
@@ -128,5 +108,25 @@ extension ASN1EncoderImpl.KeyedContainer {
         }
         
         return object
+    }
+    
+    private func selectAutomaticTagForEnumCase() {
+        if self.context.enumCodingState == .enumCase,
+           let taggingContext = self.context.automaticTaggingContext,
+           let codingKey = self.codingPath.last {
+             taggingContext.selectTag(codingKey)
+         }
+    }
+    
+    private func nestedSingleValueContainer(forKey key: Key,
+                                            context: ASN1EncodingContext) -> SingleValueEncodingContainer {
+        let container = ASN1EncoderImpl.SingleValueContainer(codingPath: self.nestedCodingPath(forKey: key),
+                                                             userInfo: self.userInfo,
+                                                             context: context)
+        
+        self.selectAutomaticTagForEnumCase() // FIXME does this belong here?
+
+        self.addContainer(container)
+        return container
     }
 }
