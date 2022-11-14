@@ -30,7 +30,7 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     var isDefault: Bool
 
     init(_ typeDef: HeimASN1TypeDef) {
-        self.tagging = typeDef.taggingEnvironment
+        self.tagging = typeDef.choiceTaggingEnvironment ?? typeDef.taggingEnvironment
         self.tag = typeDef.isTag ? typeDef.tag : nil
         self.type = typeDef.isTag ? typeDef.tType! : HeimASN1Type.typeDef(typeDef)
         precondition(typeDef.isTag == false || typeDef.parent != nil)
