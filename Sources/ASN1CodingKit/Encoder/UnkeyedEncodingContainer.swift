@@ -78,6 +78,76 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
         try container.encodeNil()
     }
     
+    func encode(_ value: Bool) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: Int) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: Int8) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: Int16) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: Int32) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: Int64) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: UInt) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: UInt8) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: UInt16) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: UInt32) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: UInt64) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: String) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+    
+    func encode(_ value: Float) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+
+    func encode(_ value: Double) throws {
+        var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
+        try container.encode(value)
+    }
+
     func encode<T>(_ value: T) throws where T : Encodable {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
