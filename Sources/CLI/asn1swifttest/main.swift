@@ -32,17 +32,20 @@ public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString>
     var bitString = BitString([0x02, 0x03, 0xcc])
      */
+    
+    public var weirdInt: BInt = -20
+    public var minInt: BInt = -2147483648
+    public var maxInt: BInt = 4294967295
+    public var zeroInt: BInt = 0
 
-    
-    public var optint: Int? = 111
-    
+    /*
     @ASN1ContextTagged<ASN1TagNumber$3, ASN1DefaultTagging, UInt?>
     public var whatever: UInt? = 1234
 
     @ASN1ContextTagged<ASN1TagNumber$4, ASN1DefaultTagging, PrintableString<String>>
     @PrintableString
     public var foobar = "hello world"
-
+*/
     /*
     @ASN1ContextTagged<ASN1TagNumber$5, ASN1DefaultTagging, Array<String>>
     var anArray = ["Hello", "ASN.1", "Coding", "Kit"]

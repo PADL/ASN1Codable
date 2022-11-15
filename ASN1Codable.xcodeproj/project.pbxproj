@@ -455,11 +455,11 @@
 			isa = PBXGroup;
 			children = (
 				D3D13E8829146B7400218279 /* Base.swift */,
-				D351DC79290E8AF700540132 /* Time.swift */,
-				D351DC7A290E8AF700540132 /* BitString.swift */,
-				D351DC7B290E8AF700540132 /* String.swift */,
 				D3D13E8329134A4B00218279 /* BInt.swift */,
+				D351DC7A290E8AF700540132 /* BitString.swift */,
 				D3FB2D9C29183E2000BC72AF /* Null.swift */,
+				D351DC7B290E8AF700540132 /* String.swift */,
+				D351DC79290E8AF700540132 /* Time.swift */,
 			);
 			path = Primitive;
 			sourceTree = "<group>";
