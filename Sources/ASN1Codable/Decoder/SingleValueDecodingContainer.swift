@@ -103,7 +103,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     func decode(_ type: UInt64.Type) throws -> UInt64 {
         try self.decodeFixedWidthIntegerValue(type)
     }
-
+    
     func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
         try self.withASN1Throwing {
             try self.decode(type, from: self.object)
@@ -169,6 +169,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
         
         return value
     }
+
+    // NB withASN1Throwing is not needed here because decodeFixedWidthIntegerValue()
+    // does not call into any exception-throwing ASNKit APIs
 
     private func decodeFixedWidthIntegerValue<T>(_ type: T.Type, verifiedTag: Bool = false) throws -> T where T: FixedWidthInteger {
         let expectedTag = ASN1DecodingContext.tag(for: type)
