@@ -266,7 +266,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         
         if object.constructed {
             if tagging == .implicit && !ASN1DecodingContext.isEnum(type) {
-                // FIXME propagate save
+                // FIXME propagate originalEncoding
                 unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
             } else {
                 guard let items = object.data.items, items.count == 1, let firstObject = object.data.items!.first else {
@@ -278,7 +278,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             }
         } else if innerTag.isUniversal {
             if tagging == .implicit {
-                // FIXME propagate save
+                // FIXME propagate originalEncoding
                 unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
             } else {
                 unwrappedObject = object
@@ -317,7 +317,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         try self.validateExtensibility(type, from: sortedObject, with: decoder)
         
         if var value = value as? ASN1PreserveBinary {
-            value._save = sortedObject.save
+            value._save = sortedObject.originalEncoding
         }
         
         return value

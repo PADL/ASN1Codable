@@ -23,7 +23,7 @@ struct __ASN1NullObject: ASN1Object {
     let length = 0
     let constructed = false
     
-    var save: Data? {
+    var originalEncoding: Data? {
         get {
             return nil
         }

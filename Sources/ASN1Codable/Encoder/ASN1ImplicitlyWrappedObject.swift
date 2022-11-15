@@ -20,7 +20,7 @@ import ASN1Kit
 internal struct ASN1ImplicitlyWrappedObject: ASN1Object {
     let data: ASN1Data
     let tag: ASN1DecodedTag
-    var save: Data?
+    var originalEncoding: Data?
     
     init(object: ASN1Object, tag: ASN1DecodedTag) {
         if object.tag.isUniversal {
@@ -30,7 +30,6 @@ internal struct ASN1ImplicitlyWrappedObject: ASN1Object {
             self.data = ASN1Data.constructed([object])
         }
         self.tag = tag
-        //self.save = object.save
     }
     
     var length: Int {
