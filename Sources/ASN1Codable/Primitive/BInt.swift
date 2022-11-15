@@ -31,8 +31,8 @@ extension BInt: ASN1EncodableType {
     public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
         var data = Data(self.getBytes())
         
-        if self >= 0 {
-            data = [0x00] + data
+        if data.count > 0, data[0] & 0x80 != 0 {
+            data.insert(0x00, at: 0)
         }
         
         return data.asn1encode(tag: .universal(.integer))
