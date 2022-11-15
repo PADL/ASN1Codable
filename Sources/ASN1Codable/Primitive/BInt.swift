@@ -40,6 +40,9 @@ extension BInt: ASN1DecodableType {
         } else if data.count == 1 {
             //
         } else if (data[0] == 0 && data[1] & 0x80 == 0) || (data[0] == 0xff && data[1] & 0x80 == 0x80) {
+            // note that the latter check may fail with certificates from CAs that
+            // read 8 bytes of RNG into a buffer and tag with [UNIVERSAL INTEGER]
+            // for serialNumber. so we may need to remove this check.
             throw ASN1Error.malformedEncoding("ASN.1 integer is not minimally encoded")
         }
 
