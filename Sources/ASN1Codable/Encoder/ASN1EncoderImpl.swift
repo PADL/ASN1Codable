@@ -96,9 +96,8 @@ extension ASN1EncoderImpl: Encoder {
     ///
     /// - returns: A new empty single value container.
     func singleValueContainer() -> SingleValueEncodingContainer {
-        if self.container != nil {
-            debugPrint("Warning: replacing single-valued container for path \(self.codingPath)")
-        }
+        // FIXME investigate why we are reusing single value contained here
+        precondition(self.container == nil || self.context.objectSetCodingContext != nil)
         
         let container = SingleValueContainer(codingPath: self.codingPath,
                                              userInfo: self.userInfo,

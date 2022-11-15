@@ -16,10 +16,10 @@
 
 import Foundation
 
-public struct Null {
+public struct Null: Codable {
 }
 
-extension Null: ASN1DecodableType, Codable {
+extension Null: ASN1DecodableType {
     public init(from asn1: ASN1Object) throws {
         guard asn1.tag == .universal(.null) else {
             throw ASN1Error.malformedEncoding("ASN.1 object has incorrect tag \(asn1.tag)")

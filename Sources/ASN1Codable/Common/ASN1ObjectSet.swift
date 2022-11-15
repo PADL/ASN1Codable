@@ -71,16 +71,9 @@ public struct ASN1ObjectSetValue: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         
-        guard let encoder = encoder as? ASN1EncoderImpl else {
-            if let wrappedValue = self.wrappedValue {
-                try container.encode(AnyCodable(wrappedValue))
-            } else {
-                try container.encodeNil()
-            }
-            return
-        }
-
-        guard let objectSetCodingContext = encoder.context.objectSetCodingContext else {
+        guard let encoder = encoder as? ASN1EncoderImpl,
+              let objectSetCodingContext = encoder.context.objectSetCodingContext else {
+            try container.encode(AnyCodable(self.wrappedValue))
             return
         }
 
@@ -93,7 +86,7 @@ public struct ASN1ObjectSetValue: Codable {
                 if let wrappedValue = self.wrappedValue {
                     berData = try innerEncoder.encode(wrappedValue)
                 } else {
-                    berData = Data() // XXX honour NULL encoding preference
+                    berData = Data() // FIXME honour NULL encoding preference
                 }
 
                 try container.encode(berData)
@@ -155,13 +148,11 @@ public struct ASN1AnyObjectSetValue: Codable, Hashable {
     }
     
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(self.wrappedValue)
+        try self.wrappedValue.encode(to: encoder)
     }
     
     public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        self.wrappedValue = AnyCodable(try container.decode(ASN1ObjectSetValue.self))
+        self.wrappedValue = AnyCodable(try ASN1ObjectSetValue(from: decoder))
     }
 }
 
