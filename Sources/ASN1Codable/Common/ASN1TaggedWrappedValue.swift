@@ -17,6 +17,8 @@
 import Foundation
 import ASN1Kit
 
+public typealias ASN1TaggedProjectedValue = (ASN1DecodedTag?, ASN1Tagging?)
+
 public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible, CustomDebugStringConvertible, ASN1TaggedTypeRepresentable {
     static var tag: ASN1DecodedTag? { get }
     static var tagging: ASN1Tagging? { get }
@@ -24,7 +26,7 @@ public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible, Custom
     associatedtype Value: Codable
     
     var wrappedValue: Value { get set }
-    var projectedValue: any ASN1TaggedWrappedValue { get }
+    var projectedValue: ASN1TaggedProjectedValue { get }
 
     init(wrappedValue: Value)
 }
@@ -32,8 +34,8 @@ public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible, Custom
 extension ASN1TaggedWrappedValue {
     public static var tag: ASN1DecodedTag? { return nil }
     
-    public var projectedValue: any ASN1TaggedWrappedValue {
-        return self
+    public var projectedValue: ASN1TaggedProjectedValue {
+        return (Self.tag, Self.tagging)
     }
     
     public func encode(to encoder: Encoder) throws {
