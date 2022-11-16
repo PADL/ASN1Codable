@@ -157,7 +157,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             outputStream.write("\tcase \(containingTypeDef.generatedName)(\(fieldDescriptor.swiftType!))\n")
         } else {
             let fieldDescriptor = HeimASN1FieldDescriptor(typeDef)
-            let disablePropertyWrappers = containingTypeDef.translator?.disablePropertyWrappers ?? false
+            let disablePropertyWrappers = containingTypeDef.translator?.options.contains(.disablePropertyWrappers) ?? false
             let isDefault = containingTypeDef.defaultValue != nil
             let visibility = containingTypeDef.visibility
             let generatedName = isDefault ? "_\(containingTypeDef.generatedName)" : containingTypeDef.generatedName

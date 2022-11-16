@@ -30,20 +30,31 @@ extension OutputStream: TextOutputStream {
 }
 
 public final class HeimASN1Translator {
+    
+    public struct Options: OptionSet {
+        public let rawValue: UInt
+        
+        public init(rawValue: UInt) {
+            self.rawValue = rawValue
+        }
+        
+        public static let disablePropertyWrappers = Options(rawValue: 1 << 0)
+    }
+    
     var inputStream: InputStream
     var outputStream: OutputStream
     var module: HeimASN1Module? = nil
     var imports = [HeimASN1ModuleRef]()
     var typeRefCache = Set<String>()
-    var disablePropertyWrappers = false
+    var options: Options
     var typeDefsByName = [String: HeimASN1TypeDef]()
     var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
     var typeDefs = [HeimASN1TypeDef]()
 
-    public init(inputStream: InputStream, outputStream: inout OutputStream, disablePropertyWrappers: Bool = false) {
+    public init(inputStream: InputStream, outputStream: inout OutputStream, options: Options = Options()) {
         self.inputStream = inputStream
         self.outputStream = outputStream
-        self.disablePropertyWrappers = disablePropertyWrappers
+        self.options = options
     }
     
     func cacheTypeRef(_ ref: String) {
