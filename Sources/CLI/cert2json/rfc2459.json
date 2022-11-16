@@ -548,9 +548,7 @@
 "ttype":
 {"name":"AliasUTF8String","gen_name":"AliasUTF8String","is_type":true,"exported":false,"typedef":true,"ttype":"UTF8String","ctype":"heim_utf8_string"}
 }
-{"name":"AliasIA5String","gen_name":"AliasIA5String","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":12,"tagenv":"EXPLICIT",
-"ttype":
-{"name":"AliasIA5String","gen_name":"AliasIA5String","is_type":true,"exported":false,"typedef":true,"ttype":"UTF8String","ctype":"heim_utf8_string"}
+{"name":"AliasIA5String","gen_name":"AliasIA5String","is_type":true,"exported":true,"typedef":true,"ttype":"DirectoryString","alias":true
 }
 {"name":"AliasPrintableString","gen_name":"AliasPrintableString","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":19,"tagenv":"EXPLICIT",
 "ttype":
@@ -1547,6 +1545,8 @@
 {"name":"FIPSLevel","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
 }]}
+}
+{"name":"AliasIA5String","gen_name":"AliasIA5String","is_type":true,"exported":true,"typedef":true,"ttype":"DirectoryString","alias":true
 }
 {"name":"X520name","gen_name":"X520name","is_type":true,"exported":true,"typedef":true,"ttype":"DirectoryString","alias":true
 }

@@ -865,7 +865,7 @@ id-pkix-on-pkinit-ms-san OBJECT IDENTIFIER ::=
 -- template backend) by creating aliases for universal types we use in IOS
 -- objects.
 AliasUTF8String ::= UTF8String
-AliasIA5String ::= UTF8String
+AliasIA5String ::= DirectoryString
 AliasPrintableString ::= PrintableString
 on-xmppAddr _OTHER-NAME ::= { &id id-pkix-on-xmppAddr, &Type AliasUTF8String }
 on-dnsSRV _OTHER-NAME ::= { &id id-pkix-on-dnsSRV, &Type AliasIA5String }
