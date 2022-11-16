@@ -41,7 +41,6 @@ extension DirectoryString: CustomStringConvertible {
     }
 }
 
-
 extension ObjectIdentifier {
     static var securityBundle = Bundle(path: "/System/Library/Frameworks/Security.framework")
 
