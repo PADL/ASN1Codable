@@ -41,20 +41,19 @@ extension DirectoryString: CustomStringConvertible {
     }
 }
 
+
 extension ObjectIdentifier {
+    static var securityBundle = Bundle(path: "/System/Library/Frameworks/Security.framework")
+
     var friendlyName: String {
-        switch self.rawValue {
-        case "2.5.4.3":
-            return "CN"
-        case "2.5.4.6":
-            return "C"
-        case "2.5.4.10":
-            return "O"
-        case "2.5.4.11":
-            return "OU"
-        default:
-            return self.description
+        do {
+            let asn1 = try self.asn1encode(tag: nil).serialize().hexString(separator: " ")
+            if let securityBundle = Self.securityBundle {
+               return securityBundle.localizedString(forKey: asn1, value: nil, table: "OID")
+            }
+        } catch {
         }
+        return self.description
     }
 }
 
