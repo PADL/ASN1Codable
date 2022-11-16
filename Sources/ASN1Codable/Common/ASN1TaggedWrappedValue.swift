@@ -106,10 +106,10 @@ extension ASN1TaggedWrappedValue {
         if let tagDescription = tagDescription {
             debugDescription.append(tagDescription)
         }
-        if !debugDescription.isEmpty {
-            debugDescription.append(" ")
-        }
         if let taggingDescription = taggingDescription {
+            if !debugDescription.isEmpty {
+                debugDescription.append(" ")
+            }
             debugDescription.append(taggingDescription)
         }
         if !debugDescription.isEmpty {
