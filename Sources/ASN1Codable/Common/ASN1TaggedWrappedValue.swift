@@ -17,7 +17,7 @@
 import Foundation
 import ASN1Kit
 
-public protocol ASN1TaggedWrappedValue: Codable, ASN1TaggedTypeRepresentable {
+public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible, CustomDebugStringConvertible, ASN1TaggedTypeRepresentable {
     static var tag: ASN1DecodedTag? { get }
     static var tagging: ASN1Tagging? { get }
 
@@ -45,6 +45,79 @@ extension ASN1TaggedWrappedValue {
         precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
         try self.init(wrappedValue: Value(from: decoder))
     }
+    
+    public var description: String {
+        return String(describing: self.wrappedValue)
+    }
+    
+    public var debugDescription: String {
+        let tagDescription: String?
+        let taggingDescription: String?
+        let valueDescription: String
+        var debugDescription = ""
+        
+        if let tag = Self.tag {
+            switch tag {
+            case .universal(let asn1Tag):
+                tagDescription = "[UNIVERSAL \(asn1Tag.rawValue)]"
+                break
+            case .applicationTag(let tagNo):
+                tagDescription = "[APPLICATION \(tagNo)]"
+                break
+            case .taggedTag(let tagNo):
+                tagDescription = "[\(tagNo)]"
+                break
+            case .privateTag(let tagNo):
+                tagDescription = "[PRIVATE \(tagNo)]"
+                break
+            }
+        } else {
+            tagDescription = nil
+        }
+
+        if let tagging = Self.tagging {
+            switch tagging {
+            case .implicit:
+                taggingDescription = "IMPLICIT"
+                break
+            case .explicit:
+                taggingDescription = "EXPLICIT"
+                break
+            case .automatic:
+                taggingDescription = "AUTOMATIC"
+                break
+            }
+        } else {
+            taggingDescription = nil
+        }
+        
+        switch self.wrappedValue {
+        case is Void:
+            valueDescription = "NULL"
+            break
+        case let wrappedValue as CustomDebugStringConvertible:
+            valueDescription = wrappedValue.debugDescription
+            break
+        default:
+            valueDescription = String(describing: self.wrappedValue)
+            break
+        }
+        
+        if let tagDescription = tagDescription {
+            debugDescription.append(tagDescription)
+        }
+        if !debugDescription.isEmpty {
+            debugDescription.append(" ")
+        }
+        if let taggingDescription = taggingDescription {
+            debugDescription.append(taggingDescription)
+        }
+        if !debugDescription.isEmpty {
+            debugDescription.append(" ")
+        }
+        debugDescription.append(valueDescription)
+        return debugDescription
+    }
 }
 
 extension KeyedDecodingContainer {
@@ -56,4 +129,3 @@ extension KeyedDecodingContainer {
         return U(wrappedValue: nil)
     }
 }
-
