@@ -48,10 +48,14 @@ extension ObjectIdentifier {
         do {
             let asn1 = try self.asn1encode(tag: nil).serialize().hexString(separator: " ")
             if let securityBundle = Self.securityBundle {
-               return securityBundle.localizedString(forKey: asn1, value: nil, table: "OID")
+                let friendlyName = securityBundle.localizedString(forKey: asn1, value: nil, table: "OID")
+                if friendlyName != asn1 {
+                    return friendlyName
+                }
             }
         } catch {
         }
+        
         return self.description
     }
 }
