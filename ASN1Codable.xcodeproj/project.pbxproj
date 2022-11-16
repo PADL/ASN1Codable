@@ -391,7 +391,8 @@
 			children = (
 				D351DC39290E849200540132 /* ASN1CodableTests */,
 			);
-			path = ASN1CodableTests;
+			name = ASN1CodableTests;
+			path = Tests/ASN1CodableTests;
 			sourceTree = "<group>";
 		};
 		D351DC44290E898300540132 /* Frameworks */ = {
