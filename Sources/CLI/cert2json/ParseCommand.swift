@@ -31,10 +31,15 @@ struct ParseCommand: CommandProtocol {
     let function: String = "Parse ASN.1 encoded file or from cmd-line input"
 
     func run(_ options: Options) -> Result<(), Error> {
-        let file = URL(fileURLWithPath: (options.file as NSString).expandingTildeInPath)
-        let fileContents = try? file.readFileContents()
-        guard !options.string.isEmpty || fileContents != nil else {
+        let fileContents: Data?
+        
+        if !options.file.isEmpty {
+            let file = URL(fileURLWithPath: (options.file as NSString).expandingTildeInPath)
+            fileContents = try? file.readFileContents()
+        } else if options.string.isEmpty {
             return .failure(.unsupportedMode("No string or valid file path passed"))
+        } else {
+            fileContents = nil
         }
 
         do {
@@ -67,15 +72,17 @@ struct ParseCommand: CommandProtocol {
             let decoder = ASN1Decoder()
             let cert = try decoder.decode(Certificate.self, from: data)
             
-            let jsonEncoder = JSONEncoder()
-            jsonEncoder.outputFormatting = .prettyPrinted
-
-            guard let jsonData = try String(data: jsonEncoder.encode(cert), encoding: .utf8) else {
-                return .failure(.encodingError)
+            if options.json {
+                let jsonEncoder = JSONEncoder()
+                jsonEncoder.outputFormatting = .prettyPrinted
+                
+                guard let jsonData = try String(data: jsonEncoder.encode(cert), encoding: .utf8) else {
+                    return .failure(.encodingError)
+                }
+                
+                print("\(jsonData)")
             }
-
-            print("\(jsonData)")
-
+            
             if options.reencode {
                 let asn1Encoder = ASN1Encoder()
                 let encoded = try asn1Encoder.encode(cert)
@@ -88,6 +95,12 @@ struct ParseCommand: CommandProtocol {
                 }
             }
             
+            if options.san, let sans: [GeneralName] = cert.extension(id_x509_ce_subjectAltName) {
+                sans.forEach { san in
+                    print("\(san)")
+                }
+            }
+            
             return .success(())
         } catch let error {
             return .failure(.decodingError(error))
@@ -97,24 +110,31 @@ struct ParseCommand: CommandProtocol {
     struct Options: OptionsProtocol {
         let file: String
         let string: String
+        let json: Bool
         let reencode: Bool
+        let san: Bool
 
-        static func create(_ file: String) -> (String) -> (Bool) -> Options {
-            return { (string: String) in { (reencode: Bool) in
-                Options(
-                    file: file,
-                    string: string,
-                    reencode: reencode)
+        static func create(_ file: String) -> (_ string: String) -> (_ json: Bool) -> (_ reencode: Bool) -> (_ san: Bool) -> Options {
+            return { (string: String) in { (json: Bool) in { (reencode: Bool) in { (san: Bool) in
+                Options(file: file,
+                        string: string,
+                        json: json,
+                        reencode: reencode,
+                        san: san)
+            }
+            }
             }
             }
         }
-
+        
         static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<Error>> {
             //swiftlint:disable:previous identifier_name
             return create
                     <*> m <| Option(key: "file", defaultValue: "", usage: "path to PEM encoded file")
                     <*> m <| Option(key: "string", defaultValue: "", usage: "string passed as ASN.1 encoded base64")
+                    <*> m <| Option(key: "json", defaultValue: true, usage: "output certificate as JSON")
                     <*> m <| Option(key: "reencode", defaultValue: false, usage: "re-encode to ASN.1")
+                    <*> m <| Option(key: "san", defaultValue: false, usage: "display ccertificate SANs")
         }
     }
 }
