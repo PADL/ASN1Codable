@@ -97,7 +97,7 @@ extension GeneralName: CustomStringConvertible {
                 return String(describing: ipAddress.wrappedValue)
             }
         case .registeredID(let oid):
-            return "\(oid.wrappedValue)"
+            return String(describing: oid)
         }
     }
 }
