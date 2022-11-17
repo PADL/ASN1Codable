@@ -17,12 +17,16 @@
 import Commandant
 import Foundation
 
-let commands = CommandRegistry<ParseCommand.Error>()
-commands.register(ParseCommand())
-commands.register(VersionCommand())
-let helpCommand = HelpCommand(registry: commands)
-commands.register(helpCommand)
+struct VersionCommand: CommandProtocol {
+    struct Error: Swift.Error {
+    }
 
-commands.main(defaultVerb: helpCommand.verb) { error in
-    print("\(error)")
+    let verb: String = "version"
+    let function: String = "Show version info"
+
+    func run(_ options: NoOptions<TranslateCommand.Error>) -> Result<(), TranslateCommand.Error> {
+        print("0.0")
+
+        return .success(())
+    }
 }

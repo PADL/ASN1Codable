@@ -60,6 +60,8 @@
 		D3C67EB9291E012F0018F3D3 /* HeimASN1TypeMember.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C67EB8291E012F0018F3D3 /* HeimASN1TypeMember.swift */; };
 		D3C67EBB291E01430018F3D3 /* HeimASN1OpenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C67EBA291E01430018F3D3 /* HeimASN1OpenType.swift */; };
 		D3C67EBD291E01540018F3D3 /* HeimASN1Decoration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C67EBC291E01540018F3D3 /* HeimASN1Decoration.swift */; };
+		D3C67EC42925B6840018F3D3 /* TranslateCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C67EC02925ADBE0018F3D3 /* TranslateCommand.swift */; };
+		D3C67EC52925B6870018F3D3 /* VersionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C67EC22925ADC60018F3D3 /* VersionCommand.swift */; };
 		D3D13E61291339FA00218279 /* ASN1Kit in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E60291339FA00218279 /* ASN1Kit */; };
 		D3D13E6429133A2200218279 /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6329133A2200218279 /* AnyCodable */; };
 		D3D13E6729133AB600218279 /* Echo in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6629133AB600218279 /* Echo */; };
@@ -258,6 +260,8 @@
 		D3C67EB8291E012F0018F3D3 /* HeimASN1TypeMember.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeimASN1TypeMember.swift; sourceTree = "<group>"; };
 		D3C67EBA291E01430018F3D3 /* HeimASN1OpenType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeimASN1OpenType.swift; sourceTree = "<group>"; };
 		D3C67EBC291E01540018F3D3 /* HeimASN1Decoration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeimASN1Decoration.swift; sourceTree = "<group>"; };
+		D3C67EC02925ADBE0018F3D3 /* TranslateCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslateCommand.swift; sourceTree = "<group>"; };
+		D3C67EC22925ADC60018F3D3 /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
 		D3D13E6C291342D500218279 /* cert2json */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cert2json; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3D13E6E291342D500218279 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D3D13E7B2913434200218279 /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
@@ -544,6 +548,8 @@
 			isa = PBXGroup;
 			children = (
 				D3FB2DD12919C4C800BC72AF /* main.swift */,
+				D3C67EC02925ADBE0018F3D3 /* TranslateCommand.swift */,
+				D3C67EC22925ADC60018F3D3 /* VersionCommand.swift */,
 			);
 			path = asn1json2swift;
 			sourceTree = "<group>";
@@ -922,6 +928,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3C67EC52925B6870018F3D3 /* VersionCommand.swift in Sources */,
+				D3C67EC42925B6840018F3D3 /* TranslateCommand.swift in Sources */,
 				D3FB2DD22919C4C800BC72AF /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
