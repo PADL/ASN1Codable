@@ -24,6 +24,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     var enumCodingState: ASN1EnumCodingState = .none
     var encodeAsSet = false
     var currentEnumType: Any.Type?
+    var currentTag: ASN1DecodedTag? = nil
     var objectSetCodingContext: ASN1ObjectSetCodingContext?
     var automaticTaggingContext: ASN1AutomaticTaggingContext?
 
@@ -100,7 +101,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
         return reflect(lookThroughOptional(type)) is EnumMetadata
     }
 
-    func decodingSingleValue<T>(_ type: T.Type?) -> Self where T: Decodable {
+    func decodingSingleValue<T>(_ type: T.Type?, fromSingleValueContainer: Bool = false) -> Self where T: Decodable {
         var context = self
         context.nextEnumCodingState()
 
@@ -110,6 +111,10 @@ struct ASN1DecodingContext: ASN1CodingContext {
         } else {
             context.enumCodingState = .none
             context.currentEnumType = nil
+        }
+        
+        if !fromSingleValueContainer {
+            context.currentTag = nil
         }
         
         return context
