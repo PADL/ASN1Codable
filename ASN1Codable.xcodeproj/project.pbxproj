@@ -104,7 +104,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE).swift",
 			);
-			script = "export DYLD_FRAMEWORK_PATH=$BUILT_PRODUCTS_DIR\n$BUILT_PRODUCTS_DIR/asn1json2swift $INPUT_FILE_PATH > $DERIVED_FILE_DIR/$INPUT_FILE_BASE.swift\n";
+			script = "export DYLD_FRAMEWORK_PATH=$BUILT_PRODUCTS_DIR\n$BUILT_PRODUCTS_DIR/asn1json2swift translate --file $INPUT_FILE_PATH --map-type DirectoryString:String > $DERIVED_FILE_DIR/$INPUT_FILE_BASE.swift\n";
 		};
 /* End PBXBuildRule section */
 

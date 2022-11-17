@@ -34,8 +34,20 @@ struct TranslateCommand: CommandProtocol {
             return .failure(.failedToOpenInputStream)
         }
         
+        let typeMapDictionary: [String:String]?
+        
+        if let typeMaps = options.typeMaps {
+            let pairs: [(String, String)] = typeMaps.map {
+                let values = $0.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
+                return (String(values[0]), String(values[1]))
+            }
+            typeMapDictionary = Dictionary(pairs, uniquingKeysWith: { return $1 })
+        } else {
+            typeMapDictionary = nil
+        }
+        
         var outputStream: OutputStream = OutputStream(toMemory: ())
-        let translator = HeimASN1Translator(inputStream: inputStream, outputStream: &outputStream)
+        let translator = HeimASN1Translator(inputStream: inputStream, outputStream: &outputStream, typeMaps: typeMapDictionary)
 
         do {
             try translator.translate()
@@ -51,31 +63,19 @@ struct TranslateCommand: CommandProtocol {
 
     struct Options: OptionsProtocol {
         let file: String
+        let typeMaps: [String]?
 
-        static func create(_ file: String) -> Options {
-            return Options(file: file)
+        static func create(_ file: String) -> (_ typeMaps: [String]?) -> Options {
+            return { (_ typeMaps: [String]?) in
+                return Options(file: file, typeMaps: typeMaps)
+            }
         }
         
         static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<Error>> {
             //swiftlint:disable:previous identifier_name
             return create
                     <*> m <| Option(key: "file", defaultValue: "", usage: "path to JSON output from asn1compile")
+                    <*> m <| Option<[String]?>(key: "map-type", defaultValue: nil, usage: "replace ASN.1 type with user-defined Swift type")
         }
     }
 }
-
-/*
- static func create(_ file: String) -> Options {
-     return { (string: String) in { (json: Bool) in { (reencode: Bool) in { (san: Bool) in
-         Options(file: file,
-                 string: string,
-                 json: json,
-                 reencode: reencode,
-                 san: san)
-     }
-     }
-     }
-     }
- }
-
- */

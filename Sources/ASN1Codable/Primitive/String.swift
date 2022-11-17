@@ -162,3 +162,41 @@ public struct PrintableString<Value: Codable & ExpressibleByString>: Codable, Eq
 extension PrintableString: ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Tag { return .printableString }
 }
+
+extension ASN1DecodedTag {
+    var isString: Bool {
+        switch self {
+        case .universal(let tag):
+            return tag.isString
+        default:
+            return false
+        }
+    }
+}
+
+extension ASN1Tag {
+    var isString: Bool {
+        switch self {
+        case .numericString:
+            fallthrough
+        case .ia5String:
+            fallthrough
+        case .printableString:
+            fallthrough
+        case .graphicString:
+            fallthrough
+        case .visibleString:
+            fallthrough
+        case .generalString:
+            fallthrough
+        case .universalString:
+            fallthrough
+        case .bmpString:
+            fallthrough
+        case .utf8String:
+            return true
+        default:
+            return false
+        }
+    }
+}

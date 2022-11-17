@@ -294,11 +294,25 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         return self._swiftConformances(baseType).joined(separator: ", ")
     }
     
+    private func emitMappedSwiftTypeAlias(_ outputStream: inout OutputStream) {
+        if !(self.translator?.typeRefExists(self.generatedName) ?? false),
+             let swiftType = self.translator?.typeMaps[self.generatedName] {
+            outputStream.write("\(self.visibility)typealias \(self.generatedName) = \(swiftType)\n")
+            self.translator?.cacheTypeRef(self.generatedName)
+        }
+    }
+
     func emit(_ outputStream: inout OutputStream) throws {
         self.type?.typeDefValue?.parent = self
         self.tType?.typeDefValue?.parent = self
 
+        if self.translator?.typeMaps.keys.contains(self.generatedName) ?? false {
+            self.emitMappedSwiftTypeAlias(&outputStream)
+            return
+        }
+
         if self.isTypeDef ?? false, cType != nil, let tType = self.tType {
+            
             if case .universal(let type) = tType {
                 switch type {
                 case .sequence:
@@ -335,10 +349,6 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                         outputStream.write("\n")
                     }
                     
-                    if swiftMetaType == "class" {
-                        outputStream.write("\t\(visibility)func init() {}\n\n")
-                    }
-
                     outputStream.write("\t\(visibility)enum CodingKeys: String, CodingKey {\n")
                     self.members?.forEach {
                         if let typeDefValue = $0.typeDefValue {

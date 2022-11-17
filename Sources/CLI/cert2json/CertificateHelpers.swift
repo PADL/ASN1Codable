@@ -24,23 +24,6 @@ extension Certificate {
   }
 }
 
-extension DirectoryString: CustomStringConvertible {
-    var description: String {
-        switch self {
-        case .ia5String(let ia5String):
-            return String(describing: ia5String)
-        case .printableString(let printableString):
-            return String(describing: printableString)
-        case .universalString(let universalString):
-            return String(describing: universalString)
-        case .utf8String(let utf8String):
-            return String(describing: utf8String)
-        case .bmpString(let bmpString):
-            return String(describing: bmpString)
-        }
-    }
-}
-
 extension ObjectIdentifier {
     static var securityBundle = Bundle(path: "/System/Library/Frameworks/Security.framework")
 

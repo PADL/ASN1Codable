@@ -229,6 +229,13 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
     private func decodePrimitiveValue<T>(_ type: T.Type, from object: ASN1Object, verifiedTag: Bool = false) throws -> T where T: ASN1DecodableType {
         let expectedTag = ASN1DecodingContext.tag(for: type)
+        var verifiedTag = verifiedTag
+        
+        // to avoid needing DirectoryString, if the expected tag is a UTF8String (which can hold
+        // the other string encodings), then we accept any string type
+        if object.tag.isString && expectedTag == .universal(.utf8String) {
+            verifiedTag = true
+        }
         
         guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
             let context = DecodingError.Context(codingPath: self.codingPath,

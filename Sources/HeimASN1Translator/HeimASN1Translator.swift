@@ -43,18 +43,20 @@ public final class HeimASN1Translator {
     
     var inputStream: InputStream
     var outputStream: OutputStream
+    let options: Options
+    let typeMaps: [String:String]
     var module: HeimASN1Module? = nil
     var imports = [HeimASN1ModuleRef]()
     var typeRefCache = Set<String>()
-    var options: Options
     var typeDefsByName = [String: HeimASN1TypeDef]()
     var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
     var typeDefs = [HeimASN1TypeDef]()
 
-    public init(inputStream: InputStream, outputStream: inout OutputStream, options: Options = Options()) {
+    public init(inputStream: InputStream, outputStream: inout OutputStream, options: Options = Options(), typeMaps: [String:String]? = nil) {
         self.inputStream = inputStream
         self.outputStream = outputStream
         self.options = options
+        self.typeMaps = typeMaps ?? [:]
     }
     
     func cacheTypeRef(_ ref: String) {
