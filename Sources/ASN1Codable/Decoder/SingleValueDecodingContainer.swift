@@ -127,7 +127,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         let value: T
         
         // FIXME
-        self.context = self.context.decodingSingleValue(type, fromSingleValueContainer: true)
+        self.context = self.context.decodingSingleValue(type)
 
         if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
             value = try self.decodeTaggedValue(type, from: object) as! T
