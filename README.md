@@ -7,43 +7,32 @@ Note that it is presently a work in progress: it is not ready for production use
 ## Example
 
 ```asn1
-DirectoryString ::= CHOICE {
-        ia5String       IA5String,
-        printableString PrintableString,
-        universalString UniversalString,
-        utf8String      UTF8String,
-        bmpString       BMPString
-}
+AttributeType ::= OBJECT IDENTIFIER
 
-AttributeValues ::= SET OF AttributeValue
+--- DirectoryString is normally a CHOICE, but we can explicitly
+--- map it to a String with the --map-type option to asn1json2swift
 
-Attribute ::= SEQUENCE {
+AttributeTypeAndValue ::= SEQUENCE {
         type    AttributeType,
-        value   AttributeValues
+        value   DirectoryString
 }
 ```
 
 becomes:
 
 ```swift
-enum DirectoryString: Codable {
-	case ia5String(IA5String<String>)
-	case printableString(PrintableString<String>)
-	case universalString(UniversalString<String>)
-	case utf8String(UTF8String<String>)
-	case bmpString(BMPString<String>)
-}
+typealias AttributeType = ObjectIdentifier
 
-typealias AttributeValues = Set<AttributeValue>
+typealias DirectoryString = String
 
-struct Attribute: Codable {
-	enum CodingKeys: String, CodingKey {
-		case type
-		case value
-	}
+struct AttributeTypeAndValue: Codable, Equatable, Hashable {
+        enum CodingKeys: String, CodingKey {
+                case type
+                case value
+        }
 
-	var type: AttributeType
-	var value: AttributeValues
+        var type: AttributeType
+        var value: DirectoryString
 }
 ```
 
