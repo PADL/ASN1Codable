@@ -51,7 +51,7 @@ extension AttributeTypeAndValue: CustomStringConvertible {
 
 extension OtherName: CustomStringConvertible {
     public var description: String {
-        return "\(self.type_id)=\(self.value)"
+        return "\(self.type_id)={\(self.value)}"
     }
 }
 
