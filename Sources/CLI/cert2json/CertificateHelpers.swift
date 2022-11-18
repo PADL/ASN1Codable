@@ -49,6 +49,12 @@ extension AttributeTypeAndValue: CustomStringConvertible {
     }
 }
 
+extension OtherName: CustomStringConvertible {
+    public var description: String {
+        return "\(self.type_id)=\(self.value)"
+    }
+}
+
 extension Name: CustomStringConvertible {
     var description: String {
         switch self {

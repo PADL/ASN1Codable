@@ -136,6 +136,16 @@ public struct ASN1ObjectSetValue: Codable {
     }
 }
 
+extension ASN1ObjectSetValue: CustomStringConvertible {
+    public var description: String {
+        if let value = self.wrappedValue {
+            return String(describing: value)
+        } else {
+            return "<unsupported>"
+        }
+    }
+}
+
 /// Represents a type-erased object set value.
 @propertyWrapper
 public struct ASN1AnyObjectSetValue: Codable, Hashable {
