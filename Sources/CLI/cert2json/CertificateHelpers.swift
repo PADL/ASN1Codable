@@ -62,6 +62,28 @@ extension Name: CustomStringConvertible {
 
     }
 }
+
+// FIXME add synthesis of these to the translator
+
+extension Name: Equatable {
+    static func == (lhs: Name, rhs: Name) -> Bool {
+        if case .rdnSequence(let lhs) = lhs,
+           case .rdnSequence(let rhs) = rhs {
+            return lhs == rhs
+        } else {
+            return false
+        }
+    }
+}
+
+extension Name: Hashable {
+    func hash(into hasher: inout Hasher) {
+        if case .rdnSequence(let self) = self {
+            hasher.combine(self)
+        }
+    }
+}
+
 extension GeneralName: CustomStringConvertible {
     var description: String {
         switch self {
