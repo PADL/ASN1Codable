@@ -165,6 +165,14 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         return tagClass == .context || tagClass == .application || tagClass == .private
     }
     
+    var nonUniversalTagValue: UInt? {
+        guard let tagClass = self.tagClass, tagClass != .universal else {
+            return nil
+        }
+        
+        return self.tagValue
+    }
+    
     private var _isSetOrSequence: Bool {
         guard let parent = self.parent, let tag = parent.tag else {
             return false

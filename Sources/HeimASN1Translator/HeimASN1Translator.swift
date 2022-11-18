@@ -67,6 +67,45 @@ public final class HeimASN1Translator {
         return typeRefCache.contains(ref)
     }
 
+    lazy var maxTagValue: UInt? = {
+        var maxTagValue: UInt? = nil
+        var foundNonUniversalMember = false
+
+        self.apply { typeDef, stop in
+            var _maxTagValue: UInt = maxTagValue ?? 0
+            
+            if let tagValue = typeDef.nonUniversalTagValue, tagValue > _maxTagValue {
+                foundNonUniversalMember = true
+                _maxTagValue = tagValue
+            }
+            
+            if let members = typeDef.members {
+                _maxTagValue = members.map { $0.typeDefValue?.nonUniversalTagValue ?? 0 }.reduce(maxTagValue ?? 0, {
+                    foundNonUniversalMember = true
+                    return max($0, $1)
+                })
+            }
+            
+            // don't set maxTagValue if we didn't find a non-universal member, because we don't
+            // want to emit an unecessary ASN1TagNumber if there are no tagged types in this module
+            if foundNonUniversalMember, _maxTagValue >= maxTagValue ?? 0 {
+                maxTagValue = _maxTagValue
+            }
+        }
+        
+        return maxTagValue
+    }()
+    
+    private func emitTagNumberTypes(_ outputStream: inout OutputStream) {
+        guard let maxTagValue = self.maxTagValue else {
+            return
+        }
+        
+        for i in 0...maxTagValue {
+            outputStream.write("enum ASN1TagNumber$\(i): ASN1TagNumberRepresentable {}\n")
+        }
+    }
+    
     func decode(_ data: Data, range: Range<Data.Index>) throws {
         let jsonDecoder = JSONDecoder()
 
@@ -143,6 +182,8 @@ public final class HeimASN1Translator {
             try $0.emit(&outputStream)
             outputStream.write("\n")
         }
+        
+        self.emitTagNumberTypes(&outputStream)
         
         outputStream.close()
     }
