@@ -19,9 +19,9 @@ import Network
 import ASN1Codable
 
 extension Certificate {
-  func `extension`<T>(_ extnID: ObjectIdentifier) -> T? where T: Codable {
-      return self.tbsCertificate.extensions?.first(where: { $0.extnID == extnID })?.extnValue as? T
-  }
+    func `extension`<T>(_ extnID: ObjectIdentifier) -> T? where T: Codable {
+        return self.tbsCertificate.extensions?.first(where: { $0.extnID == extnID })?.extnValue as? T
+    }
 }
 
 extension ObjectIdentifier {
@@ -53,11 +53,11 @@ extension Name: CustomStringConvertible {
     var description: String {
         switch self {
         case .rdnSequence(let rdns):
-            return rdns.reversed().map { relativeDistinguishedName in
+            return ([""] + rdns.map { relativeDistinguishedName in
                 relativeDistinguishedName.map { attributeValueAssertion in
                     String(describing: attributeValueAssertion)
-                }.joined(separator: "+")
-            }.joined(separator: ",")
+                }.joined(separator: ",")
+            }).joined(separator: "/")
         }
 
     }
