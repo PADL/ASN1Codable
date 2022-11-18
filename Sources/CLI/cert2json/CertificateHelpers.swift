@@ -104,16 +104,13 @@ extension GeneralName: CustomStringConvertible {
         case .uniformResourceIdentifier(let uri):
             return "URI:\(uri)"
         case .iPAddress(let ipAddress):
-            let s: String
-            
             if let ipv4Address = IPv4Address(ipAddress.wrappedValue) {
-                s = String(describing: ipv4Address)
+                return "IP Address:\(ipv4Address)"
             } else if let ipv6Address = IPv6Address(ipAddress.wrappedValue) {
-                s = String(describing: ipv6Address)
+                return "IP Address:\(ipv6Address)"
             } else {
-                s = String(describing: ipAddress.wrappedValue)
+                return "IP Address:<unknown>"
             }
-            return "IP Address:\(s)"
         case .registeredID(let rid):
             return "RID:\(rid)"
         }
