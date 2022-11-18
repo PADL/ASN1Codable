@@ -21,13 +21,22 @@ struct ASN1DecodingContext: ASN1CodingContext {
     var taggingEnvironment: ASN1Tagging = .explicit
     var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
     
+    /// whether we are decoding an enumerated type
     var enumCodingState: ASN1EnumCodingState = .none
+    /// whether we are decoding a struct that is has SET instead of SEQUENCE encoding
     var encodeAsSet = false
+    /// the current enum type being decoded
     var currentEnumType: Any.Type?
+    /// the innermost decoded tag: this is used for allowing any string type to be represented by an untagged String
     var currentTag: ASN1DecodedTag? = nil
+    /// state for open type decoding
     var objectSetCodingContext: ASN1ObjectSetCodingContext?
+    /// state for AUTOMATIC tagging
     var automaticTaggingContext: ASN1AutomaticTaggingContext?
 
+    /// returns the expected tag for a given type. Property wrappers can return their own type,
+    /// UNIVERSAL types are represented by the tagNo property on ASN1UniversalTagRepresentable,
+    /// everything else is a SET or a SEQUENCE
     static func tag(for type: Any.Type) -> ASN1DecodedTag {
         let type = lookThroughOptional(type)
 
@@ -46,6 +55,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
         return tag
     }
     
+    /// looks through an optional type to return the wrapped type
     private static func lookThroughOptional(_ type: Any.Type) -> Any.Type {
         let unwrappedType: Any.Type
 
@@ -59,6 +69,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
         return unwrappedType
     }
     
+    /// returns true if an enum type has a member with a particular tag
     static func enumTypeHasMember<T>(_ type: T.Type, tag: ASN1DecodedTag, tagging: ASN1Tagging? = nil) -> Bool where T: Decodable {
         guard let metadata = reflect(Self.lookThroughOptional(type)) as? EnumMetadata else {
             return false
@@ -78,6 +89,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
         }
     }
     
+    /// synthesizes an CodingKey from a reflected enum case name. Does not work with custom coding keys.
     func enumCodingKey<Key>(_ keyType: Key.Type, object: ASN1Object) -> Key? where Key: CodingKey {
         if let currentEnum = self.currentEnumType,
               let metadata = reflect(Self.lookThroughOptional(currentEnum)) as? EnumMetadata,
@@ -97,10 +109,12 @@ struct ASN1DecodingContext: ASN1CodingContext {
         }
     }
 
+    /// returns true if the type is an enumearted type
     static func isEnum<T>(_ type: T.Type) -> Bool {
         return reflect(lookThroughOptional(type)) is EnumMetadata
     }
 
+    /// called before decoding a single value, maintains enum type state
     func decodingSingleValue<T>(_ type: T.Type?) -> Self where T: Decodable {
         var context = self
         context.nextEnumCodingState()
