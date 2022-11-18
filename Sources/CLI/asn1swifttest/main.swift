@@ -141,7 +141,6 @@ func test() -> Void {
         let asn1Encoder = ASN1Encoder()
         //asn1Encoder.taggingEnvironment = .automatic
         let berData = try asn1Encoder.encode(valueToEncode)
-        print("BER: \(berData.toHexString())")
         
         dumpEncodedData(berData)
         
