@@ -116,3 +116,9 @@ extension GeneralName: CustomStringConvertible {
         }
     }
 }
+
+extension HardwareModuleName: CustomStringConvertible {
+    var description: String {
+        return "\(self.hwType)=\(self.hwSerialNum.base64EncodedString())"
+    }
+}
