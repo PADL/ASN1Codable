@@ -51,7 +51,7 @@ extension AttributeTypeAndValue: CustomStringConvertible {
 
 extension OtherName: CustomStringConvertible {
     public var description: String {
-        return "\(self.type_id)={\(self.value)}"
+        return "\(self.type_id.friendlyName)={\(self.value)}"
     }
 }
 
@@ -112,13 +112,13 @@ extension GeneralName: CustomStringConvertible {
                 return "IP Address:<unknown>"
             }
         case .registeredID(let rid):
-            return "RID:\(rid)"
+            return "RID:\(rid.wrappedValue.friendlyName)"
         }
     }
 }
 
 extension HardwareModuleName: CustomStringConvertible {
     var description: String {
-        return "\(self.hwType)=\(self.hwSerialNum.base64EncodedString())"
+        return "\(self.hwType.friendlyName)=\(self.hwSerialNum.base64EncodedString())"
     }
 }
