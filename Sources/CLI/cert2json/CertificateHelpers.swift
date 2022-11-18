@@ -94,25 +94,28 @@ extension GeneralName: CustomStringConvertible {
     var description: String {
         switch self {
         case .otherName(let otherName):
-            return String(describing: otherName)
+            return "OtherName:\(otherName)"
         case .rfc822Name(let rfc822Name):
-            return String(describing: rfc822Name)
+            return "email:\(rfc822Name)"
         case .dNSName(let dNSName):
-            return String(describing: dNSName)
+            return "DNS:\(dNSName)"
         case .directoryName(let directoryName):
-            return String(describing: directoryName)
+            return "DirName:\(directoryName)"
         case .uniformResourceIdentifier(let uri):
-            return String(describing: uri)
+            return "URI:\(uri)"
         case .iPAddress(let ipAddress):
+            let s: String
+            
             if let ipv4Address = IPv4Address(ipAddress.wrappedValue) {
-                return String(describing: ipv4Address)
+                s = String(describing: ipv4Address)
             } else if let ipv6Address = IPv6Address(ipAddress.wrappedValue) {
-                return String(describing: ipv6Address)
+                s = String(describing: ipv6Address)
             } else {
-                return String(describing: ipAddress.wrappedValue)
+                s = String(describing: ipAddress.wrappedValue)
             }
-        case .registeredID(let oid):
-            return String(describing: oid)
+            return "IP Address:\(s)"
+        case .registeredID(let rid):
+            return "RID:\(rid)"
         }
     }
 }
