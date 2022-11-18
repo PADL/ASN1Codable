@@ -17,10 +17,7 @@ let package = Package(
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "ASN1Codable",
-            targets: ["ASN1Codable"]),
-        .executable(
-            name: "cert2json",
-            targets: ["cert2json", "ASN1Codable"]),
+            targets: ["ASN1Codable"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -37,11 +34,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "ASN1Codable",
-            dependencies: ["ASN1Kit", "Echo", .product(name: "BigNumber", package: "Swift-BigInt"), "AnyCodable"]),
-        .target(
-            name: "cert2json",
-            dependencies: ["ASN1Codable", "Commandant", .product(name: "Algorithms", package: "swift-algorithms")],
-            path: "Sources/CLI/cert2json")
+            dependencies: ["ASN1Kit", "Echo", .product(name: "BigNumber", package: "Swift-BigInt"), "AnyCodable"])
     ],
     swiftLanguageVersions: [.v5]
 )
