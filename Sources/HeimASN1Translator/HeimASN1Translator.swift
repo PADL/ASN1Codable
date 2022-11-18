@@ -105,7 +105,7 @@ public final class HeimASN1Translator {
         
         outputStream.open()
         
-        outputStream.write("/// HeimASN1Translator generated \(Date.now)\n\n")
+        outputStream.write("/// HeimASN1Translator generated \(Date())\n\n")
         outputStream.write("import Foundation\n")
         outputStream.write("import BigNumber\n")
         outputStream.write("import AnyCodable\n")
