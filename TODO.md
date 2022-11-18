@@ -1,6 +1,6 @@
 - make BitString support non-byte multiples
-- CodableKey instead of property wrapper?
-- allow additional conformances in asn1json2swift
-- support for REAL in ASN1Kit
-- make ASN1Kit OID representation more efficient
-
+- CodableKey and/or @runtimeMetadata instead of property wrappers?
+- allow additional arbitrary conformances in asn1json2swift
+- support for REAL in ASN1Kit for Decimal, Float and Double
+- make ASN1Kit OID representation [UInt]
+- support for nested SEQUENCE (structs)
