@@ -101,6 +101,9 @@ enum HeimASN1UniversalType: String, Codable, HeimASN1SwiftTypeRepresentable, Hei
         case .printableString:
             tag = .printableString
             break
+        case .generalString:
+            tag = .generalString
+            break
         case .utcTime:
             tag = .utcTime
             break
