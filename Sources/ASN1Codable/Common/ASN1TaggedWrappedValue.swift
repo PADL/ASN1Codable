@@ -56,7 +56,7 @@ extension ASN1TaggedWrappedValue {
         let valueDescription: String
         var debugDescription = ""
         
-        if let tag = Self.tag {
+        if let tag = self.projectedValue.tag {
             switch tag {
             case .universal(let asn1Tag):
                 tagDescription = "[UNIVERSAL \(asn1Tag.rawValue)]"
@@ -75,7 +75,7 @@ extension ASN1TaggedWrappedValue {
             tagDescription = nil
         }
 
-        if let tagging = Self.tagging {
+        if let tagging = self.projectedValue.tagging {
             switch tagging {
             case .implicit:
                 taggingDescription = "IMPLICIT"
