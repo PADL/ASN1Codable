@@ -70,7 +70,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     }
     
     /// returns true if an enum type has a member with a particular tag
-    static func enumTypeHasMember<T>(_ type: T.Type, tag: ASN1DecodedTag, tagging: ASN1Tagging? = nil) -> Bool where T: Decodable {
+    static func enumTypeHasMember<T>(_ type: T.Type, with metatype: ASN1Metatype) -> Bool where T: Decodable {
         guard let metadata = reflect(Self.lookThroughOptional(type)) as? EnumMetadata else {
             return false
         }
@@ -81,11 +81,11 @@ struct ASN1DecodingContext: ASN1CodingContext {
                   return false
               }
             
-            if let tagging = tagging, wrappedFieldType.tagging != tagging {
+            if let tagging = metatype.tagging, wrappedFieldType.tagging != tagging {
                 return false
             }
             
-            return tag == wrappedFieldType.tag
+            return metatype.tag == wrappedFieldType.tag
         }
     }
     

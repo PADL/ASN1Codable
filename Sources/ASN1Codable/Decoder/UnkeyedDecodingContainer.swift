@@ -274,7 +274,7 @@ extension ASN1DecoderImpl.UnkeyedContainer {
         if self.isAtEnd {
             object = ASN1NullObject
         } else {
-            if let type = type, ASN1DecodingContext.enumTypeHasMember(type, tag: self.object.tag, tagging: .implicit) {
+            if let type = type, ASN1DecodingContext.enumTypeHasMember(type, with: ASN1TagMetatype(tag: self.object.tag, tagging: .implicit)) {
                 object = self.object
             } else {
                 try self.validateCurrentIndex()

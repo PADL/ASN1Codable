@@ -177,11 +177,11 @@ extension ASN1EncoderImpl.SingleValueContainer {
         return object
     }
     
-    private func encodeTagged<T: Encodable>(_ value: T, tag: ASN1DecodedTag?, tagging: ASN1Tagging?, skipTaggedValues: Bool = false) throws -> ASN1Object? {
+    private func encodeTagged<T: Encodable>(_ value: T, with metatype: ASN1Metatype, skipTaggedValues: Bool = false) throws -> ASN1Object? {
         let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
-        let tagging = tagging ?? self.context.taggingEnvironment
+        let tagging = metatype.tagging ?? self.context.taggingEnvironment
         
-        if let object = object, let tag = tag {
+        if let object = object, let tag = metatype.tag {
             let wrappedObject: ASN1Object
             
             if tag.isUniversal {
@@ -200,16 +200,16 @@ extension ASN1EncoderImpl.SingleValueContainer {
     }
     
     private func encodeTaggedValue<T: Encodable & ASN1TaggedType>(_ value: T) throws -> ASN1Object? {
-        return try self.encodeTagged(value, tag: T.tag, tagging: T.tagging, skipTaggedValues: true)
+        return try self.encodeTagged(value, with: T.metatype, skipTaggedValues: true)
     }
     
     private func encodeTaggedWrappedValue<T: Encodable & ASN1TaggedWrappedValue>(_ value: T) throws -> ASN1Object? {
-        return try self.encodeTagged(value.wrappedValue, tag: T.tag, tagging: T.tagging)
+        return try self.encodeTagged(value.wrappedValue, with: T.metatype)
     }
     
     private func encodeAutomaticallyTaggedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
         let taggingContext = self.context.automaticTaggingContext!
-        return try self.encodeTagged(value, tag: taggingContext.nextTag(), tagging: taggingContext.tagging, skipTaggedValues: true)
+        return try self.encodeTagged(value, with: taggingContext.metatype(), skipTaggedValues: true)
     }
     
     private func encodeFixedWithIntegerValue<T>(_ value: T) throws -> ASN1Object? where T: FixedWidthInteger {
