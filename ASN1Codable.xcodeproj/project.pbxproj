@@ -52,6 +52,7 @@
 		D351DCE6290EF95E00540132 /* UnkeyedDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCDF290EF91B00540132 /* UnkeyedDecodingContainer.swift */; };
 		D351DCE7290EF95E00540132 /* SingleValueDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCDD290EF91B00540132 /* SingleValueDecodingContainer.swift */; };
 		D382641329299C6400808667 /* ASN1Metatype.swift in Sources */ = {isa = PBXBuildFile; fileRef = D382641229299C6400808667 /* ASN1Metatype.swift */; };
+		D3826417292ACE0700808667 /* Data+HexString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3826416292ACE0700808667 /* Data+HexString.swift */; };
 		D389097129223ACD00FF05C4 /* ASN1ExtensibleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D389097029223ACD00FF05C4 /* ASN1ExtensibleType.swift */; };
 		D399B208290FB1120010B730 /* ASN1Tagging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D399B207290FB1120010B730 /* ASN1Tagging.swift */; };
 		D3C67EB3291E00F50018F3D3 /* ASN1Tag+SwiftType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C67EB2291E00F50018F3D3 /* ASN1Tag+SwiftType.swift */; };
@@ -252,6 +253,7 @@
 		D351DCE0290EF91B00540132 /* ASN1Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1Decoder.swift; sourceTree = "<group>"; };
 		D351DCE1290EF91B00540132 /* ASN1DecodingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecodingContainer.swift; sourceTree = "<group>"; };
 		D382641229299C6400808667 /* ASN1Metatype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1Metatype.swift; sourceTree = "<group>"; };
+		D3826416292ACE0700808667 /* Data+HexString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+HexString.swift"; sourceTree = "<group>"; };
 		D389097029223ACD00FF05C4 /* ASN1ExtensibleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1ExtensibleType.swift; sourceTree = "<group>"; };
 		D399B207290FB1120010B730 /* ASN1Tagging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1Tagging.swift; sourceTree = "<group>"; };
 		D3C67EB2291E00F50018F3D3 /* ASN1Tag+SwiftType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ASN1Tag+SwiftType.swift"; sourceTree = "<group>"; };
@@ -500,6 +502,7 @@
 				D351DC5C290E8AAF00540132 /* CertificateHelpers.swift */,
 				D3D13E7B2913434200218279 /* VersionCommand.swift */,
 				D3D13E7D291343A500218279 /* ParseCommand.swift */,
+				D3826416292ACE0700808667 /* Data+HexString.swift */,
 			);
 			path = cert2json;
 			sourceTree = "<group>";
@@ -889,6 +892,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3826417292ACE0700808667 /* Data+HexString.swift in Sources */,
 				D30F2DF3292201A8009299A3 /* rfc2459.json in Sources */,
 				D3D13E7E291343A500218279 /* ParseCommand.swift in Sources */,
 				D3D13E7C2913434200218279 /* VersionCommand.swift in Sources */,

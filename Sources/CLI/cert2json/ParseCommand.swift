@@ -43,7 +43,7 @@ struct ParseCommand: CommandProtocol {
         }
 
         do {
-            let data: Data?
+            var data: Data? = nil
             
             if let fileContents = fileContents {
                 var didBegin = false
@@ -63,6 +63,9 @@ struct ParseCommand: CommandProtocol {
                 data = Data(base64Encoded: base64)
             } else {
                 data = Data(base64Encoded: options.string)
+                if data == nil {
+                    data = Data(hexString: options.string)
+                }
             }
             
             guard let data = data else {
@@ -70,6 +73,7 @@ struct ParseCommand: CommandProtocol {
             }
 
             let decoder = ASN1Decoder()
+            
             let cert = try decoder.decode(Certificate.self, from: data)
             
             if options.json {
