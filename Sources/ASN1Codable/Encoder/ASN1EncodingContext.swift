@@ -32,7 +32,7 @@ struct ASN1EncodingContext: ASN1CodingContext {
         return reflection.displayStyle == .enum
     }
 
-    func encodingSingleValue<T>(_ value: T, forKey: CodingKey? = nil) -> Self {
+    func encodingSingleValue<T>(_ value: T) -> Self {
         var context = self
 
         if Self.isEnum(value) {
