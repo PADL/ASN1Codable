@@ -31,7 +31,7 @@ public extension ASN1TaggedType {
         return nil
     }
     
-    static var tag: ASN1DecodedTag? {
+    private static var tag: ASN1DecodedTag? {
         guard let tagNumber = self.tagNumber else {
             return nil
         }
@@ -39,7 +39,7 @@ public extension ASN1TaggedType {
         return ASN1DecodedTag.taggedTag(tagNumber.tagNo)
     }
     
-    static var tagging: ASN1Tagging? {
+    private static var tagging: ASN1Tagging? {
         if self is any ASN1ImplicitlyTaggedType.Type {
             return .implicit
         } else if self is any ASN1ExplicitlyTaggedType.Type {
@@ -47,5 +47,9 @@ public extension ASN1TaggedType {
         } else {
             return nil
         }
+    }
+    
+    static var metatype: ASN1Metatype {
+        return ASN1Metatype(tag: self.tag, tagging: self.tagging)
     }
 }

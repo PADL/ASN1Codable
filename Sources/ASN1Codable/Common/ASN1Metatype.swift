@@ -17,12 +17,7 @@
 import Foundation
 import ASN1Kit
 
-public protocol ASN1Metatype {
-    var tag: ASN1DecodedTag? { get }
-    var tagging: ASN1Tagging? { get }
-}
-
-struct ASN1TagMetatype: ASN1Metatype {
+public struct ASN1Metatype: Equatable {
     var tag: ASN1DecodedTag?
     var tagging: ASN1Tagging?
 }

@@ -18,9 +18,6 @@ import Foundation
 import ASN1Kit
 
 public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible, CustomDebugStringConvertible, ASN1TaggedTypeRepresentable {
-    static var tag: ASN1DecodedTag? { get }
-    static var tagging: ASN1Tagging? { get }
-
     associatedtype Value: Codable
     
     var wrappedValue: Value { get set }
@@ -30,8 +27,6 @@ public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible, Custom
 }
 
 extension ASN1TaggedWrappedValue {
-    public static var tag: ASN1DecodedTag? { return nil }
-    
     public var projectedValue: ASN1Metatype {
         return Self.metatype
     }

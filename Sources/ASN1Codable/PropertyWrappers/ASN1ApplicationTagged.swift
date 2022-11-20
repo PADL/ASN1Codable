@@ -20,7 +20,6 @@ import ASN1Kit
 @propertyWrapper
 public struct ASN1ApplicationTagged <Tag, Tagging, Value>: Codable, ASN1TaggedWrappedValue where Tag: ASN1TagNumberRepresentable, Tagging: ASN1TaggingRepresentable, Value: Codable {
     public static var tagNumber: Tag.Type { return Tag.self }
-    public static var tagging: ASN1Tagging? { return Tagging.tagging }
 
     public var wrappedValue: Value
         
@@ -32,8 +31,8 @@ public struct ASN1ApplicationTagged <Tag, Tagging, Value>: Codable, ASN1TaggedWr
         self.wrappedValue = nil
     }
 
-    public static var tag: ASN1DecodedTag? {
-        return ASN1DecodedTag.applicationTag(self.tagNumber.tagNo)
+    public static var metatype: ASN1Metatype {
+        return ASN1Metatype(tag: ASN1DecodedTag.applicationTag(tagNumber.tagNo), tagging: Tagging.tagging)
     }
 }
 
@@ -44,14 +43,4 @@ extension ASN1ApplicationTagged: Hashable where Value: Hashable {
 }
 
 public protocol ASN1ApplicationTaggedType: ASN1TaggedType {
-}
-
-public extension ASN1ApplicationTaggedType {
-    static var tag: ASN1DecodedTag? {
-        guard let tagNumber = self.tagNumber else {
-            return nil
-        }
-        
-        return ASN1DecodedTag.applicationTag(tagNumber.tagNo)
-    }
 }

@@ -42,7 +42,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
 
         let tag: ASN1DecodedTag
         
-        if let type = type as? ASN1TaggedTypeRepresentable.Type, let typeTag = type.tag {
+        if let type = type as? ASN1TaggedTypeRepresentable.Type, let typeTag = type.metatype.tag {
             tag = typeTag
         } else if let type = type as? ASN1UniversalTagRepresentable.Type {
             tag = .universal(type.tagNo)
@@ -81,11 +81,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
                   return false
               }
             
-            if let tagging = metatype.tagging, wrappedFieldType.tagging != tagging {
-                return false
-            }
-            
-            return metatype.tag == wrappedFieldType.tag
+            return metatype == wrappedFieldType.metatype
         }
     }
     

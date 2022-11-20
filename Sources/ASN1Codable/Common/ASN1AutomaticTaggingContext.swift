@@ -34,7 +34,7 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
                       let wrappedFieldType = fieldType as? any ASN1TaggedWrappedValue.Type else {
                     return false
                 }
-                return wrappedFieldType.tag != nil
+                return wrappedFieldType.metatype.tag != nil
             }
             
             guard !hasTaggedFields else {
@@ -46,7 +46,7 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
                       let wrappedFieldType = fieldType as? any ASN1TaggedWrappedValue.Type else {
                     return false
                 }
-                return wrappedFieldType.tag != nil
+                return wrappedFieldType.metatype.tag != nil
             }
             
             guard !hasTaggedFields else {
@@ -102,7 +102,7 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
     }
     
     func metatype() -> ASN1Metatype {
-        return ASN1TagMetatype(tag: self.nextTag(), tagging: self.tagging)
+        return ASN1Metatype(tag: self.nextTag(), tagging: self.tagging)
     }
 
     var description: String {

@@ -45,8 +45,8 @@ public struct GeneralizedTime<Value: Codable & ExpressibleByDate>: Codable, Equa
         self.wrappedValue = nil
     }
     
-    public static var tag: ASN1DecodedTag? {
-        return .universal(.generalizedTime)
+    public static var metatype: ASN1Metatype {
+        return ASN1Metatype(tag: .universal(.generalizedTime))
     }
 }
 
@@ -66,8 +66,8 @@ public struct UTCTime<Value: Codable & ExpressibleByDate>: Codable, Equatable, H
         self.wrappedValue = nil
     }
     
-    public static var tag: ASN1DecodedTag? {
-        return .universal(.utcTime)
+    public static var metatype: ASN1Metatype {
+        return ASN1Metatype(tag: .universal(.utcTime))
     }
 }
 
