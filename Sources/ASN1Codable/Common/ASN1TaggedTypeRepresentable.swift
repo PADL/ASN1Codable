@@ -20,9 +20,11 @@ import ASN1Kit
 public protocol ASN1TaggedTypeRepresentable {
     static var tag: ASN1DecodedTag? { get }
     static var tagging: ASN1Tagging? { get }
+    static var metatype: ASN1Metatype { get }
 }
 
 public extension ASN1TaggedTypeRepresentable {
     static var tag: ASN1DecodedTag? { return nil }
     static var tagging: ASN1Tagging? { return nil }
+    static var metatype: ASN1Metatype { return ASN1TagMetatype(tag: self.tag, tagging: self.tagging) }
 }

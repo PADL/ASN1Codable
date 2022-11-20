@@ -33,7 +33,7 @@ extension ASN1TaggedWrappedValue {
     public static var tag: ASN1DecodedTag? { return nil }
     
     public var projectedValue: ASN1Metatype {
-        return ASN1TagMetatype(tag: Self.tag, tagging: Self.tagging)
+        return Self.metatype
     }
     
     public func encode(to encoder: Encoder) throws {
