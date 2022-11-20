@@ -111,7 +111,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     }
 
     /// called before decoding a single value, maintains enum type state
-    func decodingSingleValue<T>(_ type: T.Type) -> Self where T: Decodable {
+    func decodingSingleValue<T>(_ type: T.Type, forKey: CodingKey? = nil) -> Self where T: Decodable {
         var context = self
         context.nextEnumCodingState()
 
