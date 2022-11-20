@@ -19,12 +19,21 @@ import Foundation
 import ASN1Kit
 
 struct ASN1EncodingContext: ASN1CodingContext {
+    /// default tagging environment
     var taggingEnvironment: ASN1Tagging = .explicit
+    /// custom object set type dictionary
     var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
-    
+    /// whether we are decoding an enumerated type
     var enumCodingState: ASN1EnumCodingState = .none
+    /// whether we are decoding a struct that is has SET instead of SEQUENCE encoding
     var encodeAsSet = false
+    /// the current enum type being decoded
+    var currentEnumType: Any.Type?
+    /// the innermost decoded tag: this is used for allowing any string type to be represented by an untagged String
+    var currentTag: ASN1DecodedTag? = nil
+    /// state for open type decoding
     var objectSetCodingContext: ASN1ObjectSetCodingContext?
+    /// state for AUTOMATIC tagging
     var automaticTaggingContext: ASN1AutomaticTaggingContext?
 
     private static func isEnum<T>(_ value: T) -> Bool {

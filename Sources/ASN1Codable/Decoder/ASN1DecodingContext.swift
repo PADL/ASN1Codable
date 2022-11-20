@@ -18,9 +18,10 @@ import Foundation
 import Echo
 
 struct ASN1DecodingContext: ASN1CodingContext {
+    /// default tagging environment
     var taggingEnvironment: ASN1Tagging = .explicit
+    /// custom object set type dictionary
     var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
-    
     /// whether we are decoding an enumerated type
     var enumCodingState: ASN1EnumCodingState = .none
     /// whether we are decoding a struct that is has SET instead of SEQUENCE encoding

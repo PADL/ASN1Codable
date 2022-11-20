@@ -58,6 +58,13 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
     
     var allKeys: [Key] {
+        if Key.self is ASN1ExplicitTagCodingKey.Type, let items = self.object.data.items {
+            // this is part of the escape hatch to support Apple's component attributes
+            // type, which is a SEQUENCE of arbitrary explicitly tagged values, which
+            // are not known until runtime
+            return items.map { ASN1ExplicitTagCodingKey(tag: $0.tag) as! Key }
+        }
+        
         let keys: [Key]
         let currentObject: ASN1Object
         
@@ -339,7 +346,7 @@ extension ASN1DecoderImpl.KeyedContainer {
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
         let value = try container.decode(type)
-        
+
         if !ASN1DecoderImpl.isNilOrWrappedNil(value) {
             self.addContainer(container, forKey: key)
         }

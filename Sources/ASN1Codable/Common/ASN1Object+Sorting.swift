@@ -17,50 +17,13 @@
 import Foundation
 import ASN1Kit
 
-private extension ASN1DecodedTag {
-    var tagType: UInt8 {
-        switch self {
-        case .universal(_):
-            return ASN1Tag.universal
-        case .applicationTag(_):
-            return ASN1Tag.application
-        case .taggedTag(_):
-            return ASN1Tag.tagged
-        case .privateTag(_):
-            return ASN1Tag.private
-        }
-    }
-    
-    var tagNo: UInt {
-        switch self {
-        case .universal(let tagNo):
-            return UInt(tagNo.rawValue)
-        case .applicationTag(let tagNo):
-            return tagNo
-        case .taggedTag(let tagNo):
-            return tagNo
-        case .privateTag(let tagNo):
-            return tagNo
-        }
-    }
-}
-
 extension ASN1Object {
     var sortedByTag: ASN1Object {
         guard self.constructed, self.tag == .universal(.set), let items = self.data.items else {
             return self
         }
         
-        let sorted = items.sorted(by: { lhs, rhs in
-            let lhs_tagType = lhs.tag.tagType, rhs_tagType = rhs.tag.tagType
-            let lhs_tagNo = lhs.tag.tagNo, rhs_tagNo = rhs.tag.tagNo
-            
-            if lhs_tagType == lhs_tagType {
-                return lhs_tagNo < rhs_tagNo
-            } else {
-                return lhs_tagType < rhs_tagType
-            }
-        })
+        let sorted = items.sorted(by: { ASN1DecodedTag.sort($0.tag, $1.tag) })
         
         return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
     }

@@ -129,7 +129,12 @@ extension ASN1DecoderImpl.SingleValueContainer {
         // FIXME
         self.context = self.context.decodingSingleValue(type)
 
-        if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
+        if !skipTaggedValues, let key = self.codingPath.last as? ASN1CodingKey {
+            // avoid re-encoding tag on constructed values by flattening to a normal coding key
+            self.codingPath[self.codingPath.count - 1] = ASN1PlaceholderCodingKey(key)
+
+            value = try self.decodeTaggedKeyedValue(type, from: object, forKey: key)
+        } else if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
             value = try self.decodeTaggedValue(type, from: object) as! T
         } else if let type = type as? any (Decodable & ASN1TaggedWrappedValue).Type {
             value = try self.decodeTaggedWrappedValue(type, from: object) as! T
@@ -170,10 +175,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return value
     }
 
-    // NB withASN1Throwing is not needed here because decodeFixedWidthIntegerValue()
-    // does not call into any exception-throwing ASNKit APIs
-
     private func decodeFixedWidthIntegerValue<T>(_ type: T.Type, verifiedTag: Bool = false) throws -> T where T: FixedWidthInteger {
+        // NB withASN1Throwing is not needed here because decodeFixedWidthIntegerValue()
+        // does not call into any exception-throwing ASNKit APIs
+
         let expectedTag = ASN1DecodingContext.tag(for: type)
         
         guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
@@ -210,6 +215,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
             }
             return T(value)
         }
+    }
+    
+    private func decodeTaggedKeyedValue<T>(_ type: T.Type, from object: ASN1Object, forKey key: ASN1CodingKey) throws -> T where T: Decodable {
+        return try self.decodeTagged(type, from: object, with: key.metatype, skipTaggedValues: true)
     }
     
     private func decodeTaggedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedType {

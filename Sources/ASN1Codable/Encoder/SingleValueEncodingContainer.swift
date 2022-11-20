@@ -161,8 +161,13 @@ extension ASN1EncoderImpl.SingleValueContainer {
     
     private func encode<T: Encodable>(_ value: T, skipTaggedValues: Bool = false) throws -> ASN1Object? {
         let object: ASN1Object?
-        
-        if !skipTaggedValues, let value = value as? ASN1TaggedType {
+
+        if !skipTaggedValues, let key = self.codingPath.last as? ASN1CodingKey {
+            // avoid re-encoding tag on constructed values by flattening to a normal coding key
+            self.codingPath[self.codingPath.count - 1] = ASN1PlaceholderCodingKey(key)
+
+            object = try self.encodeTagged(value, with: key.metatype, skipTaggedValues: true)
+        } else if !skipTaggedValues, let value = value as? ASN1TaggedType {
             object = try self.encodeTaggedValue(value)
         } else if let value = value as? any (Encodable & ASN1TaggedWrappedValue) {
             object = try self.encodeTaggedWrappedValue(value)

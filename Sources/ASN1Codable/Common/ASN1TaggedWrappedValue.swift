@@ -46,49 +46,12 @@ extension ASN1TaggedWrappedValue {
     }
     
     public var debugDescription: String {
-        let tagDescription: String?
-        let taggingDescription: String?
         let valueDescription: String
-        var debugDescription = ""
-        
-        if let tag = self.projectedValue.tag {
-            switch tag {
-            case .universal(let asn1Tag):
-                tagDescription = "[UNIVERSAL \(asn1Tag.rawValue)]"
-                break
-            case .applicationTag(let tagNo):
-                tagDescription = "[APPLICATION \(tagNo)]"
-                break
-            case .taggedTag(let tagNo):
-                tagDescription = "[\(tagNo)]"
-                break
-            case .privateTag(let tagNo):
-                tagDescription = "[PRIVATE \(tagNo)]"
-                break
-            }
-        } else {
-            tagDescription = nil
-        }
-
-        if let tagging = self.projectedValue.tagging {
-            switch tagging {
-            case .implicit:
-                taggingDescription = "IMPLICIT"
-                break
-            case .explicit:
-                taggingDescription = "EXPLICIT"
-                break
-            case .automatic:
-                taggingDescription = "AUTOMATIC"
-                break
-            }
-        } else {
-            taggingDescription = nil
-        }
+        var debugDescription = self.projectedValue.debugDescription
         
         switch self.wrappedValue {
         case is Void:
-            valueDescription = "NULL"
+            valueDescription = "null"
             break
         case let wrappedValue as CustomDebugStringConvertible:
             valueDescription = wrappedValue.debugDescription
@@ -98,15 +61,6 @@ extension ASN1TaggedWrappedValue {
             break
         }
         
-        if let tagDescription = tagDescription {
-            debugDescription.append(tagDescription)
-        }
-        if let taggingDescription = taggingDescription {
-            if !debugDescription.isEmpty {
-                debugDescription.append(" ")
-            }
-            debugDescription.append(taggingDescription)
-        }
         if !debugDescription.isEmpty {
             debugDescription.append(" ")
         }
