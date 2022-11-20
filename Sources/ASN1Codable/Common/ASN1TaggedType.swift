@@ -29,27 +29,5 @@ public protocol ASN1SetCodable: ASN1TaggedType {
 public extension ASN1TaggedType {
     static var tagNumber: ASN1TagNumberRepresentable.Type? {
         return nil
-    }
-    
-    private static var tag: ASN1DecodedTag? {
-        guard let tagNumber = self.tagNumber else {
-            return nil
-        }
-        
-        return ASN1DecodedTag.taggedTag(tagNumber.tagNo)
-    }
-    
-    private static var tagging: ASN1Tagging? {
-        if self is any ASN1ImplicitlyTaggedType.Type {
-            return .implicit
-        } else if self is any ASN1ExplicitlyTaggedType.Type {
-            return .explicit
-        } else {
-            return nil
-        }
-    }
-    
-    static var metatype: ASN1Metatype {
-        return ASN1Metatype(tag: self.tag, tagging: self.tagging)
-    }
+    }    
 }
