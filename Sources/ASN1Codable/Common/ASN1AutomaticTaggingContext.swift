@@ -92,12 +92,12 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         return Key(stringValue: metadata.descriptor.fields.records[Int(tagNo)].name)
     }
     
-    func nextTag() -> ASN1DecodedTag {
+    private func nextTag() -> ASN1DecodedTag {
         defer { self.tagNo += 1 }
         return .taggedTag(self.tagNo)
     }
     
-    var tagging: ASN1Tagging {
+    private var tagging: ASN1Tagging {
         return self.enumMetadata != nil ? .explicit : .implicit
     }
     
