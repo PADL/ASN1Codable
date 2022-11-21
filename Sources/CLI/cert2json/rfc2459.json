@@ -628,8 +628,20 @@
 {"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleCertificatePolicies","value":5}]}
 {"name":"id-apple-ce","gen_name":"id_apple_ce","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
 {"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleCertificateExtensions","value":6}]}
+{"name":"id-apple-ce-appleComponentType","gen_name":"id_apple_ce_appleComponentType","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":null,"value":11},{"label":null,"value":1}]}
+{"name":"id-apple-ce-appleComponentSerial","gen_name":"id_apple_ce_appleComponentSerial","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":null,"value":11},{"label":null,"value":2}]}
 {"name":"id-apple-ce-appleComponentAttributes","gen_name":"id_apple_ce_appleComponentAttributes","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
 {"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":null,"value":11},{"label":null,"value":3}]}
+{"name":"AppleComponentType","gen_name":"AppleComponentType","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":4,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"AppleComponentType","gen_name":"AppleComponentType","is_type":true,"exported":false,"typedef":true,"ttype":"OCTET STRING","ctype":"heim_octet_string"}
+}
+{"name":"AppleComponentSerial","gen_name":"AppleComponentSerial","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":4,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"AppleComponentSerial","gen_name":"AppleComponentSerial","is_type":true,"exported":false,"typedef":true,"ttype":"OCTET STRING","ctype":"heim_octet_string"}
+}
 {"name":"id-pkix-on-pkinit-ms-san","gen_name":"id_pkix_on_pkinit_ms_san","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
 {"label":"iso","value":1},{"label":"org","value":3},{"label":"dod","value":6},{"label":"internet","value":1},{"label":"private","value":4},{"label":"enterprise","value":1},{"label":"microsoft","value":311},{"label":null,"value":20},{"label":null,"value":2},{"label":null,"value":3}]}
 {"name":"AliasUTF8String","gen_name":"AliasUTF8String","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":12,"tagenv":"EXPLICIT",

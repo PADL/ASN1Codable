@@ -77,16 +77,23 @@ public struct ASN1ObjectSetValue: Codable {
             return
         }
 
+        let type = objectSetCodingContext.type(encoder.context)
+
         // FIXME set tagging environment to EXPLICIT then restore
         do {
             if objectSetCodingContext.encodeAsOctetString {
-                let innerEncoder = ASN1Encoder()
-                
                 let berData: Data
-                if let wrappedValue = self.wrappedValue {
-                    berData = try innerEncoder.encode(wrappedValue)
+
+                if type != nil {
+                    if let wrappedValue = self.wrappedValue {
+                        berData = try ASN1Encoder().encode(wrappedValue)
+                    } else {
+                        berData = Data() // FIXME honour NULL encoding preference
+                    }
+                } else if let data = self.wrappedValue as? Data {
+                    berData = data
                 } else {
-                    berData = Data() // FIXME honour NULL encoding preference
+                    fatalError("Object set type \(String(describing: objectSetCodingContext.valueType)) not mapped to a type, but wrapped value is not Data")
                 }
 
                 try container.encode(berData)
@@ -98,7 +105,7 @@ public struct ASN1ObjectSetValue: Codable {
                 }
             }
         } catch {
-            debugPrint("Failed to encode object set value \(String(describing: self.wrappedValue)): \(error)")
+            debugPrint("Failed to encode object set value \(String(describing: self.wrappedValue)) for type \(objectSetCodingContext.objectSetType): \(error)")
             throw error
         }
     }
@@ -112,25 +119,35 @@ public struct ASN1ObjectSetValue: Codable {
         }
         
         // FIXME set tagging environment to EXPLICIT then restore
-        guard let objectSetCodingContext = decoder.context.objectSetCodingContext,
-              let type = objectSetCodingContext.type(decoder) else {
+        guard let objectSetCodingContext = decoder.context.objectSetCodingContext else {
             self.wrappedValue = nil
             return
         }
 
+        let type = objectSetCodingContext.type(decoder.context)
+        let valueType = objectSetCodingContext.valueType ?? "nil"
+        
         do {
             if objectSetCodingContext.encodeAsOctetString {
                 let berData = try container.decode(Data.self)
-                let innerDecoder = ASN1Decoder()
-                
-                self.wrappedValue = try innerDecoder.decode(type, from: berData)
+                if let type = type {
+                    self.wrappedValue = try ASN1Decoder().decode(type, from: berData)
+                } else {
+                    debugPrint("Unknown object set type \(valueType), decoding as Data")
+                    self.wrappedValue = berData
+                }
             } else {
-                let value = try container.decode(type)
-                
-                self.wrappedValue = value
+                guard let type = type else {
+                    debugPrint("Unknown object set type \(valueType), cannot decode")
+                    let context = DecodingError.Context(codingPath: container.codingPath,
+                                                        debugDescription: "Unknown object set type \(valueType)")
+                    throw DecodingError.typeMismatch(Data.self, context)
+                }
+
+                self.wrappedValue = try container.decode(type)
             }
         } catch {
-            debugPrint("Failed to decode object set type \(type): \(error)")
+            debugPrint("Failed to decode object set type \(valueType): \(error)")
             throw error
         }
     }
@@ -176,7 +193,7 @@ final class ASN1ObjectSetCodingContext {
         self.encodeAsOctetString = encodeAsOctetString
     }
     
-    func type(_ decoder: ASN1DecoderImpl) -> Codable.Type? {
+    func type(_ codingContext: ASN1CodingContext) -> Codable.Type? {
         let type: Codable.Type?
         
         guard let valueType = self.valueType else {
@@ -186,14 +203,13 @@ final class ASN1ObjectSetCodingContext {
         
         let anyValueType = AnyHashable(valueType)
         
-        if let typeDict = decoder.context.objectSetTypeDictionary,
+        if let typeDict = codingContext.objectSetTypeDictionary,
            let typeDict = typeDict[String(reflecting: objectSetType)],
            let userType = typeDict[anyValueType] {
             type = userType
         } else if let knownType = objectSetType.knownTypes[anyValueType] {
             type = knownType
         } else {
-            debugPrint("Unknown object set type \(valueType)")
             type = nil
         }
         return type

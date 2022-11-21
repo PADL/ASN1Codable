@@ -904,8 +904,18 @@ id-apple-eku-appleResourceSigning OBJECT IDENTIFIER ::= {id-apple-eku-appleCodeS
 id-apple-cp OBJECT IDENTIFIER ::= {id-apple-ds appleCertificatePolicies(5)}
 
 id-apple-ce OBJECT IDENTIFIER ::= {id-apple-ds appleCertificateExtensions(6)}
+
+id-apple-ce-appleComponentType OBJECT IDENTIFIER ::= {id-apple-ds 11 1}
+id-apple-ce-appleComponentSerial OBJECT IDENTIFIER ::= {id-apple-ds 11 2}
 id-apple-ce-appleComponentAttributes OBJECT IDENTIFIER ::= {id-apple-ds 11 3}
 
+--- this is an IA5String, UTF8String, or not DER-encoded at all
+--- XXX we can't yet represent a type that is not encoded within an extension
+AppleComponentType ::= OCTET STRING
+AppleComponentSerial ::= OCTET STRING
+
+--- this is a placeholder, it is mapped during the translation process to
+--- an extensible dictionary type
 AppleComponentAttributes ::= CHOICE {
 	value			[0]     HEIM_ANY
 }
@@ -1108,6 +1118,16 @@ ext-HeimPkinitPrincMaxLife _EXTENSION ::= {
     &Critical FALSE,
     &ExtnType HeimPkinitPrincMaxLifeSecs
 }
+--- ext-AppleComponentType _EXTENSION ::= {
+---     &id id-apple-ce-appleComponentType,
+---     &Critical FALSE,
+---     &ExtnType AppleComponentType
+--- }
+--- ext-AppleComponentSerial _EXTENSION ::= {
+---     &id id-apple-ce-appleComponentSerial,
+---     &Critical FALSE,
+---     &ExtnType AppleComponentSerial
+--- }
 ext-AppleComponentAttributes _EXTENSION ::= {
     &id id-apple-ce-appleComponentAttributes,
     &Critical FALSE,
@@ -1134,6 +1154,8 @@ CertExtensions _EXTENSION ::= {
   | ext-SubjectInfoAccessSyntax
   | ext-ProxyCertInfo
   | ext-HeimPkinitPrincMaxLife
+---   | ext-AppleComponentType
+---   | ext-AppleComponentSerial
   | ext-AppleComponentAttributes
 }
 
