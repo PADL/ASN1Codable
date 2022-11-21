@@ -20,9 +20,9 @@ import AnyCodable
 
 @propertyWrapper
 public struct ASN1TaggedDictionary {
-    public var wrappedValue: Dictionary<ASN1DecodedTag, AnyCodable>
+    public var wrappedValue: Dictionary<UInt, AnyCodable>
     
-    public init(wrappedValue: Dictionary<ASN1DecodedTag, AnyCodable>) {
+    public init(wrappedValue: Dictionary<UInt, AnyCodable>) {
         self.wrappedValue = wrappedValue
     }
 }
@@ -34,11 +34,13 @@ extension ASN1TaggedDictionary: Decodable {
             
             self.wrappedValue = Dictionary()
             try container.allKeys.forEach {
-                self.wrappedValue[$0.tag] = try container.decode(AnyCodable.self, forKey: $0)
+                if case .taggedTag(let tagNo) = $0.tag {
+                    self.wrappedValue[tagNo] = try container.decode(AnyCodable.self, forKey: $0)
+                }
             }
         } else {
             let container = try decoder.singleValueContainer()
-            self.wrappedValue = try container.decode(Dictionary<ASN1DecodedTag, AnyCodable>.self)
+            self.wrappedValue = try container.decode(Dictionary<UInt, AnyCodable>.self)
             return
         }
     }
@@ -49,8 +51,8 @@ extension ASN1TaggedDictionary: Encodable {
         if let encoder = encoder as? ASN1EncoderImpl {
             var container = encoder.container(keyedBy: ASN1ExplicitTagCodingKey.self)
             
-            try self.wrappedValue.keys.sorted(by: ASN1DecodedTag.sort).forEach {
-                let key = ASN1ExplicitTagCodingKey(tag: $0)
+            try self.wrappedValue.keys.sorted(by: { $0 < $1 }).forEach {
+                let key = ASN1ExplicitTagCodingKey(tag: .taggedTag($0))
                 let value = self.wrappedValue[$0]
                 try container.encode(value, forKey: key)
             }

@@ -48,18 +48,7 @@ extension Certificate {
             return nil
         }
         
-        var dict = Dictionary<UInt, NSObject>()
-        
-        attributes.wrappedValue.forEach { kv in
-            guard case .taggedTag(let tagNo) = kv.0,
-                  let ns = kv.1.value as? NSObject else {
-                return
-            }
-            
-            dict[tagNo] = ns
-        }
-        
-        return dict as NSDictionary
+        return attributes.wrappedValue.mapValues { $0.value as? NSObject } as NSDictionary
     }
     
     @objc var serialNumberData: CFData? {
