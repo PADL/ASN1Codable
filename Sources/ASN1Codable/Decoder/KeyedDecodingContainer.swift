@@ -86,6 +86,10 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
     // FIXME we don't know the keys ahead of time so we can't answer this except in the enum case
     func contains(_ key: Key) -> Bool {
+        if let key = key as? ASN1CodingKey {
+            return (key.intValue ?? 0) < (self.count ?? 0)
+        }
+        
         let currentObject: ASN1Object
         
         do {
