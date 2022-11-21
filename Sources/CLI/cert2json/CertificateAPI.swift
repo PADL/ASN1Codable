@@ -17,6 +17,18 @@
 import Foundation
 import ASN1Codable
 
+@_cdecl("CertificateCreateWithData")
+func CertificateCreateWithData(_ allocator: CFAllocator,
+                               _ der_certificate: CFData?) -> Certificate?
+{
+    guard let der_certificate = der_certificate else { return nil }
+    do {
+        return try ASN1Decoder().decode(Certificate.self, from: der_certificate as Data)
+    } catch {
+        return nil
+    }
+}
+
 @_cdecl("CertificateCreateWithBytes")
 func CertificateCreateWithBytes(_ allocator: CFAllocator,
                                  _ bytes: [UInt8],
@@ -61,7 +73,30 @@ extension Certificate {
 }
 
 @_cdecl("CertificateCopyComponentAttributes")
-func CertificateCopyComponentAttributes(_ certificate: Certificate) -> CFDictionary? {
+func CertificateCopyComponentAttributes(_ certificate: Certificate?) -> CFDictionary? {
+    guard let certificate = certificate else { return nil }
+    
     return certificate.componentAttributes
 }
 
+@_cdecl("CertificateGetSubjectKeyID")
+func CertificateGetSubjectKeyID(_ certificate: Certificate?) -> CFData? {
+    guard let certificate = certificate else { return nil }
+    guard let subjectKeyID: Data = certificate.extension(id_x509_ce_subjectKeyIdentifier) else { return nil }
+    
+    return subjectKeyID as CFData
+}
+
+@_cdecl("CertificateSetKeychainItem")
+func CertificateSetKeychainItem(_ certificate: Certificate?, _ keychain_item: CFTypeRef) -> OSStatus
+{
+    guard let certificate = certificate else { return errSecParam }
+    certificate._keychain_item = keychain_item
+    return errSecSuccess
+}
+
+@_cdecl("CertificateGetLength")
+func CertificateGetLength(_ certificate: Certificate) -> CFIndex
+{
+    return certificate._save?.count ?? 0
+}

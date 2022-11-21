@@ -975,7 +975,7 @@
 }
 {"name":"Certificate","gen_name":"Certificate","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
-{"name":"Certificate","gen_name":"Certificate","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct Certificate","members":[
+{"name":"Certificate","gen_name":"Certificate","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct Certificate","preserve":true,"members":[
 {"name":"tbsCertificate","gen_name":"tbsCertificate","optional":false,"type":{"name":"Certificate","gen_name":"tbsCertificate","is_type":true,"exported":true,"typedef":false,"ttype":"TBSCertificate","alias":true
 }
 },{"name":"signatureAlgorithm","gen_name":"signatureAlgorithm","optional":false,"type":{"name":"Certificate","gen_name":"signatureAlgorithm","is_type":true,"exported":true,"typedef":false,"ttype":"AlgorithmIdentifier","alias":true
@@ -984,7 +984,7 @@
 "ttype":
 {"name":"Certificate","gen_name":"signatureValue","is_type":true,"exported":false,"typedef":false,"ttype":"BIT STRING","ctype":"heim_bit_string"}
 }
-}]}
+}],"decorate":[{"type":"CFTypeRef","name":"_keychain_item","optional":true,"external":true,"pointer":false,"void_star":false,"struct_star":false,"copy_function":"","free_function":"","header_name":"Foundation"}]}
 }
 {"name":"Certificates","gen_name":"Certificates","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":

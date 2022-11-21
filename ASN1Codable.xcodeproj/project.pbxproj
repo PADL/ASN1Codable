@@ -514,12 +514,12 @@
 				D30F2DF129220148009299A3 /* rfc2459.json */,
 				D3D13E6E291342D500218279 /* main.swift */,
 				D351DC5C290E8AAF00540132 /* CertificateHelpers.swift */,
-				D3D13E7B2913434200218279 /* VersionCommand.swift */,
-				D3D13E7D291343A500218279 /* ParseCommand.swift */,
-				D3826416292ACE0700808667 /* Data+HexString.swift */,
 				D3F28843292B33440006CD82 /* CertificateAPI.swift */,
 				D3F28847292B3DDD0006CD82 /* CertificateAPI.m */,
 				D363A44B292B311C007476B4 /* cert2json-Bridging-Header.h */,
+				D3D13E7B2913434200218279 /* VersionCommand.swift */,
+				D3D13E7D291343A500218279 /* ParseCommand.swift */,
+				D3826416292ACE0700808667 /* Data+HexString.swift */,
 			);
 			path = cert2json;
 			sourceTree = "<group>";
