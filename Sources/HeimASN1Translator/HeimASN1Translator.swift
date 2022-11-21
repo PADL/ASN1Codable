@@ -81,6 +81,29 @@ public final class HeimASN1Translator {
     func typeRefExists(_ ref: String) -> Bool {
         return typeRefCache.contains(ref)
     }
+
+    lazy var swiftImports: Set<String> = {
+        var swiftImports = Set<String>()
+        
+        swiftImports.insert("Foundation")
+        swiftImports.insert("BigNumber")
+        swiftImports.insert("AnyCodable")
+        swiftImports.insert("ASN1Codable")
+
+        self.apply { typeDef, stop in
+            if let decoration = typeDef.decorate {
+                decoration.forEach {
+                    if !$0.headerName.isEmpty { swiftImports.insert($0.headerName) }
+                }
+            }
+        }
+
+        return swiftImports
+    }()
+    
+    private func emitImports(_ outputStream: inout OutputStream) {
+        self.swiftImports.forEach { outputStream.write("import \($0)\n") }
+    }
     
     lazy var maxTagValue: UInt? = {
         var maxTagValue: UInt? = nil
@@ -157,15 +180,6 @@ public final class HeimASN1Translator {
     public func translate() throws {
         let data = Data(reading: self.inputStream)
         
-        outputStream.open()
-        
-        outputStream.write("/// HeimASN1Translator generated \(Date())\n\n")
-        outputStream.write("import Foundation\n")
-        outputStream.write("import BigNumber\n")
-        outputStream.write("import AnyCodable\n")
-        outputStream.write("import ASN1Codable\n")
-        outputStream.write("\n")
-
         var start: Data.Index = 0
         var end: Data.Index = data.count
         
@@ -193,6 +207,14 @@ public final class HeimASN1Translator {
             }
         }
         
+        outputStream.open()
+        
+        outputStream.write("/// HeimASN1Translator generated \(Date())\n\n")
+
+        self.emitImports(&outputStream)
+
+        outputStream.write("\n")
+
         try self.typeDefs.forEach {
             try $0.emit(&outputStream)
             outputStream.write("\n")
