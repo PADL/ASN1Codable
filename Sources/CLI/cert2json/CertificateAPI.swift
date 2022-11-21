@@ -15,6 +15,7 @@
 //
 
 import Foundation
+import Network
 import ASN1Codable
 
 @_cdecl("CertificateCreateWithData")
@@ -43,12 +44,17 @@ func CertificateCreateWithBytes(_ allocator: CFAllocator,
 }
 
 extension Certificate {
-    var componentAttributes: NSDictionary? {
+    fileprivate var componentAttributes: NSDictionary? {
         guard let attributes: ASN1TaggedDictionary = self.extension(id_apple_ce_appleComponentAttributes) else {
             return nil
         }
         
+        // unbox AnyCodable
         return attributes.wrappedValue.mapValues { $0.value as? NSObject } as NSDictionary
+    }
+    
+    fileprivate var subjectAltName: [GeneralName]? {
+        return self.extension(id_x509_ce_subjectAltName)
     }
     
     @objc var serialNumberData: CFData? {
@@ -105,4 +111,55 @@ func CertificateCopyData(_ certificate: Certificate?) -> CFData?
 func CertificateGetLength(_ certificate: Certificate) -> CFIndex
 {
     return certificate._save?.count ?? 0
+}
+
+@_cdecl("CertificateCopyIPAddresses")
+func CertificateCopyIPAddresses(_ certificate: Certificate) -> CFArray?
+{
+    guard let datas = certificate.subjectAltName?.compactMap({
+        if case .iPAddress(let ipAddress) = $0 {
+            if let ipv4Address = IPv4Address(ipAddress.wrappedValue) {
+                return String(describing: ipv4Address)
+            } else if let ipv6Address = IPv6Address(ipAddress.wrappedValue) {
+                return String(describing: ipv6Address)
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }), datas.count != 0 else {
+        return nil
+    }
+    return datas as CFArray
+}
+
+@_cdecl("CertificateCopyIPAddressDatas")
+func CertificateCopyIPAddressDatas(_ certificate: Certificate) -> CFArray?
+{
+    guard let datas = certificate.subjectAltName?.compactMap({
+        if case .iPAddress(let ipAddress) = $0 {
+            return ipAddress.wrappedValue
+        } else {
+            return nil
+        }
+    }), datas.count != 0 else {
+        return nil
+    }
+    return datas as CFArray
+}
+
+@_cdecl("CertificateCopyDNSNamesFromSAN")
+func CertificateCopyDNSNamesFromSAN(_ certificate: Certificate) -> CFArray?
+{
+    guard let datas = certificate.subjectAltName?.compactMap({
+        if case .dNSName(let dnsName) = $0 {
+            return dnsName
+        } else {
+            return nil
+        }
+    }), datas.count != 0 else {
+        return nil
+    }
+    return datas as CFArray
 }
