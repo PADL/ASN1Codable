@@ -56,7 +56,7 @@ extension ASN1DecoderImpl {
         }
         
         var nestedCodingPath: [CodingKey] {
-            return self.codingPath + [Index(intValue: self.count!)!]
+            return self.codingPath + [Index(intValue: self.currentIndex)!]
         }
     }
 }
