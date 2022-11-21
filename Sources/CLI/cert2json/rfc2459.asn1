@@ -860,31 +860,31 @@ id-apple-ds OBJECT IDENTIFIER ::= {id-apple appleDataSecurity(100)}
 
 id-apple-tp OBJECT IDENTIFIER ::= {id-apple-ds appleTrustPolicies(1)}
 id-apple-tp-iSignTP OBJECT IDENTIFIER ::= {id-apple-tp 1}
-id-apple-tp-appleX509Basic OBJECT IDENTIFIER ::= {id-apple-tp 2}
-id-apple-tp-appleSSLPolicy OBJECT IDENTIFIER ::= {id-apple-tp 3}
-id-apple-tp-appleLocalCertGenPolicy OBJECT IDENTIFIER ::= {id-apple-tp 4}
-id-apple-tp-appleCSRGenPolicy OBJECT IDENTIFIER ::= {id-apple-tp 5}
-id-apple-tp-appleCRLPolicy OBJECT IDENTIFIER ::= {id-apple-tp 6}
-id-apple-tp-appleOCSPPolicy OBJECT IDENTIFIER ::= {id-apple-tp 7}
-id-apple-tp-appleSMIMEPolicy OBJECT IDENTIFIER ::= {id-apple-tp 8}
-id-apple-tp-appleEAPPolicy OBJECT IDENTIFIER ::= {id-apple-tp 9}
-id-apple-tp-appleSWUpdateSigningPolicy OBJECT IDENTIFIER ::= {id-apple-tp 10}
-id-apple-tp-appleIPSecPolicy OBJECT IDENTIFIER ::= {id-apple-tp 11}
-id-apple-tp-appleIChatPolicy OBJECT IDENTIFIER ::= {id-apple-tp 12}
-id-apple-tp-appleResourceSignPolicy OBJECT IDENTIFIER ::= {id-apple-tp 13}
-id-apple-tp-applePKINITClientPolicy OBJECT IDENTIFIER ::= {id-apple-tp 14}
-id-apple-tp-applePKINITServerPolicy OBJECT IDENTIFIER ::= {id-apple-tp 15}
-id-apple-tp-appleCodeSigningPolicy OBJECT IDENTIFIER ::= {id-apple-tp 16}
-id-apple-tp-applePackageSigningPolicy OBJECT IDENTIFIER ::= {id-apple-tp 17}
+id-apple-tp-x509Basic OBJECT IDENTIFIER ::= {id-apple-tp appleX509Basic(2)}
+id-apple-tp-SSLPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleSSLPolicy(3)}
+id-apple-tp-localCertGenPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleLocalCertGenPolicy(4)}
+id-apple-tp-CSRGenPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleCSRGenPolicy(5)}
+id-apple-tp-CRLPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleCRLPolicy(6)}
+id-apple-tp-OCSPPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleOCSPPolicy(7)}
+id-apple-tp-SMIMEPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleSMIMEPolicy(8)}
+id-apple-tp-EAPPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleEAPPolicy(9)}
+id-apple-tp-SWUpdateSigningPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleSWUpdateSigningPolicy(10)}
+id-apple-tp-iPSecPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleIPSecPolicy(11)}
+id-apple-tp-iChatPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleIChatPolicy(12)}
+id-apple-tp-resourceSignPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleResourceSignPolicy(13)}
+id-apple-tp-PKINITClientPolicy OBJECT IDENTIFIER ::= {id-apple-tp applePKINITClientPolicy(14)}
+id-apple-tp-PKINITServerPolicy OBJECT IDENTIFIER ::= {id-apple-tp applePKINITServerPolicy(15)}
+id-apple-tp-codeSigningPolicy OBJECT IDENTIFIER ::= {id-apple-tp appleCodeSigningPolicy(16)}
+id-apple-tp-packageSigningPolicy OBJECT IDENTIFIER ::= {id-apple-tp applePackageSigningPolicy(17)}
 
 id-apple-sa OBJECT IDENTIFIER ::= {id-apple-ds appleSecurityAlgorithm(2)}
-id-apple-sa-appleFEE OBJECT IDENTIFIER ::= {id-apple-sa 1}
-id-apple-sa-appleASC OBJECT IDENTIFIER ::= {id-apple-sa 2}
-id-apple-sa-appleFEE_MD5 OBJECT IDENTIFIER ::= {id-apple-sa 3}
-id-apple-sa-appleFEE_SHA1 OBJECT IDENTIFIER ::= {id-apple-sa 4}
-id-apple-sa-appleFEED OBJECT IDENTIFIER ::= {id-apple-sa 5}
-id-apple-sa-appleFEEDEXP OBJECT IDENTIFIER ::= {id-apple-sa 6}
-id-apple-sa-appleECDSA OBJECT IDENTIFIER ::= {id-apple-sa 7}
+id-apple-sa-fee OBJECT IDENTIFIER ::= {id-apple-sa appleFEE(1)}
+id-apple-sa-asc OBJECT IDENTIFIER ::= {id-apple-sa appleASC(2)}
+id-apple-sa-fee-md5 OBJECT IDENTIFIER ::= {id-apple-sa appleFEE_MD5(3)}
+id-apple-sa-fee-sha2 OBJECT IDENTIFIER ::= {id-apple-sa appleFEE_SHA1(4)}
+id-apple-sa-feed OBJECT IDENTIFIER ::= {id-apple-sa appleFEED(5)}
+id-apple-sa-feed-exp OBJECT IDENTIFIER ::= {id-apple-sa appleFEEDEXP(6)}
+id-apple-sa-ecdsa OBJECT IDENTIFIER ::= {id-apple-sa appleECDSA(7)}
 
 id-apple-dm OBJECT IDENTIFIER ::= {id-apple-ds appleDotMacCertificate(3)}
 id-apple-dm-req OBJECT IDENTIFIER ::= {id-apple-dm dotMacCertificateRequest(1)}
@@ -904,6 +904,18 @@ id-apple-eku-appleResourceSigning OBJECT IDENTIFIER ::= {id-apple-eku-appleCodeS
 id-apple-cp OBJECT IDENTIFIER ::= {id-apple-ds appleCertificatePolicies(5)}
 
 id-apple-ce OBJECT IDENTIFIER ::= {id-apple-ds appleCertificateExtensions(6)}
+
+id-apple-ce-cs OBJECT IDENTIFIER ::= {id-apple-ce appleCertificateExtensionCodeSigning(1)}
+id-apple-ce-cs-appleSigning OBJECT IDENTIFIER ::= {id-apple-ce-cs appleCertificateExtensionAppleSigning(1)}
+id-apple-ce-cs-WWDRDevelopmentSigning OBJECT IDENTIFIER ::= {id-apple-ce-cs appleCertificateExtensionWWDRDevelopmentSigning(2)}
+id-apple-ce-cs-releaseSigning OBJECT IDENTIFIER ::= {id-apple-ce-cs appleCertificateExtensionAppleReleaseSigning(3)}
+id-apple-ce-cs-WWDRSubmissionSigning OBJECT IDENTIFIER ::= {id-apple-ce-cs appleCertificateExtensionAppleTestSigning(1)}
+
+id-apple-ce-intermediateMarker OBJECT IDENTIFIER ::= {id-apple-ce appleCertificateExtensionIntermediateMarker(2)}
+id-apple-ce-clientSSL OBJECT IDENTIFIER ::= {id-apple-ce appleCertificateExtensionClientSSL(3)}
+id-apple-ce-otherNameExtensionMarker OBJECT IDENTIFIER ::= {id-apple-ce appleOtherNameExtensionMarker(4)}
+id-apple-ce-iTunesStoreData OBJECT IDENTIFIER ::= {id-apple-ce appleCertificateExtensioniTunesStoreData(5)}
+id-apple-ce-MACIPAddress OBJECT IDENTIFIER ::= {id-apple-ce appleCertificateExtensioniTunesStoreData(17)}
 
 id-apple-ce-appleComponentType OBJECT IDENTIFIER ::= {id-apple-ds 11 1}
 id-apple-ce-appleComponentSerial OBJECT IDENTIFIER ::= {id-apple-ds 11 2}
@@ -1133,6 +1145,11 @@ ext-AppleComponentAttributes _EXTENSION ::= {
     &Critical FALSE,
     &ExtnType AppleComponentAttributes
 }
+ext-AppleMACIPAddress _EXTENSION ::= {
+    &id id-apple-ce-MACIPAddress,
+    &Critical FALSE,
+    &ExtnType UTF8String
+}
 CertExtensions _EXTENSION ::= {
     ext-AuthorityKeyIdentifier
   | ext-SubjectKeyIdentifier
@@ -1157,6 +1174,7 @@ CertExtensions _EXTENSION ::= {
 ---   | ext-AppleComponentType
 ---   | ext-AppleComponentSerial
   | ext-AppleComponentAttributes
+  | ext-AppleMACIPAddress
 }
 
 Extension ::= Extension { CertExtensions }
