@@ -18,8 +18,13 @@ import Foundation
 import ASN1Kit
 import AnyCodable
 
+@propertyWrapper
 public struct ASN1TaggedDictionary {
-    var wrappedValue: Dictionary<ASN1DecodedTag, AnyCodable>
+    public var wrappedValue: Dictionary<ASN1DecodedTag, AnyCodable>
+    
+    public init(wrappedValue: Dictionary<ASN1DecodedTag, AnyCodable>) {
+        self.wrappedValue = wrappedValue
+    }
 }
 
 extension ASN1TaggedDictionary: Decodable {
