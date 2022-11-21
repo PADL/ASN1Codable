@@ -72,9 +72,7 @@ struct ParseCommand: CommandProtocol {
                 return .failure(.base64DecodingError)
             }
 
-            let decoder = ASN1Decoder()
-            
-            let cert = try decoder.decode(Certificate.self, from: data)
+            let cert = try ASN1Decoder().decode(Certificate.self, from: data)
             
             if options.json {
                 let jsonEncoder = JSONEncoder()
@@ -104,7 +102,7 @@ struct ParseCommand: CommandProtocol {
                     print("\(san)")
                 }
             }
-            
+                        
             return .success(())
         } catch let error {
             return .failure(.decodingError(error))

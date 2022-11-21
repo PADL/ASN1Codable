@@ -43,6 +43,7 @@ public final class HeimASN1Translator {
     
     enum TypeMap: Equatable {
         case `class`
+        case objc
         case alias(String)
     }
 
@@ -61,7 +62,16 @@ public final class HeimASN1Translator {
         self.inputStream = inputStream
         self.outputStream = outputStream
         self.options = options
-        self.typeMaps = (typeMaps ?? [:]).mapValues { $0 == "@class" ? TypeMap.class : TypeMap.alias($0) }
+        self.typeMaps = (typeMaps ?? [:]).mapValues {
+            switch $0 {
+            case "@class":
+                return TypeMap.class
+            case "@objc":
+                return TypeMap.objc
+            default:
+                return TypeMap.alias($0)
+            }
+        }
     }
     
     func cacheTypeRef(_ ref: String) {

@@ -262,6 +262,9 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     
     func _swiftConformances(_ baseType: String?) -> [String] {
         var conformances = [String]()
+        if self.translator?.typeMaps[self.generatedName] == .objc {
+            conformances.append("NSObject")
+        }
         if let baseType = baseType {
             conformances.append(baseType)
         }
@@ -314,12 +317,16 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         self.tType?.typeDefValue?.parent = self
 
         var isClass = false
+        var isObjC = false
         
         if let map = self.translator?.typeMaps[self.generatedName] {
             switch map {
             case .alias(let aliasName):
                 self.emitMappedSwiftTypeAlias(aliasName, &outputStream)
                 return
+            case .objc:
+                isObjC = true
+                fallthrough
             case .class:
                 isClass = true
                 break
@@ -327,7 +334,6 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         }
 
         if self.isTypeDef ?? false, cType != nil, let tType = self.tType {
-            
             if case .universal(let type) = tType {
                 switch type {
                 case .sequence:
@@ -335,8 +341,9 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                 case .set:
                     // main struct implementation
                     let swiftMetaType = self.preserve ?? isClass ? "class" : "struct"
+                    let objcPrefix = isObjC ? "@objc " : ""
                     
-                    outputStream.write("\(visibility)\(swiftMetaType) \(self.generatedName): \(self.swiftConformances(nil)) {\n")
+                    outputStream.write("\(visibility)\(objcPrefix)\(swiftMetaType) \(self.generatedName): \(self.swiftConformances(nil)) {\n")
                     
                     if let tag = parent?.tag, !tag.isUniversal {
                         outputStream.write("\t\(visibility)static let tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$\(parent!.tagValue!).self\n\n")
