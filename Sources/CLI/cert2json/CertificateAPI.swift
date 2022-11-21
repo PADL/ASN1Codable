@@ -53,8 +53,7 @@ extension Certificate {
     
     @objc var serialNumberData: CFData? {
         do {
-            let encoded = try ASN1Encoder().encode(self.tbsCertificate.serialNumber)
-            return encoded as CFData
+            return try ASN1Encoder().encode(self.tbsCertificate.serialNumber) as CFData
         } catch {
             return nil
         }
