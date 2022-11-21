@@ -75,12 +75,30 @@ func CertificateGetSubjectKeyID(_ certificate: Certificate?) -> CFData? {
     return subjectKeyID as CFData
 }
 
+@_cdecl("CertificateCreateWithKeychainItem")
+func CertificateCreateWithKeychainItem(_ allocator: CFAllocator,
+                                       _ der_certificate: CFData,
+                                       _ keychain_item: CFTypeRef) -> Certificate?
+{
+    guard let certificate = CertificateCreateWithData(allocator, der_certificate) else { return nil }
+    certificate._keychain_item = keychain_item
+    return certificate
+}
+
 @_cdecl("CertificateSetKeychainItem")
 func CertificateSetKeychainItem(_ certificate: Certificate?, _ keychain_item: CFTypeRef) -> OSStatus
 {
     guard let certificate = certificate else { return errSecParam }
     certificate._keychain_item = keychain_item
     return errSecSuccess
+}
+
+@_cdecl("CertificateCopyData")
+func CertificateCopyData(_ certificate: Certificate?) -> CFData?
+{
+    guard let certificate = certificate else { return nil }
+    guard let data = certificate._save else { return nil }
+    return data as CFData
 }
 
 @_cdecl("CertificateGetLength")
