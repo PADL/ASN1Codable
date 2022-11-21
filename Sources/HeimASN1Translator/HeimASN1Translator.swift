@@ -41,10 +41,15 @@ public final class HeimASN1Translator {
         public static let disablePropertyWrappers = Options(rawValue: 1 << 0)
     }
     
+    enum TypeMap: Equatable {
+        case `class`
+        case alias(String)
+    }
+
     var inputStream: InputStream
     var outputStream: OutputStream
     let options: Options
-    let typeMaps: [String:String]
+    let typeMaps: [String:TypeMap]
     var module: HeimASN1Module? = nil
     var imports = [HeimASN1ModuleRef]()
     var typeRefCache = Set<String>()
@@ -56,7 +61,7 @@ public final class HeimASN1Translator {
         self.inputStream = inputStream
         self.outputStream = outputStream
         self.options = options
-        self.typeMaps = typeMaps ?? [:]
+        self.typeMaps = (typeMaps ?? [:]).mapValues { $0 == "@class" ? TypeMap.class : TypeMap.alias($0) }
     }
     
     func cacheTypeRef(_ ref: String) {
@@ -66,7 +71,7 @@ public final class HeimASN1Translator {
     func typeRefExists(_ ref: String) -> Bool {
         return typeRefCache.contains(ref)
     }
-
+    
     lazy var maxTagValue: UInt? = {
         var maxTagValue: UInt? = nil
         var foundNonUniversalMember = false

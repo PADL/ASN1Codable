@@ -302,10 +302,9 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         return self._swiftConformances(baseType).joined(separator: ", ")
     }
     
-    private func emitMappedSwiftTypeAlias(_ outputStream: inout OutputStream) {
-        if !(self.translator?.typeRefExists(self.generatedName) ?? false),
-             let swiftType = self.translator?.typeMaps[self.generatedName] {
-            outputStream.write("\(self.visibility)typealias \(self.generatedName) = \(swiftType)\n")
+    private func emitMappedSwiftTypeAlias(_ aliasName: String, _ outputStream: inout OutputStream) {
+        if !(self.translator?.typeRefExists(self.generatedName) ?? false) {
+            outputStream.write("\(self.visibility)typealias \(self.generatedName) = \(aliasName)\n")
             self.translator?.cacheTypeRef(self.generatedName)
         }
     }
@@ -314,9 +313,17 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         self.type?.typeDefValue?.parent = self
         self.tType?.typeDefValue?.parent = self
 
-        if self.translator?.typeMaps.keys.contains(self.generatedName) ?? false {
-            self.emitMappedSwiftTypeAlias(&outputStream)
-            return
+        var isClass = false
+        
+        if let map = self.translator?.typeMaps[self.generatedName] {
+            switch map {
+            case .alias(let aliasName):
+                self.emitMappedSwiftTypeAlias(aliasName, &outputStream)
+                return
+            case .class:
+                isClass = true
+                break
+            }
         }
 
         if self.isTypeDef ?? false, cType != nil, let tType = self.tType {
@@ -327,7 +334,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                     fallthrough
                 case .set:
                     // main struct implementation
-                    let swiftMetaType = self.preserve ?? false ? "class" : "struct"
+                    let swiftMetaType = self.preserve ?? isClass ? "class" : "struct"
                     
                     outputStream.write("\(visibility)\(swiftMetaType) \(self.generatedName): \(self.swiftConformances(nil)) {\n")
                     
