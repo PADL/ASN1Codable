@@ -79,6 +79,7 @@
 		D3D13E8429134A4B00218279 /* BInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8329134A4B00218279 /* BInt.swift */; };
 		D3D13E8929146B7400218279 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8829146B7400218279 /* Base.swift */; };
 		D3F28845292B33580006CD82 /* CertificateAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F28843292B33440006CD82 /* CertificateAPI.swift */; };
+		D3F28848292B3DDD0006CD82 /* CertificateAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = D3F28847292B3DDD0006CD82 /* CertificateAPI.m */; };
 		D3FB2D9D29183E2000BC72AF /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2D9C29183E2000BC72AF /* Null.swift */; };
 		D3FB2DA12918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */; };
 		D3FB2DA72918641900BC72AF /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = D3FB2DA62918641900BC72AF /* Algorithms */; };
@@ -279,6 +280,7 @@
 		D3D13E8329134A4B00218279 /* BInt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BInt.swift; sourceTree = "<group>"; };
 		D3D13E8829146B7400218279 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		D3F28843292B33440006CD82 /* CertificateAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateAPI.swift; sourceTree = "<group>"; };
+		D3F28847292B3DDD0006CD82 /* CertificateAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CertificateAPI.m; sourceTree = "<group>"; };
 		D3FB2D9C29183E2000BC72AF /* Null.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Null.swift; sourceTree = "<group>"; };
 		D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1ImplicitlyWrappedObject.swift; sourceTree = "<group>"; };
 		D3FB2DA929187C2800BC72AF /* ASN1AutomaticTaggingContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1AutomaticTaggingContext.swift; sourceTree = "<group>"; };
@@ -516,6 +518,7 @@
 				D3D13E7D291343A500218279 /* ParseCommand.swift */,
 				D3826416292ACE0700808667 /* Data+HexString.swift */,
 				D3F28843292B33440006CD82 /* CertificateAPI.swift */,
+				D3F28847292B3DDD0006CD82 /* CertificateAPI.m */,
 				D363A44B292B311C007476B4 /* cert2json-Bridging-Header.h */,
 			);
 			path = cert2json;
@@ -910,6 +913,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3F28848292B3DDD0006CD82 /* CertificateAPI.m in Sources */,
 				D3F28845292B33580006CD82 /* CertificateAPI.swift in Sources */,
 				D3826417292ACE0700808667 /* Data+HexString.swift in Sources */,
 				D30F2DF3292201A8009299A3 /* rfc2459.json in Sources */,
