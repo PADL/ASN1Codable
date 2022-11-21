@@ -854,6 +854,62 @@ TPMSecurityAssertions ::= SEQUENCE {
     ...
 }
 
+-- Apple-specific extensions
+id-apple OBJECT IDENTIFIER ::= {iso(1) member-body(2) us(840) apple(113635)}
+id-apple-ds OBJECT IDENTIFIER ::= {id-apple appleDataSecurity(100)}
+
+id-apple-tp OBJECT IDENTIFIER ::= {id-apple-ds appleTrustPolicies(1)}
+id-apple-tp-iSignTP OBJECT IDENTIFIER ::= {id-apple-tp 1}
+id-apple-tp-appleX509Basic OBJECT IDENTIFIER ::= {id-apple-tp 2}
+id-apple-tp-appleSSLPolicy OBJECT IDENTIFIER ::= {id-apple-tp 3}
+id-apple-tp-appleLocalCertGenPolicy OBJECT IDENTIFIER ::= {id-apple-tp 4}
+id-apple-tp-appleCSRGenPolicy OBJECT IDENTIFIER ::= {id-apple-tp 5}
+id-apple-tp-appleCRLPolicy OBJECT IDENTIFIER ::= {id-apple-tp 6}
+id-apple-tp-appleOCSPPolicy OBJECT IDENTIFIER ::= {id-apple-tp 7}
+id-apple-tp-appleSMIMEPolicy OBJECT IDENTIFIER ::= {id-apple-tp 8}
+id-apple-tp-appleEAPPolicy OBJECT IDENTIFIER ::= {id-apple-tp 9}
+id-apple-tp-appleSWUpdateSigningPolicy OBJECT IDENTIFIER ::= {id-apple-tp 10}
+id-apple-tp-appleIPSecPolicy OBJECT IDENTIFIER ::= {id-apple-tp 11}
+id-apple-tp-appleIChatPolicy OBJECT IDENTIFIER ::= {id-apple-tp 12}
+id-apple-tp-appleResourceSignPolicy OBJECT IDENTIFIER ::= {id-apple-tp 13}
+id-apple-tp-applePKINITClientPolicy OBJECT IDENTIFIER ::= {id-apple-tp 14}
+id-apple-tp-applePKINITServerPolicy OBJECT IDENTIFIER ::= {id-apple-tp 15}
+id-apple-tp-appleCodeSigningPolicy OBJECT IDENTIFIER ::= {id-apple-tp 16}
+id-apple-tp-applePackageSigningPolicy OBJECT IDENTIFIER ::= {id-apple-tp 17}
+
+id-apple-sa OBJECT IDENTIFIER ::= {id-apple-ds appleSecurityAlgorithm(2)}
+id-apple-sa-appleFEE OBJECT IDENTIFIER ::= {id-apple-sa 1}
+id-apple-sa-appleASC OBJECT IDENTIFIER ::= {id-apple-sa 2}
+id-apple-sa-appleFEE_MD5 OBJECT IDENTIFIER ::= {id-apple-sa 3}
+id-apple-sa-appleFEE_SHA1 OBJECT IDENTIFIER ::= {id-apple-sa 4}
+id-apple-sa-appleFEED OBJECT IDENTIFIER ::= {id-apple-sa 5}
+id-apple-sa-appleFEEDEXP OBJECT IDENTIFIER ::= {id-apple-sa 6}
+id-apple-sa-appleECDSA OBJECT IDENTIFIER ::= {id-apple-sa 7}
+
+id-apple-dm OBJECT IDENTIFIER ::= {id-apple-ds appleDotMacCertificate(3)}
+id-apple-dm-req OBJECT IDENTIFIER ::= {id-apple-dm dotMacCertificateRequest(1)}
+id-apple-dm-ext OBJECT IDENTIFIER ::= {id-apple-dm dotMacCerificateExtension(2)}
+id-apple-dm-ext-identity OBJECT IDENTIFIER ::= {id-apple-dm-ext dotMacCertExtensionIdentity(1)}
+id-apple-dm-ext-emailSign OBJECT IDENTIFIER ::= {id-apple-dm-ext dotMacCertExtensionEmailSign(2)}
+id-apple-dm-ext-emailEncrypt OBJECT IDENTIFIER ::= {id-apple-dm-ext dotMacCertExtensionEmailEncrypt(2)}
+
+id-apple-eku OBJECT IDENTIFIER ::= {id-apple-ds appleExtendedKeyUsage(4)}
+id-apple-eku-appleCodeSigning OBJECT IDENTIFIER ::= {id-apple-eku 1}
+id-apple-eku-appleCodeSigningDevelopment OBJECT IDENTIFIER ::= {id-apple-eku-appleCodeSigning 1}
+id-apple-eku-appleSoftwareUpdateSigning OBJECT IDENTIFIER ::= {id-apple-eku-appleCodeSigning 2}
+id-apple-eku-appleSoftwareUpdateTestSigning OBJECT IDENTIFIER ::= {id-apple-eku-appleSoftwareUpdateSigning 1}
+id-apple-eku-appleCodeSigningThirdParty OBJECT IDENTIFIER ::= {id-apple-eku-appleCodeSigning 2}
+id-apple-eku-appleResourceSigning OBJECT IDENTIFIER ::= {id-apple-eku-appleCodeSigning 3}
+
+id-apple-cp OBJECT IDENTIFIER ::= {id-apple-ds appleCertificatePolicies(5)}
+
+id-apple-ce OBJECT IDENTIFIER ::= {id-apple-ds appleCertificateExtensions(6)}
+id-apple-ce-appleComponentAttributes OBJECT IDENTIFIER ::= {id-apple-ds 11 3}
+
+AppleComponentAttributes ::= CHOICE {
+	value			[0]     HEIM_ANY
+}
+
 -- Back to OtherName, SingleAttribute, AttributeSet, and Extension
 
 -- XXX Not really the right name for this OID:
@@ -1052,6 +1108,11 @@ ext-HeimPkinitPrincMaxLife _EXTENSION ::= {
     &Critical FALSE,
     &ExtnType HeimPkinitPrincMaxLifeSecs
 }
+ext-AppleComponentAttributes _EXTENSION ::= {
+    &id id-apple-ce-appleComponentAttributes,
+    &Critical FALSE,
+    &ExtnType AppleComponentAttributes
+}
 CertExtensions _EXTENSION ::= {
     ext-AuthorityKeyIdentifier
   | ext-SubjectKeyIdentifier
@@ -1073,6 +1134,7 @@ CertExtensions _EXTENSION ::= {
   | ext-SubjectInfoAccessSyntax
   | ext-ProxyCertInfo
   | ext-HeimPkinitPrincMaxLife
+  | ext-AppleComponentAttributes
 }
 
 Extension ::= Extension { CertExtensions }

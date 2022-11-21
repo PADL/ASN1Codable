@@ -542,6 +542,94 @@
 {"tpm_v1":0}
 ]}
 }
+{"name":"id-apple","gen_name":"id_apple","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635}]}
+{"name":"id-apple-ds","gen_name":"id_apple_ds","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100}]}
+{"name":"id-apple-tp","gen_name":"id_apple_tp","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1}]}
+{"name":"id-apple-tp-iSignTP","gen_name":"id_apple_tp_iSignTP","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":1}]}
+{"name":"id-apple-tp-appleX509Basic","gen_name":"id_apple_tp_appleX509Basic","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":2}]}
+{"name":"id-apple-tp-appleSSLPolicy","gen_name":"id_apple_tp_appleSSLPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":3}]}
+{"name":"id-apple-tp-appleLocalCertGenPolicy","gen_name":"id_apple_tp_appleLocalCertGenPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":4}]}
+{"name":"id-apple-tp-appleCSRGenPolicy","gen_name":"id_apple_tp_appleCSRGenPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":5}]}
+{"name":"id-apple-tp-appleCRLPolicy","gen_name":"id_apple_tp_appleCRLPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":6}]}
+{"name":"id-apple-tp-appleOCSPPolicy","gen_name":"id_apple_tp_appleOCSPPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":7}]}
+{"name":"id-apple-tp-appleSMIMEPolicy","gen_name":"id_apple_tp_appleSMIMEPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":8}]}
+{"name":"id-apple-tp-appleEAPPolicy","gen_name":"id_apple_tp_appleEAPPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":9}]}
+{"name":"id-apple-tp-appleSWUpdateSigningPolicy","gen_name":"id_apple_tp_appleSWUpdateSigningPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":10}]}
+{"name":"id-apple-tp-appleIPSecPolicy","gen_name":"id_apple_tp_appleIPSecPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":11}]}
+{"name":"id-apple-tp-appleIChatPolicy","gen_name":"id_apple_tp_appleIChatPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":12}]}
+{"name":"id-apple-tp-appleResourceSignPolicy","gen_name":"id_apple_tp_appleResourceSignPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":13}]}
+{"name":"id-apple-tp-applePKINITClientPolicy","gen_name":"id_apple_tp_applePKINITClientPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":14}]}
+{"name":"id-apple-tp-applePKINITServerPolicy","gen_name":"id_apple_tp_applePKINITServerPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":15}]}
+{"name":"id-apple-tp-appleCodeSigningPolicy","gen_name":"id_apple_tp_appleCodeSigningPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":16}]}
+{"name":"id-apple-tp-applePackageSigningPolicy","gen_name":"id_apple_tp_applePackageSigningPolicy","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleTrustPolicies","value":1},{"label":null,"value":17}]}
+{"name":"id-apple-sa","gen_name":"id_apple_sa","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleSecurityAlgorithm","value":2}]}
+{"name":"id-apple-sa-appleFEE","gen_name":"id_apple_sa_appleFEE","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleSecurityAlgorithm","value":2},{"label":null,"value":1}]}
+{"name":"id-apple-sa-appleASC","gen_name":"id_apple_sa_appleASC","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleSecurityAlgorithm","value":2},{"label":null,"value":2}]}
+{"name":"id-apple-sa-appleFEE_MD5","gen_name":"id_apple_sa_appleFEE_MD5","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleSecurityAlgorithm","value":2},{"label":null,"value":3}]}
+{"name":"id-apple-sa-appleFEE_SHA1","gen_name":"id_apple_sa_appleFEE_SHA1","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleSecurityAlgorithm","value":2},{"label":null,"value":4}]}
+{"name":"id-apple-sa-appleFEED","gen_name":"id_apple_sa_appleFEED","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleSecurityAlgorithm","value":2},{"label":null,"value":5}]}
+{"name":"id-apple-sa-appleFEEDEXP","gen_name":"id_apple_sa_appleFEEDEXP","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleSecurityAlgorithm","value":2},{"label":null,"value":6}]}
+{"name":"id-apple-sa-appleECDSA","gen_name":"id_apple_sa_appleECDSA","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleSecurityAlgorithm","value":2},{"label":null,"value":7}]}
+{"name":"id-apple-dm","gen_name":"id_apple_dm","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleDotMacCertificate","value":3}]}
+{"name":"id-apple-dm-req","gen_name":"id_apple_dm_req","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleDotMacCertificate","value":3},{"label":"dotMacCertificateRequest","value":1}]}
+{"name":"id-apple-dm-ext","gen_name":"id_apple_dm_ext","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleDotMacCertificate","value":3},{"label":"dotMacCerificateExtension","value":2}]}
+{"name":"id-apple-dm-ext-identity","gen_name":"id_apple_dm_ext_identity","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleDotMacCertificate","value":3},{"label":"dotMacCerificateExtension","value":2},{"label":"dotMacCertExtensionIdentity","value":1}]}
+{"name":"id-apple-dm-ext-emailSign","gen_name":"id_apple_dm_ext_emailSign","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleDotMacCertificate","value":3},{"label":"dotMacCerificateExtension","value":2},{"label":"dotMacCertExtensionEmailSign","value":2}]}
+{"name":"id-apple-dm-ext-emailEncrypt","gen_name":"id_apple_dm_ext_emailEncrypt","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleDotMacCertificate","value":3},{"label":"dotMacCerificateExtension","value":2},{"label":"dotMacCertExtensionEmailEncrypt","value":2}]}
+{"name":"id-apple-eku","gen_name":"id_apple_eku","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleExtendedKeyUsage","value":4}]}
+{"name":"id-apple-eku-appleCodeSigning","gen_name":"id_apple_eku_appleCodeSigning","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleExtendedKeyUsage","value":4},{"label":null,"value":1}]}
+{"name":"id-apple-eku-appleCodeSigningDevelopment","gen_name":"id_apple_eku_appleCodeSigningDevelopment","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleExtendedKeyUsage","value":4},{"label":null,"value":1},{"label":null,"value":1}]}
+{"name":"id-apple-eku-appleSoftwareUpdateSigning","gen_name":"id_apple_eku_appleSoftwareUpdateSigning","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleExtendedKeyUsage","value":4},{"label":null,"value":1},{"label":null,"value":2}]}
+{"name":"id-apple-eku-appleSoftwareUpdateTestSigning","gen_name":"id_apple_eku_appleSoftwareUpdateTestSigning","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleExtendedKeyUsage","value":4},{"label":null,"value":1},{"label":null,"value":2},{"label":null,"value":1}]}
+{"name":"id-apple-eku-appleCodeSigningThirdParty","gen_name":"id_apple_eku_appleCodeSigningThirdParty","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleExtendedKeyUsage","value":4},{"label":null,"value":1},{"label":null,"value":2}]}
+{"name":"id-apple-eku-appleResourceSigning","gen_name":"id_apple_eku_appleResourceSigning","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleExtendedKeyUsage","value":4},{"label":null,"value":1},{"label":null,"value":3}]}
+{"name":"id-apple-cp","gen_name":"id_apple_cp","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleCertificatePolicies","value":5}]}
+{"name":"id-apple-ce","gen_name":"id_apple_ce","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":"appleCertificateExtensions","value":6}]}
+{"name":"id-apple-ce-appleComponentAttributes","gen_name":"id_apple_ce_appleComponentAttributes","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"member-body","value":2},{"label":"us","value":840},{"label":"apple","value":113635},{"label":"appleDataSecurity","value":100},{"label":null,"value":11},{"label":null,"value":3}]}
 {"name":"id-pkix-on-pkinit-ms-san","gen_name":"id_pkix_on_pkinit_ms_san","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
 {"label":"iso","value":1},{"label":"org","value":3},{"label":"dod","value":6},{"label":"internet","value":1},{"label":"private","value":4},{"label":"enterprise","value":1},{"label":"microsoft","value":311},{"label":null,"value":20},{"label":null,"value":2},{"label":null,"value":3}]}
 {"name":"AliasUTF8String","gen_name":"AliasUTF8String","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":12,"tagenv":"EXPLICIT",
@@ -761,8 +849,10 @@
 "ttype":
 {"name":"Extension","gen_name":"extnValue","is_type":true,"exported":false,"typedef":false,"ttype":"OCTET STRING","ctype":"heim_octet_string"}
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_EXTENSION","objectsetname":"CertExtensions","typeidmember":"extnID","opentypemember":"extnValue","typeidfield":"id","opentypefield":"ExtnType","opentypeids":["id_heim_ce_pkinit_princ_max_life","id_pkix_pe_authorityInfoAccess","id_pkix_pe_subjectInfoAccess","id_pkix_pe_proxyCertInfo","id_x509_ce_subjectDirectoryAttributes","id_x509_ce_subjectKeyIdentifier","id_x509_ce_keyUsage","id_x509_ce_privateKeyUsagePeriod","id_x509_ce_subjectAltName","id_x509_ce_issuerAltName","id_x509_ce_basicConstraints","id_x509_ce_nameConstraints","id_x509_ce_cRLDistributionPoints","id_x509_ce_certificatePolicies","id_x509_ce_policyMappings","id_x509_ce_authorityKeyIdentifier","id_x509_ce_policyConstraints","id_x509_ce_extKeyUsage","id_x509_ce_freshestCRL","id_x509_ce_inhibitAnyPolicy"],
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_EXTENSION","objectsetname":"CertExtensions","typeidmember":"extnID","opentypemember":"extnValue","typeidfield":"id","opentypefield":"ExtnType","opentypeids":["id_heim_ce_pkinit_princ_max_life","id_apple_ce_appleComponentAttributes","id_pkix_pe_authorityInfoAccess","id_pkix_pe_subjectInfoAccess","id_pkix_pe_proxyCertInfo","id_x509_ce_subjectDirectoryAttributes","id_x509_ce_subjectKeyIdentifier","id_x509_ce_keyUsage","id_x509_ce_privateKeyUsagePeriod","id_x509_ce_subjectAltName","id_x509_ce_issuerAltName","id_x509_ce_basicConstraints","id_x509_ce_nameConstraints","id_x509_ce_cRLDistributionPoints","id_x509_ce_certificatePolicies","id_x509_ce_policyMappings","id_x509_ce_authorityKeyIdentifier","id_x509_ce_policyConstraints","id_x509_ce_extKeyUsage","id_x509_ce_freshestCRL","id_x509_ce_inhibitAnyPolicy"],
 "members":[{"name":"Extension","gen_name":"*ext_HeimPkinitPrincMaxLife","is_type":true,"exported":true,"typedef":false,"ttype":"HeimPkinitPrincMaxLifeSecs","alias":true
+}
+,{"name":"Extension","gen_name":"*ext_AppleComponentAttributes","is_type":true,"exported":true,"typedef":false,"ttype":"AppleComponentAttributes","alias":true
 }
 ,{"name":"Extension","gen_name":"*ext_AuthorityInfoAccess","is_type":true,"exported":true,"typedef":false,"ttype":"AuthorityInfoAccessSyntax","alias":true
 }
@@ -1546,6 +1636,13 @@
 }
 }]}
 }
+{"name":"AppleComponentAttributes","gen_name":"AppleComponentAttributes","is_type":true,"exported":false,"typedef":true,"ttype":"CHOICE","ctype":"struct AppleComponentAttributes","extensible":false,"members":[
+{"name":"AppleComponentAttributes","gen_name":"value","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"AppleComponentAttributes","gen_name":"value","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
+}
+}
+]}
 {"name":"AliasIA5String","gen_name":"AliasIA5String","is_type":true,"exported":true,"typedef":true,"ttype":"DirectoryString","alias":true
 }
 {"name":"X520name","gen_name":"X520name","is_type":true,"exported":true,"typedef":true,"ttype":"DirectoryString","alias":true
