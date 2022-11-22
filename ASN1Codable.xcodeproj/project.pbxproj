@@ -10,9 +10,7 @@
 		D30F2DE72920A77B009299A3 /* HeimASN1Tagging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30F2DE62920A77B009299A3 /* HeimASN1Tagging.swift */; };
 		D30F2DE92920A7A4009299A3 /* HeimASN1Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30F2DE82920A7A4009299A3 /* HeimASN1Module.swift */; };
 		D30F2DEB2920A818009299A3 /* Data+Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30F2DEA2920A818009299A3 /* Data+Extras.swift */; };
-		D30F2DF3292201A8009299A3 /* rfc2459.json in Sources */ = {isa = PBXBuildFile; fileRef = D30F2DF129220148009299A3 /* rfc2459.json */; };
 		D30F2E0029221671009299A3 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		D30F2E01292216D1009299A3 /* CertificateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC5C290E8AAF00540132 /* CertificateHelpers.swift */; };
 		D31CABA5291B787300D299F0 /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = D31CABA4291B787300D299F0 /* AnyCodable */; };
 		D33AC5D52910F626003190DC /* ASN1UniversalTagRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D42910F626003190DC /* ASN1UniversalTagRepresentable.swift */; };
 		D33AC5D72910F789003190DC /* ASN1DecodingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D62910F789003190DC /* ASN1DecodingContext.swift */; };
@@ -70,16 +68,23 @@
 		D3D13E6429133A2200218279 /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6329133A2200218279 /* AnyCodable */; };
 		D3D13E6729133AB600218279 /* Echo in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6629133AB600218279 /* Echo */; };
 		D3D13E6F291342D500218279 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E6E291342D500218279 /* main.swift */; };
-		D3D13E73291342DB00218279 /* ASN1Codable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1Codable.framework */; };
-		D3D13E74291342DB00218279 /* ASN1Codable.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1Codable.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D3D13E7A2913431500218279 /* Commandant in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E792913431500218279 /* Commandant */; };
 		D3D13E7C2913434200218279 /* VersionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E7B2913434200218279 /* VersionCommand.swift */; };
 		D3D13E7E291343A500218279 /* ParseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E7D291343A500218279 /* ParseCommand.swift */; };
 		D3D13E8229134A2B00218279 /* BigNumber in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E8129134A2B00218279 /* BigNumber */; };
 		D3D13E8429134A4B00218279 /* BInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8329134A4B00218279 /* BInt.swift */; };
 		D3D13E8929146B7400218279 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E8829146B7400218279 /* Base.swift */; };
-		D3F28845292B33580006CD82 /* CertificateAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F28843292B33440006CD82 /* CertificateAPI.swift */; };
-		D3F28848292B3DDD0006CD82 /* CertificateAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = D3F28847292B3DDD0006CD82 /* CertificateAPI.m */; };
+		D3D6E7B1292C7AF600198A86 /* CertificateInternalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7B0292C7AF600198A86 /* CertificateInternalAPI.swift */; };
+		D3F28856292C44AD0006CD82 /* Certificate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F2884E292C44AD0006CD82 /* Certificate.framework */; };
+		D3F2885B292C44AD0006CD82 /* CertificateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F2885A292C44AD0006CD82 /* CertificateTests.swift */; };
+		D3F28864292C54280006CD82 /* ASN1Codable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1Codable.framework */; };
+		D3F28865292C54300006CD82 /* Certificate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F2884E292C44AD0006CD82 /* Certificate.framework */; };
+		D3F2886B292C54440006CD82 /* CertificateAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F28843292B33440006CD82 /* CertificateAPI.swift */; };
+		D3F2886C292C54440006CD82 /* CertificateHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC5C290E8AAF00540132 /* CertificateHelpers.swift */; };
+		D3F2886D292C54440006CD82 /* Certificate.h in Headers */ = {isa = PBXBuildFile; fileRef = D3F28850292C44AD0006CD82 /* Certificate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D3F28872292C55270006CD82 /* rfc2459.json in Sources */ = {isa = PBXBuildFile; fileRef = D30F2DF129220148009299A3 /* rfc2459.json */; };
+		D3F2887A292C56F40006CD82 /* Certificate.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D3F2884E292C44AD0006CD82 /* Certificate.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D3F2887C292C67930006CD82 /* CertificateInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = D3F2887B292C67930006CD82 /* CertificateInternal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D3FB2D9D29183E2000BC72AF /* Null.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2D9C29183E2000BC72AF /* Null.swift */; };
 		D3FB2DA12918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */; };
 		D3FB2DA72918641900BC72AF /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = D3FB2DA62918641900BC72AF /* Algorithms */; };
@@ -98,30 +103,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
-		D30F2DF429220337009299A3 /* PBXBuildRule */ = {
+		D3F28863292C53C20006CD82 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.json";
 			fileType = pattern.proxy;
 			inputFiles = (
-				"$(SRCROOT)/Sources/CLI/cert2json/rfc2459.json",
+				"$(SRCROOT)/Sources/Certificate/rfc2459.json",
 			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE).swift",
 			);
-			script = "export DYLD_FRAMEWORK_PATH=$BUILT_PRODUCTS_DIR\n$BUILT_PRODUCTS_DIR/asn1json2swift translate \\\n    --input $INPUT_FILE_PATH \\\n    --output $DERIVED_FILE_DIR/$INPUT_FILE_BASE.swift \\\n    --map-type DirectoryString:String,AppleComponentAttributes:ASN1TaggedDictionary,Certificate:@objc,TBSCertificate:@objc\n";
+			script = "export DYLD_FRAMEWORK_PATH=$BUILT_PRODUCTS_DIR\n$BUILT_PRODUCTS_DIR/asn1json2swift translate \\\n    --input $INPUT_FILE_PATH \\\n    --output $DERIVED_FILE_DIR/$INPUT_FILE_BASE.swift \\\n    --map-type DirectoryString:String,AppleComponentAttributes:ASN1TaggedDictionary,Certificate:@class\n";
 		};
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
-		D30F2DEC2921FDD8009299A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D351DC21290E849200540132 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D3FB2DCE2919C4C800BC72AF;
-			remoteInfo = asn1json2swift;
-		};
 		D351DC36290E849200540132 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D351DC21290E849200540132 /* Project object */;
@@ -136,7 +134,21 @@
 			remoteGlobalIDString = D351DC29290E849200540132;
 			remoteInfo = ASN1Codable;
 		};
-		D3D13E75291342DB00218279 /* PBXContainerItemProxy */ = {
+		D3F28857292C44AD0006CD82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D351DC21290E849200540132 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3F2884D292C44AD0006CD82;
+			remoteInfo = Certificate;
+		};
+		D3F28877292C56D50006CD82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D351DC21290E849200540132 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3FB2DCE2919C4C800BC72AF;
+			remoteInfo = asn1json2swift;
+		};
+		D3F2887D292C69440006CD82 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D351DC21290E849200540132 /* Project object */;
 			proxyType = 1;
@@ -184,7 +196,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D3D13E74291342DB00218279 /* ASN1Codable.framework in Embed Frameworks */,
+				D3F2887A292C56F40006CD82 /* Certificate.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,8 +291,13 @@
 		D3D13E7D291343A500218279 /* ParseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseCommand.swift; sourceTree = "<group>"; };
 		D3D13E8329134A4B00218279 /* BInt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BInt.swift; sourceTree = "<group>"; };
 		D3D13E8829146B7400218279 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
+		D3D6E7B0292C7AF600198A86 /* CertificateInternalAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateInternalAPI.swift; sourceTree = "<group>"; };
 		D3F28843292B33440006CD82 /* CertificateAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateAPI.swift; sourceTree = "<group>"; };
-		D3F28847292B3DDD0006CD82 /* CertificateAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CertificateAPI.m; sourceTree = "<group>"; };
+		D3F2884E292C44AD0006CD82 /* Certificate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Certificate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3F28850292C44AD0006CD82 /* Certificate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Certificate.h; sourceTree = "<group>"; };
+		D3F28855292C44AD0006CD82 /* CertificateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CertificateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3F2885A292C44AD0006CD82 /* CertificateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateTests.swift; sourceTree = "<group>"; };
+		D3F2887B292C67930006CD82 /* CertificateInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CertificateInternal.h; sourceTree = "<group>"; };
 		D3FB2D9C29183E2000BC72AF /* Null.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Null.swift; sourceTree = "<group>"; };
 		D3FB2DA02918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1ImplicitlyWrappedObject.swift; sourceTree = "<group>"; };
 		D3FB2DA929187C2800BC72AF /* ASN1AutomaticTaggingContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1AutomaticTaggingContext.swift; sourceTree = "<group>"; };
@@ -327,9 +344,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3F28865292C54300006CD82 /* Certificate.framework in Frameworks */,
 				D3FB2DA72918641900BC72AF /* Algorithms in Frameworks */,
 				D3D13E7A2913431500218279 /* Commandant in Frameworks */,
-				D3D13E73291342DB00218279 /* ASN1Codable.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3F2884B292C44AD0006CD82 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3F28864292C54280006CD82 /* ASN1Codable.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3F28852292C44AD0006CD82 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3F28856292C44AD0006CD82 /* Certificate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,11 +398,13 @@
 		D351DC20290E849200540132 = {
 			isa = PBXGroup;
 			children = (
+				D3F2884F292C44AD0006CD82 /* Certificate */,
 				D3FB2DA8291866F800BC72AF /* CLI */,
 				D351DC2C290E849200540132 /* ASN1Codable */,
 				D351DC38290E849200540132 /* ASN1CodableTests */,
 				D3FB2DB52919C47C00BC72AF /* HeimASN1Translator */,
 				D3FB2DC12919C47C00BC72AF /* HeimASN1TranslatorTests */,
+				D3F28859292C44AD0006CD82 /* CertificateTests */,
 				D351DC2B290E849200540132 /* Products */,
 				D351DC44290E898300540132 /* Frameworks */,
 			);
@@ -385,6 +420,8 @@
 				D3FB2DB42919C47C00BC72AF /* HeimASN1Translator.framework */,
 				D3FB2DBD2919C47C00BC72AF /* HeimASN1TranslatorTests.xctest */,
 				D3FB2DCF2919C4C800BC72AF /* asn1json2swift */,
+				D3F2884E292C44AD0006CD82 /* Certificate.framework */,
+				D3F28855292C44AD0006CD82 /* CertificateTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -510,18 +547,37 @@
 		D3D13E6D291342D500218279 /* cert2json */ = {
 			isa = PBXGroup;
 			children = (
-				D30F2DF229220152009299A3 /* rfc2459.asn1 */,
-				D30F2DF129220148009299A3 /* rfc2459.json */,
 				D3D13E6E291342D500218279 /* main.swift */,
-				D351DC5C290E8AAF00540132 /* CertificateHelpers.swift */,
-				D3F28843292B33440006CD82 /* CertificateAPI.swift */,
-				D3F28847292B3DDD0006CD82 /* CertificateAPI.m */,
 				D363A44B292B311C007476B4 /* cert2json-Bridging-Header.h */,
 				D3D13E7B2913434200218279 /* VersionCommand.swift */,
 				D3D13E7D291343A500218279 /* ParseCommand.swift */,
 				D3826416292ACE0700808667 /* Data+HexString.swift */,
 			);
 			path = cert2json;
+			sourceTree = "<group>";
+		};
+		D3F2884F292C44AD0006CD82 /* Certificate */ = {
+			isa = PBXGroup;
+			children = (
+				D3F28850292C44AD0006CD82 /* Certificate.h */,
+				D3F2887B292C67930006CD82 /* CertificateInternal.h */,
+				D3F28843292B33440006CD82 /* CertificateAPI.swift */,
+				D3D6E7B0292C7AF600198A86 /* CertificateInternalAPI.swift */,
+				D351DC5C290E8AAF00540132 /* CertificateHelpers.swift */,
+				D30F2DF229220152009299A3 /* rfc2459.asn1 */,
+				D30F2DF129220148009299A3 /* rfc2459.json */,
+			);
+			name = Certificate;
+			path = Sources/Certificate;
+			sourceTree = "<group>";
+		};
+		D3F28859292C44AD0006CD82 /* CertificateTests */ = {
+			isa = PBXGroup;
+			children = (
+				D3F2885A292C44AD0006CD82 /* CertificateTests.swift */,
+			);
+			name = CertificateTests;
+			path = Tests/CertificateTests;
 			sourceTree = "<group>";
 		};
 		D3FB2DA8291866F800BC72AF /* CLI */ = {
@@ -581,6 +637,15 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3F28849292C44AD0006CD82 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3F2886D292C54440006CD82 /* Certificate.h in Headers */,
+				D3F2887C292C67930006CD82 /* CertificateInternal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -664,11 +729,8 @@
 				D3D13E77291342DB00218279 /* Embed Frameworks */,
 			);
 			buildRules = (
-				D30F2DF429220337009299A3 /* PBXBuildRule */,
 			);
 			dependencies = (
-				D30F2DED2921FDD8009299A3 /* PBXTargetDependency */,
-				D3D13E76291342DB00218279 /* PBXTargetDependency */,
 			);
 			name = cert2json;
 			packageProductDependencies = (
@@ -678,6 +740,45 @@
 			productName = cert2json;
 			productReference = D3D13E6C291342D500218279 /* cert2json */;
 			productType = "com.apple.product-type.tool";
+		};
+		D3F2884D292C44AD0006CD82 /* Certificate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3F2885D292C44AD0006CD82 /* Build configuration list for PBXNativeTarget "Certificate" */;
+			buildPhases = (
+				D3F28849292C44AD0006CD82 /* Headers */,
+				D3F2884A292C44AD0006CD82 /* Sources */,
+				D3F2884B292C44AD0006CD82 /* Frameworks */,
+				D3F2884C292C44AD0006CD82 /* Resources */,
+			);
+			buildRules = (
+				D3F28863292C53C20006CD82 /* PBXBuildRule */,
+			);
+			dependencies = (
+				D3F2887E292C69440006CD82 /* PBXTargetDependency */,
+				D3F28878292C56D50006CD82 /* PBXTargetDependency */,
+			);
+			name = Certificate;
+			productName = Certificate;
+			productReference = D3F2884E292C44AD0006CD82 /* Certificate.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D3F28854292C44AD0006CD82 /* CertificateTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3F28860292C44AD0006CD82 /* Build configuration list for PBXNativeTarget "CertificateTests" */;
+			buildPhases = (
+				D3F28851292C44AD0006CD82 /* Sources */,
+				D3F28852292C44AD0006CD82 /* Frameworks */,
+				D3F28853292C44AD0006CD82 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3F28858292C44AD0006CD82 /* PBXTargetDependency */,
+			);
+			name = CertificateTests;
+			productName = CertificateTests;
+			productReference = D3F28855292C44AD0006CD82 /* CertificateTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		D3FB2DB32919C47C00BC72AF /* HeimASN1Translator */ = {
 			isa = PBXNativeTarget;
@@ -765,6 +866,12 @@
 						CreatedOnToolsVersion = 14.0.1;
 						LastSwiftMigration = 1400;
 					};
+					D3F2884D292C44AD0006CD82 = {
+						CreatedOnToolsVersion = 14.0.1;
+					};
+					D3F28854292C44AD0006CD82 = {
+						CreatedOnToolsVersion = 14.0.1;
+					};
 					D3FB2DB32919C47C00BC72AF = {
 						CreatedOnToolsVersion = 14.0.1;
 					};
@@ -804,6 +911,8 @@
 				D3FB2DB32919C47C00BC72AF /* HeimASN1Translator */,
 				D3FB2DBC2919C47C00BC72AF /* HeimASN1TranslatorTests */,
 				D3FB2DCE2919C4C800BC72AF /* asn1json2swift */,
+				D3F2884D292C44AD0006CD82 /* Certificate */,
+				D3F28854292C44AD0006CD82 /* CertificateTests */,
 			);
 		};
 /* End PBXProject section */
@@ -817,6 +926,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D351DC32290E849200540132 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3F2884C292C44AD0006CD82 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3F28853292C44AD0006CD82 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -913,14 +1036,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3F28848292B3DDD0006CD82 /* CertificateAPI.m in Sources */,
-				D3F28845292B33580006CD82 /* CertificateAPI.swift in Sources */,
 				D3826417292ACE0700808667 /* Data+HexString.swift in Sources */,
-				D30F2DF3292201A8009299A3 /* rfc2459.json in Sources */,
 				D3D13E7E291343A500218279 /* ParseCommand.swift in Sources */,
 				D3D13E7C2913434200218279 /* VersionCommand.swift in Sources */,
 				D3D13E6F291342D500218279 /* main.swift in Sources */,
-				D30F2E01292216D1009299A3 /* CertificateHelpers.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3F2884A292C44AD0006CD82 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3F28872292C55270006CD82 /* rfc2459.json in Sources */,
+				D3D6E7B1292C7AF600198A86 /* CertificateInternalAPI.swift in Sources */,
+				D3F2886B292C54440006CD82 /* CertificateAPI.swift in Sources */,
+				D3F2886C292C54440006CD82 /* CertificateHelpers.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3F28851292C44AD0006CD82 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3F2885B292C44AD0006CD82 /* CertificateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -964,11 +1102,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		D30F2DED2921FDD8009299A3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D3FB2DCE2919C4C800BC72AF /* asn1json2swift */;
-			targetProxy = D30F2DEC2921FDD8009299A3 /* PBXContainerItemProxy */;
-		};
 		D351DC37290E849200540132 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D351DC29290E849200540132 /* ASN1Codable */;
@@ -979,10 +1112,20 @@
 			target = D351DC29290E849200540132 /* ASN1Codable */;
 			targetProxy = D351DCCC290EC5EE00540132 /* PBXContainerItemProxy */;
 		};
-		D3D13E76291342DB00218279 /* PBXTargetDependency */ = {
+		D3F28858292C44AD0006CD82 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3F2884D292C44AD0006CD82 /* Certificate */;
+			targetProxy = D3F28857292C44AD0006CD82 /* PBXContainerItemProxy */;
+		};
+		D3F28878292C56D50006CD82 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3FB2DCE2919C4C800BC72AF /* asn1json2swift */;
+			targetProxy = D3F28877292C56D50006CD82 /* PBXContainerItemProxy */;
+		};
+		D3F2887E292C69440006CD82 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D351DC29290E849200540132 /* ASN1Codable */;
-			targetProxy = D3D13E75291342DB00218279 /* PBXContainerItemProxy */;
+			targetProxy = D3F2887D292C69440006CD82 /* PBXContainerItemProxy */;
 		};
 		D3FB2DC02919C47C00BC72AF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1143,6 +1286,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -1178,6 +1322,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -1312,6 +1457,108 @@
 			};
 			name = Release;
 		};
+		D3F2885E292C44AD0006CD82 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = T53Q9CN4T9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.padl.Certificate;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D3F2885F292C44AD0006CD82 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = T53Q9CN4T9;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.padl.Certificate;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		D3F28861292C44AD0006CD82 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = T53Q9CN4T9;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.padl.CertificateTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D3F28862292C44AD0006CD82 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = T53Q9CN4T9;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.padl.CertificateTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		D3FB2DC62919C47C00BC72AF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1331,7 +1578,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.padl.HeimASN1Translator;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -1361,7 +1608,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.padl.HeimASN1Translator;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -1380,7 +1627,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T53Q9CN4T9;
 				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.padl.HeimASN1TranslatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1398,7 +1645,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T53Q9CN4T9;
 				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.padl.HeimASN1TranslatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1414,7 +1661,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = T53Q9CN4T9;
 				ENABLE_HARDENED_RUNTIME = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -1427,7 +1674,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = T53Q9CN4T9;
 				ENABLE_HARDENED_RUNTIME = YES;
-				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -1478,6 +1725,24 @@
 			buildConfigurations = (
 				D3D13E71291342D500218279 /* Debug */,
 				D3D13E72291342D500218279 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3F2885D292C44AD0006CD82 /* Build configuration list for PBXNativeTarget "Certificate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3F2885E292C44AD0006CD82 /* Debug */,
+				D3F2885F292C44AD0006CD82 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3F28860292C44AD0006CD82 /* Build configuration list for PBXNativeTarget "CertificateTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3F28861292C44AD0006CD82 /* Debug */,
+				D3F28862292C44AD0006CD82 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

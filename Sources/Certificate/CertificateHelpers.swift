@@ -22,6 +22,27 @@ extension Certificate {
     func `extension`<T>(_ extnID: ObjectIdentifier) -> T? where T: Codable {
         return self.tbsCertificate.extensions?.first(where: { $0.extnID == extnID })?.extnValue as? T
     }
+
+    var componentAttributes: NSDictionary? {
+        guard let attributes: ASN1TaggedDictionary = self.extension(id_apple_ce_appleComponentAttributes) else {
+            return nil
+        }
+        
+        // unbox AnyCodable
+        return attributes.wrappedValue.mapValues { $0.value as? NSObject } as NSDictionary
+    }
+    
+    var subjectAltName: [GeneralName]? {
+        return self.extension(id_x509_ce_subjectAltName)
+    }
+    
+    var serialNumberData: CFData? {
+        do {
+            return try ASN1Encoder().encode(self.tbsCertificate.serialNumber) as CFData
+        } catch {
+            return nil
+        }
+    }
 }
 
 extension ObjectIdentifier {
@@ -90,6 +111,7 @@ extension Name: Hashable {
     }
 }
 
+// FIXME OpenSSL style
 extension GeneralName: CustomStringConvertible {
     var description: String {
         switch self {

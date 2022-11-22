@@ -14,7 +14,6 @@
 // limitations under the License.
 //
 
-import ASN1Codable
 import Commandant
 import Algorithms
 import Foundation
@@ -23,8 +22,9 @@ struct ParseCommand: CommandProtocol {
     enum Error: Swift.Error {
         case unsupportedMode(_: String)
         case base64DecodingError
-        case decodingError(Swift.Error)
+        case decodingError
         case encodingError
+        case jsonEncodingError
     }
 
     let verb: String = "parse"
@@ -35,78 +35,71 @@ struct ParseCommand: CommandProtocol {
         
         if !options.file.isEmpty {
             let file = URL(fileURLWithPath: (options.file as NSString).expandingTildeInPath)
-            fileContents = try? file.readFileContents()
+            fileContents = try? Data(contentsOf: file)
         } else if options.string.isEmpty {
             return .failure(.unsupportedMode("No string or valid file path passed"))
         } else {
             fileContents = nil
         }
 
-        do {
-            var data: Data? = nil
+        var data: Data? = nil
+        
+        if let fileContents = fileContents {
+            var didBegin = false
+            var base64: String = ""
             
-            if let fileContents = fileContents {
-                var didBegin = false
-                var base64: String = ""
-                
-                String(data: fileContents, encoding: .ascii)?.enumerateLines { string, stop in
-                    if string == "-----BEGIN CERTIFICATE-----" {
-                        didBegin = true
-                    } else if string == "-----END CERTIFICATE-----" {
-                        stop = true
-                    } else {
-                        if didBegin {
-                            base64 += string
-                        }
+            String(data: fileContents, encoding: .ascii)?.enumerateLines { string, stop in
+                if string == "-----BEGIN CERTIFICATE-----" {
+                    didBegin = true
+                } else if string == "-----END CERTIFICATE-----" {
+                    stop = true
+                } else {
+                    if didBegin {
+                        base64 += string
                     }
                 }
-                data = Data(base64Encoded: base64)
-            } else {
-                data = Data(base64Encoded: options.string)
-                if data == nil {
-                    data = Data(hexString: options.string)
-                }
             }
-            
-            guard let data = data else {
-                return .failure(.base64DecodingError)
+            data = Data(base64Encoded: base64)
+        } else {
+            data = Data(base64Encoded: options.string)
+            if data == nil {
+                data = Data(hexString: options.string)
             }
-
-            let cert = try ASN1Decoder().decode(Certificate.self, from: data)
-            
-            if options.json {
-                let jsonEncoder = JSONEncoder()
-                jsonEncoder.outputFormatting = .prettyPrinted
-                
-                guard let jsonData = try String(data: jsonEncoder.encode(cert), encoding: .utf8) else {
-                    return .failure(.encodingError)
-                }
-                
-                print("\(jsonData)")
-            }
-            
-            if options.reencode {
-                let asn1Encoder = ASN1Encoder()
-                let encoded = try asn1Encoder.encode(cert)
-                
-                if options.reencode {
-                    print("-----BEGIN CERTIFICATE-----")
-                    let chunks = encoded.base64EncodedString().chunks(ofCount: 64)
-                    chunks.forEach( { print($0) })
-                    print("-----END CERTIFICATE-----")
-                }
-            }
-            
-            if options.san, let sans: [GeneralName] = cert.extension(id_x509_ce_subjectAltName) {
-                sans.forEach { san in
-                    print("\(san)")
-                }
-            }
-                        
-            return .success(())
-        } catch let error {
-            return .failure(.decodingError(error))
         }
+        
+        guard let data = data else {
+            return .failure(.base64DecodingError)
+        }
+        guard let cert = CertificateCreateWithData(kCFAllocatorDefault, data as CFData) else {
+            return .failure(.decodingError)
+        }
+        
+        if options.json {
+            guard let json = CertificateCopyJSONDescription(cert) else {
+                return .failure(.jsonEncodingError)
+            }
+            
+            print("\(json)")
+        }
+        
+        if options.reencode {
+            guard let encoded = CertificateCopyReencoded(cert) else {
+                return .failure(.encodingError)
+            }
+                
+            print("-----BEGIN CERTIFICATE-----")
+            let chunks = (encoded as Data).base64EncodedString().chunks(ofCount: 64)
+            chunks.forEach( { print($0) })
+            print("-----END CERTIFICATE-----")
+        }
+        
+        if options.san, let sans = CertificateCopyDescriptionsFromSAN(cert) {
+            (sans as NSArray).forEach { san in
+                print("\(san)")
+            }
+        }
+                    
+        return .success(())
     }
 
     struct Options: OptionsProtocol {
