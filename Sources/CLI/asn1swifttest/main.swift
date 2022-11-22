@@ -119,10 +119,7 @@ struct AutoType: Codable {
     var oid = autoEnum
 }
 
-
-
 let automatic: AutoType = AutoType()
-
 
 let foobar = Set(["Hello", "World!"])
 
@@ -139,7 +136,7 @@ let setTest = Set(arrayLiteral: "surely this is the biggest value", "B", "a", "C
 func test() -> Void {
     //let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
     do {
-        let valueToEncode = testValue
+        let valueToEncode = color
         
         print("Encoding value: \(String(describing: valueToEncode))")
         

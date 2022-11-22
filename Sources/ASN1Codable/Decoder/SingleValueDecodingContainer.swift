@@ -179,8 +179,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
         // NB withASN1Throwing is not needed here because decodeFixedWidthIntegerValue()
         // does not call into any exception-throwing ASNKit APIs
 
-        let expectedTag = ASN1DecodingContext.tag(for: type)
-        
+        let expectedTag: ASN1DecodedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
+
         guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected \(expectedTag) when decoding \(self.object)")
