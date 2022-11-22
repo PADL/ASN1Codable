@@ -25,11 +25,11 @@ enum HeimASN1TaggingEnvironment: String, Codable, HeimASN1SwiftTypeRepresentable
     var swiftType: String? {
         switch self {
         case .explicit:
-            return "ASN1ExplicitTagging"
+            return "ASN1Codable.ASN1ExplicitTagging"
         case .implicit:
-            return "ASN1ImplicitTagging"
+            return "ASN1Codable.ASN1ImplicitTagging"
         default:
-            return "ASN1DefaultTagging"
+            return "ASN1Codable.ASN1DefaultTagging"
         }
     }
 }

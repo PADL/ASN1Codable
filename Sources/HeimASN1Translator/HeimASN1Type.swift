@@ -82,15 +82,15 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
     static func cTypeToSwiftType(_ cType: String) -> String? {
         switch cType {
         case "heim_integer":
-            return "BInt"
+            return "BigNumber.BInt"
         case "int64_t":
-            return "Int64"
+            return "Swift.Int64"
         case "int":
-            return "Int32"
+            return "Swift.Int32"
         case "uint64_t":
-            return "UInt64"
+            return "Swift.UInt64"
         case "unsigned int":
-            return "UInt32"
+            return "Swift.UInt32"
         default:
             return nil
         }
@@ -252,7 +252,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         case .objectIdentifier:
             if let oidStringValue = containingTypeDef.oidStringValue {
                 outputStream.write("\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(swiftType)\(containingTypeDef.isOptional ?? false ? "?" : "")")
-                outputStream.write(" = ObjectIdentifier(rawValue: \"\(oidStringValue)\")!\n")
+                outputStream.write(" = ASN1Kit.ObjectIdentifier(rawValue: \"\(oidStringValue)\")!\n")
             }
             break
         case .integer:

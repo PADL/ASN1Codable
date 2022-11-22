@@ -275,28 +275,28 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             conformances.append("Hashable")
         }
         if self.preserve ?? false {
-            conformances.append("ASN1PreserveBinary")
+            conformances.append("ASN1Codable.ASN1PreserveBinary")
         }
         if let tag = parent?.tag {
             if tag.isApplicationSpecific {
-                conformances.append("ASN1ApplicationTaggedType")
+                conformances.append("ASN1Codable.ASN1ApplicationTaggedType")
             } else if tag.isContextSpecific {
-                conformances.append("ASN1ContextTaggedType")
+                conformances.append("ASN1Codable.ASN1ContextTaggedType")
             } else if tag.isUniversal == false {
-                conformances.append("ASN1PrivateTaggedType")
+                conformances.append("ASN1Codable.ASN1PrivateTaggedType")
             }
         }
         if let tType = self.tType, case .universal(let type) = tType, type == .set {
-            conformances.append("ASN1SetCodable")
+            conformances.append("ASN1Codable.ASN1SetCodable")
         }
         if self.isExtensible ?? false {
-            conformances.append("ASN1ExtensibleType")
+            conformances.append("ASN1Codable.ASN1ExtensibleType")
         }
         if let openType = self.openType {
             let valueMember = self.members?.first { $0.typeDefValue?.name == openType.openTypeMember }
             // FIXME tags
             let isOctetString: Bool = valueMember?.typeDefValue?.type?.tag == ASN1DecodedTag.universal(.octetString)
-            conformances.append(isOctetString ? "ASN1ObjectSetOctetStringCodable" : "ASN1ObjectSetCodable")
+            conformances.append(isOctetString ? "ASN1Codable.ASN1ObjectSetOctetStringCodable" : "ASN1Codable.ASN1ObjectSetCodable")
         }
         return conformances
     }
