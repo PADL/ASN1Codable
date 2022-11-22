@@ -39,6 +39,12 @@ CertificateCopyData(CertificateRef certificate);
 __nullable
 CFStringRef CertificateCopySubjectSummary(CertificateRef certificate);
 
+OSStatus
+CertificateCopyCommonName(CertificateRef certificate, CFStringRef * __nonnull CF_RETURNS_RETAINED commonName);
+
+OSStatus
+CertificateCopyEmailAddresses(CertificateRef certificate, CFArrayRef * __nonnull CF_RETURNS_RETAINED emailAddresses);
+
 CF_IMPLICIT_BRIDGING_DISABLED
 CF_ASSUME_NONNULL_END
 

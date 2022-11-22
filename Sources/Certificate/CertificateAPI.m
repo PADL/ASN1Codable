@@ -47,3 +47,14 @@ OSStatus CertificateCopyCommonName(CertificateRef certificate, CFStringRef *comm
     CFReleaseSafe(commonNames);
     return errSecSuccess;
 }
+
+OSStatus CertificateCopyEmailAddresses(CertificateRef certificate, CFArrayRef * __nonnull CF_RETURNS_RETAINED emailAddresses) {
+    if (!certificate || !emailAddresses) {
+        return errSecParam;
+    }
+    *emailAddresses = CertificateCopyRFC822Names(certificate);
+    if (*emailAddresses == NULL) {
+        *emailAddresses = CFArrayCreate(NULL, NULL, 0, &kCFTypeArrayCallBacks);
+    }
+    return errSecSuccess;
+}
