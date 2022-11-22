@@ -69,6 +69,8 @@ struct SignatureWrapper: Codable {
 let ts = TestStruct()
 
 struct TestType: Codable, ASN1ApplicationTaggedType {
+    public static var tagNumber: UInt = 25
+
     enum CodingKeys: Int, ASN1CodingKey {
         var metatype: ASN1Metatype {
             ASN1Metatype(tag: .taggedTag(UInt(self.rawValue)))
@@ -78,8 +80,6 @@ struct TestType: Codable, ASN1ApplicationTaggedType {
         case someTime = 1
         case someString = 2
     }
-    
-    public static var tagNumber: UInt = 25
 
     var someInteger: UInt32 = 0
     @GeneralizedTime
