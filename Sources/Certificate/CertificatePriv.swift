@@ -15,37 +15,8 @@
 //
 
 import Foundation
-import Network
 import ASN1Codable
-
-internal extension Certificate {
-    static func _fromCertificateRef(_ certificateRef: CertificateRef!) -> Certificate? {
-        if certificateRef == nil { return nil }
-        return unsafeBitCast(certificateRef, to: Certificate.self)
-    }
-    
-    var _certificateRef: CertificateRef {
-        let certificate = Unmanaged<Certificate>.passRetained(self)
-        return unsafeBitCast(certificate, to: CertificateRef.self)
-    }
-
-    fileprivate static func create(with der_certificate: Data) -> CertificateRef? {
-        do {
-            let certificate = try ASN1Decoder().decode(Certificate.self, from: der_certificate as Data)
-            return certificate._certificateRef
-        } catch {
-            return nil
-        }
-    }
-}
-
-@_cdecl("CertificateCreateWithData")
-public func CertificateCreateWithData(_ allocator: CFAllocator!,
-                                      _ der_certificate: CFData?) -> CertificateRef?
-{
-    guard let der_certificate = der_certificate else { return nil }
-    return Certificate.create(with: der_certificate as Data)
-}
+import Network
 
 @_cdecl("CertificateCreateWithBytes")
 public func CertificateCreateWithBytes(_ allocator: CFAllocator!,
@@ -56,20 +27,6 @@ public func CertificateCreateWithBytes(_ allocator: CFAllocator!,
     return Certificate.create(with: data)
 }
 
-@_cdecl("CertificateCopyComponentAttributes")
-public func CertificateCopyComponentAttributes(_ certificate: CertificateRef?) -> CFDictionary? {
-    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
-    
-    return certificate.componentAttributes
-}
-
-@_cdecl("CertificateGetSubjectKeyID")
-public func CertificateGetSubjectKeyID(_ certificate: CertificateRef?) -> CFData? {
-    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
-    guard let subjectKeyID: Data = certificate.extension(id_x509_ce_subjectKeyIdentifier) else { return nil }
-    
-    return subjectKeyID as CFData
-}
 
 @_cdecl("CertificateCreateWithKeychainItem")
 public func CertificateCreateWithKeychainItem(_ allocator: CFAllocator!,
@@ -83,20 +40,30 @@ public func CertificateCreateWithKeychainItem(_ allocator: CFAllocator!,
     return certificate
 }
 
+@_cdecl("CertificateCopyComponentAttributes")
+public func CertificateCopyComponentAttributes(_ certificate: CertificateRef?) -> CFDictionary?
+{
+    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
+    
+    return certificate.componentAttributes
+}
+
+
+@_cdecl("CertificateGetSubjectKeyID")
+public func CertificateGetSubjectKeyID(_ certificate: CertificateRef?) -> CFData?
+{
+    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
+    guard let subjectKeyID: Data = certificate.extension(id_x509_ce_subjectKeyIdentifier) else { return nil }
+    
+    return subjectKeyID as CFData
+}
+
 @_cdecl("CertificateSetKeychainItem")
 public func CertificateSetKeychainItem(_ certificate: CertificateRef?, _ keychain_item: CFTypeRef) -> OSStatus
 {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return errSecParam }
     certificate._keychain_item = keychain_item
     return errSecSuccess
-}
-
-@_cdecl("CertificateCopyData")
-public func CertificateCopyData(_ certificate: CertificateRef?) -> CFData?
-{
-    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
-    guard let data = certificate._save else { return nil }
-    return data as CFData
 }
 
 @_cdecl("CertificateGetLength")
@@ -128,34 +95,23 @@ public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> CFArray
     return datas as CFArray
 }
 
-@_cdecl("CertificateCopyIPAddressDatas")
-public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> CFArray?
+@_cdecl("CertificateCopyRFC822Names")
+public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray?
 {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
-    guard let datas = certificate.subjectAltName?.compactMap({
-        if case .iPAddress(let ipAddress) = $0 {
-            return ipAddress.wrappedValue
-        } else {
-            return nil
-        }
-    }), datas.count != 0 else {
-        return nil
-    }
-    return datas as CFArray
-}
 
-@_cdecl("CertificateCopyDNSNamesFromSAN")
-public func CertificateCopyDNSNamesFromSAN(_ certificate: CertificateRef) -> CFArray?
-{
-    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
-    guard let datas = certificate.subjectAltName?.compactMap({
-        if case .dNSName(let dnsName) = $0 {
-            return dnsName
-        } else {
-            return nil
-        }
-    }), datas.count != 0 else {
-        return nil
+    var names = [String]()
+    
+    if let san = certificate.subjectAltName {
+        names.append(contentsOf: san.compactMap({
+            if case .rfc822Name(let rfc822Name) = $0 { return String(describing: rfc822Name) }
+            else { return nil }
+        }))
+    } else if case .rdnSequence(let rdns) = certificate.tbsCertificate.subject, rdns.count != 0 {
+        names.append(contentsOf: rdns.compactMap({
+            $0.first(where: { $0.type == id_at_emailAddress })?.value
+        }))
     }
-    return datas as CFArray
+    
+    return names.count == 0 ? nil : names as CFArray
 }

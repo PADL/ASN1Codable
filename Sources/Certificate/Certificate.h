@@ -33,32 +33,11 @@ typedef struct CF_BRIDGED_TYPE(CFTypeRef) __Certificate *CertificateRef;
 __nullable CertificateRef
 CertificateCreateWithData(CFAllocatorRef __nullable allocator, CFDataRef data);
 
-__nullable CFDictionaryRef
-CertificateCopyComponentAttributes(CertificateRef certificate);
-
-__nullable CFDataRef
-CertificateGetSubjectKeyID(CertificateRef certificate);
-
-__nullable CertificateRef
-CertificateCreateWithKeychainItem(CFAllocatorRef __nullable allocator, CFDataRef data, CFTypeRef keychain_item);
-
-OSStatus
-CertificateSetKeychainItem(CertificateRef certificate, CFTypeRef keychain_item);
-
 __nullable CFDataRef
 CertificateCopyData(CertificateRef certificate);
 
-CFIndex
-CertificateGetLength(CertificateRef certificate);
-
-__nullable CFArrayRef
-CertificateCopyIPAddresses(CertificateRef certificate);
-
-__nullable CFArrayRef
-CertificateCopyIPAddressDatas(CertificateRef certificate);
-
-__nullable CFArrayRef
-CertificateCopyDNSNamesFromSAN(CertificateRef certificate);
+__nullable
+CFStringRef CertificateCopySubjectSummary(CertificateRef certificate);
 
 CF_IMPLICIT_BRIDGING_DISABLED
 CF_ASSUME_NONNULL_END

@@ -23,14 +23,37 @@ __BEGIN_DECLS
 CF_ASSUME_NONNULL_BEGIN
 CF_IMPLICIT_BRIDGING_ENABLED
 
-__nullable CFArrayRef
-CertificateCopyIPAddressDatas(CertificateRef certificate);
+CFIndex
+CertificateGetLength(CertificateRef certificate);
+
+__nullable CFDataRef
+CertificateGetSubjectKeyID(CertificateRef certificate);
+
+__nullable CertificateRef
+CertificateCreateWithKeychainItem(CFAllocatorRef __nullable allocator, CFDataRef data, CFTypeRef keychain_item);
+
+OSStatus
+CertificateSetKeychainItem(CertificateRef certificate, CFTypeRef keychain_item);
+
+__nullable CFDictionaryRef
+CertificateCopyComponentAttributes(CertificateRef certificate);
 
 __nullable CFArrayRef
-CertificateCopyDNSNamesFromSAN(CertificateRef certificate);
+CertificateCopyIPAddresses(CertificateRef certificate);
 
 __nullable CFArrayRef
-CertificateCopyRFC822NamesFromSAN(CertificateRef certificate);
+CertificateCopyRFC822Names(CertificateRef certificate);
+
+// extras that are not in SecCertificatePriv.h
+
+__nullable CFArrayRef
+CertificateCopyDescriptionsFromSAN(CertificateRef certificate);
+
+__nullable CFDataRef
+CertificateCopyReencoded(CertificateRef certificate);
+
+__nullable CFStringRef
+CertificateCopyJSONDescription(CertificateRef certificate);
 
 CF_IMPLICIT_BRIDGING_DISABLED
 CF_ASSUME_NONNULL_END
