@@ -20,14 +20,8 @@ import ASN1Kit
 // for applying a tag/flag to an entire type rather than a member
 
 public protocol ASN1TaggedType: ASN1TaggedTypeRepresentable, Codable {    
-    static var tagNumber: ASN1TagNumberRepresentable.Type? { get }
+    static var tagNumber: ASN1TagNumberRepresentable.Type { get }
 }
 
-public protocol ASN1SetCodable: ASN1TaggedType {
-}
-
-public extension ASN1TaggedType {
-    static var tagNumber: ASN1TagNumberRepresentable.Type? {
-        return nil
-    }    
+public protocol ASN1SetCodable {
 }

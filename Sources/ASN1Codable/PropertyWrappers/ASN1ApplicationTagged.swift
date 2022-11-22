@@ -32,7 +32,7 @@ public struct ASN1ApplicationTagged <Tag, Tagging, Value>: Codable, ASN1TaggedWr
     }
 
     public static var metatype: ASN1Metatype {
-        return ASN1Metatype(tag: ASN1DecodedTag.applicationTag(tagNumber.tagNo), tagging: Tagging.tagging)
+        return ASN1Metatype(tag: .applicationTag(tagNumber.tagNo), tagging: Tagging.tagging)
     }
 }
 
@@ -43,4 +43,10 @@ extension ASN1ApplicationTagged: Hashable where Value: Hashable {
 }
 
 public protocol ASN1ApplicationTaggedType: ASN1TaggedType {
+}
+
+extension ASN1ApplicationTaggedType {
+    public static var metatype: ASN1Metatype {
+        return ASN1Metatype(tag: .applicationTag(self.tagNumber.tagNo))
+    }
 }

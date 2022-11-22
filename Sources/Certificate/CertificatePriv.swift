@@ -104,8 +104,11 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray
     
     if let san = certificate.subjectAltName {
         names.append(contentsOf: san.compactMap({
-            if case .rfc822Name(let rfc822Name) = $0 { return String(describing: rfc822Name) }
-            else { return nil }
+            if case .rfc822Name(let rfc822Name) = $0 {
+                return String(describing: rfc822Name)
+            } else {
+                return nil
+            }
         }))
     } else if let rdns = certificate.rdns(identifiedBy: id_at_emailAddress) {
         names.append(contentsOf: rdns)

@@ -18,8 +18,8 @@ import Foundation
 import ASN1Codable
 import BigNumber
 
-public struct TestStruct: Codable, ASN1TaggedType, ASN1SetCodable {
-    public static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self    
+public struct TestStruct: Codable, ASN1ApplicationTaggedType, ASN1SetCodable {
+    public static var tagNumber: ASN1TagNumberRepresentable.Type = ASN1TagNumber$10.self
 
     
     /*
@@ -69,7 +69,7 @@ struct SignatureWrapper: Codable {
 let ts = TestStruct()
 
 struct TestType: Codable, ASN1ApplicationTaggedType {
-    static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$10.self
+    static var tagNumber: ASN1TagNumberRepresentable.Type = ASN1TagNumber$10.self
     
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, UInt>
     var someInteger: UInt = 0
@@ -90,13 +90,13 @@ testValue.someString = "Hello"
 
 //https://www.oss.com/asn1/resources/asn1-made-simple/asn1-quick-reference/asn1-tags.html
 struct ImplicitAutoType: Codable, ASN1ContextTaggedType, ASN1ImplicitlyTaggedType {
-    static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$0.self
+    static var tagNumber: ASN1TagNumberRepresentable.Type = ASN1TagNumber$0.self
     var name = "John"
     var age = 25
 }
 
 struct ExplicitAutoType: Codable, ASN1ContextTaggedType {
-    static var tagNumber: ASN1TagNumberRepresentable.Type? = ASN1TagNumber$0.self
+    static var tagNumber: ASN1TagNumberRepresentable.Type = ASN1TagNumber$0.self
     var name = "John"
     var age = 25
 }
