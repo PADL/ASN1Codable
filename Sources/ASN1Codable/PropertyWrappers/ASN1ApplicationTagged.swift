@@ -47,6 +47,6 @@ public protocol ASN1ApplicationTaggedType: ASN1TaggedType {
 
 extension ASN1ApplicationTaggedType {
     public static var metatype: ASN1Metatype {
-        return ASN1Metatype(tag: .applicationTag(self.tagNumber.tagNo))
+        return ASN1Metatype(tag: .applicationTag(self.tagNumber))
     }
 }

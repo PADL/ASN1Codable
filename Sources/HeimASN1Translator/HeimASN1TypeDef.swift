@@ -346,7 +346,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                     outputStream.write("\(visibility)\(objcPrefix)\(swiftMetaType) \(self.generatedName): \(self.swiftConformances(nil)) {\n")
                     
                     if let tag = parent?.tag, !tag.isUniversal {
-                        outputStream.write("\t\(visibility)static let tagNumber: ASN1TagNumberRepresentable.Type = ASN1TagNumber$\(parent!.tagValue!).self\n\n")
+                        outputStream.write("\t\(visibility)static let tagNumber: UInt = \(parent!.tagValue!)\n\n")
                     }
                     
                     if let openType = self.openType {

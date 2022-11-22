@@ -19,7 +19,7 @@ import ASN1Codable
 import BigNumber
 
 public struct TestStruct: Codable, ASN1ApplicationTaggedType, ASN1SetCodable {
-    public static var tagNumber: ASN1TagNumberRepresentable.Type = ASN1TagNumber$10.self
+    public static var tagNumber: UInt = 10
 
     
     /*
@@ -70,7 +70,7 @@ let ts = TestStruct()
 
 struct TestType: Codable, ASN1ApplicationTaggedType {
     // [APPLICATION 10] tag on containing SEQUENCE
-    static var tagNumber: ASN1TagNumberRepresentable.Type = ASN1TagNumber$10.self
+    public static var tagNumber: UInt = 10
 
     // [0] INTEGER (0..4294967295)
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, UInt32>
@@ -94,13 +94,13 @@ testValue.someString = "Hello"
 
 //https://www.oss.com/asn1/resources/asn1-made-simple/asn1-quick-reference/asn1-tags.html
 struct ImplicitAutoType: Codable, ASN1ContextTaggedType, ASN1ImplicitlyTaggedType {
-    static var tagNumber: ASN1TagNumberRepresentable.Type = ASN1TagNumber$0.self
+    public static var tagNumber: UInt = 0
     var name = "John"
     var age = 25
 }
 
 struct ExplicitAutoType: Codable, ASN1ContextTaggedType {
-    static var tagNumber: ASN1TagNumberRepresentable.Type = ASN1TagNumber$0.self
+    public static var tagNumber: UInt = 0
     var name = "John"
     var age = 25
 }

@@ -47,6 +47,6 @@ public protocol ASN1PrivateTaggedType: ASN1TaggedType {
 
 extension ASN1PrivateTaggedType {
     public static var metatype: ASN1Metatype {
-        return ASN1Metatype(tag: .privateTag(self.tagNumber.tagNo))
+        return ASN1Metatype(tag: .privateTag(self.tagNumber))
     }
 }
