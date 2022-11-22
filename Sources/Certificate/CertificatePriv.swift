@@ -121,7 +121,7 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray
 public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> CFArray?
 {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
-    guard let names = certificate.subjectAltName?.map({ $0.description }), names.count != 0 else {
+    guard let names = certificate.subjectAltName?.map({ String(describing: $0) }), names.count != 0 else {
         return nil
     }
     return names as CFArray

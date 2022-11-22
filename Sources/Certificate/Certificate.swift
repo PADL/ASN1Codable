@@ -34,15 +34,42 @@ public func CertificateCopyData(_ certificate: CertificateRef?) -> CFData?
     return data as CFData
 }
 
+extension Certificate {
+    func rdn(identifiedBy oid: AttributeType) -> [DirectoryString]? {
+        guard case .rdnSequence(let rdns) = self.tbsCertificate.subject, rdns.count > 0 else {
+            return nil
+        }
+        
+        return rdns.compactMap { $0.first(where: { $0.type == oid })?.value }
+    }
+    
+    var rdnCount: Int {
+        guard case .rdnSequence(let rdns) = self.tbsCertificate.subject else { return 0 }
+        return rdns.count
+    }
+}
+
 @_cdecl("CertificateCopySubjectSummary")
 public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFString?
 {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
 
-    // try subject
-    // try common name
-    // rfc822
-    // DNS names
+    let summary: String
     
-    return nil
+    // FIXME mirror Security.framework, currently just returns a DN
+    if let cn = certificate.rdn(identifiedBy: id_at_commonName), cn.count > 0 {
+        summary = cn[0]
+    } else if certificate.rdnCount != 0 {
+        summary = certificate.tbsCertificate.subject.description
+    } else if let emails = CertificateCopyRFC822Names(certificate._certificateRef),
+              let email = (emails as NSArray).firstObject as? String {
+        summary = email
+    } else if let dns = CertificateCopyDNSNamesFromSAN(certificate._certificateRef),
+              let dns = (dns as NSArray).firstObject as? String {
+        summary = dns
+    } else {
+        return nil
+    }
+    
+    return summary as CFString
 }
