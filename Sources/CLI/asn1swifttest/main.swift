@@ -69,15 +69,19 @@ struct SignatureWrapper: Codable {
 let ts = TestStruct()
 
 struct TestType: Codable, ASN1ApplicationTaggedType {
+    // [APPLICATION 10] tag on containing SEQUENCE
     static var tagNumber: ASN1TagNumberRepresentable.Type = ASN1TagNumber$10.self
-    
-    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, UInt>
-    var someInteger: UInt = 0
 
+    // [0] INTEGER (0..4294967295)
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, UInt32>
+    var someInteger: UInt32 = 0
+
+    // [1] GeneralizedTime
     @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, GeneralizedTime>
     @GeneralizedTime
     var someTime: Date = Date()
-    
+   
+    // [2] PrintableString OPTIONAL
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1DefaultTagging, PrintableString<String?>>
     @PrintableString
     var someString: String? = nil
