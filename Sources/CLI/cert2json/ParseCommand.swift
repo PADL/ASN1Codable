@@ -83,7 +83,7 @@ struct ParseCommand: CommandProtocol {
         }
         
         if options.reencode {
-            guard let encoded = CertificateCopyReencoded(cert) else {
+            guard let encoded = CertificateCopyDataReencoded(cert) else {
                 return .failure(.encodingError)
             }
                 

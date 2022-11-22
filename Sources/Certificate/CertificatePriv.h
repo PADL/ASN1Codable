@@ -50,7 +50,7 @@ __nullable CFArrayRef
 CertificateCopyDescriptionsFromSAN(CertificateRef certificate);
 
 __nullable CFDataRef
-CertificateCopyReencoded(CertificateRef certificate);
+CertificateCopyDataReencoded(CertificateRef certificate);
 
 __nullable CFStringRef
 CertificateCopyJSONDescription(CertificateRef certificate);

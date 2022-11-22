@@ -115,3 +115,45 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray
     
     return names.count == 0 ? nil : names as CFArray
 }
+
+
+@_cdecl("CertificateCopyDescriptionsFromSAN")
+public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> CFArray?
+{
+    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
+    guard let names = certificate.subjectAltName?.map({ $0.description }), names.count != 0 else {
+        return nil
+    }
+    return names as CFArray
+}
+
+@_cdecl("CertificateCopyDataReencoded")
+public func CertificateCopyDataReencoded(_ certificate: CertificateRef) -> CFData?
+{
+    let certificate = Certificate._fromCertificateRef(certificate)!
+    let asn1Encoder = ASN1Encoder()
+    
+    do {
+        return try asn1Encoder.encode(certificate) as CFData
+    } catch {
+        return nil
+    }
+}
+
+@_cdecl("CertificateCopyJSONDescription")
+public func CertificateCopyJSONDescription(_ certificate: CertificateRef) -> CFString?
+{
+    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
+
+    let jsonEncoder = JSONEncoder()
+    jsonEncoder.outputFormatting = .prettyPrinted
+    
+    do {
+        let data = try jsonEncoder.encode(certificate)
+        guard let string = String(data: data, encoding: .utf8) else { return nil }
+        return string as CFString
+    } catch {
+    }
+    
+    return nil
+}
