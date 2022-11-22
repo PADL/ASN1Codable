@@ -23,6 +23,11 @@ import ASN1Kit
 public struct ASN1Metatype: Equatable {
     var tag: ASN1DecodedTag?
     var tagging: ASN1Tagging?
+    
+    public init(tag: ASN1DecodedTag? = nil, tagging: ASN1Tagging? = nil) {
+        self.tag = tag
+        self.tagging = tagging
+    }
 }
 
 extension ASN1Metatype: CustomDebugStringConvertible {

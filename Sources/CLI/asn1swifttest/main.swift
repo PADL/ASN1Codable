@@ -69,20 +69,21 @@ struct SignatureWrapper: Codable {
 let ts = TestStruct()
 
 struct TestType: Codable, ASN1ApplicationTaggedType {
-    // [APPLICATION 10] tag on containing SEQUENCE
-    public static var tagNumber: UInt = 10
+    enum CodingKeys: Int, ASN1CodingKey {
+        var metatype: ASN1Metatype {
+            ASN1Metatype(tag: .taggedTag(UInt(self.rawValue)))
+        }
+        
+        case someInteger = 0
+        case someTime = 1
+        case someString = 2
+    }
+    
+    public static var tagNumber: UInt = 25
 
-    // [0] INTEGER (0..4294967295)
-    @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, UInt32>
     var someInteger: UInt32 = 0
-
-    // [1] GeneralizedTime
-    @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, GeneralizedTime>
     @GeneralizedTime
     var someTime: Date = Date()
-   
-    // [2] PrintableString OPTIONAL
-    @ASN1ContextTagged<ASN1TagNumber$2, ASN1DefaultTagging, PrintableString<String?>>
     @PrintableString
     var someString: String? = nil
 }
@@ -136,9 +137,9 @@ let color = Color.blue
 let setTest = Set(arrayLiteral: "surely this is the biggest value", "B", "a", "CCC")
 
 func test() -> Void {
-    let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
+    //let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
     do {
-        let valueToEncode = ts
+        let valueToEncode = testValue
         
         print("Encoding value: \(String(describing: valueToEncode))")
         
@@ -146,6 +147,8 @@ func test() -> Void {
         //asn1Encoder.taggingEnvironment = .automatic
         let berData = try asn1Encoder.encode(valueToEncode)
         
+        let base64 = berData.base64EncodedString()
+        print("Base64 encoded value: \(base64)")
         dumpEncodedData(berData)
         
         let asn1Decoder = ASN1Decoder()

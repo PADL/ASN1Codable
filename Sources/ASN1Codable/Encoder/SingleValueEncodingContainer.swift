@@ -60,13 +60,13 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     
     func encode(_ value: Bool) throws {
         try self.withASN1Throwing(value) {
-            self.object = try value.asn1encode(tag: nil)
+            try value.asn1encode(tag: nil)
         }
     }
     
     func encode(_ value: String) throws {
         try self.withASN1Throwing(value) {
-            self.object = try value.asn1encode(tag: nil)
+            try value.asn1encode(tag: nil)
         }
     }
     
@@ -80,61 +80,61 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     
     func encode(_ value: Int) throws {
         try self.withASN1Throwing(value) {
-            self.object = try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWithIntegerValue(value)
         }
     }
     
     func encode(_ value: Int8) throws {
         try self.withASN1Throwing(value) {
-            self.object = try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWithIntegerValue(value)
         }
     }
     
     func encode(_ value: Int16) throws {
         try self.withASN1Throwing(value) {
-            self.object = try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWithIntegerValue(value)
         }
     }
     
     func encode(_ value: Int32) throws {
         try self.withASN1Throwing(value) {
-            self.object = try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWithIntegerValue(value)
         }
     }
     
     func encode(_ value: Int64) throws {
         try self.withASN1Throwing(value) {
-            self.object = try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWithIntegerValue(value)
         }
     }
     
     func encode(_ value: UInt) throws {
         try self.withASN1Throwing(value) {
-            self.object = try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWithIntegerValue(value)
         }
     }
     
     func encode(_ value: UInt8) throws {
         try self.withASN1Throwing(value) {
-            self.object = try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWithIntegerValue(value)
         }
     }
     
     func encode(_ value: UInt16) throws {
         try self.withASN1Throwing(value) {
-            self.object = try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWithIntegerValue(value)
         }
     }
     
     func encode(_ value: UInt32) throws {
         try self.withASN1Throwing(value) {
-            self.object = try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWithIntegerValue(value)
         }
     }
     
     func encode(_ value: UInt64) throws {
         try self.withASN1Throwing(value) {
-            self.object = try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWithIntegerValue(value)
         }
     }
     
@@ -142,15 +142,20 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         self.context = self.context.encodingSingleValue(value) // FIXME
         
         try self.withASN1Throwing(value) {
-            self.object = try encode(value)
+            try encode(value)
         }
     }
 }
 
 extension ASN1EncoderImpl.SingleValueContainer {
-    private func withASN1Throwing<T>(_ value: T, _ block: () throws -> ()) throws {
+    private func withASN1Throwing<T: Encodable>(_ value: T, _ block: () throws -> ASN1Object?) throws {
         do {
-            try block()
+            // FIXME this is asymettric with decoding
+            if self.codingPath.last is ASN1CodingKey {
+                self.object = try self.encode(value, skipTaggedValues: false)
+            } else {
+                self.object = try block()
+            }
         } catch let error as ASN1Error {
             let context = EncodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "ASN.1 encoding error",
