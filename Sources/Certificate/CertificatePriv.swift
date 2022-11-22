@@ -107,15 +107,19 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray
             if case .rfc822Name(let rfc822Name) = $0 { return String(describing: rfc822Name) }
             else { return nil }
         }))
-    } else if case .rdnSequence(let rdns) = certificate.tbsCertificate.subject, rdns.count != 0 {
-        names.append(contentsOf: rdns.compactMap({
-            $0.first(where: { $0.type == id_at_emailAddress })?.value
-        }))
+    } else if let rdns = certificate.rdns(identifiedBy: id_at_emailAddress) {
+        names.append(contentsOf: rdns)
     }
     
     return names.count == 0 ? nil : names as CFArray
 }
 
+@_cdecl("CertificateCopyCommonNames")
+public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> CFArray?
+{
+    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
+    return certificate.rdns(identifiedBy: id_at_commonName) as CFArray?
+}
 
 @_cdecl("CertificateCopyDescriptionsFromSAN")
 public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> CFArray?

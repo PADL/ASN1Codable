@@ -78,6 +78,7 @@
 		D3D6E7B3292C80CE00198A86 /* CertificatePriv.h in Headers */ = {isa = PBXBuildFile; fileRef = D3D6E7B2292C80CE00198A86 /* CertificatePriv.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D3D6E7B5292C824700198A86 /* CertificatePriv.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7B4292C824700198A86 /* CertificatePriv.swift */; };
 		D3D6E7B7292C826700198A86 /* CertificateRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7B6292C826700198A86 /* CertificateRef.swift */; };
+		D3D6E7B9292C8FF400198A86 /* CertificateAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7B8292C8FF400198A86 /* CertificateAPI.m */; };
 		D3F28856292C44AD0006CD82 /* Certificate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F2884E292C44AD0006CD82 /* Certificate.framework */; };
 		D3F2885B292C44AD0006CD82 /* CertificateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F2885A292C44AD0006CD82 /* CertificateTests.swift */; };
 		D3F28864292C54280006CD82 /* ASN1Codable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1Codable.framework */; };
@@ -298,6 +299,9 @@
 		D3D6E7B2292C80CE00198A86 /* CertificatePriv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CertificatePriv.h; sourceTree = "<group>"; };
 		D3D6E7B4292C824700198A86 /* CertificatePriv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificatePriv.swift; sourceTree = "<group>"; };
 		D3D6E7B6292C826700198A86 /* CertificateRef.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateRef.swift; sourceTree = "<group>"; };
+		D3D6E7B8292C8FF400198A86 /* CertificateAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CertificateAPI.m; sourceTree = "<group>"; };
+		D3D6E7BA292C907A00198A86 /* CertificateAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CertificateAPI.h; sourceTree = "<group>"; };
+		D3D6E7BB292C909A00198A86 /* CFRelease.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFRelease.h; sourceTree = "<group>"; };
 		D3F28843292B33440006CD82 /* Certificate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
 		D3F2884E292C44AD0006CD82 /* Certificate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Certificate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3F28850292C44AD0006CD82 /* Certificate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Certificate.h; sourceTree = "<group>"; };
@@ -575,6 +579,9 @@
 				D3D6E7B6292C826700198A86 /* CertificateRef.swift */,
 				D30F2DF229220152009299A3 /* rfc2459.asn1 */,
 				D30F2DF129220148009299A3 /* rfc2459.json */,
+				D3D6E7B8292C8FF400198A86 /* CertificateAPI.m */,
+				D3D6E7BB292C909A00198A86 /* CFRelease.h */,
+				D3D6E7BA292C907A00198A86 /* CertificateAPI.h */,
 			);
 			name = Certificate;
 			path = Sources/Certificate;
@@ -878,6 +885,7 @@
 					};
 					D3F2884D292C44AD0006CD82 = {
 						CreatedOnToolsVersion = 14.0.1;
+						LastSwiftMigration = 1400;
 					};
 					D3F28854292C44AD0006CD82 = {
 						CreatedOnToolsVersion = 14.0.1;
@@ -1063,6 +1071,7 @@
 				D3D6E7B7292C826700198A86 /* CertificateRef.swift in Sources */,
 				D3F2886C292C54440006CD82 /* CertificateHelpers.swift in Sources */,
 				D3D6E7B5292C824700198A86 /* CertificatePriv.swift in Sources */,
+				D3D6E7B9292C8FF400198A86 /* CertificateAPI.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1472,6 +1481,7 @@
 		D3F2885E292C44AD0006CD82 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1498,6 +1508,7 @@
 				SWIFT_INSTALL_MODULE = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -1505,6 +1516,7 @@
 		D3F2885F292C44AD0006CD82 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
