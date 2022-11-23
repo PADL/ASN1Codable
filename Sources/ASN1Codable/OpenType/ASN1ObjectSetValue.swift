@@ -18,41 +18,6 @@ import Foundation
 import ASN1Kit
 import AnyCodable
 
-public typealias ASN1ObjectSetTypeDictionary = [String: [AnyHashable: Codable.Type]]
-
-/// Represents a key, typically an `Int` or `ObjectIdentifier`, that is used as a
-/// discriminant in encoding an object set.
-@propertyWrapper
-public struct ASN1ObjectSetType<ValueType>: Codable where ValueType : Codable & Hashable {
-    public var wrappedValue: ValueType
-
-    public init(wrappedValue: ValueType) {
-        self.wrappedValue = wrappedValue
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(self.wrappedValue)
-    
-        if let encoder = encoder as? ASN1EncoderImpl,
-           let objectSetCodingContext = encoder.context.objectSetCodingContext {
-            precondition(objectSetCodingContext.valueType == nil)
-            objectSetCodingContext.valueType = self.wrappedValue
-        }
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        self.wrappedValue = try container.decode(ValueType.self)
-        
-        if let decoder = decoder as? ASN1DecoderImpl,
-           let objectSetCodingContext = decoder.context.objectSetCodingContext {
-            precondition(objectSetCodingContext.valueType == nil)
-            objectSetCodingContext.valueType = wrappedValue
-        }
-    }
-}
-
 /// Represents an open typed value.
 @propertyWrapper
 public struct ASN1ObjectSetValue: Codable {
@@ -161,64 +126,4 @@ extension ASN1ObjectSetValue: CustomStringConvertible {
             return "<unsupported>"
         }
     }
-}
-
-/// Represents a type-erased object set value.
-@propertyWrapper
-public struct ASN1AnyObjectSetValue: Codable, Hashable {
-    public typealias Value = AnyCodable
-    
-    public var wrappedValue: Value
-    
-    public init(wrappedValue: Value) {
-        self.wrappedValue = wrappedValue
-    }
-    
-    public func encode(to encoder: Encoder) throws {
-        try self.wrappedValue.encode(to: encoder)
-    }
-    
-    public init(from decoder: Decoder) throws {
-        self.wrappedValue = AnyCodable(try ASN1ObjectSetValue(from: decoder))
-    }
-}
-
-final class ASN1ObjectSetCodingContext {
-    let objectSetType: ASN1ObjectSetCodable.Type
-    let encodeAsOctetString: Bool
-    var valueType: (any Codable & Hashable)?
-    
-    init(objectSetType: ASN1ObjectSetCodable.Type, encodeAsOctetString: Bool) {
-        self.objectSetType = objectSetType
-        self.encodeAsOctetString = encodeAsOctetString
-    }
-    
-    func type(_ codingContext: ASN1CodingContext) -> Codable.Type? {
-        let type: Codable.Type?
-        
-        guard let valueType = self.valueType else {
-            debugPrint("Object set type must come before value")
-            return nil
-        }
-        
-        let anyValueType = AnyHashable(valueType)
-        
-        if let typeDict = codingContext.objectSetTypeDictionary,
-           let typeDict = typeDict[String(reflecting: objectSetType)],
-           let userType = typeDict[anyValueType] {
-            type = userType
-        } else if let knownType = objectSetType.knownTypes[anyValueType] {
-            type = knownType
-        } else {
-            type = nil
-        }
-        return type
-    }
-}
-
-public protocol ASN1ObjectSetCodable: Codable {
-    static var knownTypes: [AnyHashable: Codable.Type] { get }
-}
-
-public protocol ASN1ObjectSetOctetStringCodable: ASN1ObjectSetCodable {
 }
