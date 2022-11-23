@@ -65,6 +65,10 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         }
     }
     
+    private var translator: HeimASN1Translator? {
+        return self.type.typeDefValue?.translator
+    }
+    
     private var isTagged: Bool {
         return self.tag != nil
     }
@@ -265,6 +269,38 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         return "\(self._bareSwiftType)"
     }
     
+    private var _dereferencedTypeDefValue: HeimASN1TypeDef? {
+        if let typeRef = self.type.typeDefValue?.tType?.typeRefValue,
+           let translator = self.translator,
+           let derefTypeRef = translator.typeDefsByName[typeRef] {
+            return derefTypeRef
+        } else {
+            return nil
+        }
+    }
+    
+    private var _dereferencedUniversalTypeTag: ASN1Tag? {
+        if let dereferencedTypeDefValue = self._dereferencedTypeDefValue,
+           let tag = dereferencedTypeDefValue.tType?.typeDefValue?.tTypeUniversalValue?.tag,
+           case .universal(let asn1Tag) = tag {
+            return asn1Tag
+        } else {
+            return nil
+        }
+    }
+
+    private var _dereferencedSwiftType: (String, String)? {
+        if let asn1Tag = self._dereferencedUniversalTypeTag {
+            if let wrappedSwiftType = asn1Tag.wrappedSwiftType {
+                return wrappedSwiftType
+            } else if let swiftType = asn1Tag.swiftType {
+                return ("", swiftType)
+            }
+        }
+        
+        return nil
+    }
+    
     var description: String {
         let tagDesc: String
         if let tag = self.tag {
@@ -275,14 +311,21 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         return "FieldDescriptor {tag=\(tagDesc), bareSwiftType=\(self.bareSwiftType), propertyWrappers=\(self.propertyWrappers)}"
     }
 
-    private var _initializer: String {
-        // FIXME needs to look through type refs for string aliases
-        switch self.bareSwiftType {
-        case "String":
+    private func _initializer(for bareSwiftType: String) -> String {
+        if bareSwiftType == "String" {
             return "\"\""
-        default:
-            return "\(self.bareSwiftType)()"
+        } else {
+            return "\(bareSwiftType)()"
         }
+    }
+    
+    private var _initializer: String {
+        guard let dereferencedSwiftType = self._dereferencedSwiftType, !dereferencedSwiftType.0.isEmpty else {
+            return self._initializer(for: self._bareSwiftType)
+        }
+                
+        precondition(self.wrappedPrimitiveType == nil)
+        return "\(dereferencedSwiftType.0)<\(dereferencedSwiftType.1)>(wrappedValue: \(self._initializer(for: dereferencedSwiftType.1)))"
     }
     
     var initialValue: String {
@@ -301,5 +344,4 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     var hasNestedWrappers: Bool {
         return self.propertyWrappers.count > 1
     }
-
 }

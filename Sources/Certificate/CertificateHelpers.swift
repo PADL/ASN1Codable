@@ -69,6 +69,12 @@ extension AttributeTypeAndValue: CustomStringConvertible {
     }
 }
 
+extension KRB5PrincipalName: CustomStringConvertible {
+    public var description: String {
+        "\(self.principalName.name_string.map { String(describing: $0 )}.joined(separator: "/"))@\(self.realm)"
+    }
+}
+
 extension OtherName: CustomStringConvertible {
     public var description: String {
         return "\(self.type_id.friendlyName)={\(self.value)}"

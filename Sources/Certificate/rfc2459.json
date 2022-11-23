@@ -368,6 +368,36 @@
 {"label":"iso","value":1},{"label":"identified-organization","value":3},{"label":"dod","value":6},{"label":"internet","value":1},{"label":"security","value":5},{"label":"mechanisms","value":5},{"label":"pkix","value":7},{"label":null,"value":8},{"label":null,"value":7}]}
 {"name":"id-pkix-on-hardwareModuleName","gen_name":"id_pkix_on_hardwareModuleName","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
 {"label":"iso","value":1},{"label":"identified-organization","value":3},{"label":"dod","value":6},{"label":"internet","value":1},{"label":"security","value":5},{"label":"mechanisms","value":5},{"label":"pkix","value":7},{"label":null,"value":8},{"label":null,"value":4}]}
+{"name":"id-pkix-on-pkinit-san","gen_name":"id_pkix_on_pkinit_san","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":"iso","value":1},{"label":"org","value":3},{"label":"dod","value":6},{"label":"internet","value":1},{"label":"security","value":5},{"label":"kerberosv5","value":2},{"label":"x509-sanan","value":2}]}
+{"name":"NAME_TYPE","gen_name":"NAME_TYPE","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"NAME_TYPE","gen_name":"NAME_TYPE","is_type":true,"exported":true,"typedef":true,"ttype":"INTEGER","ctype":"enum","members":[
+{"KRB5_NT_UNKNOWN":0},
+{"KRB5_NT_PRINCIPAL":1},
+{"KRB5_NT_SRV_INST":2},
+{"KRB5_NT_SRV_HST":3},
+{"KRB5_NT_SRV_XHST":4},
+{"KRB5_NT_UID":5},
+{"KRB5_NT_X500_PRINCIPAL":6},
+{"KRB5_NT_SMTP_NAME":7},
+{"KRB5_NT_ENTERPRISE_PRINCIPAL":10},
+{"KRB5_NT_WELLKNOWN":11},
+{"KRB5_NT_SRV_HST_DOMAIN":12},
+{"KRB5_NT_ENT_PRINCIPAL_AND_ID":-130},
+{"KRB5_NT_MS_PRINCIPAL":-128},
+{"KRB5_NT_MS_PRINCIPAL_AND_ID":-129},
+{"KRB5_NT_NTLM":-1200},
+{"KRB5_NT_X509_GENERAL_NAME":-1201},
+{"KRB5_NT_GSS_HOSTBASED_SERVICE":-1202},
+{"KRB5_NT_CACHE_UUID":-1203},
+{"KRB5_NT_SRV_HST_NEEDS_CANON":-195894762}
+]}
+}
+{"name":"Realm","gen_name":"Realm","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":27,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"Realm","gen_name":"Realm","is_type":true,"exported":false,"typedef":true,"ttype":"GeneralString","ctype":"heim_general_string"}
+}
 {"name":"id-pkix-on-permanentIdentifier","gen_name":"id_pkix_on_permanentIdentifier","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
 {"label":"iso","value":1},{"label":"identified-organization","value":3},{"label":"dod","value":6},{"label":"internet","value":1},{"label":"security","value":5},{"label":"mechanisms","value":5},{"label":"pkix","value":7},{"label":null,"value":8},{"label":null,"value":3}]}
 {"name":"id-pkix-kp","gen_name":"id_pkix_kp","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
@@ -1063,8 +1093,10 @@
 {"name":"OtherName","gen_name":"value","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
 }
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_OTHER-NAME","objectsetname":"KnownOtherNameTypes","typeidmember":"type-id","opentypemember":"value","typeidfield":"id","opentypefield":"Type","opentypeids":["id_pkix_on_pkinit_ms_san","id_pkix_on_permanentIdentifier","id_pkix_on_hardwareModuleName","id_pkix_on_xmppAddr","id_pkix_on_dnsSRV"],
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_OTHER-NAME","objectsetname":"KnownOtherNameTypes","typeidmember":"type-id","opentypemember":"value","typeidfield":"id","opentypefield":"Type","opentypeids":["id_pkix_on_pkinit_ms_san","id_pkix_on_pkinit_san","id_pkix_on_permanentIdentifier","id_pkix_on_hardwareModuleName","id_pkix_on_xmppAddr","id_pkix_on_dnsSRV"],
 "members":[{"name":"OtherName","gen_name":"*on_pkinit_ms_san","is_type":true,"exported":true,"typedef":false,"ttype":"AliasUTF8String","alias":true
+}
+,{"name":"OtherName","gen_name":"*on_krb5PrincipalName","is_type":true,"exported":true,"typedef":false,"ttype":"KRB5PrincipalName","alias":true
 }
 ,{"name":"OtherName","gen_name":"*on_permanentIdentifier","is_type":true,"exported":true,"typedef":false,"ttype":"PermanentIdentifier","alias":true
 }
@@ -1476,6 +1508,43 @@
 },{"name":"hwSerialNum","gen_name":"hwSerialNum","optional":false,"type":{"name":"HardwareModuleName","gen_name":"hwSerialNum","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":4,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"HardwareModuleName","gen_name":"hwSerialNum","is_type":true,"exported":false,"typedef":false,"ttype":"OCTET STRING","ctype":"heim_octet_string"}
+}
+}]}
+}
+{"name":"PrincipalName","gen_name":"PrincipalName","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrincipalName","gen_name":"PrincipalName","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct PrincipalName","members":[
+{"name":"name-type","gen_name":"name_type","optional":false,"type":{"name":"PrincipalName","gen_name":"name_type","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrincipalName","gen_name":"name_type","is_type":true,"exported":true,"typedef":false,"ttype":"NAME_TYPE","alias":true
+}
+}
+},{"name":"name-string","gen_name":"name_string","optional":false,"type":{"name":"PrincipalName","gen_name":"name_string","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrincipalName","gen_name":"name_string","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrincipalName","gen_name":"name_string","is_type":true,"exported":false,"typedef":false,"ttype":"SEQUENCE OF","ctype":"struct PrincipalName_name_string","members":[{"name":"PrincipalName_name_string","gen_name":"len","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"unsigned int"}
+,{"name":"PrincipalName_name_string","gen_name":"*val","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":27,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrincipalName_name_string","gen_name":"*val","is_type":true,"exported":false,"typedef":false,"ttype":"GeneralString","ctype":"heim_general_string"}
+}
+]}
+}
+}
+}]}
+}
+{"name":"KRB5PrincipalName","gen_name":"KRB5PrincipalName","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"KRB5PrincipalName","gen_name":"KRB5PrincipalName","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct KRB5PrincipalName","members":[
+{"name":"realm","gen_name":"realm","optional":false,"type":{"name":"KRB5PrincipalName","gen_name":"realm","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"KRB5PrincipalName","gen_name":"realm","is_type":true,"exported":true,"typedef":false,"ttype":"Realm","alias":true
+}
+}
+},{"name":"principalName","gen_name":"principalName","optional":false,"type":{"name":"KRB5PrincipalName","gen_name":"principalName","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"KRB5PrincipalName","gen_name":"principalName","is_type":true,"exported":true,"typedef":false,"ttype":"PrincipalName","alias":true
+}
 }
 }]}
 }
