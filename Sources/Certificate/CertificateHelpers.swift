@@ -27,9 +27,8 @@ extension Certificate {
         guard let attributes: ASN1TaggedDictionary = self.extension(id_apple_ce_appleComponentAttributes) else {
             return nil
         }
-        
-        // unbox AnyCodable
-        return attributes.wrappedValue.mapValues { $0.value as? NSObject } as NSDictionary
+
+        return attributes._bridgeToObjectiveC()
     }
     
     var subjectAltName: [GeneralName]? {

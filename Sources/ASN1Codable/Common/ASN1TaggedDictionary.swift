@@ -18,12 +18,17 @@ import Foundation
 import ASN1Kit
 import AnyCodable
 
-@propertyWrapper
 public struct ASN1TaggedDictionary {
-    public var wrappedValue: Dictionary<UInt, AnyCodable>
+    fileprivate var wrappedValue: Dictionary<UInt, AnyCodable>
     
-    public init(wrappedValue: Dictionary<UInt, AnyCodable>) {
+    init(wrappedValue: Dictionary<UInt, AnyCodable>) {
         self.wrappedValue = wrappedValue
+    }
+    
+    public func _bridgeToObjectiveC() -> NSDictionary {
+        return self.wrappedValue.mapValues {
+            return $0.value as? NSObject
+        } as NSDictionary
     }
 }
 
@@ -63,9 +68,9 @@ extension ASN1TaggedDictionary: Encodable {
 }
 
 fileprivate struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
-    internal var tagNo: UInt
+    var tagNo: UInt
     
-    internal init(tagNo: UInt) {
+    init(tagNo: UInt) {
         self.tagNo = tagNo
     }
     

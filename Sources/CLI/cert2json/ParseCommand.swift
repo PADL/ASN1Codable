@@ -67,7 +67,7 @@ struct ParseCommand: CommandProtocol {
             }
         }
         
-        guard let data = data else {
+        guard let data = data, data.count > 0 else {
             return .failure(.base64DecodingError)
         }
         guard let cert = CertificateCreateWithData(kCFAllocatorDefault, data as CFData) else {
@@ -98,7 +98,7 @@ struct ParseCommand: CommandProtocol {
                 print("\(san)")
             }
         }
-                    
+        
         return .success(())
     }
 
