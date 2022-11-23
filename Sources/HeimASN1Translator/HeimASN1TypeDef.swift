@@ -398,7 +398,8 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                     }
                     
                     self.decorate?.forEach {
-                        outputStream.write("\t\(visibility)var \($0.name): \($0.type)\($0.isOptional ? "?" : "")\n")
+                        let type = $0.isVoidStar ? "Any?" : $0.type
+                        outputStream.write("\t\(visibility)var \($0.name): \(type)\($0.isOptional ? "?" : "")\n")
                     }
                     if !(self.decorate?.isEmpty ?? true) {
                         outputStream.write("\n")
