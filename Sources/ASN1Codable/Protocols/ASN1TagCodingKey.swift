@@ -17,11 +17,16 @@
 import Foundation
 import ASN1Kit
 
-// coding key representing an explicit context tag in a struct or enum
 public protocol ASN1TagCodingKey: CodingKey {}
 
+/// A coding key representing an explicit CONTEXT tag
 public protocol ASN1ExplicitTagCodingKey: ASN1TagCodingKey {}
+/// A coding key representing an implicit CONTEXT tag
 public protocol ASN1ImplicitTagCodingKey: ASN1TagCodingKey {}
+
+/// Note, currently APPLICATION, PRIVATE and UNIVERSAL tags are not supported
+/// by ASN1TagCodingKey. They could be added later but they are not relevant to the
+/// initial use case (PKIX) and would introduce unneeded complexity.
 
 extension ASN1TagCodingKey {
     var asn1Type: ASN1Type {
@@ -33,17 +38,21 @@ extension ASN1TagCodingKey {
             tagging = .explicit
         }
         
+        precondition(self.intValue != nil && self.intValue! >= 0)
         return ASN1Type(tag: .taggedTag(UInt(self.intValue!)), tagging: tagging)
     }
 }
 
-internal struct ASN1PlaceholderCodingKey: CodingKey {
-    let key: ASN1TagCodingKey
+/// The placeholder coding key is used to avoid recursing when encoding/decoding
+/// tagged values.
 
-    init(_ key: ASN1TagCodingKey) { self.key = key }
+internal struct ASN1PlaceholderCodingKey: CodingKey {
+    private let wrappedValue: ASN1TagCodingKey
+
+    init(_ wrappedValue: ASN1TagCodingKey) { self.wrappedValue = wrappedValue }
     init?(intValue: Int) { return nil }
     init?(stringValue: String) { return nil }
 
-    var stringValue: String { return key.stringValue }
-    var intValue: Int? { return key.intValue }
+    var stringValue: String { return wrappedValue.stringValue }
+    var intValue: Int? { return wrappedValue.intValue }
 }

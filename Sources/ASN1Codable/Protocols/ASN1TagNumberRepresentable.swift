@@ -20,7 +20,7 @@ import Foundation
 public protocol ASN1TagNumberRepresentable {
 }
 
-// extracts the tag number from the ASN1TagNumber concrete type
+// extracts the tag number from the ASN1TagNumber placeholder type
 extension ASN1TagNumberRepresentable {
     static var tagNo: UInt {
         let name = String(describing: self)
