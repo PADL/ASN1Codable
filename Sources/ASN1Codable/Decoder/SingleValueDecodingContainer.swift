@@ -278,24 +278,19 @@ extension ASN1DecoderImpl.SingleValueContainer {
                                  from object: ASN1Object,
                                  with asn1Type: ASN1Type,
                                  skipTaggedValues: Bool = false) throws -> T where T: Decodable {
-        guard let tag = asn1Type.tag else {
-            // FIXME should this happen? precondition check?
-            return try self.decode(type, from: object, skipTaggedValues: skipTaggedValues)
-        }
-                
-        guard object.tag == tag else {
+        guard object.tag == asn1Type.tag else {
             if self.isOptionalOrWrappedOptional(type) {
                 return self.possiblyWrappedNilLiteral(type)
             } else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Expected tag \(tag) but received \(object.tag)")
+                                                    debugDescription: "Expected tag \(asn1Type.tag) but received \(object.tag)")
                 throw DecodingError.typeMismatch(type, context)
             }
         }
                 
         let unwrappedObject: ASN1Object
         let tagging = asn1Type.tagging ?? self.context.taggingEnvironment
-        let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : tag
+        let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : asn1Type.tag
         
         if object.constructed {
             if tagging == .implicit && !ASN1DecodingContext.isEnum(type) {
@@ -304,7 +299,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             } else {
                 guard let items = object.data.items, items.count == 1, let firstObject = object.data.items!.first else {
                     let context = DecodingError.Context(codingPath: self.codingPath,
-                                                        debugDescription: "Tag \(tag) for single value container must wrap a single value only")
+                                                        debugDescription: "Tag \(asn1Type.tag) for single value container must wrap a single value only")
                     throw DecodingError.typeMismatch(type, context)
                 }
                 unwrappedObject = firstObject
@@ -322,9 +317,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
             throw DecodingError.typeMismatch(type, context)
         }
         
-        let verifiedUniversalTag = !object.constructed && tag.isUniversal
+        let verifiedUniversalTag = !object.constructed && asn1Type.tag.isUniversal
         
-        self.context.currentTag = tag
+        self.context.currentTag = asn1Type.tag
         
         return try self.decode(type, from: unwrappedObject, skipTaggedValues: verifiedUniversalTag || skipTaggedValues)
     }

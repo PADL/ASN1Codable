@@ -43,8 +43,8 @@ struct ASN1DecodingContext: ASN1CodingContext {
 
         let tag: ASN1DecodedTag
         
-        if let type = type as? ASN1TaggedTypeRepresentable.Type, let typeTag = type.asn1Type.tag {
-            tag = typeTag
+        if let type = type as? ASN1TaggedTypeRepresentable.Type {
+            tag = type.asn1Type.tag
         } else if let type = type as? ASN1UniversalTagRepresentable.Type {
             tag = .universal(type.tagNo)
         } else if type is Set<AnyHashable>.Type || type is ASN1SetCodable.Type {
