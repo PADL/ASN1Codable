@@ -23,7 +23,7 @@ public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> CFAr
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
     guard let datas = certificate.subjectAltName?.compactMap({
         if case .iPAddress(let ipAddress) = $0 {
-            return ipAddress.wrappedValue
+            return ipAddress
         } else {
             return nil
         }

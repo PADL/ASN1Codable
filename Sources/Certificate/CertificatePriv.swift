@@ -79,9 +79,9 @@ public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> CFArray
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
     guard let datas = certificate.subjectAltName?.compactMap({
         if case .iPAddress(let ipAddress) = $0 {
-            if let ipv4Address = IPv4Address(ipAddress.wrappedValue) {
+            if let ipv4Address = IPv4Address(ipAddress) {
                 return String(describing: ipv4Address)
-            } else if let ipv6Address = IPv6Address(ipAddress.wrappedValue) {
+            } else if let ipv6Address = IPv6Address(ipAddress) {
                 return String(describing: ipv6Address)
             } else {
                 return nil

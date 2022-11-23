@@ -126,15 +126,15 @@ extension GeneralName: CustomStringConvertible {
         case .uniformResourceIdentifier(let uri):
             return "URI:\(uri)"
         case .iPAddress(let ipAddress):
-            if let ipv4Address = IPv4Address(ipAddress.wrappedValue) {
+            if let ipv4Address = IPv4Address(ipAddress) {
                 return "IP Address:\(ipv4Address)"
-            } else if let ipv6Address = IPv6Address(ipAddress.wrappedValue) {
+            } else if let ipv6Address = IPv6Address(ipAddress) {
                 return "IP Address:\(ipv6Address)"
             } else {
                 return "IP Address:<unknown>"
             }
         case .registeredID(let rid):
-            return "RID:\(rid.wrappedValue.friendlyName)"
+            return "RID:\(rid.friendlyName)"
         }
     }
 }

@@ -33,6 +33,7 @@ internal extension Certificate {
             let certificate = try ASN1Decoder().decode(Certificate.self, from: der_certificate as Data)
             return certificate._certificateRef
         } catch {
+            debugPrint("Failed to decode certificate: \(error)")
             return nil
         }
     }
