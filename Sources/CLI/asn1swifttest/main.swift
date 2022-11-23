@@ -71,11 +71,7 @@ let ts = TestStruct()
 struct TestType: Codable, ASN1ApplicationTaggedType {
     public static var tagNumber: UInt = 25
 
-    enum CodingKeys: Int, ASN1CodingKey {
-        var metatype: ASN1Metatype {
-            ASN1Metatype(tag: .taggedTag(UInt(self.rawValue)))
-        }
-        
+    enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
         case someInteger = 0
         case someTime = 1
         case someString = 2
@@ -94,7 +90,7 @@ testValue.someTime = Date()
 testValue.someString = "Hello"
 
 //https://www.oss.com/asn1/resources/asn1-made-simple/asn1-quick-reference/asn1-tags.html
-struct ImplicitAutoType: Codable, ASN1ContextTaggedType, ASN1ImplicitlyTaggedType {
+struct ImplicitAutoType: Codable, ASN1ContextTaggedType {
     public static var tagNumber: UInt = 0
     var name = "John"
     var age = 25
@@ -129,6 +125,18 @@ public enum Color: Int, Codable {
     case yellow = 2
 }
 
+public enum Something: Codable {
+    enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
+        case string = 0
+        case integer = 1
+    }
+
+    case string(String)
+    case integer(Int)
+}
+
+let something = Something.string("hlelo")
+
 let color = Color.blue
 
 let setTest = Set(arrayLiteral: "surely this is the biggest value", "B", "a", "CCC")
@@ -136,7 +144,7 @@ let setTest = Set(arrayLiteral: "surely this is the biggest value", "B", "a", "C
 func test() -> Void {
     //let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
     do {
-        let valueToEncode = color
+        let valueToEncode = something
         
         print("Encoding value: \(String(describing: valueToEncode))")
         
