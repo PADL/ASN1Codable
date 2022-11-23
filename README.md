@@ -5,32 +5,81 @@ ASN1Codable is a Swift framework for encoding Codable types using ASN.1. The typ
 ## Example
 
 ```asn1
-AttributeType ::= OBJECT IDENTIFIER
-
---- DirectoryString is normally a CHOICE, but we can explicitly
---- map it to a String with the --map-type option to asn1json2swift
-
-AttributeTypeAndValue ::= SEQUENCE {
-        type    AttributeType,
-        value   DirectoryString
+TBSCertificate  ::=  SEQUENCE  {
+     version         [0]  Version OPTIONAL, -- EXPLICIT DEFAULT 1,
+     serialNumber         CertificateSerialNumber,
+     signature            AlgorithmIdentifier,
+     issuer               Name,
+     validity             Validity,
+     subject              Name,
+     subjectPublicKeyInfo SubjectPublicKeyInfo,
+     issuerUniqueID  [1]  IMPLICIT BIT STRING -- UniqueIdentifier -- OPTIONAL,
+                          -- If present, version shall be v2 or v3
+     subjectUniqueID [2]  IMPLICIT BIT STRING -- UniqueIdentifier -- OPTIONAL,
+                          -- If present, version shall be v2 or v3
+     extensions      [3]  EXPLICIT Extensions OPTIONAL
+                          -- If present, version shall be v3
 }
 ```
 
 becomes:
 
 ```swift
-typealias AttributeType = ObjectIdentifier
+class TBSCertificate: Codable {
+        @ASN1ContextTagged<ASN1TagNumber$0, ASN1ExplicitTagging, Version?>
+        var version: Version? = nil
+        var serialNumber: CertificateSerialNumber
+        var signature: AlgorithmIdentifier
+        var issuer: Name
+        var validity: Validity
+        var subject: Name
+        var subjectPublicKeyInfo: SubjectPublicKeyInfo
+        @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, BitString?>
+        var issuerUniqueID: BitString? = nil
+        @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString?>
+        var subjectUniqueID: BitString? = nil
+        @ASN1ContextTagged<ASN1TagNumber$3, ASN1ExplicitTagging, Extensions?>
+        var extensions: Extensions? = nil
+}
+```
 
-typealias DirectoryString = String
+and
 
-struct AttributeTypeAndValue: Codable, Equatable, Hashable {
-        enum CodingKeys: String, CodingKey {
-                case type
-                case value
+```asn1
+GeneralName ::= CHOICE {
+        otherName                       [0]     IMPLICIT OtherName,
+        rfc822Name                      [1]     IMPLICIT IA5String,
+        dNSName                         [2]     IMPLICIT IA5String,
+--      x400Address                     [3]     IMPLICIT ORAddress,--
+        directoryName                   [4]     IMPLICIT Name,
+--      ediPartyName                    [5]     IMPLICIT EDIPartyName, --
+        uniformResourceIdentifier       [6]     IMPLICIT IA5String,
+        iPAddress                       [7]     IMPLICIT OCTET STRING,
+        registeredID                    [8]     IMPLICIT OBJECT IDENTIFIER
+}
+```
+
+becomes:
+
+```swift
+enum GeneralName: Codable {
+        enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
+                case otherName = 0
+                case rfc822Name = 1
+                case dNSName = 2
+                case directoryName = 4
+                case uniformResourceIdentifier = 6
+                case iPAddress = 7
+                case registeredID = 8
         }
 
-        var type: AttributeType
-        var value: DirectoryString
+        case otherName(OtherName)
+        case rfc822Name(IA5String<String>)
+        case dNSName(IA5String<String>)
+        case directoryName(Name)
+        case uniformResourceIdentifier(IA5String<String>)
+        case iPAddress(Data)
+        case registeredID(ObjectIdentifier)
 }
 ```
 
