@@ -258,28 +258,40 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
     private func emitUniversal(_ universal: HeimASN1UniversalType, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
         //let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
         let swiftType = self.swiftType!
+        let constant = containingTypeDef.constant ?? false
 
-        switch universal {
-        case .objectIdentifier:
-            if let oidStringValue = containingTypeDef.oidStringValue {
-                outputStream.write("\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(swiftType)\(containingTypeDef.isOptional ?? false ? "?" : "")")
-                outputStream.write(" = ASN1Kit.ObjectIdentifier(rawValue: \"\(oidStringValue)\")!\n")
-            }
-            break
-        case .integer:
-            try containingTypeDef.members?.forEach {
-                if let member = $0.typeDefValue {
-                    member.parent = typeDefValue
-                    try member.emit(&outputStream)
-                } else if let member = $0.dictionaryValue?.first {
-                    let value = wrappedInitializer(containingTypeDef: containingTypeDef, value: member.value)
-                    outputStream.write("\(containingTypeDef.visibility)let \(member.key): \(containingTypeDef.generatedName) = \(value)\n")
+        if constant {
+            outputStream.write("\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(swiftType)\(containingTypeDef.isOptional ?? false ? "?" : "")")
+            
+            switch universal {
+            case .objectIdentifier:
+                if let oidStringValue = containingTypeDef.oidStringValue {
+                    outputStream.write(" = ASN1Kit.ObjectIdentifier(rawValue: \"\(oidStringValue)\")!\n")
                 }
+                break
+            case .integer:
+                outputStream.write(" = \(containingTypeDef.value![0].value)\n")
+                break
+            default:
+                break
             }
-            break
-        default:
-            self.emitSwiftTypeAlias(containingTypeDef: containingTypeDef, &outputStream)
-            break
+        } else {
+            switch universal {
+            case .integer:
+                try containingTypeDef.members?.forEach {
+                    if let member = $0.typeDefValue {
+                        member.parent = typeDefValue
+                        try member.emit(&outputStream)
+                    } else if let member = $0.dictionaryValue?.first {
+                        let value = wrappedInitializer(containingTypeDef: containingTypeDef, value: member.value)
+                        outputStream.write("\(containingTypeDef.visibility)let \(member.key): \(containingTypeDef.generatedName) = \(value)\n")
+                    }
+                }
+                break
+            default:
+                self.emitSwiftTypeAlias(containingTypeDef: containingTypeDef, &outputStream)
+                break
+            }
         }
     }
 

@@ -410,7 +410,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                 break
             }
         }
-
+        
         if self.isTypeDef ?? false, cType != nil, let tType = self.tType {
             if case .universal(let type) = tType {
                 switch type {
