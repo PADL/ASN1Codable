@@ -928,9 +928,7 @@ AppleComponentSerial ::= OCTET STRING
 
 --- this is a placeholder, it is mapped during the translation process to
 --- an extensible dictionary type
-AppleComponentAttributes ::= CHOICE {
-	value			[0]     HEIM_ANY
-}
+AppleComponentAttributes ::= [0] HEIM_ANY
 
 -- Back to OtherName, SingleAttribute, AttributeSet, and Extension
 

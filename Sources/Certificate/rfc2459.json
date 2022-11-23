@@ -662,6 +662,11 @@
 "ttype":
 {"name":"AppleComponentSerial","gen_name":"AppleComponentSerial","is_type":true,"exported":false,"typedef":true,"ttype":"OCTET STRING","ctype":"heim_octet_string"}
 }
+{"name":"AppleComponentAttributes","gen_name":"AppleComponentAttributes","is_type":true,"exported":false,"typedef":true,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"AppleComponentAttributes","gen_name":"AppleComponentAttributes","is_type":true,"exported":true,"typedef":true,"ttype":"HEIM_ANY","alias":true
+}
+}
 {"name":"id-pkix-on-pkinit-ms-san","gen_name":"id_pkix_on_pkinit_ms_san","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
 {"label":"iso","value":1},{"label":"org","value":3},{"label":"dod","value":6},{"label":"internet","value":1},{"label":"private","value":4},{"label":"enterprise","value":1},{"label":"microsoft","value":311},{"label":null,"value":20},{"label":null,"value":2},{"label":null,"value":3}]}
 {"name":"AliasUTF8String","gen_name":"AliasUTF8String","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":12,"tagenv":"EXPLICIT",
@@ -1672,13 +1677,11 @@
 }
 }]}
 }
-{"name":"AppleComponentAttributes","gen_name":"AppleComponentAttributes","is_type":true,"exported":false,"typedef":true,"ttype":"CHOICE","ctype":"struct AppleComponentAttributes","extensible":false,"members":[
-{"name":"AppleComponentAttributes","gen_name":"value","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
+{"name":"AppleComponentAttributes","gen_name":"AppleComponentAttributes","is_type":true,"exported":false,"typedef":true,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
 "ttype":
-{"name":"AppleComponentAttributes","gen_name":"value","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
+{"name":"AppleComponentAttributes","gen_name":"AppleComponentAttributes","is_type":true,"exported":true,"typedef":true,"ttype":"HEIM_ANY","alias":true
 }
 }
-]}
 {"name":"AliasIA5String","gen_name":"AliasIA5String","is_type":true,"exported":true,"typedef":true,"ttype":"DirectoryString","alias":true
 }
 {"name":"X520name","gen_name":"X520name","is_type":true,"exported":true,"typedef":true,"ttype":"DirectoryString","alias":true
