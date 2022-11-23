@@ -79,6 +79,7 @@
 		D3D6E7B5292C824700198A86 /* CertificatePriv.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7B4292C824700198A86 /* CertificatePriv.swift */; };
 		D3D6E7B7292C826700198A86 /* CertificateRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7B6292C826700198A86 /* CertificateRef.swift */; };
 		D3D6E7B9292C8FF400198A86 /* CertificateAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7B8292C8FF400198A86 /* CertificateAPI.m */; };
+		D3D6E7BE292DB04200198A86 /* rfc2459.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7BD292DB04200198A86 /* rfc2459.swift */; };
 		D3F28856292C44AD0006CD82 /* Certificate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F2884E292C44AD0006CD82 /* Certificate.framework */; };
 		D3F2885B292C44AD0006CD82 /* CertificateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F2885A292C44AD0006CD82 /* CertificateTests.swift */; };
 		D3F28864292C54280006CD82 /* ASN1Codable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1Codable.framework */; };
@@ -105,23 +106,6 @@
 		D3FB2DE42919D4F900BC72AF /* ASN1Kit in Frameworks */ = {isa = PBXBuildFile; productRef = D3FB2DE32919D4F900BC72AF /* ASN1Kit */; };
 		D3FB2DE6291F810C00BC72AF /* HeimASN1FieldDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB2DE5291F810C00BC72AF /* HeimASN1FieldDescriptor.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXBuildRule section */
-		D3F28863292C53C20006CD82 /* PBXBuildRule */ = {
-			isa = PBXBuildRule;
-			compilerSpec = com.apple.compilers.proxy.script;
-			filePatterns = "*.json";
-			fileType = pattern.proxy;
-			inputFiles = (
-				"$(SRCROOT)/Sources/Certificate/rfc2459.json",
-			);
-			isEditable = 1;
-			outputFiles = (
-				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE).swift",
-			);
-			script = "export DYLD_FRAMEWORK_PATH=$BUILT_PRODUCTS_DIR\n$BUILT_PRODUCTS_DIR/asn1json2swift translate \\\n    --input $INPUT_FILE_PATH \\\n    --output $DERIVED_FILE_DIR/$INPUT_FILE_BASE.swift \\\n    --map-type DirectoryString:String,AppleComponentAttributes:ASN1TaggedDictionary,Certificate:@class\n";
-		};
-/* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
 		D351DC36290E849200540132 /* PBXContainerItemProxy */ = {
@@ -302,6 +286,7 @@
 		D3D6E7B8292C8FF400198A86 /* CertificateAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CertificateAPI.m; sourceTree = "<group>"; };
 		D3D6E7BA292C907A00198A86 /* CertificateAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CertificateAPI.h; sourceTree = "<group>"; };
 		D3D6E7BB292C909A00198A86 /* CFRelease.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFRelease.h; sourceTree = "<group>"; };
+		D3D6E7BD292DB04200198A86 /* rfc2459.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = rfc2459.swift; path = "$(DERIVED_FILE_DIR)/rfc2459.swift"; sourceTree = "<group>"; };
 		D3F28843292B33440006CD82 /* Certificate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
 		D3F2884E292C44AD0006CD82 /* Certificate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Certificate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3F28850292C44AD0006CD82 /* Certificate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Certificate.h; sourceTree = "<group>"; };
@@ -762,13 +747,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D3F2885D292C44AD0006CD82 /* Build configuration list for PBXNativeTarget "Certificate" */;
 			buildPhases = (
+				D3D6E7BC292DAE9E00198A86 /* Compile ASN.1 */,
 				D3F28849292C44AD0006CD82 /* Headers */,
 				D3F2884A292C44AD0006CD82 /* Sources */,
 				D3F2884B292C44AD0006CD82 /* Frameworks */,
 				D3F2884C292C44AD0006CD82 /* Resources */,
 			);
 			buildRules = (
-				D3F28863292C53C20006CD82 /* PBXBuildRule */,
 			);
 			dependencies = (
 				D3F2887E292C69440006CD82 /* PBXTargetDependency */,
@@ -980,6 +965,30 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		D3D6E7BC292DAE9E00198A86 /* Compile ASN.1 */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Sources/Certificate/rfc2459.json",
+			);
+			name = "Compile ASN.1";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/rfc2459.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export DYLD_FRAMEWORK_PATH=$BUILT_PRODUCTS_DIR\nexport INPUT_FILE_BASE=rfc2459\nexport INPUT_FILE_PATH=$SRCROOT/Sources/Certificate/$INPUT_FILE_BASE.json\n\n$BUILT_PRODUCTS_DIR/asn1json2swift translate \\\n    --input $INPUT_FILE_PATH \\\n    --output $DERIVED_FILE_DIR/$INPUT_FILE_BASE.swift \\\n    --map-type DirectoryString:String,AppleComponentAttributes:ASN1TaggedDictionary,Certificate:@class\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		D351DC26290E849200540132 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1065,6 +1074,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3D6E7BE292DB04200198A86 /* rfc2459.swift in Sources */,
 				D3F28872292C55270006CD82 /* rfc2459.json in Sources */,
 				D3D6E7B1292C7AF600198A86 /* CertificateInternal.swift in Sources */,
 				D3F2886B292C54440006CD82 /* Certificate.swift in Sources */,
