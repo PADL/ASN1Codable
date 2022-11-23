@@ -84,7 +84,9 @@ public final class HeimASN1Translator {
     }
     
     func resolveTypeRef(_ ref: String) -> HeimASN1TypeDef? {
-        return typeDefsByName[ref]
+        return self.imports.reduce(typeDefsByName[ref], {
+            $0 ?? $1.translator?.resolveTypeRef(ref)
+        })
     }
 
     lazy var swiftImports: Set<String> = {
