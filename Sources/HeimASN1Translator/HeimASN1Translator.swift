@@ -48,13 +48,13 @@ public final class HeimASN1Translator {
 
     let options: Options
     let typeMaps: [String:TypeMap]
-    let provenanceInformation: String?
+    private let provenanceInformation: String?
     var module: HeimASN1Module? = nil
-    var imports = [HeimASN1ModuleRef]()
-    var typeRefCache = Set<String>()
+    private var imports = [HeimASN1ModuleRef]()
+    private var typeRefCache = Set<String>()
     var typeDefsByName = [String: HeimASN1TypeDef]()
-    var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
-    var typeDefs = [HeimASN1TypeDef]()
+    private var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
+    private var typeDefs = [HeimASN1TypeDef]()
 
     public init(options: Options = Options(),
                 typeMaps: [String:String]? = nil,
