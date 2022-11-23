@@ -99,4 +99,10 @@ Cartfile.resolved
 *.swo
 *.swp
 
-Sources/CLI/TemporaryCompilerOutputChecker/Output.swift
+Sources/Certificate/asn1_rfc2459.c
+Sources/Certificate/rfc2459-priv.h
+Sources/Certificate/rfc2459.h
+Sources/Certificate/rfc2459_files
+Sources/Certificate/rfc2459_oids.c
+Sources/Certificate/rfc2459_syms.c
+
