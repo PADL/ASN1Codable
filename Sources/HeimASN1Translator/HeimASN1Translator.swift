@@ -104,7 +104,7 @@ public final class HeimASN1Translator {
         return swiftImports
     }()
     
-    private func emitImports(_ outputStream: inout OutputStream) {
+    private func emitSwiftImports(_ outputStream: inout OutputStream) {
         self.swiftImports.forEach { outputStream.write("import \($0)\n") }
     }
     
@@ -231,7 +231,7 @@ public final class HeimASN1Translator {
 
         outputStream.write("\n")
 
-        self.emitImports(&outputStream)
+        self.emitSwiftImports(&outputStream)
 
         outputStream.write("\n")
 
