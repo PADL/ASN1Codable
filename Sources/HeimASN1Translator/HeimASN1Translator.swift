@@ -30,7 +30,6 @@ extension OutputStream: TextOutputStream {
 }
 
 public final class HeimASN1Translator {
-    
     public struct Options: OptionSet {
         public let rawValue: UInt
         
@@ -47,8 +46,6 @@ public final class HeimASN1Translator {
         case alias(String)
     }
 
-    var inputStream: InputStream
-    var outputStream: OutputStream
     let options: Options
     let typeMaps: [String:TypeMap]
     let provenanceInformation: String?
@@ -59,13 +56,9 @@ public final class HeimASN1Translator {
     var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
     var typeDefs = [HeimASN1TypeDef]()
 
-    public init(inputStream: InputStream,
-                outputStream: inout OutputStream,
-                options: Options = Options(),
+    public init(options: Options = Options(),
                 typeMaps: [String:String]? = nil,
                 provenanceInformation: String? = nil) {
-        self.inputStream = inputStream
-        self.outputStream = outputStream
         self.options = options
         self.typeMaps = (typeMaps ?? [:]).mapValues {
             switch $0 {
@@ -177,9 +170,6 @@ public final class HeimASN1Translator {
                codingKey.stringValue == "name" {
                 do {
                     module = try jsonDecoder.decode(HeimASN1Module.self, from: data.subdata(in: range))
-                    if let module = module {
-                        self.outputStream.write("// ASN.1 module \(module.module) with \(module.tagging) tagging\n")
-                    }
                 } catch {
                     if let error = error as? DecodingError,
                        case .keyNotFound(_, _) = error,
@@ -194,8 +184,8 @@ public final class HeimASN1Translator {
         }
     }
     
-    public func translate() throws {
-        let data = Data(reading: self.inputStream)
+    public func `import`(_ inputStream: InputStream) throws {
+        let data = Data(reading: inputStream)
         
         var start: Data.Index = 0
         var end: Data.Index = data.count
@@ -209,7 +199,7 @@ public final class HeimASN1Translator {
                 end = 0
             } catch {
                 if let error = error as? DecodingError,
-                case .dataCorrupted(let context) = error,
+                   case .dataCorrupted(let context) = error,
                    let underlyingError = context.underlyingError as? CocoaError,
                    let errorIndex = underlyingError.userInfo["NSJSONSerializationErrorIndex"] as? Data.Index {
                     let range = start..<(start + errorIndex)
@@ -223,13 +213,18 @@ public final class HeimASN1Translator {
                 }
             }
         }
-        
-        outputStream.open()
-        
+    }
+    
+    public func translate(_ outputStream: inout OutputStream) throws {
         outputStream.write("/// HeimASN1Translator generated \(Date())\n")
+        
         if let provenanceInformation = self.provenanceInformation {
             outputStream.write("/// \(provenanceInformation)\n")
         }
+        if let module = module {
+            outputStream.write("/// ASN.1 module \(module.module) with \(module.tagging) tagging\n")
+        }
+
         outputStream.write("\n")
 
         self.emitImports(&outputStream)
@@ -242,8 +237,6 @@ public final class HeimASN1Translator {
         }
         
         self.emitTagNumberTypes(&outputStream)
-        
-        outputStream.close()
     }
 }
 
