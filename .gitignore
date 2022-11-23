@@ -1,7 +1,7 @@
 .DS_Store
 /.build
 *.xcarchive/
-#xcshareddata/
+xcshareddata/
 /Packages
 
 # Generated documentation
@@ -52,8 +52,8 @@ playground.xcworkspace
 #
 # Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
 Packages/
-#Package.pins
-/Package.resolved
+Package.pins
+Package.resolved
 .build/
 
 # CocoaPods
@@ -65,8 +65,8 @@ Packages/
 # Pods/
 #
 # Add this line if you want to avoid checking in source code from the Xcode workspace
-#*.xcworkspace/
-#*.xcworkspace
+*.xcworkspace/
+*.xcworkspace
 
 # Carthage
 #
@@ -99,10 +99,10 @@ Cartfile.resolved
 *.swo
 *.swp
 
-Sources/Certificate/asn1_rfc2459.c
-Sources/Certificate/rfc2459-priv.h
-Sources/Certificate/rfc2459.h
-Sources/Certificate/rfc2459_files
-Sources/Certificate/rfc2459_oids.c
-Sources/Certificate/rfc2459_syms.c
+Sources/Certificate/asn1_*.c
+Sources/Certificate/*-priv.h
+Sources/Certificate/*.h
+Sources/Certificate/*_files
+Sources/Certificate/*_oids.c
+Sources/Certificate/*_syms.c
 
