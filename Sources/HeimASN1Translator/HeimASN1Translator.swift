@@ -41,6 +41,10 @@ public final class HeimASN1Translator {
         static let isImportedModule = Options(rawValue: 1 << 1)
     }
     
+    enum Error: Swift.Error {
+        case failedToOpenInputStream(URL)
+    }
+
     enum TypeMap: Equatable {
         case `class`
         case objc
@@ -57,6 +61,7 @@ public final class HeimASN1Translator {
     private var typeDefsByName = [String: HeimASN1TypeDef]()
     private var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
     private var typeDefs = [HeimASN1TypeDef]()
+    private(set) var url: URL? = nil
 
     public init(options: Options = Options(),
                 typeMaps: [String:String]? = nil,
@@ -197,7 +202,17 @@ public final class HeimASN1Translator {
         }
     }
     
-    public func `import`(_ inputStream: InputStream) throws {
+    public func `import`(_ url: URL) throws {
+        guard let inputStream = InputStream(url: url) else {
+            throw Error.failedToOpenInputStream(url)
+        }
+        
+        precondition(self.url == nil)
+        self.url = url
+        try self.import(inputStream)
+    }
+    
+    func `import`(_ inputStream: InputStream) throws {
         let data = Data(reading: inputStream)
         
         var start: Data.Index = 0

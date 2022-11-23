@@ -31,10 +31,6 @@ struct TranslateCommand: CommandProtocol {
     func run(_ options: Options) -> Result<(), Error> {
         let file = URL(fileURLWithPath: (options.input as NSString).expandingTildeInPath)
 
-        guard let inputStream = InputStream(url: file) else {
-            return .failure(.failedToOpenInputStream)
-        }
-        
         let typeMapDictionary: [String:String]?
         
         if let typeMaps = options.typeMaps {
@@ -64,7 +60,7 @@ struct TranslateCommand: CommandProtocol {
                                             provenanceInformation: provenanceInformation)
 
         do {
-            try translator.import(inputStream)
+            try translator.import(file)
             outputStream.open()
             try translator.translate(&outputStream)
             outputStream.close()

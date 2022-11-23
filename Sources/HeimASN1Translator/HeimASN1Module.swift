@@ -29,10 +29,6 @@ struct HeimASN1Module: Codable {
 }
 
 class HeimASN1ModuleRef: Codable {
-    enum Error: Swift.Error {
-        case failedToOpenInputStream
-    }
-
     enum CodingKeys: String, CodingKey {
         case name = "imports"
     }
@@ -41,10 +37,13 @@ class HeimASN1ModuleRef: Codable {
     var translator: HeimASN1Translator?
     
     func `import`(translator: HeimASN1Translator) throws {
-        let file = URL(fileURLWithPath: self.name)
-
-        guard let inputStream = InputStream(url: file) else {
-            throw Error.failedToOpenInputStream
+        let file: URL
+        
+        if let parentURL = translator.url {
+            let containingURL = parentURL.deletingLastPathComponent()
+            file = containingURL.appendingPathComponent(self.name)
+        } else {
+            file = URL(fileURLWithPath: self.name)
         }
 
         var options: HeimASN1Translator.Options = translator.options
@@ -52,6 +51,6 @@ class HeimASN1ModuleRef: Codable {
         
         self.translator = HeimASN1Translator(options: options, typeMaps: [:], provenanceInformation: "imported from \(file))")
         self.translator!.parent = translator
-        try self.translator!.`import`(inputStream)
+        try self.translator!.import(file)
     }
 }
