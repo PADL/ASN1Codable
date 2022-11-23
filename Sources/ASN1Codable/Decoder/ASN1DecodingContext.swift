@@ -88,7 +88,9 @@ struct ASN1DecodingContext: ASN1CodingContext {
     
     /// synthesizes an CodingKey from a reflected enum case name. Does not work with custom coding keys.
     func enumCodingKey<Key>(_ keyType: Key.Type, object: ASN1Object) -> Key? where Key: CodingKey {
-        if let currentEnum = self.currentEnumType,
+        if case .taggedTag(let tagNo) = object.tag, keyType is ASN1TagCodingKey.Type {
+            return Key(intValue: Int(tagNo))
+        } else if let currentEnum = self.currentEnumType,
               let metadata = reflect(Self.lookThroughOptional(currentEnum)) as? EnumMetadata,
            let enumCase = metadata.descriptor.fields.records.first(where: {
                guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
@@ -114,13 +116,15 @@ struct ASN1DecodingContext: ASN1CodingContext {
     /// called before decoding a single value, maintains enum type state
     func decodingSingleValue<T>(_ type: T.Type) -> Self where T: Decodable {
         var context = self
-        context.nextEnumCodingState()
-
+        
         if Self.isEnum(type) {
             context.enumCodingState = .enum
             context.currentEnumType = type
         } else {
-            context.enumCodingState = .none
+            context.nextEnumCodingState()
+        }
+        
+        if context.enumCodingState == .none {
             context.currentEnumType = nil
         }
         

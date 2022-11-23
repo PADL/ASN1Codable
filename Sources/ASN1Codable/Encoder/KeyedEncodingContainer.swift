@@ -33,6 +33,10 @@ extension ASN1EncoderImpl {
         }
         
         func nestedCodingPath(forKey key: CodingKey) -> [CodingKey] {
+            // a special case to allow for the single value decoder to deal with
+            // enums with ASN1TagCoding key discriminants
+            if self.context.enumCodingState == .enumCase { return self.codingPath }
+            
             return self.codingPath + [key]
         }
     }
@@ -183,18 +187,26 @@ extension ASN1EncoderImpl.KeyedContainer {
     }
     
     private func selectAutomaticTagForEnumCase() {
-        if self.context.enumCodingState == .enumCase,
-           let taggingContext = self.context.automaticTaggingContext,
-           let codingKey = self.codingPath.last {
-             taggingContext.selectTag(codingKey)
-         }
+        guard self.context.enumCodingState == .enumCase,
+              let codingKey = self.codingPath.last else {
+            return
+        }
+        
+        if codingKey is any ASN1TagCodingKey {
+            // predefined keys are incompatible with automatic tagging
+            self.context.automaticTaggingContext = nil
+        }
+        
+        if let taggingContext = self.context.automaticTaggingContext {
+            taggingContext.selectTag(codingKey)
+        }
     }
     
     private func nestedSingleValueContainer(forKey key: Key,
                                             context: ASN1EncodingContext) -> SingleValueEncodingContainer {
         let container = ASN1EncoderImpl.SingleValueContainer(codingPath: self.nestedCodingPath(forKey: key),
                                                              userInfo: self.userInfo,
-                                                             context: self.context)
+                                                             context: context)
         
         self.selectAutomaticTagForEnumCase() // FIXME does this belong here?
 

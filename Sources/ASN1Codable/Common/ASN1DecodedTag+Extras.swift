@@ -76,7 +76,7 @@ extension ASN1DecodedTag: Encodable {
     }
 }
 
-internal extension ASN1DecodedTag {
+extension ASN1DecodedTag {
     static func sort(_ lhs: ASN1DecodedTag, _ rhs: ASN1DecodedTag) -> Bool {
         let lhs_tagType = lhs.tagType, rhs_tagType = rhs.tagType
         let lhs_tagNo = lhs.tagNo, rhs_tagNo = rhs.tagNo
@@ -87,7 +87,9 @@ internal extension ASN1DecodedTag {
             return lhs_tagType < rhs_tagType
         }
     }
-    
+}
+
+fileprivate extension ASN1DecodedTag {
     var tagString: String {
         let tagString: String
         

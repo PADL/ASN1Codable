@@ -27,8 +27,6 @@ struct ASN1EncodingContext: ASN1CodingContext {
     var enumCodingState: ASN1EnumCodingState = .none
     /// whether we are decoding a struct that is has SET instead of SEQUENCE encoding
     var encodeAsSet = false
-    /// the current enum type being decoded
-    var currentEnumType: Any.Type?
     /// the innermost decoded tag: this is used for allowing any string type to be represented by an untagged String
     var currentTag: ASN1DecodedTag? = nil
     /// state for open type decoding

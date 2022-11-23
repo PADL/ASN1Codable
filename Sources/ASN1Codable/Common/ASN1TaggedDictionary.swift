@@ -30,13 +30,11 @@ public struct ASN1TaggedDictionary {
 extension ASN1TaggedDictionary: Decodable {
     public init(from decoder: Decoder) throws {
         if let decoder = decoder as? ASN1DecoderImpl {
-            let container = try decoder.container(keyedBy: ASN1ExplicitTagCodingKey.self)
+            let container = try decoder.container(keyedBy: ASN1TaggedDictionaryCodingKey.self)
             
             self.wrappedValue = Dictionary()
             try container.allKeys.forEach {
-                if case .taggedTag(let tagNo) = $0.tag {
-                    self.wrappedValue[tagNo] = try container.decode(AnyCodable.self, forKey: $0)
-                }
+                self.wrappedValue[$0.tagNo] = try container.decode(AnyCodable.self, forKey: $0)
             }
         } else {
             let container = try decoder.singleValueContainer()
@@ -49,10 +47,10 @@ extension ASN1TaggedDictionary: Decodable {
 extension ASN1TaggedDictionary: Encodable {
     public func encode(to encoder: Encoder) throws {
         if let encoder = encoder as? ASN1EncoderImpl {
-            var container = encoder.container(keyedBy: ASN1ExplicitTagCodingKey.self)
+            var container = encoder.container(keyedBy: ASN1TaggedDictionaryCodingKey.self)
             
             try self.wrappedValue.keys.sorted(by: { $0 < $1 }).forEach {
-                let key = ASN1ExplicitTagCodingKey(tag: .taggedTag($0))
+                let key = ASN1TaggedDictionaryCodingKey(tagNo: $0)
                 let value = self.wrappedValue[$0]
                 try container.encode(value, forKey: key)
             }
@@ -61,5 +59,36 @@ extension ASN1TaggedDictionary: Encodable {
             try container.encode(self.wrappedValue)
             return
         }
+    }
+}
+
+fileprivate struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
+    internal var tagNo: UInt
+    
+    internal init(tagNo: UInt) {
+        self.tagNo = tagNo
+    }
+    
+    public init?(stringValue: String) {
+        guard let tagNo = UInt(stringValue) else {
+            return nil
+        }
+        self.tagNo = tagNo
+    }
+        
+    public init?(intValue: Int) {
+        if intValue < 0 {
+            return nil
+        }
+        
+        self.tagNo = UInt(intValue)
+    }
+    
+    public var stringValue: String {
+        return "[\(self.tagNo)]"
+    }
+    
+    public var intValue: Int? {
+        return self.tagNo < Int.max ? Int(tagNo) : nil
     }
 }

@@ -139,8 +139,9 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     }
     
     func encode<T: Encodable>(_ value: T) throws {
-        self.context = self.context.encodingSingleValue(value) // FIXME
-        
+        // FIXME this appeares necessary to handle top-level enums
+        self.context = self.context.encodingSingleValue(value)
+
         try self.withASN1Throwing(value) {
             try encode(value)
         }
@@ -148,10 +149,22 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
 }
 
 extension ASN1EncoderImpl.SingleValueContainer {
+    private var tagCodingKey: ASN1TagCodingKey? {
+        return self.codingPath.last as? ASN1TagCodingKey
+    }
+    
+    // avoids re-encoding tag on constructed values, by removing ASN1TagCodingKey
+    // conformance on already processed tag coding key
+    private func demoteTagCodingKey() {
+        precondition(self.codingPath.count > 0)
+        let index = self.codingPath.count - 1
+        self.codingPath[index] = ASN1PlaceholderCodingKey(self.tagCodingKey!)
+    }
+
     private func withASN1Throwing<T: Encodable>(_ value: T, _ block: () throws -> ASN1Object?) throws {
         do {
             // FIXME this is asymettric with decoding
-            if self.codingPath.last is ASN1CodingKey {
+            if self.tagCodingKey != nil {
                 self.object = try self.encode(value, skipTaggedValues: false)
             } else {
                 self.object = try block()
@@ -167,11 +180,9 @@ extension ASN1EncoderImpl.SingleValueContainer {
     private func encode<T: Encodable>(_ value: T, skipTaggedValues: Bool = false) throws -> ASN1Object? {
         let object: ASN1Object?
 
-        if !skipTaggedValues, let key = self.codingPath.last as? ASN1CodingKey {
-            // avoid re-encoding tag on constructed values by flattening to a normal coding key
-            self.codingPath[self.codingPath.count - 1] = ASN1PlaceholderCodingKey(key)
-
-            object = try self.encodeTagged(value, with: key.metatype, skipTaggedValues: true)
+        if !skipTaggedValues, let key = self.tagCodingKey {
+            self.demoteTagCodingKey()
+            object = try self.encodeTaggedKeyedValue(value, forKey: key)
         } else if !skipTaggedValues, let value = value as? ASN1TaggedType {
             object = try self.encodeTaggedValue(value)
         } else if let value = value as? any (Encodable & ASN1TaggedWrappedValue) {
@@ -198,6 +209,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
                 precondition(value is ASN1EncodableType)
                 wrappedObject = try (value as! ASN1EncodableType).asn1encode(tag: tag)
             } else if tagging == .implicit, ASN1DecodingContext.isEnum(type(of: value)) {
+                // promote IMPLICIT CHOIE values to EXPLICIT
                 wrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: tag)
             } else {
                 wrappedObject = object.wrap(with: tag, constructed: tagging != .implicit)
@@ -207,6 +219,10 @@ extension ASN1EncoderImpl.SingleValueContainer {
         } else {
             return object
         }
+    }
+    
+    private func encodeTaggedKeyedValue<T: Encodable>(_ value: T, forKey key: ASN1TagCodingKey) throws -> ASN1Object? {
+        return try self.encodeTagged(value, with: key.metatype, skipTaggedValues: true)
     }
     
     private func encodeTaggedValue<T: Encodable & ASN1TaggedType>(_ value: T) throws -> ASN1Object? {

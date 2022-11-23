@@ -23,11 +23,10 @@ internal struct ASN1ImplicitlyWrappedObject: ASN1Object {
     var originalEncoding: Data?
     
     init(object: ASN1Object, tag: ASN1DecodedTag) {
-        if object.tag.isUniversal {
-            precondition(object.data.items?.count == 1)
-            self.data = object.data.items!.first!.data
-        } else {
+        if object.constructed {
             self.data = ASN1Data.constructed([object])
+        } else {
+            self.data = object.data
         }
         self.tag = tag
     }

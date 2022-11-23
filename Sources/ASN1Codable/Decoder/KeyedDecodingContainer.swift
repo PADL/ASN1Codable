@@ -39,7 +39,28 @@ extension ASN1DecoderImpl {
         }
 
         func nestedCodingPath(forKey key: CodingKey) -> [CodingKey] {
+            // a special case to allow for the single value decoder to deal with
+            // enums with ASN1TagCoding key discriminants
+            if self.context.enumCodingState == .enumCase { return self.codingPath }
+
             return self.codingPath + [key]
+        }
+    }
+}
+
+extension ASN1Object {
+    // returns true if we have a SEQUENCE/SET of context tagged items
+    fileprivate var containsOnlyTaggedItems: Bool {
+        guard let items = self.data.items else {
+            return false
+        }
+        
+        return items.allSatisfy {
+            if case .taggedTag(_) = $0.tag {
+                return true
+            } else {
+                return false
+            }
         }
     }
 }
@@ -58,35 +79,37 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
     
     var allKeys: [Key] {
-        if Key.self is ASN1ExplicitTagCodingKey.Type, let items = self.object.data.items {
+        let keys: [Key]
+
+        if Key.self is ASN1TagCodingKey.Type && self.object.containsOnlyTaggedItems {
             // this is part of the escape hatch to support Apple's component attributes
             // type, which is a SEQUENCE of arbitrary explicitly tagged values, which
             // are not known until runtime
-            return items.map { ASN1ExplicitTagCodingKey(tag: $0.tag) as! Key }
-        }
-        
-        let keys: [Key]
-        let currentObject: ASN1Object
-        
-        do {
-            try self.validateCurrentIndex()
-            currentObject = try self.currentObject()
-        } catch {
-            return []
-        }
-        
-        if let enumCodingKey = self.context.enumCodingKey(Key.self, object: currentObject) {
-            keys = [enumCodingKey]
+            let items = self.object.data.items!
+            keys = items.compactMap { Key(intValue: Int($0.tagNo!)) }
         } else {
-            keys = self.containers.keys.map { Key(stringValue: $0)! }
-        }
+            let currentObject: ASN1Object
 
+            do {
+                try self.validateCurrentIndex()
+                currentObject = try self.currentObject()
+            } catch {
+                return []
+            }
+            
+            if let enumCodingKey = self.context.enumCodingKey(Key.self, object: currentObject) {
+                keys = [enumCodingKey]
+            } else {
+                keys = self.containers.keys.map { Key(stringValue: $0)! }
+            }
+        }
+        
         return keys
     }
 
     // FIXME we don't know the keys ahead of time so we can't answer this except in the enum case
     func contains(_ key: Key) -> Bool {
-        if let key = key as? ASN1CodingKey {
+        if let key = key as? ASN1TagCodingKey {
             return (key.intValue ?? 0) < (self.count ?? 0)
         }
         

@@ -123,16 +123,26 @@ extension ASN1DecoderImpl.SingleValueContainer {
         }
     }
 
+    private var tagCodingKey: ASN1TagCodingKey? {
+        return self.codingPath.last as? ASN1TagCodingKey
+    }
+    
+    // avoids re-encoding tag on constructed values, by removing ASN1TagCodingKey
+    // conformance on already processed tag coding key
+    private func demoteTagCodingKey() {
+        precondition(self.codingPath.count > 0)
+        let index = self.codingPath.count - 1
+        self.codingPath[index] = ASN1PlaceholderCodingKey(self.tagCodingKey!)
+    }
+
     private func decode<T>(_ type: T.Type, from object: ASN1Object, skipTaggedValues: Bool = false) throws -> T where T : Decodable {
         let value: T
         
         // FIXME
         self.context = self.context.decodingSingleValue(type)
 
-        if !skipTaggedValues, let key = self.codingPath.last as? ASN1CodingKey {
-            // avoid re-encoding tag on constructed values by flattening to a normal coding key
-            self.codingPath[self.codingPath.count - 1] = ASN1PlaceholderCodingKey(key)
-
+        if !skipTaggedValues, let key = self.tagCodingKey {
+            self.demoteTagCodingKey()
             value = try self.decodeTaggedKeyedValue(type, from: object, forKey: key)
         } else if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
             value = try self.decodeTaggedValue(type, from: object) as! T
@@ -217,7 +227,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         }
     }
     
-    private func decodeTaggedKeyedValue<T>(_ type: T.Type, from object: ASN1Object, forKey key: ASN1CodingKey) throws -> T where T: Decodable {
+    private func decodeTaggedKeyedValue<T>(_ type: T.Type, from object: ASN1Object, forKey key: ASN1TagCodingKey) throws -> T where T: Decodable {
         return try self.decodeTagged(type, from: object, with: key.metatype, skipTaggedValues: true)
     }
     
@@ -227,12 +237,13 @@ extension ASN1DecoderImpl.SingleValueContainer {
     
     private func decodeTaggedWrappedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedWrappedValue {
         let wrappedValue = try self.decodeTagged(type.Value, from: object, with: T.metatype)
-        
+
         return T(wrappedValue: wrappedValue)
     }
     
     private func decodeAutomaticallyTaggedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable {
         let taggingContext = self.context.automaticTaggingContext!
+
         return try self.decodeTagged(type, from: object, with: taggingContext.metatype(), skipTaggedValues: true)
     }
 
