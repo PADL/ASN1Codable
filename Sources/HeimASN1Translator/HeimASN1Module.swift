@@ -28,11 +28,30 @@ struct HeimASN1Module: Codable {
     var objid: [ObjectIdentifier]?
 }
 
-struct HeimASN1ModuleRef: Codable {
+class HeimASN1ModuleRef: Codable {
+    enum Error: Swift.Error {
+        case failedToOpenInputStream
+    }
+
     enum CodingKeys: String, CodingKey {
         case name = "imports"
     }
     
     var name: String
     var translator: HeimASN1Translator?
+    
+    func `import`(translator: HeimASN1Translator) throws {
+        let file = URL(fileURLWithPath: self.name)
+
+        guard let inputStream = InputStream(url: file) else {
+            throw Error.failedToOpenInputStream
+        }
+
+        var options: HeimASN1Translator.Options = translator.options
+        options.insert(.isImportedModule)
+        
+        self.translator = HeimASN1Translator(options: options, typeMaps: [:], provenanceInformation: "imported from \(file))")
+        self.translator!.parent = translator
+        try self.translator!.`import`(inputStream)
+    }
 }

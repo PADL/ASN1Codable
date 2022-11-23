@@ -38,6 +38,7 @@ public final class HeimASN1Translator {
         }
         
         public static let disablePropertyWrappers = Options(rawValue: 1 << 0)
+        static let isImportedModule = Options(rawValue: 1 << 1)
     }
     
     enum TypeMap: Equatable {
@@ -48,6 +49,7 @@ public final class HeimASN1Translator {
 
     let options: Options
     let typeMaps: [String:TypeMap]
+    weak var parent: HeimASN1Translator?
     private let provenanceInformation: String?
     private(set) var module: HeimASN1Module? = nil
     private var imports = [HeimASN1ModuleRef]()
@@ -181,7 +183,7 @@ public final class HeimASN1Translator {
                         let moduleRef = try jsonDecoder.decode(HeimASN1ModuleRef.self, from: data.subdata(in: range))
                         
                         if moduleRef.name != "heim" {
-                            
+                            try moduleRef.`import`(translator: self)
                         }
                         
                         self.imports.append(moduleRef)
