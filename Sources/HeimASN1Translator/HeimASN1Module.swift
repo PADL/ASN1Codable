@@ -29,5 +29,10 @@ struct HeimASN1Module: Codable {
 }
 
 struct HeimASN1ModuleRef: Codable {
-    var `import`: String
+    enum CodingKeys: String, CodingKey {
+        case name = "imports"
+    }
+    
+    var name: String
+    var translator: HeimASN1Translator?
 }

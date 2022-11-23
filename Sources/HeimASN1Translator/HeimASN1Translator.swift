@@ -176,10 +176,15 @@ public final class HeimASN1Translator {
                     module = try jsonDecoder.decode(HeimASN1Module.self, from: data.subdata(in: range))
                 } catch {
                     if let error = error as? DecodingError,
-                       case .keyNotFound(_, _) = error,
-                       codingKey.stringValue == "imports" {
-                        let `import` = try jsonDecoder.decode(HeimASN1ModuleRef.self, from: data.subdata(in: range))
-                        self.imports.append(`import`)
+                       case .keyNotFound(let codingKey, _) = error,
+                       codingKey.stringValue == "module" {
+                        let moduleRef = try jsonDecoder.decode(HeimASN1ModuleRef.self, from: data.subdata(in: range))
+                        
+                        if moduleRef.name != "heim" {
+                            
+                        }
+                        
+                        self.imports.append(moduleRef)
                     }
                 }
             } else {
@@ -226,7 +231,10 @@ public final class HeimASN1Translator {
             outputStream.write("/// \(provenanceInformation)\n")
         }
         if let module = module {
-            outputStream.write("/// ASN.1 module \(module.module) with \(module.tagging) tagging\n")
+            outputStream.write("/// defines ASN.1 module \(module.module) with \(module.tagging) tagging\n")
+        }
+        self.imports.forEach {
+            outputStream.write("/// imports ASN.1 module \($0.name)\n")
         }
 
         outputStream.write("\n")
