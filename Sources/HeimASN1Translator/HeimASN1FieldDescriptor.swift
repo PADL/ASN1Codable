@@ -276,7 +276,7 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     private var _dereferencedTypeDefValue: HeimASN1TypeDef? {
         if let typeRef = self.type.typeDefValue?.tType?.typeRefValue,
            let translator = self.translator,
-           let derefTypeRef = translator.typeDefsByName[typeRef] {
+           let derefTypeRef = translator.resolveTypeRef(typeRef) {
             return derefTypeRef
         } else {
             return nil

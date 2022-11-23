@@ -49,10 +49,10 @@ public final class HeimASN1Translator {
     let options: Options
     let typeMaps: [String:TypeMap]
     private let provenanceInformation: String?
-    var module: HeimASN1Module? = nil
+    private(set) var module: HeimASN1Module? = nil
     private var imports = [HeimASN1ModuleRef]()
     private var typeRefCache = Set<String>()
-    var typeDefsByName = [String: HeimASN1TypeDef]()
+    private var typeDefsByName = [String: HeimASN1TypeDef]()
     private var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
     private var typeDefs = [HeimASN1TypeDef]()
 
@@ -79,6 +79,10 @@ public final class HeimASN1Translator {
     
     func typeRefExists(_ ref: String) -> Bool {
         return typeRefCache.contains(ref)
+    }
+    
+    func resolveTypeRef(_ ref: String) -> HeimASN1TypeDef? {
+        return typeDefsByName[ref]
     }
 
     lazy var swiftImports: Set<String> = {

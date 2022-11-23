@@ -131,7 +131,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         case .universal(let type):
             return type.tag
         case .typeRef(let type):
-            if let type = self.typeDefValue?.translator?.typeDefsByName[type] {
+            if let type = self.typeDefValue?.translator?.resolveTypeRef(type) {
                 return type.tag
             } else {
                 return nil
