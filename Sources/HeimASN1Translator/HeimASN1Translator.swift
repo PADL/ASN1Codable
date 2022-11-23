@@ -145,13 +145,15 @@ public final class HeimASN1Translator {
             return
         }
         
+        // FIXME these need to be at least as visible as any fields that use them so,
+        // just make them public for now
         
         if let module = self.module {
-            outputStream.write("enum \(module.module) {\n")
+            outputStream.write("public enum \(module.module) {\n")
         }
         
         for i in 0...maxTagValue {
-            outputStream.write("\(self.module == nil ? "" : "\t")enum ASN1TagNumber$\(i): ASN1TagNumberRepresentable {}\n")
+            outputStream.write("\(self.module == nil ? "" : "\t")public enum ASN1TagNumber$\(i): ASN1TagNumberRepresentable {}\n")
         }
         
         if self.module != nil {
