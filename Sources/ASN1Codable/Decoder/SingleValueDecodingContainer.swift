@@ -228,15 +228,15 @@ extension ASN1DecoderImpl.SingleValueContainer {
     }
     
     private func decodeTaggedKeyedValue<T>(_ type: T.Type, from object: ASN1Object, forKey key: ASN1TagCodingKey) throws -> T where T: Decodable {
-        return try self.decodeTagged(type, from: object, with: key.metatype, skipTaggedValues: true)
+        return try self.decodeTagged(type, from: object, with: key.asn1Type, skipTaggedValues: true)
     }
     
     private func decodeTaggedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedType {
-        return try self.decodeTagged(type, from: object, with: T.metatype, skipTaggedValues: true)
+        return try self.decodeTagged(type, from: object, with: T.asn1Type, skipTaggedValues: true)
     }
     
     private func decodeTaggedWrappedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedWrappedValue {
-        let wrappedValue = try self.decodeTagged(type.Value, from: object, with: T.metatype)
+        let wrappedValue = try self.decodeTagged(type.Value, from: object, with: T.asn1Type)
 
         return T(wrappedValue: wrappedValue)
     }
@@ -244,7 +244,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
     private func decodeAutomaticallyTaggedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable {
         let taggingContext = self.context.automaticTaggingContext!
 
-        return try self.decodeTagged(type, from: object, with: taggingContext.metatype(), skipTaggedValues: true)
+        return try self.decodeTagged(type, from: object, with: taggingContext.asn1Type(), skipTaggedValues: true)
     }
 
     private func decodePrimitiveValue<T>(_ type: T.Type, from object: ASN1Object, verifiedTag: Bool = false) throws -> T where T: ASN1DecodableType {
@@ -276,9 +276,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
     
     private func decodeTagged<T>(_ type: T.Type,
                                  from object: ASN1Object,
-                                 with metatype: ASN1Metatype,
+                                 with asn1Type: ASN1Type,
                                  skipTaggedValues: Bool = false) throws -> T where T: Decodable {
-        guard let tag = metatype.tag else {
+        guard let tag = asn1Type.tag else {
             // FIXME should this happen? precondition check?
             return try self.decode(type, from: object, skipTaggedValues: skipTaggedValues)
         }
@@ -294,7 +294,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         }
                 
         let unwrappedObject: ASN1Object
-        let tagging = metatype.tagging ?? self.context.taggingEnvironment
+        let tagging = asn1Type.tagging ?? self.context.taggingEnvironment
         let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : tag
         
         if object.constructed {

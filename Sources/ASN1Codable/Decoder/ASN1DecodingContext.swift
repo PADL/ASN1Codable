@@ -43,7 +43,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
 
         let tag: ASN1DecodedTag
         
-        if let type = type as? ASN1TaggedTypeRepresentable.Type, let typeTag = type.metatype.tag {
+        if let type = type as? ASN1TaggedTypeRepresentable.Type, let typeTag = type.asn1Type.tag {
             tag = typeTag
         } else if let type = type as? ASN1UniversalTagRepresentable.Type {
             tag = .universal(type.tagNo)
@@ -71,7 +71,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     }
     
     /// returns true if an enum type has a member with a particular tag
-    static func enumTypeHasMember<T>(_ type: T.Type, with metatype: ASN1Metatype) -> Bool where T: Decodable {
+    static func enumTypeHasMember<T>(_ type: T.Type, with asn1Type: ASN1Type) -> Bool where T: Decodable {
         guard let metadata = reflect(Self.lookThroughOptional(type)) as? EnumMetadata else {
             return false
         }
@@ -82,7 +82,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
                   return false
               }
             
-            return metatype == wrappedFieldType.metatype
+            return asn1Type == wrappedFieldType.asn1Type
         }
     }
     

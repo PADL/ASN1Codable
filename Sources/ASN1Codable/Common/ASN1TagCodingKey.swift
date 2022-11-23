@@ -24,7 +24,7 @@ public protocol ASN1ExplicitTagCodingKey: ASN1TagCodingKey {}
 public protocol ASN1ImplicitTagCodingKey: ASN1TagCodingKey {}
 
 extension ASN1TagCodingKey {
-    var metatype: ASN1Metatype {
+    var asn1Type: ASN1Type {
         let tagging: ASN1Tagging
         
         if self is ASN1ImplicitTagCodingKey {
@@ -33,7 +33,7 @@ extension ASN1TagCodingKey {
             tagging = .explicit
         }
         
-        return ASN1Metatype(tag: .taggedTag(UInt(self.intValue!)), tagging: tagging)
+        return ASN1Type(tag: .taggedTag(UInt(self.intValue!)), tagging: tagging)
     }
 }
 

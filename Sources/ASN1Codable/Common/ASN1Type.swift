@@ -20,7 +20,7 @@ import ASN1Kit
 /// internal defintiion of a tag and tagging environment tuple. In the future this could also contain things
 /// like range limits and default values. Currently synthesised from property wrapper Swift type metadata
 /// but could also be associated with coding keys
-public struct ASN1Metatype: Equatable {
+public struct ASN1Type: Equatable {
     var tag: ASN1DecodedTag?
     var tagging: ASN1Tagging?
     
@@ -30,7 +30,7 @@ public struct ASN1Metatype: Equatable {
     }
 }
 
-extension ASN1Metatype: CustomDebugStringConvertible {
+extension ASN1Type: CustomDebugStringConvertible {
     public var debugDescription: String {
         let tagDescription: String?
         let taggingDescription: String?

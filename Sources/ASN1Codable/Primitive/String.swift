@@ -49,8 +49,8 @@ public struct GeneralString<Value: Codable & ExpressibleByString>: Codable, Equa
         self.wrappedValue = nil
     }
     
-    public static var metatype: ASN1Metatype {
-        return ASN1Metatype(tag: .universal(.generalString))
+    public static var asn1Type: ASN1Type {
+        return ASN1Type(tag: .universal(.generalString))
     }
 }
 
@@ -70,8 +70,8 @@ public struct IA5String<Value: Codable & ExpressibleByString>: Codable, Equatabl
         self.wrappedValue = nil
     }
     
-    public static var metatype: ASN1Metatype {
-        return ASN1Metatype(tag: .universal(.ia5String))
+    public static var asn1Type: ASN1Type {
+        return ASN1Type(tag: .universal(.ia5String))
     }
 }
 
@@ -91,8 +91,8 @@ public struct UTF8String<Value: Codable & ExpressibleByString>: Codable, Equatab
         self.wrappedValue = nil
     }
     
-    public static var metatype: ASN1Metatype {
-        return ASN1Metatype(tag: .universal(.utf8String))
+    public static var asn1Type: ASN1Type {
+        return ASN1Type(tag: .universal(.utf8String))
     }
 }
 
@@ -112,8 +112,8 @@ public struct UniversalString<Value: Codable & ExpressibleByString>: Codable, Eq
         self.wrappedValue = nil
     }
     
-    public static var metatype: ASN1Metatype {
-        return ASN1Metatype(tag: .universal(.universalString))
+    public static var asn1Type: ASN1Type {
+        return ASN1Type(tag: .universal(.universalString))
     }
 }
 
@@ -133,8 +133,8 @@ public struct BMPString<Value: Codable & ExpressibleByString>: Codable, Equatabl
         self.wrappedValue = nil
     }
     
-    public static var metatype: ASN1Metatype {
-        return ASN1Metatype(tag: .universal(.bmpString))
+    public static var asn1Type: ASN1Type {
+        return ASN1Type(tag: .universal(.bmpString))
     }
 }
 
@@ -154,8 +154,8 @@ public struct PrintableString<Value: Codable & ExpressibleByString>: Codable, Eq
         self.wrappedValue = nil
     }
     
-    public static var metatype: ASN1Metatype {
-        return ASN1Metatype(tag: .universal(.printableString))
+    public static var asn1Type: ASN1Type {
+        return ASN1Type(tag: .universal(.printableString))
     }
 }
 

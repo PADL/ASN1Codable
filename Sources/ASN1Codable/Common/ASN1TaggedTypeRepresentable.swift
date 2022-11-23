@@ -18,5 +18,5 @@ import Foundation
 import ASN1Kit
 
 public protocol ASN1TaggedTypeRepresentable {
-    static var metatype: ASN1Metatype { get }
+    static var asn1Type: ASN1Type { get }
 }
