@@ -202,17 +202,17 @@ extension ASN1EncoderImpl.SingleValueContainer {
         let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
         let tagging = asn1Type.tagging ?? self.context.taggingEnvironment
         
-        if let object = object {
+        if let object = object, let tag = asn1Type.tag {
             let wrappedObject: ASN1Object
             
-            if asn1Type.tag.isUniversal {
+            if tag.isUniversal {
                 precondition(value is ASN1EncodableType)
-                wrappedObject = try (value as! ASN1EncodableType).asn1encode(tag: asn1Type.tag)
+                wrappedObject = try (value as! ASN1EncodableType).asn1encode(tag: tag)
             } else if tagging == .implicit, ASN1DecodingContext.isEnum(type(of: value)) {
                 // promote IMPLICIT CHOIE values to EXPLICIT
-                wrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: asn1Type.tag)
+                wrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: tag)
             } else {
-                wrappedObject = object.wrap(with: asn1Type.tag, constructed: tagging != .implicit)
+                wrappedObject = object.wrap(with: tag, constructed: tagging != .implicit)
             }
             
             return wrappedObject

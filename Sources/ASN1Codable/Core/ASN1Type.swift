@@ -21,10 +21,10 @@ import ASN1Kit
 /// like range limits and default values. Currently synthesised from property wrapper Swift type metadata
 /// but could also be associated with coding keys
 public struct ASN1Type: Equatable {
-    var tag: ASN1DecodedTag
+    var tag: ASN1DecodedTag?
     var tagging: ASN1Tagging?
     
-    public init(tag: ASN1DecodedTag, tagging: ASN1Tagging? = nil) {
+    public init(tag: ASN1DecodedTag? = nil, tagging: ASN1Tagging? = nil) {
         self.tag = tag
         self.tagging = tagging
     }
@@ -36,19 +36,23 @@ extension ASN1Type: CustomDebugStringConvertible {
         let taggingDescription: String?
         var debugDescription = ""
         
-        switch self.tag {
-        case .universal(let asn1Tag):
-            tagDescription = "[UNIVERSAL \(asn1Tag.rawValue)]"
-            break
-        case .applicationTag(let tagNo):
-            tagDescription = "[APPLICATION \(tagNo)]"
-            break
-        case .taggedTag(let tagNo):
-            tagDescription = "[\(tagNo)]"
-            break
-        case .privateTag(let tagNo):
-            tagDescription = "[PRIVATE \(tagNo)]"
-            break
+        if let tag = self.tag {
+            switch tag {
+            case .universal(let asn1Tag):
+                tagDescription = "[UNIVERSAL \(asn1Tag.rawValue)]"
+                break
+            case .applicationTag(let tagNo):
+                tagDescription = "[APPLICATION \(tagNo)]"
+                break
+            case .taggedTag(let tagNo):
+                tagDescription = "[\(tagNo)]"
+                break
+            case .privateTag(let tagNo):
+                tagDescription = "[PRIVATE \(tagNo)]"
+                break
+            }
+        } else {
+            tagDescription = nil
         }
         
         if let tagging = self.tagging {
