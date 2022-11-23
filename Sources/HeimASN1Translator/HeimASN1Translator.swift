@@ -145,8 +145,17 @@ public final class HeimASN1Translator {
             return
         }
         
+        
+        if let module = self.module {
+            outputStream.write("enum \(module.module) {\n")
+        }
+        
         for i in 0...maxTagValue {
-            outputStream.write("enum ASN1TagNumber$\(i): ASN1TagNumberRepresentable {}\n")
+            outputStream.write("\(self.module == nil ? "" : "\t")enum ASN1TagNumber$\(i): ASN1TagNumberRepresentable {}\n")
+        }
+        
+        if self.module != nil {
+            outputStream.write("}\n")
         }
     }
     

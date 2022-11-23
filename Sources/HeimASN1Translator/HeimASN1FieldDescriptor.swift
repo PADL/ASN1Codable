@@ -126,8 +126,16 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         default:
             return nil
         }
+       
+        let modulePrefix: String
         
-        return "\(wrapperType.0)<ASN1TagNumber$\(wrapperType.1), \(tagging.swiftType!), \(self._swiftType)>"
+        if let module = self.type.typeDefValue?.translator?.module {
+            modulePrefix = "\(module.module)."
+        } else {
+            modulePrefix = ""
+        }
+        
+        return "\(wrapperType.0)<\(modulePrefix)ASN1TagNumber$\(wrapperType.1), \(tagging.swiftType!), \(self._swiftType)>"
     }
     
     private var hasTaggedWrapperType: Bool {
@@ -266,8 +274,9 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         }
         return "FieldDescriptor {tag=\(tagDesc), bareSwiftType=\(self.bareSwiftType), propertyWrappers=\(self.propertyWrappers)}"
     }
-    
+
     private var _initializer: String {
+        // FIXME needs to look through type refs for string aliases
         switch self.bareSwiftType {
         case "String":
             return "\"\""
