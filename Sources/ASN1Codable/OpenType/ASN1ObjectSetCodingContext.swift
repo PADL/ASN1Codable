@@ -20,13 +20,6 @@ import AnyCodable
 
 public typealias ASN1ObjectSetTypeDictionary = [String: [AnyHashable: Codable.Type]]
 
-public protocol ASN1ObjectSetCodable: Codable {
-    static var knownTypes: [AnyHashable: Codable.Type] { get }
-}
-
-public protocol ASN1ObjectSetOctetStringCodable: ASN1ObjectSetCodable {
-}
-
 final class ASN1ObjectSetCodingContext {
     let objectSetType: ASN1ObjectSetCodable.Type
     let encodeAsOctetString: Bool
