@@ -98,7 +98,7 @@ public struct ASN1RawRepresentableBitString <Value>: Codable, ASN1CodableType wh
         self.wrappedValue = nil
     }
         
-    public init(from asn1: ASN1Kit.ASN1Object) throws {
+    public init(from asn1: ASN1Object) throws {
         let rawValue = try ASN1IntegerBitString<Value.RawValue>(from: asn1)
         guard let value = Value(rawValue: rawValue.wrappedValue) else {
             throw ASN1Error.malformedEncoding("Could not initialize \(Value.self) from \(rawValue)")
@@ -106,7 +106,7 @@ public struct ASN1RawRepresentableBitString <Value>: Codable, ASN1CodableType wh
         self.init(wrappedValue: value)
     }
     
-    public func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Kit.ASN1Object {
+    public func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Object {
         let bitString = ASN1IntegerBitString<Value.RawValue>(wrappedValue: wrappedValue.rawValue)
         return try bitString.asn1encode(tag: tag)
     }
@@ -138,7 +138,7 @@ public struct ASN1IntegerBitString <Value>: Codable, ASN1CodableType where Value
         self.wrappedValue = nil
     }
         
-    public init(from asn1: ASN1Kit.ASN1Object) throws {
+    public init(from asn1: ASN1Object) throws {
         let bitString = try BitString(from: asn1)
         
         guard Value.bitWidth >= bitString.count * 8 else {
@@ -151,7 +151,7 @@ public struct ASN1IntegerBitString <Value>: Codable, ASN1CodableType where Value
         self.wrappedValue = Value(data.withUnsafeBytes { $0.load(as: Value.self) }).bigEndian
     }
     
-    public func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Kit.ASN1Object {
+    public func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Object {
         let bitString = try BitString(from: self.wrappedValue)
         return try bitString.asn1encode(tag: tag)
     }
