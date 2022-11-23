@@ -50,9 +50,13 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     var preserve: Bool?
     var decorate: [HeimASN1Decoration]?
     var defaultValue: AnyCodable?
-    var desiredTaggingEnvironment: HeimASN1TaggingEnvironment?
+    var _desiredTaggingEnvironment: HeimASN1TaggingEnvironment?
     weak var parent: HeimASN1TypeDef?
     weak var translator: HeimASN1Translator?
+    
+    var desiredTaggingEnvironment: HeimASN1TaggingEnvironment? {
+        return self._desiredTaggingEnvironment ?? self.taggingEnvironment
+    }
     
     var grandParent: HeimASN1TypeDef? {
         self.parent?.parent
@@ -84,7 +88,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         case preserve = "preserve"
         case decorate = "decorate"
         case defaultValue = "defval"
-        case desiredTaggingEnvironment = "desired_tagenv"
+        case _desiredTaggingEnvironment = "desired_tagenv"
     }
     
     required init(from decoder: Decoder) throws {
@@ -115,7 +119,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         self.preserve  = try container.decodeIfPresent(Bool.self, forKey: .preserve)
         self.decorate = try container.decodeIfPresent([HeimASN1Decoration].self, forKey: .decorate)
         self.defaultValue = try container.decodeIfPresent(AnyCodable.self, forKey: .defaultValue)
-        self.desiredTaggingEnvironment = try container.decodeIfPresent(HeimASN1TaggingEnvironment.self, forKey: .desiredTaggingEnvironment)
+        self._desiredTaggingEnvironment = try container.decodeIfPresent(HeimASN1TaggingEnvironment.self, forKey: ._desiredTaggingEnvironment)
         self.translator = decoder.userInfo[HeimASN1TranslatorUserInfoKey] as? HeimASN1Translator
     }
     
@@ -189,8 +193,37 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         }
     }
     
-    private var _isChoice: Bool {
+    var isChoice: Bool {
         return self.tType == .universal(.choice)
+    }
+    
+    var isUniformlyContextTaggedChoice: Bool {
+        guard self.isChoice, let members = self.members, members.count > 0 else { return false }
+                        
+        var taggingEnvironment: HeimASN1TaggingEnvironment? = nil
+        
+        let isUniformlyTaggedChoice: Bool = members.reduce(true, {
+            if $0 == false || $1.typeDefValue?.tagClass != .context {
+                return false
+            }
+            
+            if taggingEnvironment == nil {
+                // initialise to first tagging environment
+                taggingEnvironment = $1.typeDefValue?.desiredTaggingEnvironment
+            } else if taggingEnvironment != $1.typeDefValue?.desiredTaggingEnvironment {
+                // tagging environment changed
+                return false
+            }
+            
+            return true
+        })
+        
+        return isUniformlyTaggedChoice
+    }
+    
+    var uniformContextTaggingEnvironment: HeimASN1TaggingEnvironment {
+        precondition(self.isUniformlyContextTaggedChoice)
+        return self.members![0].typeDefValue!.desiredTaggingEnvironment!
     }
     
     var typeContainedBySetOf: HeimASN1Type? {
@@ -392,6 +425,15 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                     break
                 case .choice:
                     outputStream.write("\(visibility)enum \(self.generatedName): \(self.swiftConformances(nil)) {\n")
+                    if self.isUniformlyContextTaggedChoice {
+                        let codingKeyConformance = self.uniformContextTaggingEnvironment == .implicit ? "ASN1ImplicitTagCodingKey" : "ASN1ExplicitTagCodingKey"
+                        
+                        outputStream.write("\tenum CodingKeys: Int, \(codingKeyConformance) {\n")
+                        self.members?.forEach {
+                            outputStream.write("\t\tcase \($0.typeDefValue!.generatedName) = \($0.typeDefValue!.tagValue!)\n")
+                        }
+                        outputStream.write("\t}\n\n")
+                    }
                     try self.members?.forEach {
                         $0.typeDefValue?.parent = self
                         try $0.emit(&outputStream)
@@ -481,7 +523,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     }
     
     private lazy var membersOf: [HeimASN1TypeDef] = {
-        guard self._isSetOrSequence || self._isChoice else {
+        guard self._isSetOrSequence || self.isChoice else {
             return []
         }
 

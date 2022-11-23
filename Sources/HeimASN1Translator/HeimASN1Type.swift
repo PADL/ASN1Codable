@@ -150,11 +150,16 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
     }
 
     private func emitTypeDefField(_ typeDef: HeimASN1TypeDef, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
-        let isChoice = containingTypeDef.parent?.tTypeUniversalValue == .choice
+        let isChoice = containingTypeDef.parent?.isChoice ?? false
         
         if isChoice {
             let fieldDescriptor = HeimASN1FieldDescriptor(containingTypeDef)
-            outputStream.write("\tcase \(containingTypeDef.generatedName)(\(fieldDescriptor.swiftType!))\n")
+            
+            if containingTypeDef.parent?.isUniformlyContextTaggedChoice ?? false {
+                outputStream.write("\tcase \(containingTypeDef.generatedName)(\(fieldDescriptor.bareSwiftType))\n")
+            } else {
+                outputStream.write("\tcase \(containingTypeDef.generatedName)(\(fieldDescriptor.swiftType!))\n")
+            }
         } else {
             let fieldDescriptor = HeimASN1FieldDescriptor(typeDef)
             let disablePropertyWrappers = containingTypeDef.translator?.options.contains(.disablePropertyWrappers) ?? false
