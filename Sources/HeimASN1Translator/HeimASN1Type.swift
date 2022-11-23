@@ -168,6 +168,12 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             let generatedName = isDefault ? "_\(containingTypeDef.generatedName)" : containingTypeDef.generatedName
             if disablePropertyWrappers {
                 outputStream.write("\t\(visibility)var \(generatedName): \(fieldDescriptor.swiftType!)")
+            } else if containingTypeDef.parent?.isUniformlyContextTagged ?? false {
+                try fieldDescriptor.emit(&outputStream)
+                outputStream.write("\t\(visibility)var \(generatedName): \(fieldDescriptor.bareSwiftType)")
+                if fieldDescriptor.needsInitialValue && !isDefault {
+                    outputStream.write(" = \(fieldDescriptor.initialValue)")
+                }
             } else {
                 try fieldDescriptor.emit(&outputStream)
                 outputStream.write("\t\(visibility)var \(generatedName): \(fieldDescriptor.bareSwiftType)")

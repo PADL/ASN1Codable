@@ -202,15 +202,20 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                         
         var taggingEnvironment: HeimASN1TaggingEnvironment? = nil
         
-        let isUniformlyTaggedChoice: Bool = members.reduce(true, {
-            if $0 == false || $1.typeDefValue?.tagClass != .context {
+        let isUniformlyContextTagged: Bool = members.reduce(true, {
+            guard $0 == true,
+                  let typeDefValue = self.isChoice ? $1.typeDefValue : $1.typeDefValue?.type?.typeDefValue else {
+                return false
+            }
+            
+            if typeDefValue.tagClass != .context {
                 return false
             }
             
             if taggingEnvironment == nil {
                 // initialise to first tagging environment
-                taggingEnvironment = $1.typeDefValue?.desiredTaggingEnvironment
-            } else if taggingEnvironment != $1.typeDefValue?.desiredTaggingEnvironment {
+                taggingEnvironment = typeDefValue.desiredTaggingEnvironment
+            } else if taggingEnvironment != typeDefValue.desiredTaggingEnvironment {
                 // tagging environment changed
                 return false
             }
@@ -218,12 +223,18 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             return true
         })
         
-        return isUniformlyTaggedChoice
+        return isUniformlyContextTagged
     }
     
     var uniformContextTaggingEnvironment: HeimASN1TaggingEnvironment {
         precondition(self.isUniformlyContextTagged)
-        return self.members![0].typeDefValue!.desiredTaggingEnvironment!
+        
+        var typeDefValue = self.members![0].typeDefValue!
+        if !self.isChoice {
+            typeDefValue = typeDefValue.type!.typeDefValue!
+        }
+        
+        return typeDefValue.desiredTaggingEnvironment!
     }
     
     var typeContainedBySetOf: HeimASN1Type? {
@@ -345,6 +356,40 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         }
     }
 
+    private func emitTagCodingKeys(_ outputStream: inout OutputStream) {
+        let codingKeyConformance = self.uniformContextTaggingEnvironment == .implicit ? "ASN1ImplicitTagCodingKey" : "ASN1ExplicitTagCodingKey"
+        
+        outputStream.write("\tenum CodingKeys: Int, \(codingKeyConformance) {\n")
+        self.members?.forEach {
+            let typeDefValue = $0.typeDefValue!
+            let generatedName = typeDefValue.generatedName
+            let tagValue: UInt
+            
+            precondition(!generatedName.hasPrefix("*"))
+            
+            if self.isChoice {
+                tagValue = typeDefValue.tagValue!
+            } else {
+                tagValue = typeDefValue.type!.typeDefValue!.tagValue!
+                
+            }
+            outputStream.write("\t\tcase \(generatedName) = \(tagValue)\n")
+        }
+        outputStream.write("\t}\n\n")
+    }
+    
+    private func emitStringCodingKeys(_ outputStream: inout OutputStream) {
+        outputStream.write("\tenum CodingKeys: String, CodingKey {\n")
+        self.members?.forEach {
+            if $0.typeDefValue!.defaultValue != nil {
+                outputStream.write("\t\tcase _\($0.typeDefValue!.generatedName) = \"\($0.typeDefValue!.generatedName)\"\n")
+            } else {
+                outputStream.write("\t\tcase \($0.typeDefValue!.generatedName)\n")
+            }
+        }
+        outputStream.write("\t}\n\n")
+    }
+
     func emit(_ outputStream: inout OutputStream) throws {
         self.type?.typeDefValue?.parent = self
         self.tType?.typeDefValue?.parent = self
@@ -405,19 +450,11 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                         outputStream.write("\n")
                     }
                     
-                    outputStream.write("\t\(visibility)enum CodingKeys: String, CodingKey {\n")
-                    self.members?.forEach {
-                        if let typeDefValue = $0.typeDefValue {
-                            if typeDefValue.defaultValue != nil {
-                                outputStream.write("\t\tcase _\(typeDefValue.generatedName) = \"\(typeDefValue.generatedName)\"\n")
-                            } else {
-                                outputStream.write("\t\tcase \(typeDefValue.generatedName)\n")
-                            }
-                        } else if let dictionaryValue = $0.dictionaryValue {
-                            debugPrint("unexpected dictionary type \(dictionaryValue)")
-                        }
+                    if self.isUniformlyContextTagged {
+                        self.emitTagCodingKeys(&outputStream)
+                    } else {
+                        self.emitStringCodingKeys(&outputStream)
                     }
-                    outputStream.write("\t}\n\n")
                     try self.members?.forEach {
                         $0.typeDefValue?.parent = self
                         try $0.emit(&outputStream)
@@ -427,13 +464,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                 case .choice:
                     outputStream.write("\(visibility)enum \(self.generatedName): \(self.swiftConformances(nil)) {\n")
                     if self.isUniformlyContextTagged {
-                        let codingKeyConformance = self.uniformContextTaggingEnvironment == .implicit ? "ASN1ImplicitTagCodingKey" : "ASN1ExplicitTagCodingKey"
-                        
-                        outputStream.write("\tenum CodingKeys: Int, \(codingKeyConformance) {\n")
-                        self.members?.forEach {
-                            outputStream.write("\t\tcase \($0.typeDefValue!.generatedName) = \($0.typeDefValue!.tagValue!)\n")
-                        }
-                        outputStream.write("\t}\n\n")
+                        self.emitTagCodingKeys(&outputStream)
                     }
                     try self.members?.forEach {
                         $0.typeDefValue?.parent = self

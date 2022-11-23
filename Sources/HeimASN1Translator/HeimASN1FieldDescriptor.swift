@@ -65,6 +65,10 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         }
     }
     
+    private var isUsingTagCodingKey: Bool {
+        return self.type.typeDefValue?.grandParent?.isUniformlyContextTagged ?? false
+    }
+    
     private var translator: HeimASN1Translator? {
         return self.type.typeDefValue?.translator
     }
@@ -217,7 +221,7 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     var propertyWrappers: [String] {
         var wrappers = [String]()
         
-        if let taggedWrapperType = self.taggedWrapperType {
+        if !self.isUsingTagCodingKey, let taggedWrapperType = self.taggedWrapperType {
             wrappers.append(taggedWrapperType)
         }
 
