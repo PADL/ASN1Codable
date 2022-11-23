@@ -4,6 +4,8 @@ ASN1Codable is a Swift framework for encoding Codable types using ASN.1. The typ
 
 ## Example
 
+### SEQUENCE
+
 ```asn1
 TBSCertificate  ::=  SEQUENCE  {
      version         [0]  Version OPTIONAL, -- EXPLICIT DEFAULT 1,
@@ -43,7 +45,7 @@ class TBSCertificate: Codable {
 }
 ```
 
-and
+### CHOICE
 
 ```asn1
 GeneralName ::= CHOICE {
@@ -82,6 +84,8 @@ enum GeneralName: Codable {
         case registeredID(ObjectIdentifier)
 }
 ```
+
+## Usage
 
 You can use the encoder and decoder as follows:
 
