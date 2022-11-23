@@ -36,11 +36,9 @@ extension ASN1TaggedDictionary: Decodable {
     public init(from decoder: Decoder) throws {
         if let decoder = decoder as? ASN1DecoderImpl {
             let container = try decoder.container(keyedBy: ASN1TaggedDictionaryCodingKey.self)
-            
-            self.wrappedValue = Dictionary()
-            try container.allKeys.forEach {
-                self.wrappedValue[$0.tagNo] = try container.decode(AnyCodable.self, forKey: $0)
-            }
+            self.wrappedValue = try Dictionary(uniqueKeysWithValues: container.allKeys.map {
+                ($0.tagNo, try container.decode(AnyCodable.self, forKey: $0))
+            })
         } else {
             let container = try decoder.singleValueContainer()
             self.wrappedValue = try container.decode(Dictionary<UInt, AnyCodable>.self)
@@ -56,8 +54,7 @@ extension ASN1TaggedDictionary: Encodable {
             
             try self.wrappedValue.keys.sorted(by: { $0 < $1 }).forEach {
                 let key = ASN1TaggedDictionaryCodingKey(tagNo: $0)
-                let value = self.wrappedValue[$0]
-                try container.encode(value, forKey: key)
+                try container.encode(self.wrappedValue[$0], forKey: key)
             }
         } else {
             var container = encoder.singleValueContainer()
