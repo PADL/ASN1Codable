@@ -51,6 +51,7 @@ public final class HeimASN1Translator {
     var outputStream: OutputStream
     let options: Options
     let typeMaps: [String:TypeMap]
+    let provenanceInformation: String?
     var module: HeimASN1Module? = nil
     var imports = [HeimASN1ModuleRef]()
     var typeRefCache = Set<String>()
@@ -58,7 +59,11 @@ public final class HeimASN1Translator {
     var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
     var typeDefs = [HeimASN1TypeDef]()
 
-    public init(inputStream: InputStream, outputStream: inout OutputStream, options: Options = Options(), typeMaps: [String:String]? = nil) {
+    public init(inputStream: InputStream,
+                outputStream: inout OutputStream,
+                options: Options = Options(),
+                typeMaps: [String:String]? = nil,
+                provenanceInformation: String? = nil) {
         self.inputStream = inputStream
         self.outputStream = outputStream
         self.options = options
@@ -72,6 +77,7 @@ public final class HeimASN1Translator {
                 return TypeMap.alias($0)
             }
         }
+        self.provenanceInformation = provenanceInformation
     }
     
     func cacheTypeRef(_ ref: String) {
@@ -209,7 +215,11 @@ public final class HeimASN1Translator {
         
         outputStream.open()
         
-        outputStream.write("/// HeimASN1Translator generated \(Date())\n\n")
+        outputStream.write("/// HeimASN1Translator generated \(Date())\n")
+        if let provenanceInformation = self.provenanceInformation {
+            outputStream.write("/// \(provenanceInformation)\n")
+        }
+        outputStream.write("\n")
 
         self.emitImports(&outputStream)
 

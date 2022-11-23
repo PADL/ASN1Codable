@@ -58,7 +58,12 @@ struct TranslateCommand: CommandProtocol {
             outputStream = OutputStream(toMemory: ())
         }
         
-        let translator = HeimASN1Translator(inputStream: inputStream, outputStream: &outputStream, typeMaps: typeMapDictionary)
+        let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
+        let provenanceInformation = ([executableName] + CommandLine.arguments[1..<CommandLine.arguments.count - 1]).joined(separator: " ")
+        let translator = HeimASN1Translator(inputStream: inputStream,
+                                            outputStream: &outputStream,
+                                            typeMaps: typeMapDictionary,
+                                            provenanceInformation: provenanceInformation)
 
         do {
             try translator.translate()
