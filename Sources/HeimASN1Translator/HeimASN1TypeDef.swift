@@ -197,8 +197,8 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         return self.tType == .universal(.choice)
     }
     
-    var isUniformlyContextTaggedChoice: Bool {
-        guard self.isChoice, let members = self.members, members.count > 0 else { return false }
+    var isUniformlyContextTagged: Bool {
+        guard let members = self.members, members.count > 0 else { return false }
                         
         var taggingEnvironment: HeimASN1TaggingEnvironment? = nil
         
@@ -222,7 +222,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     }
     
     var uniformContextTaggingEnvironment: HeimASN1TaggingEnvironment {
-        precondition(self.isUniformlyContextTaggedChoice)
+        precondition(self.isUniformlyContextTagged)
         return self.members![0].typeDefValue!.desiredTaggingEnvironment!
     }
     
@@ -426,7 +426,7 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                     break
                 case .choice:
                     outputStream.write("\(visibility)enum \(self.generatedName): \(self.swiftConformances(nil)) {\n")
-                    if self.isUniformlyContextTaggedChoice {
+                    if self.isUniformlyContextTagged {
                         let codingKeyConformance = self.uniformContextTaggingEnvironment == .implicit ? "ASN1ImplicitTagCodingKey" : "ASN1ExplicitTagCodingKey"
                         
                         outputStream.write("\tenum CodingKeys: Int, \(codingKeyConformance) {\n")

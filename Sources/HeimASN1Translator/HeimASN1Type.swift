@@ -155,7 +155,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         if isChoice {
             let fieldDescriptor = HeimASN1FieldDescriptor(containingTypeDef)
             
-            if containingTypeDef.parent?.isUniformlyContextTaggedChoice ?? false {
+            if containingTypeDef.parent?.isUniformlyContextTagged ?? false {
                 outputStream.write("\tcase \(containingTypeDef.generatedName)(\(fieldDescriptor.bareSwiftType))\n")
             } else {
                 outputStream.write("\tcase \(containingTypeDef.generatedName)(\(fieldDescriptor.swiftType!))\n")
