@@ -80,6 +80,13 @@ public final class HeimASN1Translator {
         self.provenanceInformation = provenanceInformation
     }
     
+    init(options: Options = Options(),
+         typeMaps: [String:TypeMap]? = nil) {
+        self.options = options
+        self.typeMaps = typeMaps ?? [:]
+        self.provenanceInformation = nil
+    }
+
     func cacheTypeRef(_ ref: String) {
         typeRefCache.insert(ref)
     }
