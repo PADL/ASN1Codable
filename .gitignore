@@ -1,7 +1,7 @@
 .DS_Store
 /.build
 *.xcarchive/
-xcshareddata/
+#xcshareddata/
 /Packages
 
 # Generated documentation
@@ -52,8 +52,8 @@ playground.xcworkspace
 #
 # Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
 Packages/
-Package.pins
-Package.resolved
+#Package.pins
+/Package.resolved
 .build/
 
 # CocoaPods
@@ -65,8 +65,8 @@ Package.resolved
 # Pods/
 #
 # Add this line if you want to avoid checking in source code from the Xcode workspace
-*.xcworkspace/
-*.xcworkspace
+#*.xcworkspace/
+#*.xcworkspace
 
 # Carthage
 #
