@@ -21,14 +21,14 @@ public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible, Custom
     associatedtype Value: Codable
     
     var wrappedValue: Value { get set }
-    var projectedValue: ASN1Type { get }
+    var projectedValue: ASN1Metadata { get }
 
     init(wrappedValue: Value)
 }
 
 extension ASN1TaggedWrappedValue {
-    public var projectedValue: ASN1Type {
-        return Self.asn1Type
+    public var projectedValue: ASN1Metadata {
+        return Self.metadata
     }
     
     public func encode(to encoder: Encoder) throws {

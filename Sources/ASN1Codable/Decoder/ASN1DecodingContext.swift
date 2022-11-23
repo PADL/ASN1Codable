@@ -43,7 +43,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
 
         let tag: ASN1DecodedTag
         
-        if let type = type as? ASN1TaggedTypeRepresentable.Type, let typeTag = type.asn1Type.tag {
+        if let type = type as? ASN1TaggedTypeRepresentable.Type, let typeTag = type.metadata.tag {
             tag = typeTag
         } else if let type = type as? ASN1UniversalTagRepresentable.Type {
             tag = .universal(type.tagNo)
@@ -71,18 +71,18 @@ struct ASN1DecodingContext: ASN1CodingContext {
     }
     
     /// returns true if an enum type has a member with a particular tag
-    static func enumTypeHasMember<T>(_ type: T.Type, with asn1Type: ASN1Type) -> Bool where T: Decodable {
-        guard let metadata = reflect(Self.lookThroughOptional(type)) as? EnumMetadata else {
+    static func enumTypeHasMember<T>(_ type: T.Type, with metadata: ASN1Metadata) -> Bool where T: Decodable {
+        guard let enumMetadata = reflect(Self.lookThroughOptional(type)) as? EnumMetadata else {
             return false
         }
         
-        return metadata.descriptor.fields.records.contains {
-              guard let fieldType = metadata.type(of: $0.mangledTypeName),
+        return enumMetadata.descriptor.fields.records.contains {
+              guard let fieldType = enumMetadata.type(of: $0.mangledTypeName),
                     let wrappedFieldType = fieldType as? any ASN1TaggedWrappedValue.Type else {
                   return false
               }
             
-            return asn1Type == wrappedFieldType.asn1Type
+            return metadata == wrappedFieldType.metadata
         }
     }
     
@@ -91,9 +91,9 @@ struct ASN1DecodingContext: ASN1CodingContext {
         if case .taggedTag(let tagNo) = object.tag, keyType is ASN1TagCodingKey.Type {
             return Key(intValue: Int(tagNo))
         } else if let currentEnum = self.currentEnumType,
-              let metadata = reflect(Self.lookThroughOptional(currentEnum)) as? EnumMetadata,
-           let enumCase = metadata.descriptor.fields.records.first(where: {
-               guard let fieldType = metadata.type(of: $0.mangledTypeName) else {
+                  let enumMetadata = reflect(Self.lookThroughOptional(currentEnum)) as? EnumMetadata,
+                  let enumCase = enumMetadata.descriptor.fields.records.first(where: {
+               guard let fieldType = enumMetadata.type(of: $0.mangledTypeName) else {
                    return false
                }
                

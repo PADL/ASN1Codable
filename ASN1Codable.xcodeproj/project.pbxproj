@@ -50,7 +50,7 @@
 		D351DCE6290EF95E00540132 /* UnkeyedDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCDF290EF91B00540132 /* UnkeyedDecodingContainer.swift */; };
 		D351DCE7290EF95E00540132 /* SingleValueDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCDD290EF91B00540132 /* SingleValueDecodingContainer.swift */; };
 		D363A44A292AF21C007476B4 /* ASN1TagCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */; };
-		D382641329299C6400808667 /* ASN1Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = D382641229299C6400808667 /* ASN1Type.swift */; };
+		D382641329299C6400808667 /* ASN1Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D382641229299C6400808667 /* ASN1Metadata.swift */; };
 		D3826417292ACE0700808667 /* Data+HexString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3826416292ACE0700808667 /* Data+HexString.swift */; };
 		D382641A292AD54900808667 /* ASN1TaggedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3826418292AD1F400808667 /* ASN1TaggedDictionary.swift */; };
 		D382641D292ADA6600808667 /* ASN1DecodedTag+Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = D382641B292ADA5300808667 /* ASN1DecodedTag+Extras.swift */; };
@@ -264,7 +264,7 @@
 		D351DCE1290EF91B00540132 /* ASN1DecodingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecodingContainer.swift; sourceTree = "<group>"; };
 		D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1TagCodingKey.swift; sourceTree = "<group>"; };
 		D363A44B292B311C007476B4 /* cert2json-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cert2json-Bridging-Header.h"; sourceTree = "<group>"; };
-		D382641229299C6400808667 /* ASN1Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1Type.swift; sourceTree = "<group>"; };
+		D382641229299C6400808667 /* ASN1Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1Metadata.swift; sourceTree = "<group>"; };
 		D3826416292ACE0700808667 /* Data+HexString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+HexString.swift"; sourceTree = "<group>"; };
 		D3826418292AD1F400808667 /* ASN1TaggedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1TaggedDictionary.swift; sourceTree = "<group>"; };
 		D382641B292ADA5300808667 /* ASN1DecodedTag+Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ASN1DecodedTag+Extras.swift"; sourceTree = "<group>"; };
@@ -480,7 +480,7 @@
 			children = (
 				D3FB2DA929187C2800BC72AF /* ASN1AutomaticTaggingContext.swift */,
 				D351DC68290E8AF700540132 /* ASN1CodingContext.swift */,
-				D382641229299C6400808667 /* ASN1Type.swift */,
+				D382641229299C6400808667 /* ASN1Metadata.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1061,7 +1061,7 @@
 				D351DCE5290EF95E00540132 /* KeyedDecodingContainer.swift in Sources */,
 				D351DCE6290EF95E00540132 /* UnkeyedDecodingContainer.swift in Sources */,
 				D351DC91290E8AF700540132 /* ASN1EncodingContainer.swift in Sources */,
-				D382641329299C6400808667 /* ASN1Type.swift in Sources */,
+				D382641329299C6400808667 /* ASN1Metadata.swift in Sources */,
 				D3FB2D9D29183E2000BC72AF /* Null.swift in Sources */,
 				D382641A292AD54900808667 /* ASN1TaggedDictionary.swift in Sources */,
 				D351DC97290E8AF700540132 /* Time.swift in Sources */,

@@ -29,7 +29,7 @@ public protocol ASN1ImplicitTagCodingKey: ASN1TagCodingKey {}
 /// initial use case (PKIX) and would introduce unneeded complexity.
 
 extension ASN1TagCodingKey {
-    var asn1Type: ASN1Type {
+    var metadata: ASN1Metadata {
         let tagging: ASN1Tagging
         
         if self is ASN1ImplicitTagCodingKey {
@@ -39,7 +39,7 @@ extension ASN1TagCodingKey {
         }
         
         precondition(self.intValue != nil && self.intValue! >= 0)
-        return ASN1Type(tag: .taggedTag(UInt(self.intValue!)), tagging: tagging)
+        return ASN1Metadata(tag: .taggedTag(UInt(self.intValue!)), tagging: tagging)
     }
 }
 
