@@ -50,10 +50,6 @@ public struct GeneralizedTime<Value: Codable & ExpressibleByDate>: Codable, Equa
     }
 }
 
-extension GeneralizedTime: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .generalizedTime }
-}
-
 @propertyWrapper
 public struct UTCTime<Value: Codable & ExpressibleByDate>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
@@ -69,8 +65,4 @@ public struct UTCTime<Value: Codable & ExpressibleByDate>: Codable, Equatable, H
     public static var metadata: ASN1Metadata {
         return ASN1Metadata(tag: .universal(.utcTime))
     }
-}
-
-extension UTCTime: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .utcTime }
 }

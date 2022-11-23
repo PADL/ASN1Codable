@@ -54,10 +54,6 @@ public struct GeneralString<Value: Codable & ExpressibleByString>: Codable, Equa
     }
 }
 
-extension GeneralString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .generalString }
-}
-
 @propertyWrapper
 public struct IA5String<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
@@ -73,10 +69,6 @@ public struct IA5String<Value: Codable & ExpressibleByString>: Codable, Equatabl
     public static var metadata: ASN1Metadata {
         return ASN1Metadata(tag: .universal(.ia5String))
     }
-}
-
-extension IA5String: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .ia5String }
 }
 
 @propertyWrapper
@@ -96,10 +88,6 @@ public struct UTF8String<Value: Codable & ExpressibleByString>: Codable, Equatab
     }
 }
 
-extension UTF8String: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .utf8String }
-}
-
 @propertyWrapper
 public struct UniversalString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
@@ -115,10 +103,6 @@ public struct UniversalString<Value: Codable & ExpressibleByString>: Codable, Eq
     public static var metadata: ASN1Metadata {
         return ASN1Metadata(tag: .universal(.universalString))
     }
-}
-
-extension UniversalString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .universalString }
 }
 
 @propertyWrapper
@@ -138,10 +122,6 @@ public struct BMPString<Value: Codable & ExpressibleByString>: Codable, Equatabl
     }
 }
 
-extension BMPString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .bmpString }
-}
-
 @propertyWrapper
 public struct PrintableString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
@@ -157,10 +137,6 @@ public struct PrintableString<Value: Codable & ExpressibleByString>: Codable, Eq
     public static var metadata: ASN1Metadata {
         return ASN1Metadata(tag: .universal(.printableString))
     }
-}
-
-extension PrintableString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .printableString }
 }
 
 extension ASN1DecodedTag {
