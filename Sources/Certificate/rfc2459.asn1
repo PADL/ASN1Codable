@@ -183,10 +183,71 @@ id-at-emailAddress          AttributeType ::=
 
 id-x509-ce OBJECT IDENTIFIER ::= {joint-iso-ccitt(2) ds(5) 29}
 
-AlgorithmIdentifier ::= SEQUENCE {
-	algorithm	OBJECT IDENTIFIER,
-	parameters	HEIM_ANY OPTIONAL
+_ALGORITHM-TYPE ::= CLASS { -- Heimdal extension
+    &id     OBJECT IDENTIFIER UNIQUE,
+    &Type   OPTIONAL
 }
+
+AlgorithmIdentifier{_ALGORITHM-TYPE:AlgorithmIdentifierSet} ::= SEQUENCE {
+    algorithm   _ALGORITHM-TYPE.&id({AlgorithmIdentifierSet}),
+    parameters  _ALGORITHM-TYPE.&Type({AlgorithmIdentifierSet}{@algorithm})
+}
+
+pk-rsa _ALGORITHM-TYPE ::= {
+    &id id-pkcs1-rsaEncryption,
+    &Type NULL
+}
+
+DSA-Params ::= SEQUENCE {
+    p   INTEGER,
+    q   INTEGER,
+    g   INTEGER
+}
+
+pk-dsa _ALGORITHM-TYPE ::= {
+    &id id-dsa,
+    &Type DSA-Params
+}
+
+--- When any of these three OIDs appears within the ASN.1 type
+--- AlgorithmIdentifier, the parameters component of that type SHALL be
+--- the ASN.1 type NULL.
+sa-md2WithRSAEncryption _ALGORITHM-TYPE ::= {
+    &id id-pkcs1-md2WithRSAEncryption,
+    &Type NULL
+}
+sa-md5WithRSAEncryption _ALGORITHM-TYPE ::= {
+    &id id-pkcs1-md5WithRSAEncryption,
+    &Type NULL
+}
+sa-sha1WithRSAEncryption _ALGORITHM-TYPE ::= {
+    &id id-pkcs1-sha1WithRSAEncryption,
+    &Type NULL
+}
+sa-sha256WithRSAEncryption _ALGORITHM-TYPE ::= {
+    &id id-pkcs1-sha256WithRSAEncryption,
+    &Type NULL
+}
+sa-sha384WithRSAEncryption _ALGORITHM-TYPE ::= {
+    &id id-pkcs1-sha384WithRSAEncryption,
+    &Type NULL
+}
+sa-sha512WithRSAEncryption _ALGORITHM-TYPE ::= {
+    &id id-pkcs1-sha512WithRSAEncryption,
+    &Type NULL
+}
+KnownAlgorithmIdentifiers _ALGORITHM-TYPE ::= {
+    pk-rsa
+  | pk-dsa
+  | sa-md2WithRSAEncryption
+  | sa-md5WithRSAEncryption
+  | sa-sha1WithRSAEncryption
+  | sa-sha256WithRSAEncryption
+  | sa-sha384WithRSAEncryption
+  | sa-sha512WithRSAEncryption
+}
+
+AlgorithmIdentifier ::= AlgorithmIdentifier{KnownAlgorithmIdentifiers}
 
 AttributeType ::=   OBJECT IDENTIFIER
 
