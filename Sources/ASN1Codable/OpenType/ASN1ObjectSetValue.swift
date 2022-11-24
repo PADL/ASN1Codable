@@ -104,14 +104,12 @@ public struct ASN1ObjectSetValue: Codable {
                     self.wrappedValue = berData
                 }
             } else {
-                guard let type else {
-                    debugPrint("Unknown object set type \(valueType), cannot decode")
-                    let context = DecodingError.Context(codingPath: container.codingPath,
-                                                        debugDescription: "Unknown object set type \(valueType)")
-                    throw DecodingError.typeMismatch(Data.self, context)
+                if let type {
+                    self.wrappedValue = try container.decode(type)
+                } else {
+                    debugPrint("Unknown object set type \(valueType), decoding as nil")
+                    self.wrappedValue = nil
                 }
-
-                self.wrappedValue = try container.decode(type)
             }
         } catch {
             debugPrint("Failed to decode object set type \(valueType): \(error)")
