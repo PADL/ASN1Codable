@@ -66,34 +66,24 @@ extension ASN1Object {
 }
 
 extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
-    var count: Int? {
-        return self.object.data.fold({ primitive in
-            return 1
-        }, { items in
-            return items.count
-        })
+    private var unsafelyUnwrappedItems: [ASN1Object] {
+        return self.object.data.items!
     }
 
-    var numberOfKeyedObjectsDecoded: Int? {
-        return self.count
-    }
-    
     var allKeys: [Key] {
         let keys: [Key]
-
+        
         if Key.self is ASN1TagCodingKey.Type && self.object.containsOnlyTaggedItems {
-            // this serves both as an escape hatch to support Apple's component attributes
-            // certificate extension (which is a SEQUENCE of arbitrary tagged values), and
-            // also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
-            // used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
-            // uniform tagging to Swift types 
-            let items = self.object.data.items!
-            keys = items.compactMap { Key(intValue: Int($0.tagNo!)) }
+            /// this serves both as an escape hatch to support Apple's component attributes
+            /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and
+            /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
+            /// used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
+            /// uniform tagging to Swift types
+            keys = self.unsafelyUnwrappedItems.compactMap { Key(intValue: Int($0.tagNo!)) }
         } else {
             let currentObject: ASN1Object
 
             do {
-                try self.validateCurrentIndex()
                 currentObject = try self.currentObject()
             } catch {
                 return []
@@ -109,25 +99,25 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return keys
     }
 
-    // FIXME we don't know the keys ahead of time so we can't answer this except in the enum case
     func contains(_ key: Key) -> Bool {
-        if let key = key as? ASN1TagCodingKey {
-            return (key.intValue ?? 0) < (self.count ?? 0)
-        }
-        
-        let currentObject: ASN1Object
-        
-        do {
-            try self.validateCurrentIndex()
-            currentObject = try self.currentObject()
-        } catch {
-            return false
-        }
-        
-        if self.context.enumCodingState == .enum {
-            return self.context.enumCodingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
+        if let key = key as? ASN1TagCodingKey, self.object.containsOnlyTaggedItems {
+            /// per the similar code path in allKeys, this returns true if we have a uniformly
+            /// tagged structure and the tag represented by `key` is present
+            return self.unsafelyUnwrappedItems.contains { $0.tag == .taggedTag(UInt(key.intValue!)) }
         } else {
-            return true // let's optimistically try
+            let currentObject: ASN1Object
+            
+            do {
+                currentObject = try self.currentObject()
+            } catch {
+                return false
+            }
+            
+            if self.context.enumCodingState == .enum {
+                return self.context.enumCodingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
+            } else {
+                return true /// at this point, we have to optimistically assume the key exists
+            }
         }
     }
     
@@ -266,10 +256,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
     
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
-        try self.validateCurrentIndex()
-        let currentObject = try self.currentObject()
-        try context.validateObject(currentObject, container: true, codingPath: self.codingPath)
-
+        let currentObject = try self.currentObject(nestedContainer: true)
         let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: currentObject,
                                                                       codingPath: self.nestedCodingPath(forKey: key),
                                                                       userInfo: self.userInfo,
@@ -281,10 +268,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
     
     func nestedUnkeyedContainer(forKey key: Key) throws -> UnkeyedDecodingContainer {
-        try self.validateCurrentIndex()
-        let currentObject = try self.currentObject()
-        try context.validateObject(currentObject, container: true, codingPath: self.codingPath)
-
+        let currentObject = try self.currentObject(nestedContainer: true)
         let container = try ASN1DecoderImpl.UnkeyedContainer(object: currentObject,
                                                              codingPath: self.nestedCodingPath(forKey: key),
                                                              userInfo: self.userInfo,
@@ -307,34 +291,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 }
 
-extension ASN1DecoderImpl.KeyedContainer {
-    private var isEmptySequence: Bool {
-        return self.object.constructed && self.object.data.items?.count == 0
-    }
-    
-    private var isAtEnd: Bool {
-        guard let count = self.count else {
-            return true
-        }
-        
-        return self.currentIndex >= count
-    }
-
-
-    private func validateCurrentIndex() throws {
-        if !self.object.constructed && self.context.enumCodingState == .none && !self.object.isNull {
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Keyed container expected constructed object")
-            throw DecodingError.dataCorrupted(context)
-        }
-
-        if !self.isEmptySequence, self.isAtEnd {
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Keyed container already at end of ASN.1 object")
-            throw DecodingError.dataCorrupted(context)
-        }
-    }
-    
+extension ASN1DecoderImpl.KeyedContainer {    
     private func nestedSingleValueContainer(_ object: ASN1Object,
                                             forKey key: Key,
                                             context: ASN1DecodingContext) -> ASN1DecoderImpl.SingleValueContainer {
@@ -345,36 +302,7 @@ extension ASN1DecoderImpl.KeyedContainer {
                 
         return container
     }
-    
-    private func currentObject(for type: Decodable.Type?) throws -> ASN1Object {
-        let object: ASN1Object
         
-        if self.context.enumCodingState == .enumCase {
-            object = self.object
-        } else if self.isAtEnd {
-            // if we've reached the end of the SEQUENCE or SET, we still need to initialise
-            // the remaining wrapped objects; pad the object set with null instances.
-            object = ASN1NullObject
-        } else {
-            do {
-                // return object at current index
-                object = try self.currentObject()
-                try self.validateCurrentIndex()
-                try self.context.validateObject(object, codingPath: self.codingPath)
-            } catch {
-                if let type = type, case DecodingError.dataCorrupted(let context) = error {
-                    // retype the error as a typeMismatch, which the field is OPTIONAL
-                    // will tell the caller it is safe to skip this field
-                    throw DecodingError.typeMismatch(type, context)
-                } else {
-                    throw error
-                }
-            }
-        }
-
-        return object
-    }
-    
     private func addContainer(_ container: ASN1DecodingContainer, forKey key: Key) {
         self.containers[key.stringValue] = container
         self.currentIndex += 1

@@ -62,22 +62,6 @@ extension ASN1DecoderImpl {
 }
 
 extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
-    var count: Int? {
-        return self.object.data.fold({ primitive in
-            return 1
-        }, { items in
-            return items.count
-        })
-    }
-
-    var isAtEnd: Bool {
-        guard let count = self.count else {
-            return true
-        }
-        
-        return self.currentIndex >= count
-    }
-
     func decodeNil() throws -> Bool {
         let object = try self.currentObject(for: nil)
         let container = self.nestedSingleValueContainer(object, context: self.context)
@@ -211,10 +195,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
     
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
-        try self.validateCurrentIndex()
-        let currentObject = try self.currentObject()
-        try self.context.validateObject(currentObject, container: true, codingPath: self.codingPath)
-
+        let currentObject = try self.currentObject(nestedContainer: true)
         let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: currentObject,
                                                                       codingPath: self.nestedCodingPath,
                                                                       userInfo: self.userInfo,
@@ -226,10 +207,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
     
     func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
-        try self.validateCurrentIndex()
-        let currentObject = try self.currentObject()
-        try self.context.validateObject(currentObject, container: true, codingPath: self.codingPath)
-
+        let currentObject = try self.currentObject(nestedContainer: true)
         let container = try ASN1DecoderImpl.UnkeyedContainer(object: currentObject,
                                                              codingPath: self.nestedCodingPath,
                                                              userInfo: self.userInfo,
@@ -248,15 +226,6 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 }
 
 extension ASN1DecoderImpl.UnkeyedContainer {
-    private func validateCurrentIndex() throws {
-        if !self.object.constructed && self.context.enumCodingState == .none {
-            throw DecodingError.dataCorruptedError(in: self, debugDescription: "Unkeyed container expected constructed object")
-        }
-        if self.isAtEnd {
-            throw DecodingError.dataCorruptedError(in: self, debugDescription: "Unkeyed container already at end of ASN.1 object")
-        }
-    }
-    
     private func nestedSingleValueContainer(_ object: ASN1Object, context: ASN1DecodingContext) -> ASN1DecoderImpl.SingleValueContainer {
         let container = ASN1DecoderImpl.SingleValueContainer(object: object,
                                                              codingPath: self.nestedCodingPath,
@@ -266,27 +235,6 @@ extension ASN1DecoderImpl.UnkeyedContainer {
         return container
     }
     
-    private func currentObject(for type: Decodable.Type?) throws -> ASN1Object {
-        let object: ASN1Object
-        
-        // if we've reached the end of the SEQUENCE or SET, we still need to initialise
-        // the remaining wrapped objects; pad the object set with null instances.
-        if self.isAtEnd {
-            object = ASN1NullObject
-        } else {
-            if let type = type, ASN1DecodingContext.enumTypeHasMember(type, with: ASN1Metadata(tag: self.object.tag, tagging: .implicit)) {
-                object = self.object
-            } else {
-                try self.validateCurrentIndex()
-                object = try self.currentObject()
-            }
-            try self.validateCurrentIndex()
-            try self.context.validateObject(object, codingPath: self.codingPath)
-        }
-
-        return object
-    }
-
     private func addContainer(_ container: ASN1DecodingContainer) {
         self.containers.append(container)
         self.currentIndex += 1

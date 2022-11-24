@@ -378,10 +378,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
            let container = decoder.container,
            container.object.constructed,
            let items = container.object.data.items,
-           let numberOfKeyedObjectsDecoded = container.numberOfKeyedObjectsDecoded,
-           numberOfKeyedObjectsDecoded < items.count {
+           container.currentIndex < items.count {
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Expected no more than \(numberOfKeyedObjectsDecoded) items when decoding \(type); received \(items.count)")
+                                                debugDescription: "Expected no more than \(container.currentIndex) items when decoding \(type); received \(items.count)")
             throw DecodingError.typeMismatch(type, context)
         }
     }
@@ -443,10 +442,6 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
 // meaningless but allows us to conform to the rest of the protocol
 extension ASN1DecoderImpl.SingleValueContainer {
-    func currentObject() throws -> ASN1Object {
-        return self.object
-    }
-    
     var currentIndex: Int {
         return 0
     }

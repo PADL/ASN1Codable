@@ -139,29 +139,4 @@ struct ASN1DecodingContext: ASN1CodingContext {
         context.nextEnumCodingState()
         return context
     }
-    
-    func validateObject(_ object: ASN1Object,
-                        container: Bool = false,
-                        codingPath: [CodingKey]) throws {
-        // FIXME check constructed anyway?
-        guard container else {
-            return
-        }
-                
-        if object.constructed, object.tag.isUniversal {
-            if self.encodeAsSet && object.tag != .universal(.set) {
-                let context = DecodingError.Context(codingPath: codingPath,
-                                                    debugDescription: "Expected \(ASN1DecodedTag.universal(.set)), but received tag \(object.tag)")
-                throw DecodingError.dataCorrupted(context)
-            } else if object.tag != .universal(.sequence) {
-                let context = DecodingError.Context(codingPath: codingPath,
-                                                    debugDescription: "Expected a \(ASN1DecodedTag.universal(.sequence)), but received tag \(object.tag)")
-                throw DecodingError.dataCorrupted(context)
-            }
-        } else if self.enumCodingState != .enum {
-            let context = DecodingError.Context(codingPath: codingPath,
-                                                debugDescription: "Expected a constructed type, instead received tag \(object.tag)")
-            throw DecodingError.dataCorrupted(context)
-        }
-    }
 }
