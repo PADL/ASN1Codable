@@ -19,9 +19,11 @@ import Network
 import ASN1Codable
 
 @_cdecl("CertificateCreateWithData")
-public func CertificateCreateWithData(_ allocator: CFAllocator!,
-                                      _ der_certificate: CFData?) -> CertificateRef? {
-    guard let der_certificate = der_certificate else { return nil }
+public func CertificateCreateWithData(
+    _: CFAllocator!,
+    _ der_certificate: CFData?
+) -> CertificateRef? {
+    guard let der_certificate else { return nil }
     return Certificate.create(with: der_certificate as Data)
 }
 
@@ -54,7 +56,7 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFSt
 
     let summary: String
 
-    // FIXME mirror Security.framework, currently just returns a DN
+    // FIXME: mirror Security.framework, currently just returns a DN
     if let cn = certificate.rdns(identifiedBy: id_at_commonName), !cn.isEmpty {
         summary = cn[0]
     } else if certificate.rdnCount != 0 {

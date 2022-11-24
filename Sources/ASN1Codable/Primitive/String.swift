@@ -18,7 +18,7 @@ import Foundation
 import ASN1Kit
 
 extension String: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .utf8String }
+    static var tagNo: ASN1Tag { .utf8String }
 }
 
 public protocol ExpressibleByString: Equatable, Hashable {
@@ -31,7 +31,7 @@ extension String: ExpressibleByString {
     }
 }
 
-extension Optional: ExpressibleByString where Wrapped == String {
+extension String?: ExpressibleByString {
     public init(_ string: String) {
         self = string
     }
@@ -51,7 +51,7 @@ public struct GeneralString<Value: Codable & ExpressibleByString>:
     }
 
     public static var metadata: ASN1Metadata {
-        return ASN1Metadata(tag: .universal(.generalString))
+        ASN1Metadata(tag: .universal(.generalString))
     }
 }
 
@@ -69,7 +69,7 @@ public struct IA5String<Value: Codable & ExpressibleByString>:
     }
 
     public static var metadata: ASN1Metadata {
-        return ASN1Metadata(tag: .universal(.ia5String))
+        ASN1Metadata(tag: .universal(.ia5String))
     }
 }
 
@@ -87,7 +87,7 @@ public struct UTF8String<Value: Codable & ExpressibleByString>:
     }
 
     public static var metadata: ASN1Metadata {
-        return ASN1Metadata(tag: .universal(.utf8String))
+        ASN1Metadata(tag: .universal(.utf8String))
     }
 }
 
@@ -105,7 +105,7 @@ public struct UniversalString<Value: Codable & ExpressibleByString>:
     }
 
     public static var metadata: ASN1Metadata {
-        return ASN1Metadata(tag: .universal(.universalString))
+        ASN1Metadata(tag: .universal(.universalString))
     }
 }
 
@@ -123,7 +123,7 @@ public struct BMPString<Value: Codable & ExpressibleByString>:
     }
 
     public static var metadata: ASN1Metadata {
-        return ASN1Metadata(tag: .universal(.bmpString))
+        ASN1Metadata(tag: .universal(.bmpString))
     }
 }
 
@@ -141,7 +141,7 @@ public struct PrintableString<Value: Codable & ExpressibleByString>:
     }
 
     public static var metadata: ASN1Metadata {
-        return ASN1Metadata(tag: .universal(.printableString))
+        ASN1Metadata(tag: .universal(.printableString))
     }
 }
 

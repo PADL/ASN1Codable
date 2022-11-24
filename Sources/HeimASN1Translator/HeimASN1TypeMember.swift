@@ -64,7 +64,7 @@ indirect enum HeimASN1TypeMember: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRep
             self = .typeDef(constructed)
         } catch {
             do {
-                let dictionary = try container.decode(Dictionary<String, AnyCodable>.self)
+                let dictionary = try container.decode([String: AnyCodable].self)
                 self = .dictionary(dictionary)
             } catch {
                 throw error
@@ -72,8 +72,7 @@ indirect enum HeimASN1TypeMember: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRep
         }
     }
 
-    func encode(to encoder: Encoder) throws {
-    }
+    func encode(to _: Encoder) throws {}
 
     var swiftType: String? {
         switch self {

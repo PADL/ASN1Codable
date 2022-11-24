@@ -17,8 +17,7 @@
 import Foundation
 
 // represents a tag number used to specialize a tag generic
-public protocol ASN1TagNumberRepresentable {
-}
+public protocol ASN1TagNumberRepresentable {}
 
 // extracts the tag number from the ASN1TagNumber placeholder type
 extension ASN1TagNumberRepresentable {

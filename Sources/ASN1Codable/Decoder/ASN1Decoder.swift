@@ -22,10 +22,9 @@ public final class ASN1Decoder {
     public var taggingEnvironment: ASN1Tagging?
     public var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary?
 
-    public init() {
-    }
+    public init() {}
 
-    public func decode<T>(_ type: T.Type, from data: Data) throws -> T where T: Decodable {
+    public func decode<T>(_: T.Type, from data: Data) throws -> T where T: Decodable {
         do {
             let object = try ASN1Kit.ASN1Decoder.decode(asn1: data)
             let decoder = ASN1DecoderImpl(object: object,
@@ -44,9 +43,9 @@ public final class ASN1Decoder {
 }
 
 #if canImport(Combine)
-import Combine
+    import Combine
 
-extension ASN1Decoder: TopLevelDecoder {
-    public typealias Output = Data
-}
+    extension ASN1Decoder: TopLevelDecoder {
+        public typealias Output = Data
+    }
 #endif

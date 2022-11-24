@@ -25,8 +25,11 @@ extension ASN1EncoderImpl {
         var userInfo: [CodingUserInfoKey: Any]
         var context: ASN1EncodingContext
 
-        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any],
-             context: ASN1EncodingContext = ASN1EncodingContext()) {
+        init(
+            codingPath: [CodingKey],
+            userInfo: [CodingUserInfoKey: Any],
+            context: ASN1EncodingContext = ASN1EncodingContext()
+        ) {
             self.codingPath = codingPath
             self.userInfo = userInfo
             self.context = context
@@ -123,16 +126,16 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
     }
 
     /*
-    func encodeIfPresent<T>(_ value: T?, forKey key: Key) throws where T : Encodable {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
+     func encodeIfPresent<T>(_ value: T?, forKey key: Key) throws where T : Encodable {
+         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
 
-        if let value = value {
-            try container.encode(value)
-        } else {
-            try container.encodeNil()
-        }
-    }
-     */
+         if let value = value {
+             try container.encode(value)
+         } else {
+             try container.encodeNil()
+         }
+     }
+      */
 
     func encode<T>(_ value: T, forKey key: Key) throws where T: Encodable {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
@@ -149,8 +152,10 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
         return container
     }
 
-    func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type,
-                                    forKey key: Key) -> KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey {
+    func nestedContainer<NestedKey>(
+        keyedBy _: NestedKey.Type,
+        forKey key: Key
+    ) -> KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey {
         let container = ASN1EncoderImpl.KeyedContainer<NestedKey>(codingPath: self.nestedCodingPath(forKey: key),
                                                                   userInfo: self.userInfo,
                                                                   context: self.context)
@@ -164,7 +169,7 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
         fatalError("Not yet implemented")
     }
 
-    func superEncoder(forKey key: Key) -> Encoder {
+    func superEncoder(forKey _: Key) -> Encoder {
         fatalError("Not yet implemented")
     }
 }
@@ -177,7 +182,7 @@ extension ASN1EncoderImpl.KeyedContainer {
             precondition(self.containers.count <= 1)
             object = self.containers.first?.object
         } else {
-            let values = self.containers.compactMap { $0.object }
+            let values = self.containers.compactMap(\.object)
 
             object = ASN1Kit.create(tag: self.context.encodeAsSet ? .universal(.set) : .universal(.sequence),
                                     data: .constructed(values))
@@ -202,13 +207,15 @@ extension ASN1EncoderImpl.KeyedContainer {
         }
     }
 
-    private func nestedSingleValueContainer(forKey key: Key,
-                                            context: ASN1EncodingContext) -> SingleValueEncodingContainer {
+    private func nestedSingleValueContainer(
+        forKey key: Key,
+        context: ASN1EncodingContext
+    ) -> SingleValueEncodingContainer {
         let container = ASN1EncoderImpl.SingleValueContainer(codingPath: self.nestedCodingPath(forKey: key),
                                                              userInfo: self.userInfo,
                                                              context: context)
 
-        self.selectAutomaticTagForEnumCase() // FIXME does this belong here?
+        self.selectAutomaticTagForEnumCase() // FIXME: does this belong here?
 
         self.addContainer(container)
         return container

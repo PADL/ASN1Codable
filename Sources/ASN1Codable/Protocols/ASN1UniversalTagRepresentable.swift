@@ -22,5 +22,5 @@ protocol ASN1UniversalTagRepresentable {
 }
 
 extension Optional: ASN1UniversalTagRepresentable where Wrapped: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Kit.ASN1Tag { return Wrapped.tagNo }
+    static var tagNo: ASN1Kit.ASN1Tag { Wrapped.tagNo }
 }

@@ -21,5 +21,4 @@ public protocol ASN1ObjectSetCodable: Codable {
     static var knownTypes: [AnyHashable: Codable.Type] { get }
 }
 
-public protocol ASN1ObjectSetOctetStringCodable: ASN1ObjectSetCodable {
-}
+public protocol ASN1ObjectSetOctetStringCodable: ASN1ObjectSetCodable {}

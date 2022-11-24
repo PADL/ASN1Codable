@@ -18,7 +18,7 @@ import Foundation
 import ASN1Kit
 
 public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible,
-                                        CustomDebugStringConvertible, ASN1TaggedTypeRepresentable {
+    CustomDebugStringConvertible, ASN1TaggedTypeRepresentable {
     associatedtype Value: Codable
 
     var wrappedValue: Value { get set }
@@ -29,11 +29,11 @@ public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible,
 
 extension ASN1TaggedWrappedValue {
     static var wrappedType: Value.Type {
-        return Value.self
+        Value.self
     }
 
     public var projectedValue: ASN1Metadata {
-        return Self.metadata
+        Self.metadata
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -47,7 +47,7 @@ extension ASN1TaggedWrappedValue {
     }
 
     public var description: String {
-        return String(describing: self.wrappedValue)
+        String(describing: self.wrappedValue)
     }
 
     public var debugDescription: String {

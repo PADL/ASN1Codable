@@ -18,11 +18,11 @@ import Foundation
 import ASN1Kit
 
 @propertyWrapper
-public struct ASN1ContextTagged <Tag, Tagging, Value>: Codable, ASN1TaggedWrappedValue where
+public struct ASN1ContextTagged<Tag, Tagging, Value>: Codable, ASN1TaggedWrappedValue where
     Tag: ASN1TagNumberRepresentable,
     Tagging: ASN1TaggingRepresentable,
     Value: Codable {
-    public static var tagNumber: Tag.Type { return Tag.self }
+    public static var tagNumber: Tag.Type { Tag.self }
 
     public var wrappedValue: Value
 
@@ -35,21 +35,18 @@ public struct ASN1ContextTagged <Tag, Tagging, Value>: Codable, ASN1TaggedWrappe
     }
 
     public static var metadata: ASN1Metadata {
-        return ASN1Metadata(tag: .taggedTag(tagNumber.tagNo), tagging: Tagging.tagging)
+        ASN1Metadata(tag: .taggedTag(tagNumber.tagNo), tagging: Tagging.tagging)
     }
 }
 
-extension ASN1ContextTagged: Equatable where Value: Equatable {
-}
+extension ASN1ContextTagged: Equatable where Value: Equatable {}
 
-extension ASN1ContextTagged: Hashable where Value: Hashable {
-}
+extension ASN1ContextTagged: Hashable where Value: Hashable {}
 
-public protocol ASN1ContextTaggedType: ASN1TaggedType {
-}
+public protocol ASN1ContextTaggedType: ASN1TaggedType {}
 
 extension ASN1ContextTaggedType {
     public static var metadata: ASN1Metadata {
-        return ASN1Metadata(tag: .taggedTag(self.tagNumber))
+        ASN1Metadata(tag: .taggedTag(self.tagNumber))
     }
 }

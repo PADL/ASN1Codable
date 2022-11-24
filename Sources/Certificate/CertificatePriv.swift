@@ -19,17 +19,21 @@ import ASN1Codable
 import Network
 
 @_cdecl("CertificateCreateWithBytes")
-public func CertificateCreateWithBytes(_ allocator: CFAllocator!,
-                                       _ bytes: [UInt8],
-                                       _ der_length: CFIndex) -> CertificateRef? {
+public func CertificateCreateWithBytes(
+    _: CFAllocator!,
+    _ bytes: [UInt8],
+    _ der_length: CFIndex
+) -> CertificateRef? {
     let data = Data(bytes: bytes, count: der_length)
     return Certificate.create(with: data)
 }
 
 @_cdecl("CertificateCreateWithKeychainItem")
-public func CertificateCreateWithKeychainItem(_ allocator: CFAllocator!,
-                                              _ der_certificate: CFData,
-                                              _ keychain_item: CFTypeRef) -> CertificateRef? {
+public func CertificateCreateWithKeychainItem(
+    _: CFAllocator!,
+    _ der_certificate: CFData,
+    _ keychain_item: CFTypeRef
+) -> CertificateRef? {
     guard let certificate: CertificateRef = Certificate.create(with: der_certificate as Data) else {
         return nil
     }
@@ -145,8 +149,7 @@ public func CertificateCopyJSONDescription(_ certificate: CertificateRef) -> CFS
         let data = try jsonEncoder.encode(certificate)
         guard let string = String(data: data, encoding: .utf8) else { return nil }
         return string as CFString
-    } catch {
-    }
+    } catch {}
 
     return nil
 }

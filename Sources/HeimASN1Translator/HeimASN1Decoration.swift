@@ -29,8 +29,8 @@ struct HeimASN1Decoration: Codable {
     var headerName: String
 
     enum CodingKeys: String, CodingKey {
-        case type = "type"
-        case name = "name"
+        case type
+        case name
         case isOptional = "optional"
         case isExternal = "external"
         case isPointer = "pointer"

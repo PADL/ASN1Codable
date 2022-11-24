@@ -4,5 +4,7 @@
 --wrapparameters before-first
 --extensionacl on-declarations
 --swiftversion 5.7
+--patternlet inline
 --disable wrapMultilineStatementBraces
 --disable opaqueGenericParameters
+--disable sortedImports

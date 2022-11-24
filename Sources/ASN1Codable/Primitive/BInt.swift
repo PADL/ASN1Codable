@@ -39,7 +39,7 @@ extension BInt: ASN1DecodableType {
             throw ASN1Error.malformedEncoding("ASN.1 integer is empty")
         } else if data.count == 1 {
             //
-        } else if (data[0] == 0 && data[1] & 0x80 == 0) || (data[0] == 0xff && data[1] & 0x80 == 0x80) {
+        } else if (data[0] == 0 && data[1] & 0x80 == 0) || (data[0] == 0xFF && data[1] & 0x80 == 0x80) {
             // note that the latter check may fail with certificates from CAs that
             // read 8 bytes of RNG into a buffer and tag with [UNIVERSAL INTEGER]
             // for serialNumber. so we may need to remove this check.
@@ -48,8 +48,8 @@ extension BInt: ASN1DecodableType {
 
         if !data.isEmpty, data[0] & 0x80 == 0x80 {
             var notBytes = [UInt8](repeating: 0, count: data.count)
-            (0..<notBytes.count).forEach {
-                notBytes[$0] = data[$0] ^ 0xff
+            (0 ..< notBytes.count).forEach {
+                notBytes[$0] = data[$0] ^ 0xFF
             }
             self.init(bytes: notBytes)
             self += 1
@@ -61,24 +61,24 @@ extension BInt: ASN1DecodableType {
 }
 
 extension BInt: ASN1EncodableType {
-    public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
+    public func asn1encode(tag _: ASN1DecodedTag?) throws -> ASN1Object {
         var bytes: [UInt8]
 
         if self.signum() < 0 {
             let value = self.magnitude - 1
             bytes = value.getBytes()
 
-            (0..<bytes.count).forEach {
-                bytes[$0] ^= 0xff
+            (0 ..< bytes.count).forEach {
+                bytes[$0] ^= 0xFF
             }
             if bytes.isEmpty || bytes[0] & 0x80 == 0 {
-                bytes.insert(0xff, at: 0)
+                bytes.insert(0xFF, at: 0)
             }
         } else if self.signum() == 0 {
             bytes = [0x00]
         } else {
             bytes = self.getBytes()
-            if !bytes.isEmpty && bytes[0] & 0x80 != 0 {
+            if !bytes.isEmpty, bytes[0] & 0x80 != 0 {
                 bytes.insert(0x00, at: 0)
             }
         }
@@ -88,5 +88,5 @@ extension BInt: ASN1EncodableType {
 }
 
 extension BInt: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }

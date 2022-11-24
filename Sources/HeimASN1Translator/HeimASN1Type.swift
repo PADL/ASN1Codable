@@ -28,7 +28,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
     case typeRef(String)
 
     static func == (lhs: HeimASN1Type, rhs: HeimASN1Type) -> Bool {
-        return lhs.name == rhs.name
+        lhs.name == rhs.name
     }
 
     var universalTypeValue: HeimASN1UniversalType? {
@@ -76,8 +76,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         }
     }
 
-    func encode(to encoder: Encoder) throws {
-    }
+    func encode(to _: Encoder) throws {}
 
     static func cTypeToSwiftType(_ cType: String) -> String? {
         switch cType {
@@ -143,9 +142,9 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         typeDef.parent = containingTypeDef
 
         if containingTypeDef.isTypeDef ?? false {
-            try emitTypeDefDefinition(typeDef, containingTypeDef: containingTypeDef, &outputStream)
+            try self.emitTypeDefDefinition(typeDef, containingTypeDef: containingTypeDef, &outputStream)
         } else {
-            try emitTypeDefField(typeDef, containingTypeDef: containingTypeDef, &outputStream)
+            try self.emitTypeDefField(typeDef, containingTypeDef: containingTypeDef, &outputStream)
         }
     }
 
@@ -171,13 +170,13 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             } else if containingTypeDef.parent?.isUniformlyContextTagged ?? false {
                 try fieldDescriptor.emit(&outputStream)
                 outputStream.write("\t\(visibility)var \(generatedName): \(fieldDescriptor.bareSwiftType)")
-                if fieldDescriptor.needsInitialValue && !isDefault {
+                if fieldDescriptor.needsInitialValue, !isDefault {
                     outputStream.write(" = \(fieldDescriptor.initialValue)")
                 }
             } else {
                 try fieldDescriptor.emit(&outputStream)
                 outputStream.write("\t\(visibility)var \(generatedName): \(fieldDescriptor.bareSwiftType)")
-                if fieldDescriptor.needsInitialValue && !isDefault {
+                if fieldDescriptor.needsInitialValue, !isDefault {
                     outputStream.write(" = \(fieldDescriptor.initialValue)")
                 }
             }
@@ -185,7 +184,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             if let defaultValue = containingTypeDef.defaultValue {
                 // emit an accessor with the public type name
                 outputStream.write("\t\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(fieldDescriptor.bareSwiftTypeSansOptional) {\n")
-                // FIXME handle disablePropertyWrappers here
+                // FIXME: handle disablePropertyWrappers here
                 let defaultValueString: String
                 if defaultValue.value is String {
                     defaultValueString = "\"\(defaultValue.value)\""
@@ -268,10 +267,8 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
                 if let oidStringValue = containingTypeDef.oidStringValue {
                     outputStream.write(" = ASN1Kit.ObjectIdentifier(rawValue: \"\(oidStringValue)\")!\n")
                 }
-                break
             case .integer:
                 outputStream.write(" = \(containingTypeDef.value![0].value)\n")
-                break
             default:
                 break
             }
@@ -287,10 +284,8 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
                         outputStream.write("\(containingTypeDef.visibility)let \(member.key): \(containingTypeDef.generatedName) = \(value)\n")
                     }
                 }
-                break
             default:
                 self.emitSwiftTypeAlias(containingTypeDef: containingTypeDef, &outputStream)
-                break
             }
         }
     }
@@ -311,13 +306,10 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             precondition(type.parent != nil)
             type.tType?.typeDefValue?.parent = containingTypeDef
             try self.emitTypeDef(type, containingTypeDef: containingTypeDef, &outputStream)
-            break
         case .universal(let type):
             try self.emitUniversal(type, containingTypeDef: containingTypeDef, &outputStream)
-            break
         case .typeRef(let type):
             try self.emitTypeRef(type, containingTypeDef: containingTypeDef, &outputStream)
-            break
         }
     }
 }

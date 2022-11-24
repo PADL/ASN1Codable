@@ -20,7 +20,7 @@ import ASN1Codable
 
 extension Certificate {
     func `extension`<T>(_ extnID: ObjectIdentifier) -> T? where T: Codable {
-        return self.tbsCertificate.extensions?.first { $0.extnID == extnID }?.extnValue as? T
+        self.tbsCertificate.extensions?.first { $0.extnID == extnID }?.extnValue as? T
     }
 
     var componentAttributes: NSDictionary? {
@@ -33,7 +33,7 @@ extension Certificate {
 
     // swiftlint:disable discouraged_optional_collection
     var subjectAltName: [GeneralName]? {
-        return self.extension(id_x509_ce_subjectAltName)
+        self.extension(id_x509_ce_subjectAltName)
     }
 
     var serialNumberData: CFData? {
@@ -57,8 +57,7 @@ extension ObjectIdentifier {
                     return friendlyName
                 }
             }
-        } catch {
-        }
+        } catch {}
 
         return self.description
     }
@@ -66,7 +65,7 @@ extension ObjectIdentifier {
 
 extension AttributeTypeAndValue: CustomStringConvertible {
     var description: String {
-        return "\(self.type.friendlyName)=\(self.value)"
+        "\(self.type.friendlyName)=\(self.value)"
     }
 }
 
@@ -76,11 +75,10 @@ extension Name: CustomStringConvertible {
         case .rdnSequence(let rdns):
             return ([""] + rdns.map { $0.map { String(describing: $0) }.joined(separator: ",") }).joined(separator: "/")
         }
-
     }
 }
 
-// FIXME OpenSSL style
+// FIXME: OpenSSL style
 extension GeneralName: CustomStringConvertible {
     var description: String {
         switch self {
@@ -110,18 +108,18 @@ extension GeneralName: CustomStringConvertible {
 
 extension OtherName: CustomStringConvertible {
     public var description: String {
-        return "\(self.type_id.friendlyName)={\(self.value)}"
+        "\(self.type_id.friendlyName)={\(self.value)}"
     }
 }
 
 extension HardwareModuleName: CustomStringConvertible {
     var description: String {
-        return "\(self.hwType.friendlyName)=\(self.hwSerialNum.base64EncodedString())"
+        "\(self.hwType.friendlyName)=\(self.hwSerialNum.base64EncodedString())"
     }
 }
 
 extension KRB5PrincipalName: CustomStringConvertible {
     public var description: String {
-        "\(self.principalName.name_string.map { String(describing: $0 )}.joined(separator: "/"))@\(self.realm)"
+        "\(self.principalName.name_string.map { String(describing: $0) }.joined(separator: "/"))@\(self.realm)"
     }
 }

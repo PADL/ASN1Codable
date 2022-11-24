@@ -32,11 +32,11 @@ struct ASN1ImplicitlyWrappedObject: ASN1Object {
     }
 
     var length: Int {
-        return self.data.length
+        self.data.length
     }
 
     var constructed: Bool {
-        if case .constructed = data {
+        if case .constructed = self.data {
             return true
         } else {
             return false

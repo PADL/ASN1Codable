@@ -19,7 +19,7 @@ import ASN1Kit
 import AnyCodable
 
 public struct ASN1TaggedDictionary {
-    fileprivate var wrappedValue: [UInt: AnyCodable]
+    private var wrappedValue: [UInt: AnyCodable]
 
     init(wrappedValue: [UInt: AnyCodable]) {
         self.wrappedValue = wrappedValue
@@ -27,8 +27,8 @@ public struct ASN1TaggedDictionary {
 
     // swiftlint:disable identifier_name
     public func _bridgeToObjectiveC() -> NSDictionary {
-        return self.wrappedValue.mapValues {
-            return $0.value as? NSObject
+        self.wrappedValue.mapValues {
+            $0.value as? NSObject
         } as NSDictionary
     }
 }
@@ -42,7 +42,7 @@ extension ASN1TaggedDictionary: Decodable {
             })
         } else {
             let container = try decoder.singleValueContainer()
-            self.wrappedValue = try container.decode(Dictionary<UInt, AnyCodable>.self)
+            self.wrappedValue = try container.decode([UInt: AnyCodable].self)
             return
         }
     }
@@ -88,10 +88,10 @@ private struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
     }
 
     var stringValue: String {
-        return "[\(self.tagNo)]"
+        "[\(self.tagNo)]"
     }
 
     var intValue: Int? {
-        return self.tagNo < Int.max ? Int(tagNo) : nil
+        self.tagNo < Int.max ? Int(self.tagNo) : nil
     }
 }

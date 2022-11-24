@@ -22,13 +22,12 @@ public final class ASN1Encoder {
     public var taggingEnvironment: ASN1Tagging?
     public var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary?
 
-    public init() {
-    }
+    public init() {}
 
     public func encode<T: Encodable>(_ value: T) throws -> Data {
         let encoder = ASN1EncoderImpl(userInfo: self.userInfo,
                                       taggingEnvironment: self.taggingEnvironment,
-                                      objectSetTypeDictionary: objectSetTypeDictionary)
+                                      objectSetTypeDictionary: self.objectSetTypeDictionary)
         let box = Box(value) // needed to encode containing structure
         try box.encode(to: encoder)
         guard let object = encoder.object else {
@@ -41,9 +40,9 @@ public final class ASN1Encoder {
 }
 
 #if canImport(Combine)
-import Combine
+    import Combine
 
-extension ASN1Encoder: TopLevelEncoder {
-    public typealias Input = Data
-}
+    extension ASN1Encoder: TopLevelEncoder {
+        public typealias Input = Data
+    }
 #endif

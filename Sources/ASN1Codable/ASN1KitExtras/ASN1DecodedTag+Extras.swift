@@ -18,7 +18,7 @@ import Foundation
 import ASN1Kit
 
 extension ASN1DecodedTag {
-    fileprivate var tagType: UInt8 {
+    private var tagType: UInt8 {
         switch self {
         case .universal:
             return ASN1Tag.universal
@@ -31,7 +31,7 @@ extension ASN1DecodedTag {
         }
     }
 
-    fileprivate var tagNo: UInt {
+    private var tagNo: UInt {
         switch self {
         case .universal(let tagNo):
             return UInt(tagNo.rawValue)
@@ -122,7 +122,7 @@ extension ASN1DecodedTag {
             case "application":
                 self = .applicationTag(tagNo)
             case "universal":
-                guard tagNo == tagNo & 0xff, let tag = ASN1Tag(rawValue: UInt8(tagNo)) else {
+                guard tagNo == tagNo & 0xFF, let tag = ASN1Tag(rawValue: UInt8(tagNo)) else {
                     return nil
                 }
                 self = .universal(tag)

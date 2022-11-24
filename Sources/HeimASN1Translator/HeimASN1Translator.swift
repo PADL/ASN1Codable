@@ -17,7 +17,7 @@
 import Foundation
 import ASN1Kit
 
-let HeimASN1TranslatorUserInfoKey: CodingUserInfoKey = CodingUserInfoKey(rawValue: "HeimASN1TranslatorUserInfoKey")!
+let HeimASN1TranslatorUserInfoKey: CodingUserInfoKey = .init(rawValue: "HeimASN1TranslatorUserInfoKey")!
 
 protocol HeimASN1Emitter {
     func emit(_ outputStream: inout OutputStream) throws
@@ -64,10 +64,12 @@ public final class HeimASN1Translator {
     private var typeDefs = [HeimASN1TypeDef]()
     private(set) var url: URL?
 
-    public init(options: Options = Options(),
-                typeMaps: [String: String]? = nil,
-                additionalConformances: [String: [String]]? = nil,
-                provenanceInformation: String? = nil) {
+    public init(
+        options: Options = Options(),
+        typeMaps: [String: String]? = nil,
+        additionalConformances: [String: [String]]? = nil,
+        provenanceInformation: String? = nil
+    ) {
         self.options = options
         self.typeMaps = (typeMaps ?? [:]).mapValues {
             switch $0 {
@@ -83,9 +85,11 @@ public final class HeimASN1Translator {
         self.provenanceInformation = provenanceInformation
     }
 
-    init(options: Options = Options(),
-         typeMaps: [String: TypeMap]? = nil,
-         additionalConformances: [String: [String]]? = nil) {
+    init(
+        options: Options = Options(),
+        typeMaps: [String: TypeMap]? = nil,
+        additionalConformances: [String: [String]]? = nil
+    ) {
         self.options = options
         self.typeMaps = typeMaps ?? [:]
         self.additionalConformances = additionalConformances ?? [:]
@@ -93,17 +97,17 @@ public final class HeimASN1Translator {
     }
 
     func cacheTypeRef(_ ref: String) {
-        typeRefCache.insert(ref)
+        self.typeRefCache.insert(ref)
     }
 
     func typeRefExists(_ ref: String) -> Bool {
-        return typeRefCache.contains(ref)
+        self.typeRefCache.contains(ref)
     }
 
     func resolveTypeRef(_ ref: String) -> HeimASN1TypeDef? {
-        return self.imports.reduce(typeDefsByName[ref], {
+        self.imports.reduce(self.typeDefsByName[ref]) {
             $0 ?? $1.translator?.resolveTypeRef(ref)
-        })
+        }
     }
 
     lazy var swiftImports: Set<String> = {
@@ -142,10 +146,10 @@ public final class HeimASN1Translator {
             }
 
             if let members = typeDef.members {
-                _maxTagValue = members.map { $0.typeDefValue?.nonUniversalTagValue ?? 0 }.reduce(maxTagValue ?? 0, {
+                _maxTagValue = members.map { $0.typeDefValue?.nonUniversalTagValue ?? 0 }.reduce(maxTagValue ?? 0) {
                     foundNonUniversalMember = true
                     return max($0, $1)
-                })
+                }
             }
 
             // don't set maxTagValue if we didn't find a non-universal member, because we don't
@@ -163,14 +167,14 @@ public final class HeimASN1Translator {
             return
         }
 
-        // FIXME these need to be at least as visible as any fields that use them so,
+        // FIXME: these need to be at least as visible as any fields that use them so,
         // just make them public for now
 
         if let module = self.module {
             outputStream.write("public enum \(module.module) {\n")
         }
 
-        for i in 0...maxTagValue {
+        for i in 0 ... maxTagValue {
             outputStream.write("\(self.module == nil ? "" : "\t")public enum ASN1TagNumber$\(i): ASN1TagNumberRepresentable {}\n")
         }
 
@@ -194,7 +198,7 @@ public final class HeimASN1Translator {
                case .keyNotFound(let codingKey, _) = error,
                codingKey.stringValue == "name" {
                 do {
-                    module = try jsonDecoder.decode(HeimASN1Module.self, from: data.subdata(in: range))
+                    self.module = try jsonDecoder.decode(HeimASN1Module.self, from: data.subdata(in: range))
                 } catch {
                     if let error = error as? DecodingError,
                        case .keyNotFound(let codingKey, _) = error,
@@ -202,7 +206,7 @@ public final class HeimASN1Translator {
                         let moduleRef = try jsonDecoder.decode(HeimASN1ModuleRef.self, from: data.subdata(in: range))
 
                         if moduleRef.name != "heim" {
-                            try moduleRef.`import`(translator: self)
+                            try moduleRef.import(translator: self)
                         }
 
                         self.imports.append(moduleRef)
@@ -233,7 +237,7 @@ public final class HeimASN1Translator {
         while end > 0 {
             do {
                 // taste the data
-                try decode(data, range: start..<data.count)
+                try self.decode(data, range: start ..< data.count)
 
                 // if this acutally worked, get out
                 end = 0
@@ -242,9 +246,9 @@ public final class HeimASN1Translator {
                    case .dataCorrupted(let context) = error,
                    let underlyingError = context.underlyingError as? CocoaError,
                    let errorIndex = underlyingError.userInfo["NSJSONSerializationErrorIndex"] as? Data.Index {
-                    let range = start..<(start + errorIndex)
+                    let range = start ..< (start + errorIndex)
                     // decode the data
-                    try decode(data, range: range)
+                    try self.decode(data, range: range)
 
                     start += errorIndex
                     end = data.count - start
@@ -261,7 +265,7 @@ public final class HeimASN1Translator {
         if let provenanceInformation = self.provenanceInformation {
             outputStream.write("/// \(provenanceInformation)\n")
         }
-        if let module = module {
+        if let module {
             outputStream.write("/// defines ASN.1 module \(module.module) with \(module.tagging) tagging\n")
         }
         self.imports.forEach {
@@ -284,9 +288,11 @@ public final class HeimASN1Translator {
 }
 
 extension HeimASN1Translator {
-    fileprivate func apply(with typeDef: HeimASN1TypeDef,
-                           _ block: (_ type: HeimASN1TypeDef, _ stop: inout Bool) -> Void,
-                           _ stop: inout Bool) {
+    private func apply(
+        with typeDef: HeimASN1TypeDef,
+        _ block: (_ type: HeimASN1TypeDef, _ stop: inout Bool) -> Void,
+        _ stop: inout Bool
+    ) {
         block(typeDef, &stop)
         if stop { return }
         if let type = typeDef.type, let type = type.typeDefValue {

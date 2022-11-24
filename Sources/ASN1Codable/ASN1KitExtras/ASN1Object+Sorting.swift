@@ -46,9 +46,9 @@ extension ASN1Object {
             if lhsSerialized.count == rhsSerialized.count {
                 let cmp = lhsSerialized.withUnsafeBytes { lhsBytes in
                     rhsSerialized.withUnsafeBytes { rhsBytes in
-                        return memcmp(lhsBytes.bindMemory(to: UInt8.self).baseAddress,
-                                      rhsBytes.bindMemory(to: UInt8.self).baseAddress,
-                                      lhsSerialized.count)
+                        memcmp(lhsBytes.bindMemory(to: UInt8.self).baseAddress,
+                               rhsBytes.bindMemory(to: UInt8.self).baseAddress,
+                               lhsSerialized.count)
                     }
                 }
                 return cmp > 0

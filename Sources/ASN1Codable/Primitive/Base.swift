@@ -18,61 +18,61 @@ import Foundation
 import ASN1Kit
 
 extension Bool: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .boolean }
+    static var tagNo: ASN1Tag { .boolean }
 }
 
 extension Int: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }
 
 extension Int8: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }
 
 extension Int16: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }
 
 extension Int32: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }
 
 extension Int64: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }
 
 extension UInt: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }
 
 extension UInt8: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }
 
 extension UInt16: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }
 
 extension UInt32: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }
 
 extension UInt64: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .integer }
+    static var tagNo: ASN1Tag { .integer }
 }
 
 extension Data: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .octetString }
+    static var tagNo: ASN1Tag { .octetString }
 }
 
 extension ObjectIdentifier: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .objectIdentifier }
+    static var tagNo: ASN1Tag { .objectIdentifier }
 }
 
 extension Array: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .sequence }
+    static var tagNo: ASN1Tag { .sequence }
 }
 
 extension Set: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .set }
+    static var tagNo: ASN1Tag { .set }
 }

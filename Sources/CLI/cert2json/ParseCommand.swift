@@ -42,9 +42,9 @@ struct ParseCommand: CommandProtocol {
             fileContents = nil
         }
 
-        if let fileContents = fileContents {
+        if let fileContents {
             var didBegin = false
-            var base64: String = ""
+            var base64 = ""
 
             String(data: fileContents, encoding: .ascii)?.enumerateLines { string, stop in
                 if string == "-----BEGIN CERTIFICATE-----" {
@@ -68,7 +68,7 @@ struct ParseCommand: CommandProtocol {
         return data
     }
 
-    func run(_ options: Options) -> Result<(), Error> {
+    func run(_ options: Options) -> Result<Void, Error> {
         guard let data = self.data(options: options), !data.isEmpty else {
             return .failure(.fileReadError)
         }
@@ -113,10 +113,10 @@ struct ParseCommand: CommandProtocol {
 
         static func create(_ file: String) ->
             (_ string: String) ->
-                (_ json: Bool) ->
-                    (_ reencode: Bool) ->
-                        (_ san: Bool) -> Options {
-            return { (string: String) in { (json: Bool) in { (reencode: Bool) in { (san: Bool) in
+            (_ json: Bool) ->
+            (_ reencode: Bool) ->
+            (_ san: Bool) -> Options {
+            { (string: String) in { (json: Bool) in { (reencode: Bool) in { (san: Bool) in
                 Options(file: file,
                         string: string,
                         json: json,
@@ -130,12 +130,12 @@ struct ParseCommand: CommandProtocol {
 
         static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<Error>> {
             // swiftlint:disable:previous identifier_name
-            return create
-                    <*> m <| Option(key: "file", defaultValue: "", usage: "path to PEM encoded file")
-                    <*> m <| Option(key: "string", defaultValue: "", usage: "string passed as ASN.1 encoded base64")
-                    <*> m <| Option(key: "json", defaultValue: true, usage: "output certificate as JSON")
-                    <*> m <| Option(key: "reencode", defaultValue: false, usage: "re-encode to ASN.1")
-                    <*> m <| Option(key: "san", defaultValue: false, usage: "display ccertificate SANs")
+            self.create
+                <*> m <| Option(key: "file", defaultValue: "", usage: "path to PEM encoded file")
+                <*> m <| Option(key: "string", defaultValue: "", usage: "string passed as ASN.1 encoded base64")
+                <*> m <| Option(key: "json", defaultValue: true, usage: "output certificate as JSON")
+                <*> m <| Option(key: "reencode", defaultValue: false, usage: "re-encode to ASN.1")
+                <*> m <| Option(key: "san", defaultValue: false, usage: "display ccertificate SANs")
         }
     }
 }

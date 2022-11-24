@@ -44,7 +44,7 @@ public struct ASN1ObjectSetValue: Codable {
 
         let type = objectSetCodingContext.type(encoder.context)
 
-        // FIXME set tagging environment to EXPLICIT then restore
+        // FIXME: set tagging environment to EXPLICIT then restore
         do {
             if objectSetCodingContext.encodeAsOctetString {
                 let berData: Data
@@ -53,13 +53,13 @@ public struct ASN1ObjectSetValue: Codable {
                     if let wrappedValue = self.wrappedValue {
                         berData = try ASN1Encoder().encode(wrappedValue)
                     } else {
-                        berData = Data() // FIXME honour NULL encoding preference
+                        berData = Data() // FIXME: honour NULL encoding preference
                     }
                 } else if let data = self.wrappedValue as? Data {
                     berData = data
                 } else {
                     fatalError("Object set type \(String(describing: objectSetCodingContext.valueType)) " +
-                               "not mapped to a type, but wrapped value is not Data")
+                        "not mapped to a type, but wrapped value is not Data")
                 }
 
                 try container.encode(berData)
@@ -72,7 +72,7 @@ public struct ASN1ObjectSetValue: Codable {
             }
         } catch {
             debugPrint("Failed to encode object set value \(String(describing: self.wrappedValue)) " +
-                       "for type \(objectSetCodingContext.objectSetType): \(error)")
+                "for type \(objectSetCodingContext.objectSetType): \(error)")
             throw error
         }
     }
@@ -85,7 +85,7 @@ public struct ASN1ObjectSetValue: Codable {
             return
         }
 
-        // FIXME set tagging environment to EXPLICIT then restore
+        // FIXME: set tagging environment to EXPLICIT then restore
         guard let objectSetCodingContext = decoder.context.objectSetCodingContext else {
             self.wrappedValue = nil
             return
@@ -97,14 +97,14 @@ public struct ASN1ObjectSetValue: Codable {
         do {
             if objectSetCodingContext.encodeAsOctetString {
                 let berData = try container.decode(Data.self)
-                if let type = type {
+                if let type {
                     self.wrappedValue = try ASN1Decoder().decode(type, from: berData)
                 } else {
                     debugPrint("Unknown object set type \(valueType), decoding as Data")
                     self.wrappedValue = berData
                 }
             } else {
-                guard let type = type else {
+                guard let type else {
                     debugPrint("Unknown object set type \(valueType), cannot decode")
                     let context = DecodingError.Context(codingPath: container.codingPath,
                                                         debugDescription: "Unknown object set type \(valueType)")

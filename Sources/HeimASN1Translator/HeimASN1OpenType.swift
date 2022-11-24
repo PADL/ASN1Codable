@@ -32,17 +32,17 @@ final class HeimASN1OpenType: Codable, CustomStringConvertible {
         case openType = "opentype"
         case arrayType = "arraytype"
         case className = "classname"
-        case objectSetName = "objectsetname"        // Known ...
-        case typeIdMember = "typeidmember"          // type-id (ASN.1 name)
-        case openTypeMember = "opentypemember"      // value (ASN.1 name)
+        case objectSetName = "objectsetname" // Known ...
+        case typeIdMember = "typeidmember" // type-id (ASN.1 name)
+        case openTypeMember = "opentypemember" // value (ASN.1 name)
         case typeIdField = "typeidfield"
         case openTypeField = "opentypefield"
-        case members = "members"
+        case members
         case openTypeIds = "opentypeids"
     }
 
     var description: String {
-        return "OpenType \(className) with \(members.count) members"
+        "OpenType \(self.className) with \(self.members.count) members"
     }
 
     func typeId(for member: HeimASN1TypeDef) -> String? {

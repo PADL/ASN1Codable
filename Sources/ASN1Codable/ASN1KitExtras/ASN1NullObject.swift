@@ -24,7 +24,7 @@ struct ASN1NullObject: ASN1Object {
     let constructed = false
 
     var originalEncoding: Data? {
-        return nil
+        nil
     }
 }
 
@@ -32,6 +32,6 @@ let ASN1Null = ASN1NullObject()
 
 extension ASN1Object {
     var isNull: Bool {
-        return self.tag == .universal(.null)
+        self.tag == .universal(.null)
     }
 }

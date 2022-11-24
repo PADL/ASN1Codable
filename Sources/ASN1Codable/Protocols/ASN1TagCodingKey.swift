@@ -50,9 +50,9 @@ struct ASN1PlaceholderCodingKey: CodingKey {
     private let wrappedValue: ASN1TagCodingKey
 
     init(_ wrappedValue: ASN1TagCodingKey) { self.wrappedValue = wrappedValue }
-    init?(intValue: Int) { return nil }
-    init?(stringValue: String) { return nil }
+    init?(intValue _: Int) { nil }
+    init?(stringValue _: String) { nil }
 
-    var stringValue: String { return wrappedValue.stringValue }
-    var intValue: Int? { return wrappedValue.intValue }
+    var stringValue: String { self.wrappedValue.stringValue }
+    var intValue: Int? { self.wrappedValue.intValue }
 }

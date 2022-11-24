@@ -18,32 +18,36 @@ import Foundation
 import ASN1Kit
 
 final class ASN1EncoderImpl {
-    fileprivate var container: ASN1EncodingContainer?
+    private var container: ASN1EncodingContainer?
 
     let codingPath: [CodingKey]
     let userInfo: [CodingUserInfoKey: Any]
     let context: ASN1EncodingContext
 
-    init(codingPath: [CodingKey] = [],
-         userInfo: [CodingUserInfoKey: Any] = [:],
-         taggingEnvironment: ASN1Tagging? = nil,
-         objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil) {
+    init(
+        codingPath: [CodingKey] = [],
+        userInfo: [CodingUserInfoKey: Any] = [:],
+        taggingEnvironment: ASN1Tagging? = nil,
+        objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
+    ) {
         self.codingPath = codingPath
         self.userInfo = userInfo
         self.context = ASN1EncodingContext(taggingEnvironment: taggingEnvironment ?? .explicit,
                                            objectSetTypeDictionary: objectSetTypeDictionary)
     }
 
-    init(codingPath: [CodingKey] = [],
-         userInfo: [CodingUserInfoKey: Any] = [:],
-         context: ASN1EncodingContext = ASN1EncodingContext()) {
+    init(
+        codingPath: [CodingKey] = [],
+        userInfo: [CodingUserInfoKey: Any] = [:],
+        context: ASN1EncodingContext = ASN1EncodingContext()
+    ) {
         self.codingPath = codingPath
         self.userInfo = userInfo
         self.context = context
     }
 
     var object: ASN1Object? {
-        return self.container?.object
+        self.container?.object
     }
 }
 
@@ -57,7 +61,7 @@ extension ASN1EncoderImpl: Encoder {
     ///
     /// - parameter type: The key type to use for the container.
     /// - returns: A new keyed encoding container.
-    func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key: CodingKey {
+    func container<Key>(keyedBy _: Key.Type) -> KeyedEncodingContainer<Key> where Key: CodingKey {
         precondition(self.container == nil)
 
         let container = KeyedContainer<Key>(codingPath: self.codingPath,
@@ -97,7 +101,7 @@ extension ASN1EncoderImpl: Encoder {
     ///
     /// - returns: A new empty single value container.
     func singleValueContainer() -> SingleValueEncodingContainer {
-        // FIXME investigate why we are reusing single value contained here
+        // FIXME: investigate why we are reusing single value contained here
         precondition(self.container == nil || self.context.objectSetCodingContext != nil)
 
         let container = SingleValueContainer(codingPath: self.codingPath,

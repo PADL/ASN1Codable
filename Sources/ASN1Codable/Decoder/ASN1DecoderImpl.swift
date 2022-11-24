@@ -25,11 +25,13 @@ final class ASN1DecoderImpl {
     let userInfo: [CodingUserInfoKey: Any]
     let context: ASN1DecodingContext
 
-    init(object: ASN1Object,
-         codingPath: [CodingKey] = [],
-         userInfo: [CodingUserInfoKey: Any] = [:],
-         taggingEnvironment: ASN1Tagging? = nil,
-         objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil) {
+    init(
+        object: ASN1Object,
+        codingPath: [CodingKey] = [],
+        userInfo: [CodingUserInfoKey: Any] = [:],
+        taggingEnvironment: ASN1Tagging? = nil,
+        objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
+    ) {
         self.object = object
         self.codingPath = codingPath
         self.userInfo = userInfo
@@ -37,10 +39,12 @@ final class ASN1DecoderImpl {
                                            objectSetTypeDictionary: objectSetTypeDictionary)
     }
 
-    init(object: ASN1Object,
-         codingPath: [CodingKey] = [],
-         userInfo: [CodingUserInfoKey: Any] = [:],
-         context: ASN1DecodingContext = ASN1DecodingContext()) {
+    init(
+        object: ASN1Object,
+        codingPath: [CodingKey] = [],
+        userInfo: [CodingUserInfoKey: Any] = [:],
+        context: ASN1DecodingContext = ASN1DecodingContext()
+    ) {
         self.object = object
         self.codingPath = codingPath
         self.userInfo = userInfo
@@ -49,7 +53,7 @@ final class ASN1DecoderImpl {
 }
 
 extension ASN1DecoderImpl: Decoder {
-    func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key: CodingKey {
+    func container<Key>(keyedBy _: Key.Type) throws -> KeyedDecodingContainer<Key> where Key: CodingKey {
         precondition(self.container == nil)
 
         let container = try KeyedContainer<Key>(object: self.object,
@@ -95,7 +99,7 @@ extension ASN1DecoderImpl {
             wrappedValue = (wrappedValue as! any ASN1TaggedWrappedValue).wrappedValue
         }
 
-        // FIXME first assignment is to silence warnings
+        // FIXME: first assignment is to silence warnings
         if let wrappedValue = wrappedValue as? ExpressibleByNilLiteral,
            let wrappedValue = wrappedValue as? Decodable?,
            case .none = wrappedValue {

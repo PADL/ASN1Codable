@@ -16,5 +16,4 @@
 
 import Foundation
 
-public protocol ASN1SetCodable {
-}
+public protocol ASN1SetCodable {}

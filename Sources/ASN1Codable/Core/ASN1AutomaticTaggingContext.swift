@@ -98,14 +98,14 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
     }
 
     private var tagging: ASN1Tagging {
-        return self.enumMetadata != nil ? .explicit : .implicit
+        self.enumMetadata != nil ? .explicit : .implicit
     }
 
     func metadataForNextTag() -> ASN1Metadata {
-        return ASN1Metadata(tag: self.nextTag(), tagging: self.tagging)
+        ASN1Metadata(tag: self.nextTag(), tagging: self.tagging)
     }
 
     var description: String {
-        return "ASN1AutomaticTaggingContext(tagNo: \(self.tagNo))"
+        "ASN1AutomaticTaggingContext(tagNo: \(self.tagNo))"
     }
 }

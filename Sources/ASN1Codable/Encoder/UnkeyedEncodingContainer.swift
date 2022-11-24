@@ -25,27 +25,30 @@ extension ASN1EncoderImpl {
         var userInfo: [CodingUserInfoKey: Any]
         var context: ASN1EncodingContext
 
-        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any],
-             context: ASN1EncodingContext = ASN1EncodingContext()) {
+        init(
+            codingPath: [CodingKey],
+            userInfo: [CodingUserInfoKey: Any],
+            context: ASN1EncodingContext = ASN1EncodingContext()
+        ) {
             self.codingPath = codingPath
             self.userInfo = userInfo
             self.context = context
         }
 
         var count: Int {
-            return containers.count
+            self.containers.count
         }
 
         // swiftlint:disable nesting
         struct Index: CodingKey {
             var stringValue: String {
-                    return "\(self.intValue!)"
+                "\(self.intValue!)"
             }
 
             var intValue: Int?
 
-            init?(stringValue: String) {
-                return nil
+            init?(stringValue _: String) {
+                nil
             }
 
             init?(intValue: Int) {
@@ -54,7 +57,7 @@ extension ASN1EncoderImpl {
         }
 
         var nestedCodingPath: [CodingKey] {
-            return self.codingPath + [Index(intValue: self.count)!]
+            self.codingPath + [Index(intValue: self.count)!]
         }
     }
 }
@@ -155,7 +158,7 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
     }
 
     func nestedContainer<NestedKey>(
-	keyedBy keyType: NestedKey.Type
+        keyedBy _: NestedKey.Type
     ) -> KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey {
         let container = ASN1EncoderImpl.KeyedContainer<NestedKey>(codingPath: self.nestedCodingPath,
                                                                   userInfo: self.userInfo,
@@ -188,7 +191,7 @@ extension ASN1EncoderImpl.UnkeyedContainer {
             precondition(self.containers.count <= 1)
             object = self.containers.first?.object
         } else {
-            let values = self.containers.compactMap { $0.object }
+            let values = self.containers.compactMap(\.object)
 
             if self.context.encodeAsSet {
                 object = ASN1Kit.create(tag: .universal(.set), data: .constructed(values)).sortedByEncodedValue

@@ -47,11 +47,11 @@ enum HeimASN1UniversalType: String, Codable, HeimASN1SwiftTypeRepresentable, Hei
     case choice = "CHOICE"
 
     var swiftType: String? {
-        return self.asn1Tag.swiftType
+        self.asn1Tag.swiftType
     }
 
     var tag: ASN1DecodedTag? {
-        return .universal(self.asn1Tag)
+        .universal(self.asn1Tag)
     }
 
     private var asn1Tag: ASN1Tag {
@@ -60,74 +60,52 @@ enum HeimASN1UniversalType: String, Codable, HeimASN1SwiftTypeRepresentable, Hei
         switch self {
         case .implicit:
             tag = .implicit
-            break
         case .boolean:
             tag = .boolean
-            break
         case .integer:
             tag = .integer
-            break
         case .bitString:
             tag = .bitString
-            break
         case .octetString:
             tag = .octetString
-            break
         case .null:
             tag = .null
-            break
         case .objectIdentifier:
             tag = .objectIdentifier
-            break
         case .external:
             tag = .external
-            break
         case .enumerated:
             tag = .enumerated
-            break
         case .sequence:
             fallthrough
         case .sequenceOf:
             tag = .sequence
-            break
         case .set:
             fallthrough
         case .setOf:
             tag = .set
-            break
         case .numericString:
             tag = .numericString
-            break
         case .printableString:
             tag = .printableString
-            break
         case .generalString:
             tag = .generalString
-            break
         case .utcTime:
             tag = .utcTime
-            break
         case .generalizedTime:
             tag = .generalizedTime
-            break
         case .universalString:
             tag = .universalString
-            break
         case .ia5String:
             tag = .ia5String
-            break
         case .utf8String:
             tag = .utf8String
-            break
         case .bmpString:
             tag = .bmpString
-            break
         case .choice:
             tag = .implicit
-            break
         default:
             fatalError("unsupported tag \(self)")
-            break
         }
         return tag
     }

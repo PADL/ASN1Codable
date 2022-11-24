@@ -27,7 +27,7 @@ extension Date: ExpressibleByDate {
     }
 }
 
-extension Optional: ExpressibleByDate where Wrapped == Date {
+extension Date?: ExpressibleByDate {
     public init(_ date: Date) {
         self = date
     }
@@ -47,7 +47,7 @@ public struct GeneralizedTime<Value: Codable & ExpressibleByDate>:
     }
 
     public static var metadata: ASN1Metadata {
-        return ASN1Metadata(tag: .universal(.generalizedTime))
+        ASN1Metadata(tag: .universal(.generalizedTime))
     }
 }
 
@@ -65,6 +65,6 @@ public struct UTCTime<Value: Codable & ExpressibleByDate>:
     }
 
     public static var metadata: ASN1Metadata {
-        return ASN1Metadata(tag: .universal(.utcTime))
+        ASN1Metadata(tag: .universal(.utcTime))
     }
 }

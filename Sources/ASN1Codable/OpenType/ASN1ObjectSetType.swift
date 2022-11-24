@@ -45,7 +45,7 @@ public struct ASN1ObjectSetType<ValueType>: Codable where ValueType: Codable & H
         if let decoder = decoder as? ASN1DecoderImpl,
            let objectSetCodingContext = decoder.context.objectSetCodingContext {
             precondition(objectSetCodingContext.valueType == nil)
-            objectSetCodingContext.valueType = wrappedValue
+            objectSetCodingContext.valueType = self.wrappedValue
         }
     }
 }

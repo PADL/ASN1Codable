@@ -27,7 +27,7 @@ struct Box<Value> {
 extension Box: Encodable where Value: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(value)
+        try container.encode(self.value)
     }
 }
 

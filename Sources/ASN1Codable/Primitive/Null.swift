@@ -16,8 +16,7 @@
 
 import Foundation
 
-public struct Null: Codable {
-}
+public struct Null: Codable {}
 
 extension Null: ASN1DecodableType {
     public init(from asn1: ASN1Object) throws {
@@ -28,11 +27,11 @@ extension Null: ASN1DecodableType {
 }
 
 extension Null: ASN1EncodableType {
-    public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
-        return ASN1Null
+    public func asn1encode(tag _: ASN1DecodedTag?) throws -> ASN1Object {
+        ASN1Null
     }
 }
 
 extension Null: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { return .null }
+    static var tagNo: ASN1Tag { .null }
 }

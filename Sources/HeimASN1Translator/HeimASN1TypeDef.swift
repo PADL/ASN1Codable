@@ -25,7 +25,7 @@ struct Value: Codable {
 
 final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable, HeimASN1TagRepresentable, Equatable, CustomStringConvertible {
     static func == (lhs: HeimASN1TypeDef, rhs: HeimASN1TypeDef) -> Bool {
-        return lhs.name == rhs.name && lhs.generatedName == rhs.generatedName
+        lhs.name == rhs.name && lhs.generatedName == rhs.generatedName
     }
 
     var name: String
@@ -55,7 +55,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
     weak var translator: HeimASN1Translator?
 
     var desiredTaggingEnvironment: HeimASN1TaggingEnvironment? {
-        return self._desiredTaggingEnvironment ?? self.taggingEnvironment
+        self._desiredTaggingEnvironment ?? self.taggingEnvironment
     }
 
     var grandParent: HeimASN1TypeDef? {
@@ -67,26 +67,26 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
     }
 
     enum CodingKeys: String, CodingKey {
-        case name = "name"
+        case name
         case generatedName = "gen_name"
         case isType = "is_type"
-        case exported = "exported"
+        case exported
         case isTypeDef = "typedef"
         case tagClass = "tagclass"
         case tagValue = "tagvalue"
         case taggingEnvironment = "tagenv"
         case tType = "ttype"
         case cType = "ctype"
-        case members = "members"
+        case members
         case isAlias = "alias"
         case isOptional = "optional"
-        case type = "type"
-        case constant = "constant"
-        case value = "value"
+        case type
+        case constant
+        case value
         case isExtensible = "extensible"
         case openType = "opentype"
-        case preserve = "preserve"
-        case decorate = "decorate"
+        case preserve
+        case decorate
         case defaultValue = "defval"
         case _desiredTaggingEnvironment = "desired_tagenv"
     }
@@ -116,7 +116,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         }
         self.isExtensible = try container.decodeIfPresent(Bool.self, forKey: .isExtensible)
         self.openType = try container.decodeIfPresent(HeimASN1OpenType.self, forKey: .openType)
-        self.preserve  = try container.decodeIfPresent(Bool.self, forKey: .preserve)
+        self.preserve = try container.decodeIfPresent(Bool.self, forKey: .preserve)
         self.decorate = try container.decodeIfPresent([HeimASN1Decoration].self, forKey: .decorate)
         self.defaultValue = try container.decodeIfPresent(AnyCodable.self, forKey: .defaultValue)
         self._desiredTaggingEnvironment = try container.decodeIfPresent(HeimASN1TaggingEnvironment.self, forKey: ._desiredTaggingEnvironment)
@@ -124,7 +124,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
     }
 
     var description: String {
-        return "HeimASN1TypeDef {generatedName=(\(generatedName)), isType=\(self.isType ?? false), isTypeDef=\(self.isTypeDef ?? false)}"
+        "HeimASN1TypeDef {generatedName=(\(self.generatedName)), isType=\(self.isType ?? false), isTypeDef=\(self.isTypeDef ?? false)}"
     }
 
     var visibility: String {
@@ -158,7 +158,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
     }
 
     var isTaggedType: Bool {
-        return self.parent?.isTag ?? false
+        self.parent?.isTag ?? false
     }
 
     var isTag: Bool {
@@ -194,7 +194,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
     }
 
     var isChoice: Bool {
-        return self.tType == .universal(.choice)
+        self.tType == .universal(.choice)
     }
 
     var isUniformlyContextTagged: Bool {
@@ -202,7 +202,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
 
         var taggingEnvironment: HeimASN1TaggingEnvironment?
 
-        let isUniformlyContextTagged: Bool = members.reduce(true, {
+        let isUniformlyContextTagged: Bool = members.reduce(true) {
             guard $0 == true,
                   let typeDefValue = self.isChoice ? $1.typeDefValue : $1.typeDefValue?.type?.typeDefValue else {
                 return false
@@ -221,7 +221,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
             }
 
             return true
-        })
+        }
 
         return isUniformlyContextTagged
     }
@@ -309,7 +309,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         if self.translator?.typeMaps[self.generatedName] == .objc {
             conformances.append("NSObject")
         }
-        if let baseType = baseType {
+        if let baseType {
             conformances.append(baseType)
         }
         conformances.append("Codable")
@@ -338,7 +338,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         }
         if let openType = self.openType {
             let valueMember = self.members?.first { $0.typeDefValue?.name == openType.openTypeMember }
-            // FIXME tags
+            // FIXME: tags
             let isOctetString: Bool = valueMember?.typeDefValue?.type?.tag == ASN1DecodedTag.universal(.octetString)
             conformances.append(isOctetString ? "ASN1Codable.ASN1ObjectSetOctetStringCodable" : "ASN1Codable.ASN1ObjectSetCodable")
         }
@@ -356,7 +356,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
     }
 
     func swiftConformances(_ baseType: String?) -> String {
-        return self._swiftConformances(baseType).joined(separator: ", ")
+        self._swiftConformances(baseType).joined(separator: ", ")
     }
 
     private func emitMappedSwiftTypeAlias(_ aliasName: String, _ outputStream: inout OutputStream) {
@@ -381,7 +381,6 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                 tagValue = typeDefValue.tagValue!
             } else {
                 tagValue = typeDefValue.type!.typeDefValue!.tagValue!
-
             }
             outputStream.write("\t\tcase \(generatedName) = \(tagValue)\n")
         }
@@ -417,11 +416,10 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                 fallthrough
             case .class:
                 isClass = true
-                break
             }
         }
 
-        if self.isTypeDef ?? false, cType != nil, let tType = self.tType {
+        if self.isTypeDef ?? false, self.cType != nil, let tType = self.tType {
             if case .universal(let type) = tType {
                 switch type {
                 case .sequence:
@@ -470,7 +468,6 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                         try $0.emit(&outputStream)
                     }
                     outputStream.write("}\n")
-                    break
                 case .choice:
                     outputStream.write("\(visibility)enum \(self.generatedName): \(self.swiftConformances(nil)) {\n")
                     if self.isUniformlyContextTagged {
@@ -481,13 +478,12 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                         try $0.emit(&outputStream)
                     }
                     outputStream.write("}\n")
-                    break
                 case .bitString:
                     if let members = self.members, !members.isEmpty {
                         let highestUsedMember: Int = members.lastIndex(where: { $0.bitStringTag != nil })! + 1
 
                         // highestUsedMember = members.last { }
-                        let rawType = try(closestIntTypeForOptionSet(highestUsedMember))
+                        let rawType = try (closestIntTypeForOptionSet(highestUsedMember))
 
                         outputStream.write("\(visibility)struct _\(self.generatedName): \(self.swiftConformances("OptionSet")) {\n")
                         outputStream.write("\t\(visibility)var rawValue: \(rawType)\n\n")
@@ -538,16 +534,12 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
     }
 
     var needsHashableConformance: Bool {
-        return self._needsDirectHashableConformance || self._needsTransitiveHashableConformance
+        self._needsDirectHashableConformance || self._needsTransitiveHashableConformance
     }
 
-    private lazy var _needsDirectHashableConformance: Bool = {
-        return self._typeNeedsDirectHashableConformance(self)
-    }()
+    private lazy var _needsDirectHashableConformance: Bool = self._typeNeedsDirectHashableConformance(self)
 
-    private lazy var _needsTransitiveHashableConformance: Bool = {
-        return self.membersOf.contains { $0.needsHashableConformance }
-    }()
+    private lazy var _needsTransitiveHashableConformance: Bool = self.membersOf.contains { $0.needsHashableConformance }
 
     private func _typeNeedsDirectHashableConformance(_ typeDef: HeimASN1TypeDef) -> Bool {
         var needsHashableConformance = false

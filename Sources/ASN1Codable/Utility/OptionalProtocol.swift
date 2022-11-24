@@ -21,5 +21,5 @@ protocol OptionalProtocol {
 }
 
 extension Optional: OptionalProtocol {
-    static var wrappedType: Any.Type { return Wrapped.self }
+    static var wrappedType: Any.Type { Wrapped.self }
 }

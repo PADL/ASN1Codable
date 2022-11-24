@@ -28,10 +28,12 @@ extension ASN1DecoderImpl {
 
         var currentIndex: Int = 0
 
-        init(object: ASN1Object,
-             codingPath: [CodingKey],
-             userInfo: [CodingUserInfoKey: Any],
-             context: ASN1DecodingContext) throws {
+        init(
+            object: ASN1Object,
+            codingPath: [CodingKey],
+            userInfo: [CodingUserInfoKey: Any],
+            context: ASN1DecodingContext
+        ) throws {
             self.object = object
             self.codingPath = codingPath
             self.userInfo = userInfo
@@ -67,13 +69,13 @@ extension ASN1Object {
 
 extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     private var unsafelyUnwrappedItems: [ASN1Object] {
-        return self.object.data.items!
+        self.object.data.items!
     }
 
     var allKeys: [Key] {
         let keys: [Key]
 
-        if Key.self is ASN1TagCodingKey.Type && self.object.containsOnlyTaggedItems {
+        if Key.self is ASN1TagCodingKey.Type, self.object.containsOnlyTaggedItems {
             /// this serves both as an escape hatch to support Apple's component attributes
             /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and
             /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
@@ -138,127 +140,127 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     func decodeIfPresent(_ type: Bool.Type, forKey key: Key) throws -> Bool? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: String.Type, forKey key: Key) throws -> String? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: Double.Type, forKey key: Key) throws -> Double? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: Float.Type, forKey key: Key) throws -> Float? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: Int.Type, forKey key: Key) throws -> Int? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: Int8.Type, forKey key: Key) throws -> Int8? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: Int16.Type, forKey key: Key) throws -> Int16? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: Int32.Type, forKey key: Key) throws -> Int32? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: Int64.Type, forKey key: Key) throws -> Int64? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: UInt.Type, forKey key: Key) throws -> UInt? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: UInt8.Type, forKey key: Key) throws -> UInt8? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: UInt16.Type, forKey key: Key) throws -> UInt16? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: UInt32.Type, forKey key: Key) throws -> UInt32? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent(_ type: UInt64.Type, forKey key: Key) throws -> UInt64? {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T: Decodable {
-        return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
+        try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
     func decode(_ type: Bool.Type, forKey key: Key) throws -> Bool {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: String.Type, forKey key: Key) throws -> String {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: Double.Type, forKey key: Key) throws -> Double {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: Float.Type, forKey key: Key) throws -> Float {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: Int.Type, forKey key: Key) throws -> Int {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: Int8.Type, forKey key: Key) throws -> Int8 {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: Int16.Type, forKey key: Key) throws -> Int16 {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: Int32.Type, forKey key: Key) throws -> Int32 {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: Int64.Type, forKey key: Key) throws -> Int64 {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: UInt.Type, forKey key: Key) throws -> UInt {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: UInt8.Type, forKey key: Key) throws -> UInt8 {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: UInt16.Type, forKey key: Key) throws -> UInt16 {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: UInt32.Type, forKey key: Key) throws -> UInt32 {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode(_ type: UInt64.Type, forKey key: Key) throws -> UInt64 {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
-        return try self.decodeKeyedSingleValue(type, forKey: key)
+        try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
     func nestedContainer<NestedKey>(
-        keyedBy type: NestedKey.Type,
+        keyedBy _: NestedKey.Type,
         forKey key: Key
     ) throws -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
         let currentObject = try self.currentObject(nestedContainer: true)
@@ -287,7 +289,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     func superDecoder() throws -> Decoder {
         let context = DecodingError.Context(codingPath: self.codingPath,
                                             debugDescription: "ASN1DecoderImpl.KeyedContainer does " +
-                                            "not yet support super decoders")
+                                                "not yet support super decoders")
         throw DecodingError.dataCorrupted(context)
     }
 
@@ -295,14 +297,16 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         throw DecodingError.dataCorruptedError(forKey: key,
                                                in: self,
                                                debugDescription: "ASN1DecoderImpl.KeyedContainer does " +
-                                               "not yet support super decoders")
+                                                   "not yet support super decoders")
     }
 }
 
 extension ASN1DecoderImpl.KeyedContainer {
-    private func nestedSingleValueContainer(_ object: ASN1Object,
-                                            forKey key: Key,
-                                            context: ASN1DecodingContext) -> ASN1DecoderImpl.SingleValueContainer {
+    private func nestedSingleValueContainer(
+        _ object: ASN1Object,
+        forKey key: Key,
+        context: ASN1DecodingContext
+    ) -> ASN1DecoderImpl.SingleValueContainer {
         let container = ASN1DecoderImpl.SingleValueContainer(object: object,
                                                              codingPath: self.nestedCodingPath(forKey: key),
                                                              userInfo: self.userInfo,

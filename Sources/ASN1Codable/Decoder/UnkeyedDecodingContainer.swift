@@ -28,10 +28,12 @@ extension ASN1DecoderImpl {
 
         var currentIndex: Int = 0
 
-        init(object: ASN1Object,
-             codingPath: [CodingKey],
-             userInfo: [CodingUserInfoKey: Any],
-             context: ASN1DecodingContext) throws {
+        init(
+            object: ASN1Object,
+            codingPath: [CodingKey],
+            userInfo: [CodingUserInfoKey: Any],
+            context: ASN1DecodingContext
+        ) throws {
             // there's no point sorting SET OF on decode because the Swift type is unordered
             self.object = object
             self.codingPath = codingPath
@@ -42,13 +44,13 @@ extension ASN1DecoderImpl {
         // swiftlint:disable nesting
         struct Index: CodingKey {
             var stringValue: String {
-                return "\(self.intValue!)"
+                "\(self.intValue!)"
             }
 
             var intValue: Int?
 
-            init?(stringValue: String) {
-                return nil
+            init?(stringValue _: String) {
+                nil
             }
 
             init?(intValue: Int) {
@@ -57,7 +59,7 @@ extension ASN1DecoderImpl {
         }
 
         var nestedCodingPath: [CodingKey] {
-            return self.codingPath + [Index(intValue: self.currentIndex)!]
+            self.codingPath + [Index(intValue: self.currentIndex)!]
         }
     }
 }
@@ -75,127 +77,127 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     func decodeIfPresent(_ type: Bool.Type) throws -> Bool? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: String.Type) throws -> String? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: Double.Type) throws -> Double? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: Float.Type) throws -> Float? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: Int.Type) throws -> Int? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: Int8.Type) throws -> Int8? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: Int16.Type) throws -> Int16? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: Int32.Type) throws -> Int32? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: Int64.Type) throws -> Int64? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: UInt.Type) throws -> UInt? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: UInt8.Type) throws -> UInt8? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: UInt16.Type) throws -> UInt16? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: UInt32.Type) throws -> UInt32? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent(_ type: UInt64.Type) throws -> UInt64? {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decodeIfPresent<T>(_ type: T.Type) throws -> T? where T: Decodable {
-        return try self.decodeUnkeyedSingleValueIfPresent(type)
+        try self.decodeUnkeyedSingleValueIfPresent(type)
     }
 
     func decode(_ type: Bool.Type) throws -> Bool {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: String.Type) throws -> String {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: Double.Type) throws -> Double {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: Float.Type) throws -> Float {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: Int.Type) throws -> Int {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: Int8.Type) throws -> Int8 {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: Int16.Type) throws -> Int16 {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: Int32.Type) throws -> Int32 {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: Int64.Type) throws -> Int64 {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: UInt.Type) throws -> UInt {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: UInt8.Type) throws -> UInt8 {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: UInt16.Type) throws -> UInt16 {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: UInt32.Type) throws -> UInt32 {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode(_ type: UInt64.Type) throws -> UInt64 {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func decode<T>(_ type: T.Type) throws -> T where T: Decodable {
-        return try self.decodeUnkeyedSingleValue(type)
+        try self.decodeUnkeyedSingleValue(type)
     }
 
     func nestedContainer<NestedKey>(
-        keyedBy type: NestedKey.Type
+        keyedBy _: NestedKey.Type
     ) throws -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
         let currentObject = try self.currentObject(nestedContainer: true)
         let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: currentObject,
@@ -223,14 +225,16 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     func superDecoder() throws -> Decoder {
         let context = DecodingError.Context(codingPath: self.codingPath,
                                             debugDescription: "ASN1DecoderImpl.UnkeyedContainer does " +
-                                            "not yet support super decoders")
+                                                "not yet support super decoders")
         throw DecodingError.dataCorrupted(context)
     }
 }
 
 extension ASN1DecoderImpl.UnkeyedContainer {
-    private func nestedSingleValueContainer(_ object: ASN1Object,
-                                            context: ASN1DecodingContext) -> ASN1DecoderImpl.SingleValueContainer {
+    private func nestedSingleValueContainer(
+        _ object: ASN1Object,
+        context: ASN1DecodingContext
+    ) -> ASN1DecoderImpl.SingleValueContainer {
         let container = ASN1DecoderImpl.SingleValueContainer(object: object,
                                                              codingPath: self.nestedCodingPath,
                                                              userInfo: self.userInfo,

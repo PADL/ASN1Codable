@@ -72,10 +72,10 @@ extension ASN1Metadata: CustomDebugStringConvertible {
             taggingDescription = nil
         }
 
-        if let tagDescription = tagDescription {
+        if let tagDescription {
             debugDescription.append(tagDescription)
         }
-        if let taggingDescription = taggingDescription {
+        if let taggingDescription {
             if !debugDescription.isEmpty {
                 debugDescription.append(" ")
             }

@@ -27,13 +27,13 @@ public protocol ASN1TaggingRepresentable {
 }
 
 public enum ASN1ExplicitTagging: ASN1TaggingRepresentable {
-    public static var tagging: ASN1Tagging? { return .explicit }
+    public static var tagging: ASN1Tagging? { .explicit }
 }
 
 public enum ASN1ImplicitTagging: ASN1TaggingRepresentable {
-    public static var tagging: ASN1Tagging? { return .implicit }
+    public static var tagging: ASN1Tagging? { .implicit }
 }
 
 public enum ASN1DefaultTagging: ASN1TaggingRepresentable {
-    public static var tagging: ASN1Tagging? { return nil }
+    public static var tagging: ASN1Tagging? { nil }
 }

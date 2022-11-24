@@ -25,8 +25,12 @@ extension ASN1DecoderImpl {
         var userInfo: [CodingUserInfoKey: Any]
         var context: ASN1DecodingContext
 
-        init(object: ASN1Object, codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any],
-             context: ASN1DecodingContext = ASN1DecodingContext()) {
+        init(
+            object: ASN1Object,
+            codingPath: [CodingKey],
+            userInfo: [CodingUserInfoKey: Any],
+            context: ASN1DecodingContext = ASN1DecodingContext()
+        ) {
             self.object = object
             self.codingPath = codingPath
             self.userInfo = userInfo
@@ -37,7 +41,7 @@ extension ASN1DecoderImpl {
 
 extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     func decodeNil() -> Bool {
-        return object.isNull
+        object.isNull
     }
 
     func decode(_ type: Bool.Type) throws -> Bool {
@@ -52,11 +56,11 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         }
     }
 
-    func decode(_ type: Double.Type) throws -> Double {
+    func decode(_: Double.Type) throws -> Double {
         throw ASN1Error.unsupported("Not implemented yet")
     }
 
-    func decode(_ type: Float.Type) throws -> Float {
+    func decode(_: Float.Type) throws -> Float {
         throw ASN1Error.unsupported("Not implemented yet")
     }
 
@@ -120,7 +124,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
     }
 
     private var tagCodingKey: ASN1TagCodingKey? {
-        return self.codingPath.last as? ASN1TagCodingKey
+        self.codingPath.last as? ASN1TagCodingKey
     }
 
     /// avoids re-encoding tag on constructed values, by removing ASN1TagCodingKey
@@ -133,12 +137,14 @@ extension ASN1DecoderImpl.SingleValueContainer {
     }
 
     // swiftlint:disable force_cast
-    private func decode<T>(_ type: T.Type,
-                           from object: ASN1Object,
-                           skipTaggedValues: Bool = false) throws -> T where T: Decodable {
+    private func decode<T>(
+        _ type: T.Type,
+        from object: ASN1Object,
+        skipTaggedValues: Bool = false
+    ) throws -> T where T: Decodable {
         let value: T
 
-        // FIXME required for top-level decoders
+        // FIXME: required for top-level decoders
         self.context = self.context.decodingSingleValue(type)
 
         if let key = self.tagCodingKey {
@@ -146,15 +152,15 @@ extension ASN1DecoderImpl.SingleValueContainer {
             value = try self.decodeTaggedKeyedValue(type, from: object, forKey: key)
         } else if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
             value = try self.decodeTaggedValue(type, from: object) as! T
-        } else if let type = type as? any (Decodable & ASN1TaggedWrappedValue).Type {
+        } else if let type = type as? any(Decodable & ASN1TaggedWrappedValue).Type {
             value = try self.decodeTaggedWrappedValue(type, from: object) as! T
         } else if !skipTaggedValues, self.context.automaticTaggingContext != nil {
             value = try self.decodeAutomaticallyTaggedValue(type, from: object)
         } else if let type = type as? ASN1DecodableType.Type {
-            value = try decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
+            value = try self.decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
         } else if let type = type as? OptionalProtocol.Type,
                   let wrappedType = type.wrappedType as? Decodable.Type {
-            value = try decodeIfPresent(wrappedType, from: object, skipTaggedValues: skipTaggedValues) as! T
+            value = try self.decodeIfPresent(wrappedType, from: object, skipTaggedValues: skipTaggedValues) as! T
         } else {
             value = try self.decodeConstructedValue(type, from: object)
         }
@@ -165,9 +171,11 @@ extension ASN1DecoderImpl.SingleValueContainer {
     /// this function is required because the Swift runtime decodeIfPresent()
     /// does not know how to handle optionals inside our tagged propertry wrappers
     /// this code mirrors decodeKeyedSingleValueIfPresent() in KeyedDecodingContainer.swift
-    private func decodeIfPresent<T>(_ type: T.Type,
-                                    from object: ASN1Object,
-                                    skipTaggedValues: Bool = false) throws -> T? where T: Decodable {
+    private func decodeIfPresent<T>(
+        _: T.Type,
+        from object: ASN1Object,
+        skipTaggedValues: Bool = false
+    ) throws -> T? where T: Decodable {
         let value: T?
 
         if object.isNull {
@@ -187,8 +195,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return value
     }
 
-    private func decodeFixedWidthIntegerValue<T>(_ type: T.Type,
-                                                 verifiedTag: Bool = false) throws -> T where T: FixedWidthInteger {
+    private func decodeFixedWidthIntegerValue<T>(
+        _ type: T.Type,
+        verifiedTag: Bool = false
+    ) throws -> T where T: FixedWidthInteger {
         // NB withASN1Throwing is not needed here because decodeFixedWidthIntegerValue()
         // does not call into any exception-throwing ASNKit APIs
         let expectedTag: ASN1DecodedTag
@@ -202,7 +212,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected \(expectedTag) when " +
-                                                "decoding \(self.object)")
+                                                    "decoding \(self.object)")
             throw DecodingError.typeMismatch(type, context)
         }
 
@@ -215,16 +225,16 @@ extension ASN1DecoderImpl.SingleValueContainer {
         guard type.bitWidth >= data.count * 8 else {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Integer encoded in \(self.object) " +
-                                                "too large for \(type.bitWidth)-bit integer")
+                                                    "too large for \(type.bitWidth)-bit integer")
             throw DecodingError.dataCorrupted(context)
         }
 
-        // FIXME can FixedWidthInteger be larger than platform integer?
+        // FIXME: can FixedWidthInteger be larger than platform integer?
         if T.isSigned {
             guard let value = data.asn1integer else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
                                                     debugDescription: "Integer encoded in \(self.object) " +
-                                                    "too large for platform signed integer")
+                                                        "too large for platform signed integer")
                 throw DecodingError.dataCorrupted(context)
             }
             return T(value)
@@ -232,34 +242,41 @@ extension ASN1DecoderImpl.SingleValueContainer {
             guard let value = data.unsignedIntValue else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
                                                     debugDescription: "Integer encoded in \(self.object) " +
-                                                    "too large for platform unsigned integer")
+                                                        "too large for platform unsigned integer")
                 throw DecodingError.dataCorrupted(context)
             }
             return T(value)
         }
     }
 
-    private func decodeTaggedKeyedValue<T>(_ type: T.Type,
-                                           from object: ASN1Object,
-                                           forKey key: ASN1TagCodingKey) throws -> T where T: Decodable {
-        return try self.decodeTagged(type, from: object, with: key.metadata, skipTaggedValues: false)
+    private func decodeTaggedKeyedValue<T>(
+        _ type: T.Type,
+        from object: ASN1Object,
+        forKey key: ASN1TagCodingKey
+    ) throws -> T where T: Decodable {
+        try self.decodeTagged(type, from: object, with: key.metadata, skipTaggedValues: false)
     }
 
-    private func decodeTaggedValue<T>(_ type: T.Type,
-                                      from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedType {
-        return try self.decodeTagged(type, from: object, with: T.metadata, skipTaggedValues: true)
+    private func decodeTaggedValue<T>(
+        _ type: T.Type,
+        from object: ASN1Object
+    ) throws -> T where T: Decodable & ASN1TaggedType {
+        try self.decodeTagged(type, from: object, with: T.metadata, skipTaggedValues: true)
     }
 
-    private func decodeTaggedWrappedValue<T>(_ type: T.Type,
-                                             from object: ASN1Object
+    private func decodeTaggedWrappedValue<T>(
+        _ type: T.Type,
+        from object: ASN1Object
     ) throws -> T where T: Decodable & ASN1TaggedWrappedValue {
         let wrappedValue = try self.decodeTagged(type.Value, from: object, with: T.metadata)
 
         return T(wrappedValue: wrappedValue)
     }
 
-    private func decodeAutomaticallyTaggedValue<T>(_ type: T.Type,
-                                                   from object: ASN1Object) throws -> T where T: Decodable {
+    private func decodeAutomaticallyTaggedValue<T>(
+        _ type: T.Type,
+        from object: ASN1Object
+    ) throws -> T where T: Decodable {
         let taggingContext = self.context.automaticTaggingContext!
 
         return try self.decodeTagged(type,
@@ -268,9 +285,11 @@ extension ASN1DecoderImpl.SingleValueContainer {
                                      skipTaggedValues: true)
     }
 
-    private func decodePrimitiveValue<T>(_ type: T.Type,
-                                         from object: ASN1Object,
-                                         verifiedTag: Bool = false) throws -> T where T: ASN1DecodableType {
+    private func decodePrimitiveValue<T>(
+        _ type: T.Type,
+        from object: ASN1Object,
+        verifiedTag: Bool = false
+    ) throws -> T where T: ASN1DecodableType {
         let expectedTag = ASN1DecodingContext.tag(for: type)
         var verifiedTag = verifiedTag
 
@@ -287,7 +306,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected \(expectedTag) when " +
-                                                "decoding \(self.object)")
+                                                    "decoding \(self.object)")
             throw DecodingError.typeMismatch(type, context)
         }
 
@@ -300,12 +319,14 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
     // swiftlint:disable cyclomatic_complexity
     // swiftlint:disable function_body_length
-    private func decodeTagged<T>(_ type: T.Type,
-                                 from object: ASN1Object,
-                                 with metadata: ASN1Metadata,
-                                 skipTaggedValues: Bool = false) throws -> T where T: Decodable {
+    private func decodeTagged<T>(
+        _ type: T.Type,
+        from object: ASN1Object,
+        with metadata: ASN1Metadata,
+        skipTaggedValues: Bool = false
+    ) throws -> T where T: Decodable {
         guard let tag = metadata.tag else {
-            // FIXME should this happen? precondition check? (perhaps if only size constraints?)
+            // FIXME: should this happen? precondition check? (perhaps if only size constraints?)
             return try self.decode(type, from: object, skipTaggedValues: skipTaggedValues)
         }
 
@@ -322,7 +343,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         let unwrappedObject: ASN1Object
         var tagging = metadata.tagging ?? self.context.taggingEnvironment
 
-        if tagging == .implicit && self.context.enumCodingState == .enum {
+        if tagging == .implicit, self.context.enumCodingState == .enum {
             /// IMPLICIT tagging of types that are CHOICE types have the tag converted to EXPLICIT
             tagging = .explicit
         }
@@ -331,7 +352,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
         if object.constructed {
             if tagging == .implicit {
-                // FIXME propagate originalEncoding
+                // FIXME: propagate originalEncoding
                 unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
             } else {
                 guard let items = object.data.items,
@@ -339,14 +360,14 @@ extension ASN1DecoderImpl.SingleValueContainer {
                       let firstObject = object.data.items!.first else {
                     let context = DecodingError.Context(codingPath: self.codingPath,
                                                         debugDescription: "Tag \(tag) for single value container " +
-                                                        "must wrap a single value only")
+                                                            "must wrap a single value only")
                     throw DecodingError.typeMismatch(type, context)
                 }
                 unwrappedObject = firstObject
             }
         } else if innerTag.isUniversal {
             if tagging == .implicit {
-                // FIXME propagate originalEncoding
+                // FIXME: propagate originalEncoding
                 unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
             } else {
                 unwrappedObject = object
@@ -354,7 +375,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         } else {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected universal tag \(innerTag) " +
-                                                "for primitive object \(object)")
+                                                    "for primitive object \(object)")
             throw DecodingError.typeMismatch(type, context)
         }
 
@@ -414,12 +435,14 @@ extension ASN1DecoderImpl.SingleValueContainer {
     }
 
     private var explicitExtensibilityMarkerRequired: Bool {
-        return (self.userInfo[CodingUserInfoKey.ASN1ExplicitExtensibilityMarkerRequired] as? Bool) ?? false
+        (self.userInfo[CodingUserInfoKey.ASN1ExplicitExtensibilityMarkerRequired] as? Bool) ?? false
     }
 
-    private func validateExtensibility<T>(_ type: T.Type,
-                                          from object: ASN1Object,
-                                          with decoder: ASN1DecoderImpl) throws where T: Decodable {
+    private func validateExtensibility<T>(
+        _ type: T.Type,
+        from _: ASN1Object,
+        with decoder: ASN1DecoderImpl
+    ) throws where T: Decodable {
         if self.explicitExtensibilityMarkerRequired,
            type is (any ASN1ExtensibleType).Type == false,
            let container = decoder.container,
@@ -428,13 +451,13 @@ extension ASN1DecoderImpl.SingleValueContainer {
            container.currentIndex < items.count {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected no more than \(container.currentIndex) " +
-                                                "items when decoding \(type); received \(items.count)")
+                                                    "items when decoding \(type); received \(items.count)")
             throw DecodingError.typeMismatch(type, context)
         }
     }
 
-    private func nilLiteral<T: OptionalProtocol>(_ type: T.Type) -> T {
-        return Decodable?.init(nilLiteral: ()) as! T
+    private func nilLiteral<T: OptionalProtocol>(_: T.Type) -> T {
+        Decodable?.init(nilLiteral: ()) as! T
     }
 
     private func isWrappedOptional<T: ASN1TaggedWrappedValue>(_ type: T.Type) -> Bool {
@@ -481,6 +504,6 @@ extension ASN1DecoderImpl.SingleValueContainer {
 // meaningless but allows us to conform to the rest of the protocol
 extension ASN1DecoderImpl.SingleValueContainer {
     var currentIndex: Int {
-        return 0
+        0
     }
 }
