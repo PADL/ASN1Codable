@@ -69,7 +69,8 @@ struct ASN1DecodingContext: ASN1CodingContext {
 
         return unwrappedType
     }
-    
+
+/*
     /// returns true if an enum type has a member with a particular tag
     static func enumTypeHasMember<T>(_ type: T.Type, with metadata: ASN1Metadata) -> Bool where T: Decodable {
         guard let enumMetadata = reflect(Self.lookThroughOptional(type)) as? EnumMetadata else {
@@ -85,7 +86,8 @@ struct ASN1DecodingContext: ASN1CodingContext {
             return metadata == wrappedFieldType.metadata
         }
     }
-    
+  */
+   
     /// synthesizes an CodingKey from a reflected enum case name
     ///
     /// only works with custom coding keys that conform to ASN1TagCodingKey and contain
@@ -133,7 +135,8 @@ struct ASN1DecodingContext: ASN1CodingContext {
         
         return context
     }
-    
+
+    /// called before decoding a nested container    
     func decodingNestedContainer() -> Self {
         var context = self
         context.nextEnumCodingState()

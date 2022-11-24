@@ -123,8 +123,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return self.codingPath.last as? ASN1TagCodingKey
     }
     
-    // avoids re-encoding tag on constructed values, by removing ASN1TagCodingKey
-    // conformance on already processed tag coding key
+    /// avoids re-encoding tag on constructed values, by removing ASN1TagCodingKey
+    /// conformance on already processed tag coding key
+    /// FIXME: could this be done more elegantly?
     private func demoteTagCodingKey() {
         precondition(self.codingPath.count > 0)
         let index = self.codingPath.count - 1
@@ -134,7 +135,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
     private func decode<T>(_ type: T.Type, from object: ASN1Object, skipTaggedValues: Bool = false) throws -> T where T : Decodable {
         let value: T
         
-        // FIXME
+        // FIXME required for top-level decoders
         self.context = self.context.decodingSingleValue(type)
 
         if let key = self.tagCodingKey {
@@ -158,9 +159,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return value
     }
     
-    // tihs function is required because the Swift runtime decodeIfPresent()
-    // does not know how to handle optionals inside our tagged propertry wrappers
-    // this code mirrors decodeKeyedSingleValueIfPresent() in KeyedDecodingContainer.swift
+    /// this function is required because the Swift runtime decodeIfPresent()
+    /// does not know how to handle optionals inside our tagged propertry wrappers
+    /// this code mirrors decodeKeyedSingleValueIfPresent() in KeyedDecodingContainer.swift
     private func decodeIfPresent<T>(_ type: T.Type, from object: ASN1Object, skipTaggedValues: Bool = false) throws -> T? where T : Decodable {
         let value: T?
         
@@ -247,10 +248,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
         let expectedTag = ASN1DecodingContext.tag(for: type)
         var verifiedTag = verifiedTag
         
-        // if an untagged String is being decoded, then accept any ASN.1 string type. This
-        // allows DirectoryString to be a typealias of String rather than a cumbersome enum
-        // which requires the caller to explicitly unwrap values (at the expense of somes
-        // additional state to note the current tag).
+        /// if an untagged String is being decoded, then accept any ASN.1 string type. This
+        /// allows DirectoryString to be a typealias of String rather than a cumbersome enum
+        /// which requires the caller to explicitly unwrap values (at the expense of somes
+        /// additional state to note the current tag).
         if !verifiedTag, type is String.Type, object.tag.isString,
            !(self.context.currentTag?.isString ?? false) { // tag is empty or not a string
             precondition(expectedTag.isString)
@@ -389,16 +390,6 @@ extension ASN1DecoderImpl.SingleValueContainer {
                                                 debugDescription: "Expected no more than \(container.currentIndex) items when decoding \(type); received \(items.count)")
             throw DecodingError.typeMismatch(type, context)
         }
-    }
-    
-    private func isWrongTypeForOptional<T>(_ type: T.Type, _ error: Error) -> Bool {
-        guard type is OptionalProtocol.Type,
-              let error = error as? DecodingError,
-              case .typeMismatch(_, _) = error else {
-            return false
-        }
-        
-        return true
     }
     
     private func nilLiteral<T: OptionalProtocol>(_ type: T.Type) -> T {

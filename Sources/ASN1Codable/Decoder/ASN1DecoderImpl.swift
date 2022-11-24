@@ -89,8 +89,6 @@ extension ASN1DecoderImpl {
     static func isNilOrWrappedNil<T>(_ value: T) -> Bool where T : Decodable {
         var wrappedValue: any Decodable = value
         
-        // FIXME check non-wrapped optionals? because we need to wrap them to disambiguate in ASN.1
-        
         while wrappedValue is any ASN1TaggedWrappedValue {
             wrappedValue = (wrappedValue as! any ASN1TaggedWrappedValue).wrappedValue
         }

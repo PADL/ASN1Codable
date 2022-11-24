@@ -90,8 +90,11 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             }
             
             if let enumCodingKey = self.context.enumCodingKey(Key.self, object: currentObject) {
+                /// in this case, we know the enum coding key from reading the metadata
                 keys = [enumCodingKey]
             } else {
+                /// this is kind of pointless, as it only returns the keys we have already
+                /// decoded, but maybe it is better than returning nothing?
                 keys = self.containers.keys.map { Key(stringValue: $0)! }
             }
         }

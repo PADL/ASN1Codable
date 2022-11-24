@@ -3,3 +3,5 @@
 - support for REAL in ASN1Kit for Decimal, Float and Double
 - make ASN1Kit OID representation [UInt]
 - support for nested SEQUENCE (structs)
+- super decoders
+- propagate originalEncoding (\_save) in all cases

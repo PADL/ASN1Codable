@@ -17,9 +17,11 @@
 import Foundation
 import ASN1Kit
 
-/// internal defintiion of a tag and tagging environment tuple. In the future this could also contain things
-/// like range limits and default values. Currently synthesised from property wrapper Swift type metadata
-/// but could also be associated with coding keys
+/// internal defintiion of a tag and tagging environment tuple, along with
+/// size and value constraints (for future use).
+///
+/// ASN1Metadata can be derived from a CodingKey, from a type defintion,
+/// from a property wrapper, or from an automatic tagging context.
 public struct ASN1Metadata: Equatable {
     /// the tag type and number
     var tag: ASN1DecodedTag?

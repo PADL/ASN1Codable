@@ -24,6 +24,8 @@ protocol ASN1DecodingContainer {
     var currentIndex: Int { get }
 }
 
+/// helpers shared between keyed and unkeyed decoding containers
+
 extension ASN1DecodingContainer {
     var count: Int? {
         return self.object.data.fold({ primitive in
@@ -76,20 +78,26 @@ extension ASN1DecodingContainer {
             throw DecodingError.dataCorrupted(context)
         }
     }
-    
+   
+    /// returns the current object in a keyed or unkeyed decoding container,
+    /// subject to some validation checks 
     private func _currentObject(for type: Decodable.Type? = nil, nestedContainer: Bool) throws -> ASN1Object {
         let object: ASN1Object
+
         if self.context.enumCodingState != .none || self.object.isNull {
+            // enums have a single value, which is the enum value itself
             object = self.object
         } else if self.isAtEnd {
             // if we've reached the end of the SEQUENCE or SET, we still need to initialise
             // the remaining wrapped objects; pad the object set with null instances.
             object = ASN1NullObject
         } else if self.object.constructed, let items = self.object.data.items, self.currentIndex < items.count  {
+            // return the object at the current index
             object = items[self.currentIndex]
         } else {
+            // either we've gone past the object count, or it's not a constructed object
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Object \(self.object) is not constructed, or has less than \(self.currentIndex) items")
+                                                debugDescription: "Object \(self.object) is not constructed, or has less than \(self.currentIndex + 1) items")
             throw DecodingError.dataCorrupted(context)
         }
         
@@ -101,7 +109,9 @@ extension ASN1DecodingContainer {
         
         return object
     }
-    
+   
+    /// wrapped for _currentObject() that can coax decoding errors such that
+    /// they will hint to the caller to skip the field if OPTIONAL (see below) 
     func currentObject(for type: Decodable.Type? = nil, nestedContainer: Bool = false) throws -> ASN1Object {
         do {
             return try self._currentObject(for: type, nestedContainer: nestedContainer)
