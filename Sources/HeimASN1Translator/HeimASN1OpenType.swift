@@ -16,7 +16,7 @@
 
 import Foundation
 
-class HeimASN1OpenType: Codable, CustomStringConvertible {
+final class HeimASN1OpenType: Codable, CustomStringConvertible {
     var openType: Bool = false
     var arrayType: Bool = false
     var className: String = ""

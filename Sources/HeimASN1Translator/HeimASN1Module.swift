@@ -28,7 +28,7 @@ struct HeimASN1Module: Codable {
     var objid: [ObjectIdentifier]?
 }
 
-class HeimASN1ModuleRef: Codable {
+final class HeimASN1ModuleRef: Codable {
     enum CodingKeys: String, CodingKey {
         case name = "imports"
     }

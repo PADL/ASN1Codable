@@ -23,7 +23,7 @@ struct Value: Codable {
     var value: Int
 }
 
-class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable, HeimASN1TagRepresentable, Equatable, CustomStringConvertible {
+final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable, HeimASN1TagRepresentable, Equatable, CustomStringConvertible {
     static func == (lhs: HeimASN1TypeDef, rhs: HeimASN1TypeDef) -> Bool {
         return lhs.name == rhs.name && lhs.generatedName == rhs.generatedName
     }
