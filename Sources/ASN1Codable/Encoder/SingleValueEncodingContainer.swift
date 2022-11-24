@@ -23,7 +23,7 @@ extension ASN1EncoderImpl {
 
         var codingPath: [CodingKey]
         var userInfo: [CodingUserInfoKey: Any]
-        
+
         var context: ASN1EncodingContext
         var didEncode: Bool = false
 
@@ -31,14 +31,14 @@ extension ASN1EncoderImpl {
             get {
                 return self._object
             }
-            
+
             set {
                 preconditionCanEncodeNewValue()
                 self._object = newValue
                 self.didEncode = true
             }
         }
-        
+
         init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey : Any],
              context: ASN1EncodingContext = ASN1EncodingContext()) {
             self.codingPath = codingPath
@@ -57,87 +57,87 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         preconditionCanEncodeNewValue()
         self.didEncode = true
     }
-    
+
     func encode(_ value: Bool) throws {
         try self.withASN1Throwing(value) {
             try value.asn1encode(tag: nil)
         }
     }
-    
+
     func encode(_ value: String) throws {
         try self.withASN1Throwing(value) {
             try value.asn1encode(tag: nil)
         }
     }
-    
+
     func encode(_ value: Double) throws {
         fatalError("no support for encoding floating point values")
     }
-    
+
     func encode(_ value: Float) throws {
         fatalError("no support for encoding floating point values")
     }
-    
+
     func encode(_ value: Int) throws {
         try self.withASN1Throwing(value) {
             try self.encodeFixedWithIntegerValue(value)
         }
     }
-    
+
     func encode(_ value: Int8) throws {
         try self.withASN1Throwing(value) {
             try self.encodeFixedWithIntegerValue(value)
         }
     }
-    
+
     func encode(_ value: Int16) throws {
         try self.withASN1Throwing(value) {
             try self.encodeFixedWithIntegerValue(value)
         }
     }
-    
+
     func encode(_ value: Int32) throws {
         try self.withASN1Throwing(value) {
             try self.encodeFixedWithIntegerValue(value)
         }
     }
-    
+
     func encode(_ value: Int64) throws {
         try self.withASN1Throwing(value) {
             try self.encodeFixedWithIntegerValue(value)
         }
     }
-    
+
     func encode(_ value: UInt) throws {
         try self.withASN1Throwing(value) {
             try self.encodeFixedWithIntegerValue(value)
         }
     }
-    
+
     func encode(_ value: UInt8) throws {
         try self.withASN1Throwing(value) {
             try self.encodeFixedWithIntegerValue(value)
         }
     }
-    
+
     func encode(_ value: UInt16) throws {
         try self.withASN1Throwing(value) {
             try self.encodeFixedWithIntegerValue(value)
         }
     }
-    
+
     func encode(_ value: UInt32) throws {
         try self.withASN1Throwing(value) {
             try self.encodeFixedWithIntegerValue(value)
         }
     }
-    
+
     func encode(_ value: UInt64) throws {
         try self.withASN1Throwing(value) {
             try self.encodeFixedWithIntegerValue(value)
         }
     }
-    
+
     func encode<T: Encodable>(_ value: T) throws {
         // FIXME this appeares necessary to handle top-level enums
         self.context = self.context.encodingSingleValue(value)
@@ -152,7 +152,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
     private var tagCodingKey: ASN1TagCodingKey? {
         return self.codingPath.last as? ASN1TagCodingKey
     }
-    
+
     // avoids re-encoding tag on constructed values, by removing ASN1TagCodingKey
     // conformance on already processed tag coding key
     private func demoteTagCodingKey() {
@@ -176,7 +176,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
             throw EncodingError.invalidValue(value, context)
         }
     }
-    
+
     private func encode<T: Encodable>(_ value: T, skipTaggedValues: Bool = false) throws -> ASN1Object? {
         let object: ASN1Object?
 
@@ -194,17 +194,17 @@ extension ASN1EncoderImpl.SingleValueContainer {
         } else {
             object = try self.encodeConstructedValue(value)
         }
-        
+
         return object
     }
-    
+
     private func encodeTagged<T: Encodable>(_ value: T, with metadata: ASN1Metadata, skipTaggedValues: Bool = false) throws -> ASN1Object? {
         if !metadata.validateValueConstraints(value) {
             let context = EncodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Value \(value) outside of value constraint")
             throw EncodingError.invalidValue(value, context)
         }
-        
+
         let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
 
         if let object = object, !metadata.validateSizeConstraints(object) {
@@ -212,7 +212,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
                                                 debugDescription: "Value for \(object) outside of size constraint")
             throw EncodingError.invalidValue(value, context)
         }
-        
+
         if let object = object, let tag = metadata.tag {
             let wrappedObject: ASN1Object
             var tagging = metadata.tagging ?? self.context.taggingEnvironment
@@ -221,7 +221,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
                 /// IMPLICIT tagging of types that are CHOICE types have the tag converted to EXPLICIT
                 tagging = .explicit
             }
-            
+
             if tag.isUniversal {
                 precondition(value is ASN1EncodableType)
                 wrappedObject = try (value as! ASN1EncodableType).asn1encode(tag: tag)
@@ -230,30 +230,30 @@ extension ASN1EncoderImpl.SingleValueContainer {
             } else {
                 wrappedObject = object.wrap(with: tag, constructed: tagging != .implicit)
             }
-            
+
             return wrappedObject
         } else {
             return object
         }
     }
-    
+
     private func encodeTaggedKeyedValue<T: Encodable>(_ value: T, forKey key: ASN1TagCodingKey) throws -> ASN1Object? {
         return try self.encodeTagged(value, with: key.metadata, skipTaggedValues: false)
     }
-    
+
     private func encodeTaggedValue<T: Encodable & ASN1TaggedType>(_ value: T) throws -> ASN1Object? {
         return try self.encodeTagged(value, with: T.metadata, skipTaggedValues: true)
     }
-    
+
     private func encodeTaggedWrappedValue<T: Encodable & ASN1TaggedWrappedValue>(_ value: T) throws -> ASN1Object? {
         return try self.encodeTagged(value.wrappedValue, with: T.metadata)
     }
-    
+
     private func encodeAutomaticallyTaggedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
         let taggingContext = self.context.automaticTaggingContext!
         return try self.encodeTagged(value, with: taggingContext.metadataForNextTag(), skipTaggedValues: true)
     }
-    
+
     private func encodeFixedWithIntegerValue<T>(_ value: T) throws -> ASN1Object? where T: FixedWidthInteger {
         let tag: ASN1DecodedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
         return T.isSigned ? try Int(value).asn1encode(tag: tag) : try UInt(value).asn1encode(tag: tag)
@@ -265,16 +265,16 @@ extension ASN1EncoderImpl.SingleValueContainer {
         }
         return try value.asn1encode(tag: nil)
     }
-    
+
     private func encodeConstructedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
         self.context.encodeAsSet = value is Set<AnyHashable> || value is ASN1SetCodable
-        
+
         if self.context.taggingEnvironment == .automatic {
             self.context.automaticTaggingContext = ASN1AutomaticTaggingContext(type(of: value))
         } else {
             self.context.automaticTaggingContext = nil
         }
-        
+
         if let value = value as? ASN1ObjectSetCodable {
             let type = type(of: value)
             self.context.objectSetCodingContext = ASN1ObjectSetCodingContext(objectSetType: type,
@@ -285,12 +285,12 @@ extension ASN1EncoderImpl.SingleValueContainer {
                                       userInfo: self.userInfo,
                                       context: self.context)
         try value.encode(to: encoder)
-        
+
         if let object = encoder.object, var value = value as? ASN1PreserveBinary {
             // Note this requires the value to be a class
             value._save = try object.serialize()
         }
-        
+
         if self.context.encodeAsSet {
             return encoder.object?.sortedByTag
         } else {

@@ -19,12 +19,12 @@ import ASN1Kit
 
 final class ASN1DecoderImpl {
     var container: ASN1DecodingContainer?
-    
+
     let object: ASN1Object
     let codingPath: [CodingKey]
     let userInfo: [CodingUserInfoKey: Any]
     let context: ASN1DecodingContext
-    
+
     init(object: ASN1Object,
          codingPath: [CodingKey] = [],
          userInfo: [CodingUserInfoKey: Any] = [:],
@@ -35,7 +35,7 @@ final class ASN1DecoderImpl {
         self.userInfo = userInfo
         self.context = ASN1DecodingContext(taggingEnvironment: taggingEnvironment ?? .explicit, objectSetTypeDictionary: objectSetTypeDictionary)
     }
-    
+
     init(object: ASN1Object,
          codingPath: [CodingKey] = [],
          userInfo: [CodingUserInfoKey: Any] = [:],
@@ -56,13 +56,13 @@ extension ASN1DecoderImpl: Decoder {
                                                 userInfo: self.userInfo,
                                                 context: self.context)
         self.container = container
-                
+
         return KeyedDecodingContainer(container)
     }
-    
+
     func unkeyedContainer() throws -> UnkeyedDecodingContainer {
         precondition(self.container == nil)
-        
+
         let container = try UnkeyedContainer(object: self.object,
                                              codingPath: self.codingPath,
                                              userInfo: self.userInfo,
@@ -71,7 +71,7 @@ extension ASN1DecoderImpl: Decoder {
 
         return container
     }
-    
+
     func singleValueContainer() throws -> SingleValueDecodingContainer {
         precondition(self.container == nil)
 
@@ -80,7 +80,7 @@ extension ASN1DecoderImpl: Decoder {
                                              userInfo: self.userInfo,
                                              context: self.context)
         self.container = container
-                
+
         return container
     }
 }
@@ -88,11 +88,11 @@ extension ASN1DecoderImpl: Decoder {
 extension ASN1DecoderImpl {
     static func isNilOrWrappedNil<T>(_ value: T) -> Bool where T : Decodable {
         var wrappedValue: any Decodable = value
-        
+
         while wrappedValue is any ASN1TaggedWrappedValue {
             wrappedValue = (wrappedValue as! any ASN1TaggedWrappedValue).wrappedValue
         }
-        
+
         // FIXME first assignment is to silence warnings
         if let wrappedValue = wrappedValue as? ExpressibleByNilLiteral,
            let wrappedValue = wrappedValue as? Optional<Decodable>,

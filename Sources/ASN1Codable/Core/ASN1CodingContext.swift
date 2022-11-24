@@ -27,7 +27,7 @@ enum ASN1EnumCodingState {
 protocol ASN1CodingContext {
     var taggingEnvironment: ASN1Tagging { get }
     var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? { get }
-    
+
     var enumCodingState: ASN1EnumCodingState { get set }
     var encodeAsSet: Bool { get set }
     var objectSetCodingContext: ASN1ObjectSetCodingContext? { get set }

@@ -42,7 +42,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
         let type = lookThroughOptional(type)
 
         let tag: ASN1DecodedTag
-        
+
         if let type = type as? ASN1TaggedTypeRepresentable.Type, let typeTag = type.metadata.tag {
             tag = typeTag
         } else if let type = type as? ASN1UniversalTagRepresentable.Type {
@@ -52,10 +52,10 @@ struct ASN1DecodingContext: ASN1CodingContext {
         } else {
             tag = .universal(.sequence)
         }
-        
+
         return tag
     }
-    
+
     /// looks through an optional type to return the wrapped type
     private static func lookThroughOptional(_ type: Any.Type) -> Any.Type {
         let unwrappedType: Any.Type
@@ -76,18 +76,18 @@ struct ASN1DecodingContext: ASN1CodingContext {
         guard let enumMetadata = reflect(Self.lookThroughOptional(type)) as? EnumMetadata else {
             return false
         }
-        
+
         return enumMetadata.descriptor.fields.records.contains {
               guard let fieldType = enumMetadata.type(of: $0.mangledTypeName),
                     let wrappedFieldType = fieldType as? any ASN1TaggedWrappedValue.Type else {
                   return false
               }
-            
+
             return metadata == wrappedFieldType.metadata
         }
     }
   */
-   
+
     /// synthesizes an CodingKey from a reflected enum case name
     ///
     /// only works with custom coding keys that conform to ASN1TagCodingKey and contain
@@ -101,7 +101,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
                guard let fieldType = enumMetadata.type(of: $0.mangledTypeName) else {
                    return false
                }
-               
+
                return Self.tag(for: fieldType) == object.tag
            }) {
             // FIXME does not work with custom coding keys
@@ -121,22 +121,22 @@ struct ASN1DecodingContext: ASN1CodingContext {
     /// called before decoding a single value, maintains enum type state
     func decodingSingleValue<T>(_ type: T.Type) -> Self where T: Decodable {
         var context = self
-        
+
         if Self.isEnum(type) {
             context.enumCodingState = .enum
             context.currentEnumType = type
         } else {
             context.nextEnumCodingState()
         }
-        
+
         if context.enumCodingState == .none {
             context.currentEnumType = nil
         }
-        
+
         return context
     }
 
-    /// called before decoding a nested container    
+    /// called before decoding a nested container
     func decodingNestedContainer() -> Self {
         var context = self
         context.nextEnumCodingState()

@@ -21,7 +21,7 @@ enum HeimASN1TaggingEnvironment: String, Codable, HeimASN1SwiftTypeRepresentable
     case explicit = "EXPLICIT"
     case implicit = "IMPLICIT"
     case automatic = "AUTOMATIC"
-    
+
     var swiftType: String? {
         switch self {
         case .explicit:

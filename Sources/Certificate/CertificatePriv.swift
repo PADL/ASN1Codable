@@ -44,7 +44,7 @@ public func CertificateCreateWithKeychainItem(_ allocator: CFAllocator!,
 public func CertificateCopyComponentAttributes(_ certificate: CertificateRef?) -> CFDictionary?
 {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
-    
+
     return certificate.componentAttributes
 }
 
@@ -54,7 +54,7 @@ public func CertificateGetSubjectKeyID(_ certificate: CertificateRef?) -> CFData
 {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
     guard let subjectKeyID: Data = certificate.extension(id_x509_ce_subjectKeyIdentifier) else { return nil }
-    
+
     return subjectKeyID as CFData
 }
 
@@ -101,7 +101,7 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
 
     var names = [String]()
-    
+
     if let san = certificate.subjectAltName {
         names.append(contentsOf: san.compactMap({
             if case .rfc822Name(let rfc822Name) = $0 {
@@ -113,7 +113,7 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray
     } else if let rdns = certificate.rdns(identifiedBy: id_at_emailAddress) {
         names.append(contentsOf: rdns)
     }
-    
+
     return names.isEmpty ? nil : names as CFArray
 }
 
@@ -139,7 +139,7 @@ public func CertificateCopyDataReencoded(_ certificate: CertificateRef) -> CFDat
 {
     let certificate = Certificate._fromCertificateRef(certificate)!
     let asn1Encoder = ASN1Encoder()
-    
+
     do {
         return try asn1Encoder.encode(certificate) as CFData
     } catch {
@@ -154,13 +154,13 @@ public func CertificateCopyJSONDescription(_ certificate: CertificateRef) -> CFS
 
     let jsonEncoder = JSONEncoder()
     jsonEncoder.outputFormatting = .prettyPrinted
-    
+
     do {
         let data = try jsonEncoder.encode(certificate)
         guard let string = String(data: data, encoding: .utf8) else { return nil }
         return string as CFString
     } catch {
     }
-    
+
     return nil
 }

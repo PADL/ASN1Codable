@@ -40,16 +40,16 @@ final class HeimASN1OpenType: Codable, CustomStringConvertible {
         case members = "members"
         case openTypeIds = "opentypeids"
     }
- 
+
     var description: String {
         return "OpenType \(className) with \(members.count) members"
     }
-    
+
     func typeId(for member: HeimASN1TypeDef) -> String? {
         guard let index = self.members.firstIndex(of: member) else {
             return nil
         }
-        
+
         return self.openTypeIds?[index]
     }
 }

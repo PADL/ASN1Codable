@@ -18,7 +18,7 @@ import Foundation
 
 struct Box<Value> {
     let value: Value
-    
+
     init(_ value: Value) {
         self.value = value
     }

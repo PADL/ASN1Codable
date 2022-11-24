@@ -22,12 +22,12 @@ extension ASN1Object {
         guard self.constructed, self.tag == .universal(.set), let items = self.data.items else {
             return self
         }
-        
+
         let sorted = items.sorted { ASN1DecodedTag.sort($0.tag, $1.tag) }
 
         return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
     }
-  
+
     var sortedByEncodedValue: ASN1Object {
         guard self.constructed, self.tag == .universal(.set), let items = self.data.items else {
             return self
@@ -37,12 +37,12 @@ extension ASN1Object {
 
         return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
     }
-  
+
     private static func sort(_ lhs: ASN1Object, _ rhs: ASN1Object) -> Bool {
         do {
             let lhsSerialized = try lhs.serialize()
             let rhsSerialized = try rhs.serialize()
-            
+
             if lhsSerialized.count == rhsSerialized.count {
                 let cmp = lhsSerialized.withUnsafeBytes { lhsBytes in
                     rhsSerialized.withUnsafeBytes { rhsBytes in

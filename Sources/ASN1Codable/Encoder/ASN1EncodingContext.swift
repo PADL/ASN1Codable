@@ -47,10 +47,10 @@ struct ASN1EncodingContext: ASN1CodingContext {
         } else {
             context.enumCodingState = .none
         }
-        
+
         return context
     }
-    
+
     mutating func encodingNestedContainer() {
         self.nextEnumCodingState()
     }

@@ -26,7 +26,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
     case universal(HeimASN1UniversalType)
     case typeDef(HeimASN1TypeDef)
     case typeRef(String)
-    
+
     static func == (lhs: HeimASN1Type, rhs: HeimASN1Type) -> Bool {
         return lhs.name == rhs.name
     }
@@ -38,7 +38,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             return nil
         }
     }
-    
+
     var typeDefValue: HeimASN1TypeDef? {
         if case .typeDef(let type) = self {
             return type
@@ -46,7 +46,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             return nil
         }
     }
-    
+
     var typeRefValue: String? {
         if case .typeRef(let type) = self {
             return type
@@ -54,7 +54,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             return nil
         }
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
 
@@ -75,10 +75,10 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             }
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
     }
-    
+
     static func cTypeToSwiftType(_ cType: String) -> String? {
         switch cType {
         case "heim_integer":
@@ -95,7 +95,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             return nil
         }
     }
-    
+
     var swiftType: String? {
         switch self {
         case .typeDef(let type):
@@ -112,7 +112,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             return type == "HEIM_ANY" ? "AnyCodable" : type
         }
     }
-    
+
     var name: String {
         switch self {
         case .typeDef(let type):
@@ -123,7 +123,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             return type
         }
     }
-    
+
     var tag: ASN1DecodedTag? {
         switch self {
         case .typeDef(let type):
@@ -138,10 +138,10 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             }
         }
     }
-    
+
     private func emitTypeDef(_ typeDef: HeimASN1TypeDef, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
         typeDef.parent = containingTypeDef
-        
+
         if containingTypeDef.isTypeDef ?? false {
             try emitTypeDefDefinition(typeDef, containingTypeDef: containingTypeDef, &outputStream)
         } else {
@@ -151,10 +151,10 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
 
     private func emitTypeDefField(_ typeDef: HeimASN1TypeDef, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
         let isChoice = containingTypeDef.parent?.isChoice ?? false
-        
+
         if isChoice {
             let fieldDescriptor = HeimASN1FieldDescriptor(containingTypeDef)
-            
+
             if containingTypeDef.parent?.isUniformlyContextTagged ?? false {
                 outputStream.write("\tcase \(containingTypeDef.generatedName)(\(fieldDescriptor.bareSwiftType))\n")
             } else {
@@ -211,10 +211,10 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             containingTypeDef.translator?.cacheTypeRef(containingTypeDef.generatedName)
         }
     }
-    
+
     private func emitTypeDefDefinition(_ typeDef: HeimASN1TypeDef, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
         let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
-        
+
         if containingTypeDef.tag == .universal(.enumerated) {
             outputStream.write("\(containingTypeDef.visibility)enum \(containingTypeDef.generatedName): \(containingTypeDef.swiftConformances(swiftType)) {\n")
             try typeDef.members?.forEach {
@@ -234,12 +234,12 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             try typeDef.emit(&outputStream)
         }
     }
-    
+
     private func wrappedInitializer(containingTypeDef: HeimASN1TypeDef, value: AnyCodable) -> String {
         if let grandParent = containingTypeDef.grandParent {
             let fieldDescriptor = HeimASN1FieldDescriptor(grandParent)
             precondition(!fieldDescriptor.hasNestedWrappers)
-            
+
             if fieldDescriptor.isInitializedWithWrappedValue {
                 let quotedValue: String
                 if value.value is String {
@@ -247,14 +247,14 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
                 } else {
                     quotedValue = "\(value)"
                 }
-                
+
                 return "\(fieldDescriptor.swiftType!)(wrappedValue: \(quotedValue))"
             }
         }
-        
+
         return "\(value)"
     }
-    
+
     private func emitUniversal(_ universal: HeimASN1UniversalType, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
         //let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
         let swiftType = self.swiftType!
@@ -262,7 +262,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
 
         if constant {
             outputStream.write("\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(swiftType)\(containingTypeDef.isOptional ?? false ? "?" : "")")
-            
+
             switch universal {
             case .objectIdentifier:
                 if let oidStringValue = containingTypeDef.oidStringValue {

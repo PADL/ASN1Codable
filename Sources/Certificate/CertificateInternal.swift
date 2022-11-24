@@ -37,7 +37,7 @@ public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> CFAr
 public func CertificateCopyDNSNamesFromSAN(_ certificate: CertificateRef) -> CFArray?
 {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
-    
+
     guard let datas = certificate.subjectAltName?.compactMap({
         if case .dNSName(let dnsName) = $0 {
             return dnsName

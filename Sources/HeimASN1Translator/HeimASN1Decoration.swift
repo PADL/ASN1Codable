@@ -27,7 +27,7 @@ struct HeimASN1Decoration: Codable {
     var copyFunction: String
     var freeFunction: String
     var headerName: String
-    
+
     enum CodingKeys: String, CodingKey {
         case type = "type"
         case name = "name"

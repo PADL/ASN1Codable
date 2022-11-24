@@ -21,7 +21,7 @@ import AnyCodable
 indirect enum HeimASN1TypeMember: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable {
     case dictionary(Dictionary<String, AnyCodable>)
     case typeDef(HeimASN1TypeDef)
-    
+
     var dictionaryValue: Dictionary<String, AnyCodable>? {
         if case .dictionary(let type) = self {
             return type
@@ -29,7 +29,7 @@ indirect enum HeimASN1TypeMember: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRep
             return nil
         }
     }
-    
+
     var typeDefValue: HeimASN1TypeDef? {
         if case .typeDef(let type) = self {
             return type
@@ -42,17 +42,17 @@ indirect enum HeimASN1TypeMember: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRep
         guard let typeDefValue = self.typeDefValue else {
             return nil
         }
-        
+
         let components = typeDefValue.generatedName.components(separatedBy: ":")
-        
+
         guard components.count == 2 else {
             return nil
         }
-        
+
         guard !components[0].hasPrefix("_unused") else {
             return nil
         }
-        
+
         return components[0]
     }
 
@@ -71,10 +71,10 @@ indirect enum HeimASN1TypeMember: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRep
             }
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
     }
-    
+
     var swiftType: String? {
         switch self {
         case .typeDef(let type):
@@ -83,7 +83,7 @@ indirect enum HeimASN1TypeMember: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRep
             fatalError("unimplemented")
         }
     }
-    
+
     func emit(_ outputStream: inout OutputStream) throws {
         if case .typeDef(let type) = self {
             try type.emit(&outputStream)

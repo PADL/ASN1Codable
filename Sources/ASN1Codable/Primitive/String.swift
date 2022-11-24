@@ -40,15 +40,15 @@ extension Optional: ExpressibleByString where Wrapped == String {
 @propertyWrapper
 public struct GeneralString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
-    
+
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public init() where Value: ExpressibleByNilLiteral {
         self.wrappedValue = nil
     }
-    
+
     public static var metadata: ASN1Metadata {
         return ASN1Metadata(tag: .universal(.generalString))
     }
@@ -57,15 +57,15 @@ public struct GeneralString<Value: Codable & ExpressibleByString>: Codable, Equa
 @propertyWrapper
 public struct IA5String<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
-    
+
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public init() where Value: ExpressibleByNilLiteral {
         self.wrappedValue = nil
     }
-    
+
     public static var metadata: ASN1Metadata {
         return ASN1Metadata(tag: .universal(.ia5String))
     }
@@ -74,15 +74,15 @@ public struct IA5String<Value: Codable & ExpressibleByString>: Codable, Equatabl
 @propertyWrapper
 public struct UTF8String<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
-    
+
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public init() where Value: ExpressibleByNilLiteral {
         self.wrappedValue = nil
     }
-    
+
     public static var metadata: ASN1Metadata {
         return ASN1Metadata(tag: .universal(.utf8String))
     }
@@ -91,15 +91,15 @@ public struct UTF8String<Value: Codable & ExpressibleByString>: Codable, Equatab
 @propertyWrapper
 public struct UniversalString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
-    
+
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public init() where Value: ExpressibleByNilLiteral {
         self.wrappedValue = nil
     }
-    
+
     public static var metadata: ASN1Metadata {
         return ASN1Metadata(tag: .universal(.universalString))
     }
@@ -108,15 +108,15 @@ public struct UniversalString<Value: Codable & ExpressibleByString>: Codable, Eq
 @propertyWrapper
 public struct BMPString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
-    
+
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public init() where Value: ExpressibleByNilLiteral {
         self.wrappedValue = nil
     }
-    
+
     public static var metadata: ASN1Metadata {
         return ASN1Metadata(tag: .universal(.bmpString))
     }
@@ -125,15 +125,15 @@ public struct BMPString<Value: Codable & ExpressibleByString>: Codable, Equatabl
 @propertyWrapper
 public struct PrintableString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
-    
+
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public init() where Value: ExpressibleByNilLiteral {
         self.wrappedValue = nil
     }
-    
+
     public static var metadata: ASN1Metadata {
         return ASN1Metadata(tag: .universal(.printableString))
     }

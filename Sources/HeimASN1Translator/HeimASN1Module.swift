@@ -22,7 +22,7 @@ struct HeimASN1Module: Codable {
         case explicit
         case implicit
     }
-    
+
     var module: String
     var tagging: Tagging
     var objid: [ObjectIdentifier]?
@@ -32,14 +32,14 @@ final class HeimASN1ModuleRef: Codable {
     enum CodingKeys: String, CodingKey {
         case name = "imports"
     }
-    
+
     var name: String
     var translator: HeimASN1Translator?
-    
+
     func `import`(translator: HeimASN1Translator) throws {
         let file: URL
         let path = "\(self.name).json"
-        
+
         if let parentURL = translator.url {
             let containingURL = parentURL.deletingLastPathComponent()
             file = containingURL.appendingPathComponent(path)
@@ -49,7 +49,7 @@ final class HeimASN1ModuleRef: Codable {
 
         var options: HeimASN1Translator.Options = translator.options
         options.insert(.isImportedModule)
-        
+
         self.translator = HeimASN1Translator(options: options,
                                              typeMaps: translator.typeMaps,
                                              additionalConformances: translator.additionalConformances)

@@ -26,7 +26,7 @@ public struct ASN1PrivateTagged <Tag, Tagging, Value>: Codable, ASN1TaggedWrappe
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public init() where Value: ExpressibleByNilLiteral {
         self.wrappedValue = nil
     }

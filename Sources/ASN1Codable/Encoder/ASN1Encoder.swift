@@ -24,7 +24,7 @@ public final class ASN1Encoder {
 
     public init() {
     }
-    
+
     public func encode<T: Encodable>(_ value: T) throws -> Data {
         let encoder = ASN1EncoderImpl(userInfo: self.userInfo,
                                       taggingEnvironment: self.taggingEnvironment,

@@ -30,7 +30,7 @@ fileprivate extension ASN1DecodedTag {
             return ASN1Tag.private
         }
     }
-    
+
     var tagNo: UInt {
         switch self {
         case .universal(let tagNo):
@@ -80,7 +80,7 @@ extension ASN1DecodedTag {
     static func sort(_ lhs: ASN1DecodedTag, _ rhs: ASN1DecodedTag) -> Bool {
         let lhsTagType = lhs.tagType, rhsTagType = rhs.tagType
         let lhsTagNo = lhs.tagNo, rhsTagNo = rhs.tagNo
-        
+
         if lhsTagType == lhsTagType {
             return lhsTagNo < rhsTagNo
         } else {

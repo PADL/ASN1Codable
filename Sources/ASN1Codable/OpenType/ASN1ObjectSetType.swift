@@ -26,11 +26,11 @@ public struct ASN1ObjectSetType<ValueType>: Codable where ValueType : Codable & 
     public init(wrappedValue: ValueType) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(self.wrappedValue)
-    
+
         if let encoder = encoder as? ASN1EncoderImpl,
            let objectSetCodingContext = encoder.context.objectSetCodingContext {
             precondition(objectSetCodingContext.valueType == nil)
@@ -41,7 +41,7 @@ public struct ASN1ObjectSetType<ValueType>: Codable where ValueType : Codable & 
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         self.wrappedValue = try container.decode(ValueType.self)
-        
+
         if let decoder = decoder as? ASN1DecoderImpl,
            let objectSetCodingContext = decoder.context.objectSetCodingContext {
             precondition(objectSetCodingContext.valueType == nil)

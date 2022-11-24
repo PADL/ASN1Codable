@@ -44,7 +44,7 @@ public final class ASN1Decoder {
 
 #if canImport(Combine)
 import Combine
-            
+
 extension ASN1Decoder: TopLevelDecoder {
     public typealias Output = Data
 }

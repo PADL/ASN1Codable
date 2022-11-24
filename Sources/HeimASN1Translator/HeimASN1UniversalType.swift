@@ -49,14 +49,14 @@ enum HeimASN1UniversalType: String, Codable, HeimASN1SwiftTypeRepresentable, Hei
     var swiftType: String? {
         return self.asn1Tag.swiftType
     }
-    
+
     var tag: ASN1DecodedTag? {
         return .universal(self.asn1Tag)
     }
-    
+
     private var asn1Tag: ASN1Tag {
         let tag: ASN1Tag
-        
+
         switch self {
         case .implicit:
             tag = .implicit

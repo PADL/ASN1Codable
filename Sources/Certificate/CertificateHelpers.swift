@@ -30,11 +30,11 @@ extension Certificate {
 
         return attributes._bridgeToObjectiveC()
     }
-    
+
     var subjectAltName: [GeneralName]? {
         return self.extension(id_x509_ce_subjectAltName)
     }
-    
+
     var serialNumberData: CFData? {
         do {
             return try ASN1Encoder().encode(self.tbsCertificate.serialNumber) as CFData
@@ -58,7 +58,7 @@ extension ObjectIdentifier {
             }
         } catch {
         }
-        
+
         return self.description
     }
 }

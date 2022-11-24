@@ -19,11 +19,11 @@ import ASN1Kit
 
 final class ASN1EncoderImpl {
     fileprivate var container: ASN1EncodingContainer?
-    
+
     let codingPath: [CodingKey]
     let userInfo: [CodingUserInfoKey: Any]
     let context: ASN1EncodingContext
-    
+
     init(codingPath: [CodingKey] = [],
          userInfo: [CodingUserInfoKey: Any] = [:],
          taggingEnvironment: ASN1Tagging? = nil,
@@ -32,7 +32,7 @@ final class ASN1EncoderImpl {
         self.userInfo = userInfo
         self.context = ASN1EncodingContext(taggingEnvironment: taggingEnvironment ?? .explicit, objectSetTypeDictionary: objectSetTypeDictionary)
     }
-    
+
     init(codingPath: [CodingKey] = [],
          userInfo: [CodingUserInfoKey: Any] = [:],
          context: ASN1EncodingContext = ASN1EncodingContext()) {
@@ -58,15 +58,15 @@ extension ASN1EncoderImpl: Encoder {
     /// - returns: A new keyed encoding container.
     func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key : CodingKey {
         precondition(self.container == nil)
-        
+
         let container = KeyedContainer<Key>(codingPath: self.codingPath,
                                             userInfo: self.userInfo,
                                             context: self.context)
         self.container = container
-        
+
         return KeyedEncodingContainer(container)
     }
-    
+
     /// Returns an encoding container appropriate for holding multiple unkeyed
     /// values.
     ///
@@ -77,15 +77,15 @@ extension ASN1EncoderImpl: Encoder {
     /// - returns: A new empty unkeyed container.
     func unkeyedContainer() -> UnkeyedEncodingContainer {
         precondition(self.container == nil)
-        
+
         let container = UnkeyedContainer(codingPath: self.codingPath,
                                          userInfo: self.userInfo,
                                          context: self.context)
         self.container = container
-        
+
         return container
     }
-    
+
     /// Returns an encoding container appropriate for holding a single primitive
     /// value.
     ///
@@ -98,12 +98,12 @@ extension ASN1EncoderImpl: Encoder {
     func singleValueContainer() -> SingleValueEncodingContainer {
         // FIXME investigate why we are reusing single value contained here
         precondition(self.container == nil || self.context.objectSetCodingContext != nil)
-        
+
         let container = SingleValueContainer(codingPath: self.codingPath,
                                              userInfo: self.userInfo,
                                              context: self.context)
         self.container = container
-        
+
         return container
     }
 }

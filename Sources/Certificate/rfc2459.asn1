@@ -68,7 +68,7 @@ id-secsig-sha-1WithRSAEncryption OBJECT IDENTIFIER ::= { iso(1) identified-organ
 
 id-nistAlgorithm OBJECT IDENTIFIER ::= {
    joint-iso-itu-t(2) country(16) us(840) organization(1) gov(101) csor(3) 4 }
-  
+
 id-nist-aes-algs OBJECT IDENTIFIER ::= { id-nistAlgorithm 1 }
 
 id-aes-128-cbc OBJECT IDENTIFIER ::=		{ id-nist-aes-algs 2 }

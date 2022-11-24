@@ -22,17 +22,17 @@ import AnyCodable
 @propertyWrapper
 public struct ASN1AnyObjectSetValue: Codable, Hashable {
     public typealias Value = AnyCodable
-    
+
     public var wrappedValue: Value
-    
+
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         try self.wrappedValue.encode(to: encoder)
     }
-    
+
     public init(from decoder: Decoder) throws {
         self.wrappedValue = AnyCodable(try ASN1ObjectSetValue(from: decoder))
     }

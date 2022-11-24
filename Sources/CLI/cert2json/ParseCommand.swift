@@ -32,7 +32,7 @@ struct ParseCommand: CommandProtocol {
 
     func run(_ options: Options) -> Result<(), Error> {
         let fileContents: Data?
-        
+
         if !options.file.isEmpty {
             let file = URL(fileURLWithPath: (options.file as NSString).expandingTildeInPath)
             fileContents = try? Data(contentsOf: file)
@@ -43,11 +43,11 @@ struct ParseCommand: CommandProtocol {
         }
 
         var data: Data? = nil
-        
+
         if let fileContents = fileContents {
             var didBegin = false
             var base64: String = ""
-            
+
             String(data: fileContents, encoding: .ascii)?.enumerateLines { string, stop in
                 if string == "-----BEGIN CERTIFICATE-----" {
                     didBegin = true
@@ -66,39 +66,39 @@ struct ParseCommand: CommandProtocol {
                 data = Data(hexString: options.string)
             }
         }
-        
+
         guard let data = data, !data.isEmpty else {
             return .failure(.base64DecodingError)
         }
         guard let cert = CertificateCreateWithData(kCFAllocatorDefault, data as CFData) else {
             return .failure(.decodingError)
         }
-        
+
         if options.json {
             guard let json = CertificateCopyJSONDescription(cert) else {
                 return .failure(.jsonEncodingError)
             }
-            
+
             print("\(json)")
         }
-        
+
         if options.reencode {
             guard let encoded = CertificateCopyDataReencoded(cert) else {
                 return .failure(.encodingError)
             }
-                
+
             print("-----BEGIN CERTIFICATE-----")
             let chunks = (encoded as Data).base64EncodedString().chunks(ofCount: 64)
             chunks.forEach( { print($0) })
             print("-----END CERTIFICATE-----")
         }
-        
+
         if options.san, let sans = CertificateCopyDescriptionsFromSAN(cert) {
             (sans as NSArray).forEach { san in
                 print("\(san)")
             }
         }
-        
+
         return .success(())
     }
 
@@ -121,7 +121,7 @@ struct ParseCommand: CommandProtocol {
             }
             }
         }
-        
+
         static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<Error>> {
             //swiftlint:disable:previous identifier_name
             return create

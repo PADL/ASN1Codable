@@ -31,7 +31,7 @@ public struct ASN1Metadata: Equatable {
     var sizeConstraints: ClosedRange<Int>?
     /// value constraints for integer types (and, eventually, string types)
     var valueConstraints: ClosedRange<Int>?
-    
+
     public init(tag: ASN1DecodedTag? = nil, tagging: ASN1Tagging? = nil) {
         self.tag = tag
         self.tagging = tagging
@@ -43,7 +43,7 @@ extension ASN1Metadata: CustomDebugStringConvertible {
         let tagDescription: String?
         let taggingDescription: String?
         var debugDescription = ""
-        
+
         if let tag = self.tag {
             switch tag {
             case .universal(let asn1Tag):
@@ -62,7 +62,7 @@ extension ASN1Metadata: CustomDebugStringConvertible {
         } else {
             tagDescription = nil
         }
-        
+
         if let tagging = self.tagging {
             switch tagging {
             case .implicit:
@@ -78,7 +78,7 @@ extension ASN1Metadata: CustomDebugStringConvertible {
         } else {
             taggingDescription = nil
         }
-        
+
         if let tagDescription = tagDescription {
             debugDescription.append(tagDescription)
         }
@@ -88,7 +88,7 @@ extension ASN1Metadata: CustomDebugStringConvertible {
             }
             debugDescription.append(taggingDescription)
         }
-        
+
         return debugDescription
     }
 }
@@ -109,27 +109,27 @@ extension ASN1Metadata {
         } else {
             validatedSizeConstraints = true
         }
-        
+
         return validatedSizeConstraints
     }
-    
+
     private func validateIntegerValueConstraints<T: FixedWidthInteger>(_ value: T) -> Bool {
         let validatedValueConstraints: Bool
-        
+
         if let valueConstraints = self.valueConstraints {
             validatedValueConstraints = value >= Int.min && value <= Int.max && valueConstraints.contains(Int(value))
         } else {
             validatedValueConstraints = true
         }
-        
+
         return validatedValueConstraints
     }
-    
+
     func validateValueConstraints<T>(_ value: T) -> Bool {
         if let value = value as? any FixedWidthInteger {
             return self.validateIntegerValueConstraints(value)
         }
-        
+
         return true
     }
 }

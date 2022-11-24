@@ -33,13 +33,13 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         self.tagging = typeDef.desiredTaggingEnvironment
         self.tag = typeDef.isTag ? typeDef.tag : nil
         self.type = typeDef.isTag ? typeDef.tType! : HeimASN1Type.typeDef(typeDef)
-                
+
         if typeDef.parent?.isOptional ?? false {
             self.isOptional = true
         } else {
             self.isOptional = false
         }
-        
+
         if typeDef.parent?.defaultValue != nil {
             self.isDefault = true
         } else {
@@ -51,7 +51,7 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             self.isOptional = true
         }
     }
-    
+
     ///
     /// Determining the correct type to emit is somewhat complicated due to the fact that property
     /// wrappers are not supported in all contexts (e.g. in enum cases). Hence a wrapped type
@@ -64,26 +64,26 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             outputStream.write("\t@\($0)\n")
         }
     }
-    
+
     private var isUsingTagCodingKey: Bool {
         return self.type.typeDefValue?.grandParent?.isUniformlyContextTagged ?? false
     }
-    
+
     private var translator: HeimASN1Translator? {
         return self.type.typeDefValue?.translator
     }
-    
+
     private var isTagged: Bool {
         return self.tag != nil
     }
-    
+
     private var isBitStringEnumeration: Bool {
         return type.tag == .universal(.bitString) && !(type.typeDefValue?.tType?.typeDefValue?.members?.isEmpty ?? true)
     }
-    
+
     private var _swiftType: String {
         let swiftType: String
-        
+
         if let objectSetWrapperType = self.objectSetWrapperType {
             swiftType = "\(objectSetWrapperType)\(self._optionalSuffix)"
         } else if self.isBitStringEnumeration {
@@ -94,10 +94,10 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         } else {
             swiftType = "\(self.type.swiftType!)\(self._optionalSuffix)"
         }
-        
+
         return swiftType
     }
-    
+
     /// returns the generic type for this wrapped type
     var swiftType: String? {
         return self.taggedWrapperType ?? self._swiftType
@@ -110,20 +110,20 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             return nil
         }
     }
-    
+
     private var hasWrappedPrimitiveType: Bool {
         self.wrappedPrimitiveType != nil
     }
-    
+
     private var taggedWrapperType: String? {
         guard let tag = self.tag else {
             return nil
         }
-        
+
         precondition(!tag.isUniversal)
         let wrapperType: (String, UInt)
         let tagging = self.tagging ?? HeimASN1TaggingEnvironment.explicit
-        
+
         switch tag {
         case .taggedTag(let tagNo):
             wrapperType = ("ASN1ContextTagged", tagNo)
@@ -134,22 +134,22 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         default:
             return nil
         }
-       
+
         let modulePrefix: String
-        
+
         if let module = self.type.typeDefValue?.translator?.module {
             modulePrefix = "\(module.module)."
         } else {
             modulePrefix = ""
         }
-        
+
         return "\(wrapperType.0)<\(modulePrefix)ASN1TagNumber$\(wrapperType.1), \(tagging.swiftType!), \(self._swiftType)>"
     }
-    
+
     private var hasTaggedWrapperType: Bool {
         return self.tag != nil
     }
-    
+
     private var objectSetWrapperType: String? {
         guard let localName = self.parentName, let openType = self.openType else {
             return nil
@@ -164,23 +164,23 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             return nil
         }
     }
-    
+
     private var hasObjectSetWrapperType: Bool {
         return self.objectSetWrapperType != nil
     }
-        
+
     private var isOpenType: Bool {
         return type.typeDefValue?.grandParent?.openType != nil
     }
-    
+
     private var openType: HeimASN1OpenType? {
         return type.typeDefValue?.grandParent?.openType
     }
-    
+
     private var parentName: String? {
         return type.typeDefValue?.parent?.name
     }
-    
+
     private var isObjectSetValueType: Bool {
         guard let localName = self.parentName, let openType = self.openType else {
             return false
@@ -188,7 +188,7 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
 
         return localName == openType.openTypeMember
     }
-    
+
     private var isObjectSetTypeType: Bool {
         guard let localName = self.parentName, let openType = self.openType else {
             return false
@@ -196,19 +196,19 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
 
         return localName == openType.typeIdMember
     }
-    
+
     private var isOctetStringEncodedObjectSetValueType: Bool {
         return self.isObjectSetValueType && type.tag == .universal(.octetString)
     }
-    
+
     private var isSetOrSequence: Bool {
         guard let tag = self.type.tag else {
             return false
         }
-        
+
         return tag == .universal(.set) || tag == .universal(.sequence)
     }
-    
+
     private var canUseObjectSetValuePropertyWrapper: Bool {
         return self.isObjectSetValueType && !(self.isTagged || self.needsTypeErasedObjectSetValueType)
     }
@@ -216,11 +216,11 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     private var needsTypeErasedObjectSetValueType: Bool {
         return self.isSetOrSequence
     }
-    
+
     /// returns an array of property wrappers in declaration order. at present at most two are returned.
     var propertyWrappers: [String] {
         var wrappers = [String]()
-        
+
         if !self.isUsingTagCodingKey, let taggedWrapperType = self.taggedWrapperType {
             wrappers.append(taggedWrapperType)
         }
@@ -228,22 +228,22 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         if let objectSetWrapperType = self.objectSetWrapperType, (self.isObjectSetTypeType || self.canUseObjectSetValuePropertyWrapper) {
             wrappers.append(objectSetWrapperType)
         }
-        
+
         if let wrappedPrimitiveType = self.wrappedPrimitiveType {
             wrappers.append(wrappedPrimitiveType.0)
         }
-        
+
         return wrappers
     }
-    
+
     private var _optionalSuffix: String {
         return self.isDefault || self.isOptional ? "?" : ""
     }
-    
+
     /// returns the innermost type for this wrapped type
     var _bareSwiftType: String {
         let bareSwiftType: String
-        
+
         if let wrappedPrimitiveType = self.wrappedPrimitiveType {
             bareSwiftType = wrappedPrimitiveType.1
         } else if self.isObjectSetValueType {
@@ -261,18 +261,18 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         } else {
             bareSwiftType = type.swiftType!
         }
-        
+
         return bareSwiftType
     }
-    
+
     var bareSwiftType: String {
         return "\(self._bareSwiftType)\(self._optionalSuffix)"
     }
-    
+
     var bareSwiftTypeSansOptional: String {
         return "\(self._bareSwiftType)"
     }
-    
+
     private var _dereferencedTypeDefValue: HeimASN1TypeDef? {
         if let typeRef = self.type.typeDefValue?.tType?.typeRefValue,
            let translator = self.translator,
@@ -282,7 +282,7 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             return nil
         }
     }
-    
+
     private var _dereferencedUniversalTypeTag: ASN1Tag? {
         if let dereferencedTypeDefValue = self._dereferencedTypeDefValue,
            let tag = dereferencedTypeDefValue.tType?.typeDefValue?.tTypeUniversalValue?.tag,
@@ -301,10 +301,10 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
                 return ("", swiftType)
             }
         }
-        
+
         return nil
     }
-    
+
     var description: String {
         let tagDesc: String
         if let tag = self.tag {
@@ -322,29 +322,29 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             return "\(bareSwiftType)()"
         }
     }
-    
+
     private var _initializer: String {
         guard let dereferencedSwiftType = self._dereferencedSwiftType, !dereferencedSwiftType.0.isEmpty else {
             return self._initializer(for: self._bareSwiftType)
         }
-                
+
         precondition(self.wrappedPrimitiveType == nil)
         return "\(dereferencedSwiftType.0)<\(dereferencedSwiftType.1)>(wrappedValue: \(self._initializer(for: dereferencedSwiftType.1)))"
     }
-    
+
     var initialValue: String {
         return self.isOptional ? "nil" : "\(self._initializer)"
     }
-    
+
     var needsInitialValue: Bool {
         // FIXME
         return !self.propertyWrappers.isEmpty && !self.bareSwiftType.hasPrefix("(any") && !self.isObjectSetTypeType
     }
-    
+
     var isInitializedWithWrappedValue: Bool {
         return self.propertyWrappers.count == 1
     }
-    
+
     var hasNestedWrappers: Bool {
         return self.propertyWrappers.count > 1
     }

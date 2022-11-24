@@ -32,7 +32,7 @@ struct TranslateCommand: CommandProtocol {
         let file = URL(fileURLWithPath: (options.input as NSString).expandingTildeInPath)
 
         let typeMapDictionary: [String:String]?
-        
+
         if let typeMaps = options.typeMaps {
             let pairs: [(String, String)] = typeMaps.map {
                 let values = $0.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
@@ -42,9 +42,9 @@ struct TranslateCommand: CommandProtocol {
         } else {
             typeMapDictionary = nil
         }
-        
+
         var conformancesDictionary: [String:NSMutableArray] = [:]
-        
+
         if let conformances = options.conformances {
             conformances.forEach {
                 let values = $0.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
@@ -54,9 +54,9 @@ struct TranslateCommand: CommandProtocol {
                 conformancesDictionary[typeName] = conformances
             }
         }
-        
+
         var outputStream: OutputStream
-        
+
         if let output = options.output {
             guard let o = OutputStream(toFileAtPath: output, append: false) else {
                 return .failure(.failedToOpenOutputStream)
@@ -65,7 +65,7 @@ struct TranslateCommand: CommandProtocol {
         } else {
             outputStream = OutputStream(toMemory: ())
         }
-        
+
         let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
         let provenanceInformation = ([executableName] + CommandLine.arguments[1..<CommandLine.arguments.count - 1]).joined(separator: " ")
         let translator = HeimASN1Translator(typeMaps: typeMapDictionary,
@@ -86,7 +86,7 @@ struct TranslateCommand: CommandProtocol {
         } catch {
             return .failure(.translationError(error))
         }
-        
+
         return .success(())
     }
 
@@ -101,7 +101,7 @@ struct TranslateCommand: CommandProtocol {
                 return Options(input: input, output: output, typeMaps: typeMaps, conformances: conformances)
             }}}
         }
-        
+
         static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<Error>> {
             return create
                     <*> m <| Option<String>(key: "input", defaultValue: "", usage: "path to JSON output from asn1_compile")

@@ -19,6 +19,6 @@ import ASN1Kit
 
 // for applying a tag/flag to an entire type rather than a member
 
-public protocol ASN1TaggedType: ASN1TaggedTypeRepresentable, Codable {    
+public protocol ASN1TaggedType: ASN1TaggedTypeRepresentable, Codable {
     static var tagNumber: UInt { get }
 }

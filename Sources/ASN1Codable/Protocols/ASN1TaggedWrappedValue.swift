@@ -19,7 +19,7 @@ import ASN1Kit
 
 public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible, CustomDebugStringConvertible, ASN1TaggedTypeRepresentable {
     associatedtype Value: Codable
-    
+
     var wrappedValue: Value { get set }
     var projectedValue: ASN1Metadata { get }
 
@@ -34,25 +34,25 @@ extension ASN1TaggedWrappedValue {
     public var projectedValue: ASN1Metadata {
         return Self.metadata
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         precondition(!(encoder is ASN1Codable.ASN1EncoderImpl))
         try self.wrappedValue.encode(to: encoder)
     }
-    
+
     public init(from decoder: Decoder) throws {
         precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
         try self.init(wrappedValue: Value(from: decoder))
     }
-    
+
     public var description: String {
         return String(describing: self.wrappedValue)
     }
-    
+
     public var debugDescription: String {
         let valueDescription: String
         var debugDescription = self.projectedValue.debugDescription
-        
+
         switch self.wrappedValue {
         case is Void:
             valueDescription = "null"
@@ -64,7 +64,7 @@ extension ASN1TaggedWrappedValue {
             valueDescription = String(describing: self.wrappedValue)
             break
         }
-        
+
         if !debugDescription.isEmpty {
             debugDescription.append(" ")
         }
@@ -78,7 +78,7 @@ extension KeyedDecodingContainer {
         if let value = try self.decodeIfPresent(type, forKey: key) {
             return value
         }
-        
+
         return U(wrappedValue: nil)
     }
 }

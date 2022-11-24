@@ -20,11 +20,11 @@ import AnyCodable
 
 public struct ASN1TaggedDictionary {
     fileprivate var wrappedValue: Dictionary<UInt, AnyCodable>
-    
+
     init(wrappedValue: Dictionary<UInt, AnyCodable>) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public func _bridgeToObjectiveC() -> NSDictionary {
         return self.wrappedValue.mapValues {
             return $0.value as? NSObject
@@ -51,7 +51,7 @@ extension ASN1TaggedDictionary: Encodable {
     public func encode(to encoder: Encoder) throws {
         if let encoder = encoder as? ASN1EncoderImpl {
             var container = encoder.container(keyedBy: ASN1TaggedDictionaryCodingKey.self)
-            
+
             try self.wrappedValue.keys.sorted(by: { $0 < $1 }).forEach {
                 let key = ASN1TaggedDictionaryCodingKey(tagNo: $0)
                 try container.encode(self.wrappedValue[$0], forKey: key)
@@ -66,30 +66,30 @@ extension ASN1TaggedDictionary: Encodable {
 
 fileprivate struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
     var tagNo: UInt
-    
+
     init(tagNo: UInt) {
         self.tagNo = tagNo
     }
-    
+
     public init?(stringValue: String) {
         guard let tagNo = UInt(stringValue) else {
             return nil
         }
         self.tagNo = tagNo
     }
-        
+
     public init?(intValue: Int) {
         if intValue < 0 {
             return nil
         }
-        
+
         self.tagNo = UInt(intValue)
     }
-    
+
     public var stringValue: String {
         return "[\(self.tagNo)]"
     }
-    
+
     public var intValue: Int? {
         return self.tagNo < Int.max ? Int(tagNo) : nil
     }

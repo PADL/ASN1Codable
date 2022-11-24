@@ -25,7 +25,7 @@ import Echo
 final class ASN1AutomaticTaggingContext: CustomStringConvertible {
     private var tagNo: UInt
     private var enumMetadata: EnumMetadata?
-    
+
     init?<T>(_ type: T.Type) {
         // this is expensive, so use automatic tags sparingly, or have the compiler do the job
         if let metadata = reflect(type) as? StructMetadata {
@@ -36,7 +36,7 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
                 }
                 return wrappedFieldType.metadata.tag != nil
             }
-            
+
             guard !hasTaggedFields else {
                 return nil
             }
@@ -48,59 +48,59 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
                 }
                 return wrappedFieldType.metadata.tag != nil
             }
-            
+
             guard !hasTaggedFields else {
                 return nil
             }
 
             self.enumMetadata = metadata
         }
-        
+
         self.tagNo = 0
     }
-    
+
     func selectTag<Key>(_ key: Key) where Key : CodingKey {
         guard let metadata = self.enumMetadata else {
             return
         }
-        
+
         precondition(self.tagNo == 0)
-        
+
         guard let index = metadata.descriptor.fields.records.firstIndex(where: { $0.name == key.stringValue }) else {
             return
         }
-        
+
         self.tagNo = UInt(index)
     }
-    
+
     func selectTag<Key>(_ tag: ASN1DecodedTag) -> Key? where Key : CodingKey {
         guard let metadata = self.enumMetadata else {
             return nil
         }
-        
+
         precondition(self.tagNo == 0)
-        
+
         guard case .taggedTag(let tagNo) = tag else {
             return nil
         }
-        
+
         guard tagNo < metadata.descriptor.fields.records.count else {
             return nil
         }
-        
+
         self.tagNo = tagNo
         return Key(stringValue: metadata.descriptor.fields.records[Int(tagNo)].name)
     }
-    
+
     private func nextTag() -> ASN1DecodedTag {
         defer { self.tagNo += 1 }
         return .taggedTag(self.tagNo)
     }
-    
+
     private var tagging: ASN1Tagging {
         return self.enumMetadata != nil ? .explicit : .implicit
     }
-    
+
     func metadataForNextTag() -> ASN1Metadata {
         return ASN1Metadata(tag: self.nextTag(), tagging: self.tagging)
     }

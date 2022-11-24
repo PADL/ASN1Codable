@@ -39,7 +39,7 @@ extension ASN1DecodingContainer {
         guard let count = self.count else {
             return true
         }
-        
+
         return self.currentIndex >= count
     }
 
@@ -80,7 +80,7 @@ extension ASN1DecodingContainer {
     }
 
     /// returns the current object in a keyed or unkeyed decoding container,
-    /// subject to some validation checks 
+    /// subject to some validation checks
     private func _currentObject(for type: Decodable.Type? = nil, nestedContainer: Bool) throws -> ASN1Object {
         let object: ASN1Object
 
@@ -112,7 +112,7 @@ extension ASN1DecodingContainer {
     }
 
     /// wrapped for _currentObject() that can coax decoding errors such that
-    /// they will hint to the caller to skip the field if OPTIONAL (see below) 
+    /// they will hint to the caller to skip the field if OPTIONAL (see below)
     func currentObject(for type: Decodable.Type? = nil, nestedContainer: Bool = false) throws -> ASN1Object {
         do {
             return try self._currentObject(for: type, nestedContainer: nestedContainer)

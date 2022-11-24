@@ -40,18 +40,18 @@ extension ASN1EncoderImpl {
             var stringValue: String {
                     return "\(self.intValue!)"
             }
-            
+
             var intValue: Int?
 
             init?(stringValue: String) {
                 return nil
             }
-            
+
             init?(intValue: Int) {
                 self.intValue = intValue
             }
         }
-        
+
         var nestedCodingPath: [CodingKey] {
             return self.codingPath + [Index(intValue: self.count)!]
         }
@@ -69,75 +69,75 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
                                                          context: self.context)
         container.context.encodingNestedContainer()
         self.addContainer(container)
-        
+
         return container
     }
-    
+
     func encodeNil() throws {
         var container = self.nestedSingleValueContainer(context: ASN1EncodingContext())
         try container.encodeNil()
     }
-    
+
     func encode(_ value: Bool) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Int) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Int8) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Int16) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Int32) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Int64) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: UInt) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: UInt8) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: UInt16) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: UInt32) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: UInt64) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: String) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Float) throws {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
@@ -152,17 +152,17 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {
         let container = ASN1EncoderImpl.KeyedContainer<NestedKey>(codingPath: self.nestedCodingPath,
                                                                   userInfo: self.userInfo,
                                                                   context: self.context)
         container.context.encodingNestedContainer()
         self.addContainer(container)
-        
+
         return KeyedEncodingContainer(container)
     }
-    
+
     func superEncoder() -> Encoder {
         fatalError("not implemented")
     }
@@ -175,7 +175,7 @@ extension ASN1EncoderImpl.UnkeyedContainer {
 
         return container
     }
-    
+
     var object: ASN1Object? {
         let object: ASN1Object?
 
@@ -184,14 +184,14 @@ extension ASN1EncoderImpl.UnkeyedContainer {
             object = self.containers.first?.object
         } else {
             let values = self.containers.compactMap { $0.object }
-            
+
             if self.context.encodeAsSet {
                 object = ASN1Kit.create(tag: .universal(.set), data: .constructed(values)).sortedByEncodedValue
             } else {
                 object = ASN1Kit.create(tag: .universal(.sequence), data: .constructed(values))
             }
         }
-        
+
         return object
     }
 }

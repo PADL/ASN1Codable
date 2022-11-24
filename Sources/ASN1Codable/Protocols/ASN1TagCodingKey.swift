@@ -31,13 +31,13 @@ public protocol ASN1ImplicitTagCodingKey: ASN1TagCodingKey {}
 extension ASN1TagCodingKey {
     var metadata: ASN1Metadata {
         let tagging: ASN1Tagging
-        
+
         if self is ASN1ImplicitTagCodingKey {
             tagging = .implicit
         } else {
             tagging = .explicit
         }
-        
+
         precondition(self.intValue != nil && self.intValue! >= 0)
         return ASN1Metadata(tag: .taggedTag(UInt(self.intValue!)), tagging: tagging)
     }

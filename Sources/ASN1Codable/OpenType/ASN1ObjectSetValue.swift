@@ -22,20 +22,20 @@ import AnyCodable
 @propertyWrapper
 public struct ASN1ObjectSetValue: Codable {
     public typealias Value = (any Codable)?
-    
+
     public var wrappedValue: Value
 
     public init() {
         self.wrappedValue = nil
     }
-    
+
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        
+
         guard let encoder = encoder as? ASN1EncoderImpl,
               let objectSetCodingContext = encoder.context.objectSetCodingContext else {
             try container.encode(AnyCodable(self.wrappedValue))
@@ -82,7 +82,7 @@ public struct ASN1ObjectSetValue: Codable {
             self.wrappedValue = try container.decode(AnyCodable.self)
             return
         }
-        
+
         // FIXME set tagging environment to EXPLICIT then restore
         guard let objectSetCodingContext = decoder.context.objectSetCodingContext else {
             self.wrappedValue = nil
@@ -91,7 +91,7 @@ public struct ASN1ObjectSetValue: Codable {
 
         let type = objectSetCodingContext.type(decoder.context)
         let valueType = objectSetCodingContext.valueType ?? "nil"
-        
+
         do {
             if objectSetCodingContext.encodeAsOctetString {
                 let berData = try container.decode(Data.self)

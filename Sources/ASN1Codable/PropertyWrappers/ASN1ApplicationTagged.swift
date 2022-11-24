@@ -22,11 +22,11 @@ public struct ASN1ApplicationTagged <Tag, Tagging, Value>: Codable, ASN1TaggedWr
     public static var tagNumber: Tag.Type { return Tag.self }
 
     public var wrappedValue: Value
-        
+
     public init(wrappedValue: Value) {
         self.wrappedValue = wrappedValue
     }
-    
+
     public init() where Value: ExpressibleByNilLiteral {
         self.wrappedValue = nil
     }

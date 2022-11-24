@@ -39,10 +39,10 @@ extension Certificate {
         guard case .rdnSequence(let rdns) = self.tbsCertificate.subject, !rdns.isEmpty else {
             return nil
         }
-        
+
         return rdns.compactMap { $0.first(where: { $0.type == oid })?.value }
     }
-    
+
     var rdnCount: Int {
         guard case .rdnSequence(let rdns) = self.tbsCertificate.subject else { return 0 }
         return rdns.count
@@ -55,7 +55,7 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFSt
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
 
     let summary: String
-    
+
     // FIXME mirror Security.framework, currently just returns a DN
     if let cn = certificate.rdns(identifiedBy: id_at_commonName), !cn.isEmpty {
         summary = cn[0]
@@ -70,6 +70,6 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFSt
     } else {
         return nil
     }
-   
+
     return summary as CFString
 }

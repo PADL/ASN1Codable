@@ -20,7 +20,7 @@ import BigNumber
 
 public struct TestStruct: Codable, ASN1ApplicationTaggedType {
     public static var tagNumber: UInt = 100
-    
+
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>
     var version: Int = 1
 
@@ -29,7 +29,7 @@ public struct TestStruct: Codable, ASN1ApplicationTaggedType {
 
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString>
     var bitString = BitString([0x02, 0x03, 0xcc])
-    
+
     public var weirdInt: BInt = -20
     public var minInt: BInt = -2147483648
     public var maxInt: BInt = 4294967295
@@ -47,7 +47,7 @@ public struct TestStruct: Codable, ASN1ApplicationTaggedType {
 
     @ASN1ContextTagged<ASN1TagNumber$6, ASN1DefaultTagging, Set<String>>
     var aSet = Set(["A", "Set"])
-    
+
     @ASN1ContextTagged<ASN1TagNumber$7, ASN1DefaultTagging, GeneralString<String?>>
     @GeneralString
     var barbar: String? = "hello"
@@ -56,7 +56,7 @@ public struct TestStruct: Codable, ASN1ApplicationTaggedType {
 struct SignatureWrapper: Codable {
     @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, Data>
     var signatureValue: Data = Data()
-    
+
     var someString = "hello, world"
 }
 
@@ -157,7 +157,7 @@ public struct SomethingContainer: Codable {
         case v10 = 10
         */
     }
-    
+
     /*
     var v1 = Something.string("hello")
     var v2 = Something.integer(12345)
@@ -183,24 +183,24 @@ func test() -> Void {
     //let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
     do {
         let valueToEncode = something
-        
+
         print("Encoding value: \(String(describing: valueToEncode))")
-        
+
         let asn1Encoder = ASN1Encoder()
         //asn1Encoder.taggingEnvironment = .automatic
         let berData = try asn1Encoder.encode(valueToEncode)
-        
+
         let base64 = berData.base64EncodedString()
         print("Base64 encoded value: \(base64)")
         dumpEncodedData(berData)
-        
+
         let asn1Decoder = ASN1Decoder()
         asn1Decoder.taggingEnvironment = asn1Encoder.taggingEnvironment
         let value = try asn1Decoder.decode(type(of: valueToEncode), from: berData)
-        
+
         print("Decoded value: \(String(describing: value))")
         //print("Extensions \(String(describing: value.tbsCertificate.extensions))")
-        
+
         // reencode as JSON
         dumpJSONData(value)
     } catch {

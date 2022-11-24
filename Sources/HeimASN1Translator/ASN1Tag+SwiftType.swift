@@ -61,7 +61,7 @@ extension ASN1Tag: HeimASN1SwiftTypeRepresentable {
             return nil
         }
     }
-    
+
     var wrappedSwiftType: (String, String)? {
         switch self {
         case .generalizedTime:

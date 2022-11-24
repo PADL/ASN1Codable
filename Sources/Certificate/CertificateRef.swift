@@ -22,7 +22,7 @@ internal extension Certificate {
         if certificateRef == nil { return nil }
         return unsafeBitCast(certificateRef, to: Certificate.self)
     }
-    
+
     var _certificateRef: CertificateRef {
         let certificate = Unmanaged<Certificate>.passRetained(self)
         return unsafeBitCast(certificate, to: CertificateRef.self)

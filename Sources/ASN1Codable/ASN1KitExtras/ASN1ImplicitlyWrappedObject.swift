@@ -21,7 +21,7 @@ struct ASN1ImplicitlyWrappedObject: ASN1Object {
     let data: ASN1Data
     let tag: ASN1DecodedTag
     var originalEncoding: Data?
-    
+
     init(object: ASN1Object, tag: ASN1DecodedTag) {
         if object.constructed {
             self.data = ASN1Data.constructed([object])
@@ -30,7 +30,7 @@ struct ASN1ImplicitlyWrappedObject: ASN1Object {
         }
         self.tag = tag
     }
-    
+
     var length: Int {
         return self.data.length
     }

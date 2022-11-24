@@ -31,12 +31,12 @@ extension ASN1EncoderImpl {
             self.userInfo = userInfo
             self.context = context
         }
-        
+
         func nestedCodingPath(forKey key: CodingKey) -> [CodingKey] {
             // a special case to allow for the single value decoder to deal with
             // enums with ASN1TagCoding key discriminants
             if self.context.enumCodingState == .enumCase { return self.codingPath }
-            
+
             return self.codingPath + [key]
         }
     }
@@ -46,72 +46,72 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
     private func addContainer(_ container: ASN1EncodingContainer) {
         self.containers.append(container)
     }
-    
+
     func encodeNil(forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: ASN1EncodingContext())
         try container.encodeNil()
     }
-    
+
     func encode(_ value: Bool, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Int, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Int8, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Int16, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Int32, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Int64, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: UInt, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: UInt8, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: UInt16, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: UInt32, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: UInt64, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: String, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func encode(_ value: Float, forKey key: Key) throws {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
@@ -133,12 +133,12 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
         }
     }
      */
-    
+
     func encode<T>(_ value: T, forKey key: Key) throws where T : Encodable {
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
-    
+
     func nestedUnkeyedContainer(forKey key: Key) -> UnkeyedEncodingContainer {
         let container = ASN1EncoderImpl.UnkeyedContainer(codingPath: self.nestedCodingPath(forKey: key),
                                                          userInfo: self.userInfo,
@@ -148,7 +148,7 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
 
         return container
     }
-    
+
     func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type,
                                     forKey key: Key) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {
         let container = ASN1EncoderImpl.KeyedContainer<NestedKey>(codingPath: self.nestedCodingPath(forKey: key),
@@ -159,11 +159,11 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
 
         return KeyedEncodingContainer(container)
     }
-    
+
     func superEncoder() -> Encoder {
         fatalError("Not yet implemented")
     }
-    
+
     func superEncoder(forKey key: Key) -> Encoder {
         fatalError("Not yet implemented")
     }
@@ -172,42 +172,42 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
 extension ASN1EncoderImpl.KeyedContainer {
     var object: ASN1Object? {
         let object: ASN1Object?
-        
+
         if self.context.enumCodingState != .none {
             precondition(self.containers.count <= 1)
             object = self.containers.first?.object
         } else {
             let values = self.containers.compactMap { $0.object }
-            
+
             object = ASN1Kit.create(tag: self.context.encodeAsSet ? .universal(.set) : .universal(.sequence),
                                     data: .constructed(values))
         }
-        
+
         return object
     }
-    
+
     private func selectAutomaticTagForEnumCase() {
         guard self.context.enumCodingState == .enumCase,
               let codingKey = self.codingPath.last else {
             return
         }
-        
+
         if codingKey is any ASN1TagCodingKey {
             // predefined keys are incompatible with automatic tagging
             self.context.automaticTaggingContext = nil
         }
-        
+
         if let taggingContext = self.context.automaticTaggingContext {
             taggingContext.selectTag(codingKey)
         }
     }
-    
+
     private func nestedSingleValueContainer(forKey key: Key,
                                             context: ASN1EncodingContext) -> SingleValueEncodingContainer {
         let container = ASN1EncoderImpl.SingleValueContainer(codingPath: self.nestedCodingPath(forKey: key),
                                                              userInfo: self.userInfo,
                                                              context: context)
-        
+
         self.selectAutomaticTagForEnumCase() // FIXME does this belong here?
 
         self.addContainer(container)
