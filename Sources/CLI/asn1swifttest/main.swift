@@ -126,18 +126,16 @@ public enum Color: Int, Codable {
 }
 
 public enum Something: Codable {
-    /*
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
         case string = 0
         case integer = 1
     }
-     */
 
     case string(String)
     case integer(Int)
 }
 
-let something = Something.string("hlelo")
+let something = [Something.string("hlelo"), Something.integer(1)]
 
 let color = Color.blue
 
@@ -151,7 +149,7 @@ func test() -> Void {
         print("Encoding value: \(String(describing: valueToEncode))")
         
         let asn1Encoder = ASN1Encoder()
-        asn1Encoder.taggingEnvironment = .automatic
+        //asn1Encoder.taggingEnvironment = .automatic
         let berData = try asn1Encoder.encode(valueToEncode)
         
         let base64 = berData.base64EncodedString()
