@@ -48,16 +48,12 @@ extension ASN1Metadata: CustomDebugStringConvertible {
             switch tag {
             case .universal(let asn1Tag):
                 tagDescription = "[UNIVERSAL \(asn1Tag.rawValue)]"
-                break
             case .applicationTag(let tagNo):
                 tagDescription = "[APPLICATION \(tagNo)]"
-                break
             case .taggedTag(let tagNo):
                 tagDescription = "[\(tagNo)]"
-                break
             case .privateTag(let tagNo):
                 tagDescription = "[PRIVATE \(tagNo)]"
-                break
             }
         } else {
             tagDescription = nil
@@ -67,13 +63,10 @@ extension ASN1Metadata: CustomDebugStringConvertible {
             switch tagging {
             case .implicit:
                 taggingDescription = "IMPLICIT"
-                break
             case .explicit:
                 taggingDescription = "EXPLICIT"
-                break
             case .automatic:
                 taggingDescription = "AUTOMATIC"
-                break
             }
         } else {
             taggingDescription = nil
@@ -101,10 +94,8 @@ extension ASN1Metadata {
             switch object.data {
             case .primitive(let data):
                 validatedSizeConstraints = sizeConstraints.contains(data.count)
-                break
             case .constructed(let items):
                 validatedSizeConstraints = sizeConstraints.contains(items.count)
-                break
             }
         } else {
             validatedSizeConstraints = true

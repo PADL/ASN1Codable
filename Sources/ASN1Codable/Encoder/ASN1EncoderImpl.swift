@@ -56,7 +56,7 @@ extension ASN1EncoderImpl: Encoder {
     ///
     /// - parameter type: The key type to use for the container.
     /// - returns: A new keyed encoding container.
-    func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key : CodingKey {
+    func container<Key>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> where Key: CodingKey {
         precondition(self.container == nil)
 
         let container = KeyedContainer<Key>(codingPath: self.codingPath,

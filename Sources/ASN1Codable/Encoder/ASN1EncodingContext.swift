@@ -14,7 +14,6 @@
 // limitations under the License.
 //
 
-
 import Foundation
 import ASN1Kit
 
@@ -22,13 +21,13 @@ struct ASN1EncodingContext: ASN1CodingContext {
     /// default tagging environment
     var taggingEnvironment: ASN1Tagging = .explicit
     /// custom object set type dictionary
-    var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
+    var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary?
     /// whether we are decoding an enumerated type
     var enumCodingState: ASN1EnumCodingState = .none
     /// whether we are decoding a struct that is has SET instead of SEQUENCE encoding
     var encodeAsSet = false
     /// the innermost decoded tag: this is used for allowing any string type to be represented by an untagged String
-    var currentTag: ASN1DecodedTag? = nil
+    var currentTag: ASN1DecodedTag?
     /// state for open type decoding
     var objectSetCodingContext: ASN1ObjectSetCodingContext?
     /// state for AUTOMATIC tagging
@@ -55,4 +54,3 @@ struct ASN1EncodingContext: ASN1CodingContext {
         self.nextEnumCodingState()
     }
 }
-

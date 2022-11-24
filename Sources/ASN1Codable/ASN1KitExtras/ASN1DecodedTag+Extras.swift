@@ -20,13 +20,13 @@ import ASN1Kit
 fileprivate extension ASN1DecodedTag {
     var tagType: UInt8 {
         switch self {
-        case .universal(_):
+        case .universal:
             return ASN1Tag.universal
-        case .applicationTag(_):
+        case .applicationTag:
             return ASN1Tag.application
-        case .taggedTag(_):
+        case .taggedTag:
             return ASN1Tag.tagged
-        case .privateTag(_):
+        case .privateTag:
             return ASN1Tag.private
         }
     }
@@ -59,7 +59,7 @@ extension ASN1DecodedTag: Decodable {
 
         precondition(!(decoder is ASN1DecoderImpl))
 
-        guard let tag = Self(tagString:  tag) else {
+        guard let tag = Self(tagString: tag) else {
             let context = DecodingError.Context(codingPath: container.codingPath,
                                                 debugDescription: "Invalid tag \(tag)")
             throw DecodingError.dataCorrupted(context)

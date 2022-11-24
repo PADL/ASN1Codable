@@ -59,7 +59,7 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         self.tagNo = 0
     }
 
-    func selectTag<Key>(_ key: Key) where Key : CodingKey {
+    func selectTag<Key>(_ key: Key) where Key: CodingKey {
         guard let metadata = self.enumMetadata else {
             return
         }
@@ -73,7 +73,7 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         self.tagNo = UInt(index)
     }
 
-    func selectTag<Key>(_ tag: ASN1DecodedTag) -> Key? where Key : CodingKey {
+    func selectTag<Key>(_ tag: ASN1DecodedTag) -> Key? where Key: CodingKey {
         guard let metadata = self.enumMetadata else {
             return nil
         }

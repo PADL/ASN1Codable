@@ -28,7 +28,7 @@ protocol ASN1DecodingContainer {
 
 extension ASN1DecodingContainer {
     var count: Int? {
-        return self.object.data.fold({ primitive in
+        return self.object.data.fold({ _ in
             return 1
         }, { items in
             return items.count
@@ -52,11 +52,13 @@ extension ASN1DecodingContainer {
 
         if !self.object.constructed && self.context.enumCodingState == .none && !self.object.isNull {
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "\(isUnkeyedContainer ? "Unkeyed" : "Keyed") container expected a constructed ASN.1 object")
+                                                debugDescription: "\(isUnkeyedContainer ? "Unkeyed" : "Keyed") " +
+                                                "container expected a constructed ASN.1 object")
             throw DecodingError.dataCorrupted(context)
         } else if isUnkeyedContainer, !self._isEmptySequence, self.isAtEnd {
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Unkeyed decoding container is already at end of ASN.1 object")
+                                                debugDescription: "Unkeyed decoding container is " +
+                                                "already at end of ASN.1 object")
             throw DecodingError.dataCorrupted(context)
         }
     }
@@ -65,16 +67,20 @@ extension ASN1DecodingContainer {
         if object.constructed, object.tag.isUniversal {
             if self.context.encodeAsSet && object.tag != .universal(.set) {
                 let context = DecodingError.Context(codingPath: codingPath,
-                                                    debugDescription: "Expected \(ASN1DecodedTag.universal(.set)), but received tag \(object.tag)")
+                                                    debugDescription: "Expected \(ASN1DecodedTag.universal(.set)), " +
+                                                    "but received tag \(object.tag)")
                 throw DecodingError.dataCorrupted(context)
             } else if object.tag != .universal(.sequence) {
                 let context = DecodingError.Context(codingPath: codingPath,
-                                                    debugDescription: "Expected a \(ASN1DecodedTag.universal(.sequence)), but received tag \(object.tag)")
+                                                    debugDescription: "Expected a " +
+                                                    "\(ASN1DecodedTag.universal(.sequence)), " +
+                                                    "but received tag \(object.tag)")
                 throw DecodingError.dataCorrupted(context)
             }
         } else if self.context.enumCodingState != .enum {
             let context = DecodingError.Context(codingPath: codingPath,
-                                                debugDescription: "Expected a constructed type, instead received tag \(object.tag)")
+                                                debugDescription: "Expected a constructed type, " +
+                                                "instead received tag \(object.tag)")
             throw DecodingError.dataCorrupted(context)
         }
     }

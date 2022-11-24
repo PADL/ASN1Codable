@@ -20,7 +20,7 @@ import ASN1Kit
 /// Represents a key, typically an `Int` or `ObjectIdentifier`, that is used as a
 /// discriminant in encoding an object set.
 @propertyWrapper
-public struct ASN1ObjectSetType<ValueType>: Codable where ValueType : Codable & Hashable {
+public struct ASN1ObjectSetType<ValueType>: Codable where ValueType: Codable & Hashable {
     public var wrappedValue: ValueType
 
     public init(wrappedValue: ValueType) {

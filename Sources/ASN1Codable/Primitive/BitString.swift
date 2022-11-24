@@ -87,7 +87,9 @@ extension BitString: ASN1UniversalTagRepresentable {
 }
 
 @propertyWrapper
-public struct ASN1RawRepresentableBitString <Value>: Codable, ASN1CodableType where Value: RawRepresentable & Codable, Value.RawValue: FixedWidthInteger & Codable {
+public struct ASN1RawRepresentableBitString <Value>: Codable, ASN1CodableType where
+    Value: RawRepresentable & Codable,
+    Value.RawValue: FixedWidthInteger & Codable {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {

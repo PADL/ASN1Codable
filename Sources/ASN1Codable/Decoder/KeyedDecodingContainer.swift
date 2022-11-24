@@ -253,7 +253,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
-    func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
+    func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
         return try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
@@ -308,7 +308,7 @@ extension ASN1DecoderImpl.KeyedContainer {
         self.currentIndex += 1
     }
 
-    private func decodeKeyedSingleValue<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
+    private func decodeKeyedSingleValue<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
         let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
@@ -321,7 +321,7 @@ extension ASN1DecoderImpl.KeyedContainer {
         return value
     }
 
-    private func decodeKeyedSingleValueIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
+    private func decodeKeyedSingleValueIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T: Decodable {
         let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
@@ -333,7 +333,7 @@ extension ASN1DecoderImpl.KeyedContainer {
             do {
                 value = try container.decode(type)
             } catch {
-                if let error = error as? DecodingError, case .typeMismatch(_, _) = error {
+                if let error = error as? DecodingError, case .typeMismatch = error {
                     return nil
                 } else {
                     throw error

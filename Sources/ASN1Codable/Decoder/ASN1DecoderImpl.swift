@@ -48,7 +48,7 @@ final class ASN1DecoderImpl {
 }
 
 extension ASN1DecoderImpl: Decoder {
-    func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
+    func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key: CodingKey {
         precondition(self.container == nil)
 
         let container = try KeyedContainer<Key>(object: self.object,
@@ -86,7 +86,7 @@ extension ASN1DecoderImpl: Decoder {
 }
 
 extension ASN1DecoderImpl {
-    static func isNilOrWrappedNil<T>(_ value: T) -> Bool where T : Decodable {
+    static func isNilOrWrappedNil<T>(_ value: T) -> Bool where T: Decodable {
         var wrappedValue: any Decodable = value
 
         while wrappedValue is any ASN1TaggedWrappedValue {
@@ -95,7 +95,7 @@ extension ASN1DecoderImpl {
 
         // FIXME first assignment is to silence warnings
         if let wrappedValue = wrappedValue as? ExpressibleByNilLiteral,
-           let wrappedValue = wrappedValue as? Optional<Decodable>,
+           let wrappedValue = wrappedValue as? Decodable?,
            case .none = wrappedValue {
             return true
         } else {
