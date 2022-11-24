@@ -63,8 +63,7 @@ extension ASN1DecoderImpl {
 
 extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     func decodeNil() throws -> Bool {
-        let object = try self.currentObject(for: nil)
-        let container = self.nestedSingleValueContainer(object, context: self.context)
+        let container = self.nestedSingleValueContainer(try self.currentObject(), context: self.context)
         let isNil = container.decodeNil()
 
         if isNil {
@@ -241,8 +240,8 @@ extension ASN1DecoderImpl.UnkeyedContainer {
     }
         
     private func decodeUnkeyedSingleValue<T>(_ type: T.Type) throws -> T where T : Decodable {
-        let object = try self.currentObject(for: type)
-        let container = self.nestedSingleValueContainer(object, context: self.context.decodingSingleValue(type))
+        let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
+                                                        context: self.context.decodingSingleValue(type))
 
         let value = try container.decode(type)
         
@@ -254,8 +253,8 @@ extension ASN1DecoderImpl.UnkeyedContainer {
     }
     
     private func decodeUnkeyedSingleValueIfPresent<T>(_ type: T.Type) throws -> T? where T : Decodable {
-        let object = try self.currentObject(for: type)
-        let container = self.nestedSingleValueContainer(object, context: self.context.decodingSingleValue(type))
+        let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
+                                                        context: self.context.decodingSingleValue(type))
         let value: T?
 
         if object.isNull {

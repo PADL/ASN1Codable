@@ -122,8 +122,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
     
     func decodeNil(forKey key: Key) throws -> Bool {
-        let object = try self.currentObject(for: nil)
-        let container = self.nestedSingleValueContainer(object,
+        let container = self.nestedSingleValueContainer(try self.currentObject(),
                                                         forKey: key,
                                                         context: self.context)
         let isNil = container.decodeNil()
@@ -309,8 +308,7 @@ extension ASN1DecoderImpl.KeyedContainer {
     }
     
     private func decodeKeyedSingleValue<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
-        let object = try self.currentObject(for: type)
-        let container = self.nestedSingleValueContainer(object,
+        let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
         let value = try container.decode(type)
@@ -323,8 +321,7 @@ extension ASN1DecoderImpl.KeyedContainer {
     }
     
     private func decodeKeyedSingleValueIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
-        let object = try self.currentObject(for: type)
-        let container = self.nestedSingleValueContainer(object,
+        let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
         let value: T?
