@@ -36,7 +36,7 @@ public func CertificateCopyData(_ certificate: CertificateRef?) -> CFData?
 
 extension Certificate {
     func rdns(identifiedBy oid: AttributeType) -> [String]? {
-        guard case .rdnSequence(let rdns) = self.tbsCertificate.subject, rdns.count > 0 else {
+        guard case .rdnSequence(let rdns) = self.tbsCertificate.subject, !rdns.isEmpty else {
             return nil
         }
         
@@ -57,7 +57,7 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFSt
     let summary: String
     
     // FIXME mirror Security.framework, currently just returns a DN
-    if let cn = certificate.rdns(identifiedBy: id_at_commonName), cn.count > 0 {
+    if let cn = certificate.rdns(identifiedBy: id_at_commonName), !cn.isEmpty {
         summary = cn[0]
     } else if certificate.rdnCount != 0 {
         summary = certificate.tbsCertificate.subject.description
@@ -70,6 +70,6 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFSt
     } else {
         return nil
     }
-    
+   
     return summary as CFString
 }

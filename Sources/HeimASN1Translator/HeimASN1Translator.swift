@@ -246,7 +246,7 @@ public final class HeimASN1Translator {
                     // decode the data
                     try decode(data, range: range)
                     
-                    start = start + errorIndex
+                    start += errorIndex
                     end = data.count - start
                 } else {
                     throw error

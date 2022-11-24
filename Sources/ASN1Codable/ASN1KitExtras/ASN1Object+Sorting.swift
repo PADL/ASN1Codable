@@ -23,11 +23,11 @@ extension ASN1Object {
             return self
         }
         
-        let sorted = items.sorted(by: { ASN1DecodedTag.sort($0.tag, $1.tag) })
-        
+        let sorted = items.sorted { ASN1DecodedTag.sort($0.tag, $1.tag) }
+
         return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
     }
-    
+  
     var sortedByEncodedValue: ASN1Object {
         guard self.constructed, self.tag == .universal(.set), let items = self.data.items else {
             return self
@@ -37,23 +37,23 @@ extension ASN1Object {
 
         return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
     }
-    
+  
     private static func sort(_ lhs: ASN1Object, _ rhs: ASN1Object) -> Bool {
         do {
-            let lhs_serialized = try lhs.serialize()
-            let rhs_serialized = try rhs.serialize()
+            let lhsSerialized = try lhs.serialize()
+            let rhsSerialized = try rhs.serialize()
             
-            if lhs_serialized.count == rhs_serialized.count {
-                let cmp = lhs_serialized.withUnsafeBytes { lhs_bytes in
-                    rhs_serialized.withUnsafeBytes { rhs_bytes in
-                        return memcmp(lhs_bytes.bindMemory(to: UInt8.self).baseAddress,
-                                      rhs_bytes.bindMemory(to: UInt8.self).baseAddress,
-                                      lhs_serialized.count)
+            if lhsSerialized.count == rhsSerialized.count {
+                let cmp = lhsSerialized.withUnsafeBytes { lhsBytes in
+                    rhsSerialized.withUnsafeBytes { rhsBytes in
+                        return memcmp(lhsBytes.bindMemory(to: UInt8.self).baseAddress,
+                                      rhsBytes.bindMemory(to: UInt8.self).baseAddress,
+                                      lhsSerialized.count)
                     }
                 }
                 return cmp > 0
             } else {
-                return lhs_serialized.count < rhs_serialized.count
+                return lhsSerialized.count < rhsSerialized.count
             }
         } catch {
             return false

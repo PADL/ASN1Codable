@@ -17,22 +17,18 @@
 import Foundation
 import ASN1Kit
 
-struct __ASN1NullObject: ASN1Object {
+struct ASN1NullObject: ASN1Object {
     let tag: ASN1DecodedTag = .universal(.null)
     let data: ASN1Data = .primitive(Data())
     let length = 0
     let constructed = false
-    
+
     var originalEncoding: Data? {
-        get {
-            return nil
-        }
-        set {
-        }
+        return nil
     }
 }
 
-let ASN1NullObject = __ASN1NullObject()
+let ASN1Null = ASN1NullObject()
 
 extension ASN1Object {
     var isNull: Bool {

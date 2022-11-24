@@ -156,7 +156,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
     // avoids re-encoding tag on constructed values, by removing ASN1TagCodingKey
     // conformance on already processed tag coding key
     private func demoteTagCodingKey() {
-        precondition(self.codingPath.count > 0)
+        precondition(!self.codingPath.isEmpty)
         let index = self.codingPath.count - 1
         self.codingPath[index] = ASN1PlaceholderCodingKey(self.tagCodingKey!)
     }

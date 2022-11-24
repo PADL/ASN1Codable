@@ -198,7 +198,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
     }
     
     var isUniformlyContextTagged: Bool {
-        guard let members = self.members, members.count > 0 else { return false }
+        guard let members = self.members, !members.isEmpty else { return false }
                         
         var taggingEnvironment: HeimASN1TaggingEnvironment? = nil
         

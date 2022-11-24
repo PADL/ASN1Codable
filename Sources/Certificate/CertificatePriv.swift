@@ -89,7 +89,7 @@ public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> CFArray
         } else {
             return nil
         }
-    }), datas.count != 0 else {
+    }), !datas.isEmpty else {
         return nil
     }
     return datas as CFArray
@@ -114,7 +114,7 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray
         names.append(contentsOf: rdns)
     }
     
-    return names.count == 0 ? nil : names as CFArray
+    return names.isEmpty ? nil : names as CFArray
 }
 
 @_cdecl("CertificateCopyCommonNames")
@@ -128,7 +128,7 @@ public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> CFArray
 public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> CFArray?
 {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
-    guard let names = certificate.subjectAltName?.map({ String(describing: $0) }), names.count != 0 else {
+    guard let names = certificate.subjectAltName?.map({ String(describing: $0) }), !names.isEmpty else {
         return nil
     }
     return names as CFArray

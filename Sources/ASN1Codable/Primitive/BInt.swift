@@ -34,8 +34,8 @@ extension BInt: ASN1DecodableType {
         guard let data = asn1.data.primitive, asn1.tag == .universal(.integer) else {
             throw ASN1Error.malformedEncoding("ASN.1 object has incorrect tag \(asn1.tag)")
         }
-        
-        if data.count == 0 {
+
+        if data.isEmpty {
             throw ASN1Error.malformedEncoding("ASN.1 integer is empty")
         } else if data.count == 1 {
             //
@@ -46,7 +46,7 @@ extension BInt: ASN1DecodableType {
             throw ASN1Error.malformedEncoding("ASN.1 integer is not minimally encoded")
         }
 
-        if data.count > 0 && data[0] & 0x80 == 0x80 {
+        if !data.isEmpty, data[0] & 0x80 == 0x80 {
             var notBytes = [UInt8](repeating: 0, count: data.count)
             (0..<notBytes.count).forEach {
                 notBytes[$0] = data[$0] ^ 0xff
@@ -63,7 +63,7 @@ extension BInt: ASN1DecodableType {
 extension BInt: ASN1EncodableType {
     public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
         var bytes: [UInt8]
-        
+
         if self.signum() < 0 {
             let value = self.magnitude - 1
             bytes = value.getBytes()
@@ -71,14 +71,14 @@ extension BInt: ASN1EncodableType {
             (0..<bytes.count).forEach {
                 bytes[$0] ^= 0xff
             }
-            if bytes.count == 0 || bytes[0] & 0x80 == 0 {
+            if bytes.isEmpty || bytes[0] & 0x80 == 0 {
                 bytes.insert(0xff, at: 0)
             }
         } else if self.signum() == 0 {
             bytes = [0x00]
         } else {
             bytes = self.getBytes()
-            if bytes.count > 0 && bytes[0] & 0x80 != 0 {
+            if !bytes.isEmpty && bytes[0] & 0x80 != 0 {
                 bytes.insert(0x00, at: 0)
             }
         }

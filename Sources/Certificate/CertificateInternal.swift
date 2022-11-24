@@ -27,7 +27,7 @@ public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> CFAr
         } else {
             return nil
         }
-    }), datas.count != 0 else {
+    }), !datas.isEmpty else {
         return nil
     }
     return datas as CFArray
@@ -44,7 +44,7 @@ public func CertificateCopyDNSNamesFromSAN(_ certificate: CertificateRef) -> CFA
         } else {
             return nil
         }
-    }), datas.count != 0 else {
+    }), !datas.isEmpty else {
         return nil
     }
     return datas as CFArray
@@ -61,9 +61,9 @@ public func CertificateCopyRFC822NamesFromSAN(_ certificate: CertificateRef) -> 
         } else {
             return nil
         }
-    }), names.count != 0 else {
+    }), !names.isEmpty else {
         return nil
     }
-    
+
     return names as CFArray
 }

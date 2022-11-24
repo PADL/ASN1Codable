@@ -58,13 +58,13 @@ extension ASN1DecodedTag: Decodable {
         let tag = try container.decode(String.self)
 
         precondition(!(decoder is ASN1DecoderImpl))
-        
+
         guard let tag = Self(tagString:  tag) else {
             let context = DecodingError.Context(codingPath: container.codingPath,
                                                 debugDescription: "Invalid tag \(tag)")
             throw DecodingError.dataCorrupted(context)
         }
-        
+
         self = tag
     }
 }
@@ -78,39 +78,35 @@ extension ASN1DecodedTag: Encodable {
 
 extension ASN1DecodedTag {
     static func sort(_ lhs: ASN1DecodedTag, _ rhs: ASN1DecodedTag) -> Bool {
-        let lhs_tagType = lhs.tagType, rhs_tagType = rhs.tagType
-        let lhs_tagNo = lhs.tagNo, rhs_tagNo = rhs.tagNo
+        let lhsTagType = lhs.tagType, rhsTagType = rhs.tagType
+        let lhsTagNo = lhs.tagNo, rhsTagNo = rhs.tagNo
         
-        if lhs_tagType == lhs_tagType {
-            return lhs_tagNo < rhs_tagNo
+        if lhsTagType == lhsTagType {
+            return lhsTagNo < rhsTagNo
         } else {
-            return lhs_tagType < rhs_tagType
+            return lhsTagType < rhsTagType
         }
     }
 }
 
-fileprivate extension ASN1DecodedTag {
+extension ASN1DecodedTag {
     var tagString: String {
         let tagString: String
-        
+
         switch self {
         case .applicationTag(let tagNo):
             tagString = "application.\(tagNo)"
-            break
         case .taggedTag(let tagNo):
             tagString = "\(tagNo)"
-            break
         case .universal(let tag):
             tagString = "universal.\(tag.rawValue)"
-            break
         case .privateTag(let tagNo):
             tagString = "private.\(tagNo)"
-            break
         }
-        
+
         return tagString
     }
-    
+
     init?(tagString tag: String) {
         if !tag.contains(".") {
             guard let tagNo = UInt(tag) else {
@@ -125,16 +121,13 @@ fileprivate extension ASN1DecodedTag {
             switch typeTagNo[0] {
             case "application":
                 self = .applicationTag(tagNo)
-                break
             case "universal":
                 guard tagNo == tagNo & 0xff, let tag = ASN1Tag(rawValue: UInt8(tagNo)) else {
                     return nil
                 }
                 self = .universal(tag)
-                break
             case "private":
                 self = .privateTag(tagNo)
-                break
             default:
                 return nil
             }

@@ -29,7 +29,7 @@ extension Null: ASN1DecodableType {
 
 extension Null: ASN1EncodableType {
     public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
-        return ASN1NullObject
+        return ASN1Null
     }
 }
 

@@ -127,7 +127,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
     /// conformance on already processed tag coding key
     /// FIXME: could this be done more elegantly?
     private func demoteTagCodingKey() {
-        precondition(self.codingPath.count > 0)
+        precondition(!self.codingPath.isEmpty)
         let index = self.codingPath.count - 1
         self.codingPath[index] = ASN1PlaceholderCodingKey(self.tagCodingKey!)
     }
@@ -150,7 +150,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         } else if let type = type as? ASN1DecodableType.Type {
             value = try decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
         } else if let type = type as? OptionalProtocol.Type,
-                  let wrappedType = type.wrappedType as? Decodable.Type{
+                  let wrappedType = type.wrappedType as? Decodable.Type {
             value = try decodeIfPresent(wrappedType, from: object, skipTaggedValues: skipTaggedValues) as! T
         } else {
             value = try self.decodeConstructedValue(type, from: object)

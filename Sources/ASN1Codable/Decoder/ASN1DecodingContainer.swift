@@ -44,9 +44,9 @@ extension ASN1DecodingContainer {
     }
 
     private var _isEmptySequence: Bool {
-        return self.object.constructed && self.object.data.items?.count == 0
+        return self.object.constructed && self.object.data.items?.isEmpty ?? true
     }
-    
+
     private func _validate() throws {
         let isUnkeyedContainer = self is UnkeyedDecodingContainer
 
@@ -60,7 +60,7 @@ extension ASN1DecodingContainer {
             throw DecodingError.dataCorrupted(context)
         }
     }
-    
+
     private func _validateNestedContainer(_ object: ASN1Object) throws {
         if object.constructed, object.tag.isUniversal {
             if self.context.encodeAsSet && object.tag != .universal(.set) {
@@ -78,7 +78,7 @@ extension ASN1DecodingContainer {
             throw DecodingError.dataCorrupted(context)
         }
     }
-   
+
     /// returns the current object in a keyed or unkeyed decoding container,
     /// subject to some validation checks 
     private func _currentObject(for type: Decodable.Type? = nil, nestedContainer: Bool) throws -> ASN1Object {
@@ -90,26 +90,27 @@ extension ASN1DecodingContainer {
         } else if self.isAtEnd {
             // if we've reached the end of the SEQUENCE or SET, we still need to initialise
             // the remaining wrapped objects; pad the object set with null instances.
-            object = ASN1NullObject
+            object = ASN1Null
         } else if self.object.constructed, let items = self.object.data.items, self.currentIndex < items.count  {
             // return the object at the current index
             object = items[self.currentIndex]
         } else {
             // either we've gone past the object count, or it's not a constructed object
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Object \(self.object) is not constructed, or has less than \(self.currentIndex + 1) items")
+                                                debugDescription: "Object \(self.object) is " +
+                                                "not constructed, or has less than \(self.currentIndex + 1) items")
             throw DecodingError.dataCorrupted(context)
         }
-        
+
         try self._validate()
-        
+
         if nestedContainer {
             try self._validateNestedContainer(object)
         }
-        
+
         return object
     }
-   
+
     /// wrapped for _currentObject() that can coax decoding errors such that
     /// they will hint to the caller to skip the field if OPTIONAL (see below) 
     func currentObject(for type: Decodable.Type? = nil, nestedContainer: Bool = false) throws -> ASN1Object {

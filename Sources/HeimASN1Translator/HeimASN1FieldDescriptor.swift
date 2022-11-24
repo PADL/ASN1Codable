@@ -338,7 +338,7 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     
     var needsInitialValue: Bool {
         // FIXME
-        return self.propertyWrappers.count != 0 && !self.bareSwiftType.hasPrefix("(any") && !self.isObjectSetTypeType
+        return !self.propertyWrappers.isEmpty && !self.bareSwiftType.hasPrefix("(any") && !self.isObjectSetTypeType
     }
     
     var isInitializedWithWrappedValue: Bool {
