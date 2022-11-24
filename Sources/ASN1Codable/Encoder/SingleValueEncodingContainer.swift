@@ -213,16 +213,19 @@ extension ASN1EncoderImpl.SingleValueContainer {
             throw EncodingError.invalidValue(value, context)
         }
         
-        let tagging = metadata.tagging ?? self.context.taggingEnvironment
-        
         if let object = object, let tag = metadata.tag {
             let wrappedObject: ASN1Object
+            var tagging = metadata.tagging ?? self.context.taggingEnvironment
+
+            if tagging == .implicit && self.context.enumCodingState == .enum {
+                /// IMPLICIT tagging of types that are CHOICE types have the tag converted to EXPLICIT
+                tagging = .explicit
+            }
             
             if tag.isUniversal {
                 precondition(value is ASN1EncodableType)
                 wrappedObject = try (value as! ASN1EncodableType).asn1encode(tag: tag)
-            } else if tagging == .implicit, ASN1DecodingContext.isEnum(type(of: value)) {
-                // promote IMPLICIT CHOIE values to EXPLICIT
+            } else if tagging == .implicit && self.context.enumCodingState == .enum {
                 wrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: tag)
             } else {
                 wrappedObject = object.wrap(with: tag, constructed: tagging != .implicit)

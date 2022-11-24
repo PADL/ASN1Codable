@@ -85,13 +85,6 @@ extension ASN1DecodingContainer {
             // if we've reached the end of the SEQUENCE or SET, we still need to initialise
             // the remaining wrapped objects; pad the object set with null instances.
             object = ASN1NullObject
-            /*
-        } else if isUnkeyedContainer, let type = type,
-                  ASN1DecodingContext.enumTypeHasMember(type, with: ASN1Metadata(tag: self.object.tag, tagging: .implicit)) {
-            // FIXME is this still required? this was previously in the
-            // UnkeyedDecodingContainer currentObject() implementation
-            object = self.object
-             */
         } else if self.object.constructed, let items = self.object.data.items, self.currentIndex < items.count  {
             object = items[self.currentIndex]
         } else {

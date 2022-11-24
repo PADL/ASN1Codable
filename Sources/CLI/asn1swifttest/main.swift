@@ -125,17 +125,35 @@ public enum Color: Int, Codable {
     case yellow = 2
 }
 
-public enum Something: Codable {
+public enum Something: Codable, Hashable, Equatable {
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
         case string = 0
         case integer = 1
+        case array = 2
     }
 
     case string(String)
     case integer(Int)
+    case array(Array<String>)
 }
 
-let something = [Something.string("hlelo"), Something.integer(1)]
+public struct SomethingContainer: Codable, Hashable, Equatable {
+    enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
+        case v1 = 1
+        case v2 = 9
+        case v3 = 10
+        case v4 = 11
+        case v5 = 12
+    }
+    
+    var v1 = Something.string("hello")
+    var v2 = Something.integer(12345)
+    var v3 = Something.array(["a", "b"])
+    var v4 = String("Hello")
+    var v5 = [Something.string("HI"), Something.integer(3142)]
+}
+
+let something = SomethingContainer()
 
 let color = Color.blue
 

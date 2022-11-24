@@ -290,11 +290,17 @@ extension ASN1DecoderImpl.SingleValueContainer {
         }
                 
         let unwrappedObject: ASN1Object
-        let tagging = metadata.tagging ?? self.context.taggingEnvironment
+        var tagging = metadata.tagging ?? self.context.taggingEnvironment
+
+        if tagging == .implicit && self.context.enumCodingState == .enum {
+            /// IMPLICIT tagging of types that are CHOICE types have the tag converted to EXPLICIT
+            tagging = .explicit
+        }
+
         let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : tag
-        
+
         if object.constructed {
-            if tagging == .implicit && !ASN1DecodingContext.isEnum(type) {
+            if tagging == .implicit {
                 // FIXME propagate originalEncoding
                 unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
             } else {
