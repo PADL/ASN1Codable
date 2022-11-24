@@ -79,19 +79,19 @@ extension ASN1DecodingContainer {
     
     private func _currentObject(for type: Decodable.Type? = nil, nestedContainer: Bool) throws -> ASN1Object {
         let object: ASN1Object
-        let isUnkeyedContainer = self is UnkeyedDecodingContainer
-  
         if self.context.enumCodingState != .none || self.object.isNull {
             object = self.object
         } else if self.isAtEnd {
             // if we've reached the end of the SEQUENCE or SET, we still need to initialise
             // the remaining wrapped objects; pad the object set with null instances.
             object = ASN1NullObject
+            /*
         } else if isUnkeyedContainer, let type = type,
                   ASN1DecodingContext.enumTypeHasMember(type, with: ASN1Metadata(tag: self.object.tag, tagging: .implicit)) {
             // FIXME is this still required? this was previously in the
             // UnkeyedDecodingContainer currentObject() implementation
             object = self.object
+             */
         } else if self.object.constructed, let items = self.object.data.items, self.currentIndex < items.count  {
             object = items[self.currentIndex]
         } else {
