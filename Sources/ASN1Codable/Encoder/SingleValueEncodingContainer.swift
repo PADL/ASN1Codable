@@ -180,7 +180,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
     private func encode<T: Encodable>(_ value: T, skipTaggedValues: Bool = false) throws -> ASN1Object? {
         let object: ASN1Object?
 
-        if !skipTaggedValues, let key = self.tagCodingKey {
+        if let key = self.tagCodingKey {
             self.demoteTagCodingKey()
             object = try self.encodeTaggedKeyedValue(value, forKey: key)
         } else if !skipTaggedValues, let value = value as? ASN1TaggedType {
@@ -238,7 +238,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
     }
     
     private func encodeTaggedKeyedValue<T: Encodable>(_ value: T, forKey key: ASN1TagCodingKey) throws -> ASN1Object? {
-        return try self.encodeTagged(value, with: key.metadata, skipTaggedValues: true)
+        return try self.encodeTagged(value, with: key.metadata, skipTaggedValues: false)
     }
     
     private func encodeTaggedValue<T: Encodable & ASN1TaggedType>(_ value: T) throws -> ASN1Object? {

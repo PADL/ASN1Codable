@@ -18,8 +18,8 @@ import Foundation
 import ASN1Codable
 import BigNumber
 
-public struct TestStruct: Codable, ASN1ApplicationTaggedType, ASN1SetCodable {
-    public static var tagNumber: UInt = 10
+public struct TestStruct: Codable, ASN1ApplicationTaggedType {
+    public static var tagNumber: UInt = 100
     
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>
     var version: Int = 1
@@ -133,31 +133,45 @@ public enum Something: Codable, Hashable, Equatable {
     case array(Array<String>)
 }
 
+public struct TestStructWrapper: Codable {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case testStructWrapper = 1
+    }
+    var testStructWrapper = ts
+}
+
 public struct SomethingContainer: Codable {
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
+        /*
         case v1 = 1
         case v2 = 2
         case v3 = 3
         case v4 = 4
         case v5 = 5
+         */
         case v6 = 6
+        /*
         case v7 = 7
         case v8 = 8
         case v9 = 9
         case v10 = 10
-        
+        */
     }
     
+    /*
     var v1 = Something.string("hello")
     var v2 = Something.integer(12345)
     var v3 = Something.array(["a", "b"])
     var v4 = String("Hello")
     var v5 = [Something.string("HI"), Something.integer(3142)]
-    var v6: TestStruct = ts
+     */
+    var v6: TestStructWrapper = TestStructWrapper()
+    /*
     var v7: TestType = testValue
     var v8: AutoEnum = autoEnum
     var v9: Color = color
     var v10: Set<String> = foobar
+     */
 }
 
 let something = SomethingContainer()

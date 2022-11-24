@@ -137,7 +137,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         // FIXME
         self.context = self.context.decodingSingleValue(type)
 
-        if !skipTaggedValues, let key = self.tagCodingKey {
+        if let key = self.tagCodingKey {
             self.demoteTagCodingKey()
             value = try self.decodeTaggedKeyedValue(type, from: object, forKey: key)
         } else if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
@@ -224,7 +224,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
     }
     
     private func decodeTaggedKeyedValue<T>(_ type: T.Type, from object: ASN1Object, forKey key: ASN1TagCodingKey) throws -> T where T: Decodable {
-        return try self.decodeTagged(type, from: object, with: key.metadata, skipTaggedValues: true)
+        return try self.decodeTagged(type, from: object, with: key.metadata, skipTaggedValues: false)
     }
     
     private func decodeTaggedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedType {
