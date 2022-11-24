@@ -164,7 +164,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
     private func withASN1Throwing<T: Encodable>(_ value: T, _ block: () throws -> ASN1Object?) throws {
         do {
             // FIXME this is asymettric with decoding
-            if self.tagCodingKey != nil {
+            if self.tagCodingKey != nil || self.context.automaticTaggingContext != nil {
                 self.object = try self.encode(value, skipTaggedValues: false)
             } else {
                 self.object = try block()
