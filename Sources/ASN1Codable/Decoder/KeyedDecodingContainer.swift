@@ -356,10 +356,20 @@ extension ASN1DecoderImpl.KeyedContainer {
             // the remaining wrapped objects; pad the object set with null instances.
             object = ASN1NullObject
         } else {
-            // return object at current index
-            object = try self.currentObject()
-            try self.validateCurrentIndex()
-            try self.context.validateObject(object, codingPath: self.codingPath)
+            do {
+                // return object at current index
+                object = try self.currentObject()
+                try self.validateCurrentIndex()
+                try self.context.validateObject(object, codingPath: self.codingPath)
+            } catch {
+                if let type = type, case DecodingError.dataCorrupted(let context) = error {
+                    // retype the error as a typeMismatch, which the field is OPTIONAL
+                    // will tell the caller it is safe to skip this field
+                    throw DecodingError.typeMismatch(type, context)
+                } else {
+                    throw error
+                }
+            }
         }
 
         return object
