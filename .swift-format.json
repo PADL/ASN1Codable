@@ -13,7 +13,7 @@
   "lineBreakBeforeEachGenericRequirement" : false,
   "lineLength" : 100,
   "maximumBlankLines" : 1,
-  "prioritizeKeepingFunctionOutputTogether" : false,
+  "prioritizeKeepingFunctionOutputTogether" : true,
   "respectsExistingLineBreaks" : true,
   "rules" : {
     "AllPublicDeclarationsHaveDocumentation" : false,
@@ -40,7 +40,7 @@
     "OneCasePerLine" : true,
     "OneVariableDeclarationPerLine" : true,
     "OnlyOneTrailingClosureArgument" : true,
-    "OrderedImports" : true,
+    "OrderedImports" : false,
     "ReturnVoidInsteadOfEmptyTuple" : true,
     "UseEarlyExits" : false,
     "UseLetInEveryBoundCaseVariable" : true,
