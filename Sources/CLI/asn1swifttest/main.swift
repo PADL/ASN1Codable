@@ -20,39 +20,33 @@ import BigNumber
 
 public struct TestStruct: Codable, ASN1ApplicationTaggedType, ASN1SetCodable {
     public static var tagNumber: UInt = 10
-
     
-    /*
     @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>
-    public var version: Int = 1
+    var version: Int = 1
 
     @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, Data>
-    public var data: Data = Data()
+    var data: Data = Data()
 
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString>
     var bitString = BitString([0x02, 0x03, 0xcc])
-     */
     
     public var weirdInt: BInt = -20
     public var minInt: BInt = -2147483648
     public var maxInt: BInt = 4294967295
     public var zeroInt: BInt = 0
 
-    /*
     @ASN1ContextTagged<ASN1TagNumber$3, ASN1DefaultTagging, UInt?>
-    public var whatever: UInt? = 1234
+    var whatever: UInt? = 1234
 
     @ASN1ContextTagged<ASN1TagNumber$4, ASN1DefaultTagging, PrintableString<String>>
     @PrintableString
-    public var foobar = "hello world"
-*/
-    /*
+    var foobar = "hello world"
+
     @ASN1ContextTagged<ASN1TagNumber$5, ASN1DefaultTagging, Array<String>>
     var anArray = ["Hello", "ASN.1", "Coding", "Kit"]
 
     @ASN1ContextTagged<ASN1TagNumber$6, ASN1DefaultTagging, Set<String>>
     var aSet = Set(["A", "Set"])
-    */
     
     @ASN1ContextTagged<ASN1TagNumber$7, ASN1DefaultTagging, GeneralString<String?>>
     @GeneralString
@@ -125,6 +119,8 @@ public enum Color: Int, Codable {
     case yellow = 2
 }
 
+let color = Color.blue
+
 public enum Something: Codable, Hashable, Equatable {
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
         case string = 0
@@ -137,13 +133,19 @@ public enum Something: Codable, Hashable, Equatable {
     case array(Array<String>)
 }
 
-public struct SomethingContainer: Codable, Hashable, Equatable {
+public struct SomethingContainer: Codable {
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
         case v1 = 1
-        case v2 = 9
-        case v3 = 10
-        case v4 = 11
-        case v5 = 12
+        case v2 = 2
+        case v3 = 3
+        case v4 = 4
+        case v5 = 5
+        case v6 = 6
+        case v7 = 7
+        case v8 = 8
+        case v9 = 9
+        case v10 = 10
+        
     }
     
     var v1 = Something.string("hello")
@@ -151,11 +153,15 @@ public struct SomethingContainer: Codable, Hashable, Equatable {
     var v3 = Something.array(["a", "b"])
     var v4 = String("Hello")
     var v5 = [Something.string("HI"), Something.integer(3142)]
+    var v6: TestStruct = ts
+    var v7: TestType = testValue
+    var v8: AutoEnum = autoEnum
+    var v9: Color = color
+    var v10: Set<String> = foobar
 }
 
 let something = SomethingContainer()
 
-let color = Color.blue
 
 let setTest = Set(arrayLiteral: "surely this is the biggest value", "B", "a", "CCC")
 
