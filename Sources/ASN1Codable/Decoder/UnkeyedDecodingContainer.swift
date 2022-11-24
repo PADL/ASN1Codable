@@ -194,8 +194,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
     
     func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
-        let currentObject = try self.currentObject(nestedContainer: true)
-        let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: currentObject,
+        let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: try self.currentObject(nestedContainer: true),
                                                                       codingPath: self.nestedCodingPath,
                                                                       userInfo: self.userInfo,
                                                                       context: self.context.decodingNestedContainer())
@@ -206,8 +205,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
     
     func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
-        let currentObject = try self.currentObject(nestedContainer: true)
-        let container = try ASN1DecoderImpl.UnkeyedContainer(object: currentObject,
+        let container = try ASN1DecoderImpl.UnkeyedContainer(object: try self.currentObject(nestedContainer: true),
                                                              codingPath: self.nestedCodingPath,
                                                              userInfo: self.userInfo,
                                                              context: self.context.decodingNestedContainer())
