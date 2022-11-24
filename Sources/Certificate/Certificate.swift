@@ -18,6 +18,19 @@ import Foundation
 import Network
 import ASN1Codable
 
+extension Certificate {
+    static func create(with der_certificate: Data) -> CertificateRef? {
+        do {
+            let decoder = ASN1Decoder()
+            let certificate = try decoder.decode(Certificate.self, from: der_certificate as Data)
+            return certificate._certificateRef
+        } catch {
+            debugPrint("Failed to decode certificate: \(error)")
+            return nil
+        }
+    }
+}
+
 @_cdecl("CertificateCreateWithData")
 public func CertificateCreateWithData(
     _: CFAllocator!,
