@@ -46,7 +46,7 @@ extension ASN1TagCodingKey {
 /// The placeholder coding key is used to avoid recursing when encoding/decoding
 /// tagged values.
 
-internal struct ASN1PlaceholderCodingKey: CodingKey {
+struct ASN1PlaceholderCodingKey: CodingKey {
     private let wrappedValue: ASN1TagCodingKey
 
     init(_ wrappedValue: ASN1TagCodingKey) { self.wrappedValue = wrappedValue }

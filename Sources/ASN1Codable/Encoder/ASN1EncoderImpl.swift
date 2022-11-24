@@ -17,7 +17,7 @@
 import Foundation
 import ASN1Kit
 
-internal final class ASN1EncoderImpl {
+final class ASN1EncoderImpl {
     fileprivate var container: ASN1EncodingContainer?
     
     let codingPath: [CodingKey]

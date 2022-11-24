@@ -17,7 +17,7 @@
 import Foundation
 import ASN1Kit
 
-internal struct ASN1ImplicitlyWrappedObject: ASN1Object {
+struct ASN1ImplicitlyWrappedObject: ASN1Object {
     let data: ASN1Data
     let tag: ASN1DecodedTag
     var originalEncoding: Data?
