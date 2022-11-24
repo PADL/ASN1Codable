@@ -132,7 +132,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
         self.codingPath[index] = ASN1PlaceholderCodingKey(self.tagCodingKey!)
     }
 
-    private func decode<T>(_ type: T.Type, from object: ASN1Object, skipTaggedValues: Bool = false) throws -> T where T: Decodable {
+    // swiftlint:disable force_cast
+    private func decode<T>(_ type: T.Type,
+                           from object: ASN1Object,
+                           skipTaggedValues: Bool = false) throws -> T where T: Decodable {
         let value: T
 
         // FIXME required for top-level decoders
@@ -162,7 +165,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
     /// this function is required because the Swift runtime decodeIfPresent()
     /// does not know how to handle optionals inside our tagged propertry wrappers
     /// this code mirrors decodeKeyedSingleValueIfPresent() in KeyedDecodingContainer.swift
-    private func decodeIfPresent<T>(_ type: T.Type, from object: ASN1Object, skipTaggedValues: Bool = false) throws -> T? where T: Decodable {
+    private func decodeIfPresent<T>(_ type: T.Type,
+                                    from object: ASN1Object,
+                                    skipTaggedValues: Bool = false) throws -> T? where T: Decodable {
         let value: T?
 
         if object.isNull {
@@ -182,15 +187,22 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return value
     }
 
-    private func decodeFixedWidthIntegerValue<T>(_ type: T.Type, verifiedTag: Bool = false) throws -> T where T: FixedWidthInteger {
+    private func decodeFixedWidthIntegerValue<T>(_ type: T.Type,
+                                                 verifiedTag: Bool = false) throws -> T where T: FixedWidthInteger {
         // NB withASN1Throwing is not needed here because decodeFixedWidthIntegerValue()
         // does not call into any exception-throwing ASNKit APIs
+        let expectedTag: ASN1DecodedTag
 
-        let expectedTag: ASN1DecodedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
+        if self.context.enumCodingState == .enum {
+            expectedTag = .universal(.enumerated)
+        } else {
+            expectedTag = .universal(.integer)
+        }
 
         guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Expected \(expectedTag) when decoding \(self.object)")
+                                                debugDescription: "Expected \(expectedTag) when " +
+                                                "decoding \(self.object)")
             throw DecodingError.typeMismatch(type, context)
         }
 
@@ -202,7 +214,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
         guard type.bitWidth >= data.count * 8 else {
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Integer encoded in \(self.object) too large for \(type.bitWidth)-bit integer")
+                                                debugDescription: "Integer encoded in \(self.object) " +
+                                                "too large for \(type.bitWidth)-bit integer")
             throw DecodingError.dataCorrupted(context)
         }
 
@@ -210,41 +223,54 @@ extension ASN1DecoderImpl.SingleValueContainer {
         if T.isSigned {
             guard let value = data.asn1integer else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Integer encoded in \(self.object) too large for platform signed integer")
+                                                    debugDescription: "Integer encoded in \(self.object) " +
+                                                    "too large for platform signed integer")
                 throw DecodingError.dataCorrupted(context)
             }
             return T(value)
         } else {
             guard let value = data.unsignedIntValue else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Integer encoded in \(self.object) too large for platform unsigned integer")
+                                                    debugDescription: "Integer encoded in \(self.object) " +
+                                                    "too large for platform unsigned integer")
                 throw DecodingError.dataCorrupted(context)
             }
             return T(value)
         }
     }
 
-    private func decodeTaggedKeyedValue<T>(_ type: T.Type, from object: ASN1Object, forKey key: ASN1TagCodingKey) throws -> T where T: Decodable {
+    private func decodeTaggedKeyedValue<T>(_ type: T.Type,
+                                           from object: ASN1Object,
+                                           forKey key: ASN1TagCodingKey) throws -> T where T: Decodable {
         return try self.decodeTagged(type, from: object, with: key.metadata, skipTaggedValues: false)
     }
 
-    private func decodeTaggedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedType {
+    private func decodeTaggedValue<T>(_ type: T.Type,
+                                      from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedType {
         return try self.decodeTagged(type, from: object, with: T.metadata, skipTaggedValues: true)
     }
 
-    private func decodeTaggedWrappedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable & ASN1TaggedWrappedValue {
+    private func decodeTaggedWrappedValue<T>(_ type: T.Type,
+                                             from object: ASN1Object
+    ) throws -> T where T: Decodable & ASN1TaggedWrappedValue {
         let wrappedValue = try self.decodeTagged(type.Value, from: object, with: T.metadata)
 
         return T(wrappedValue: wrappedValue)
     }
 
-    private func decodeAutomaticallyTaggedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable {
+    private func decodeAutomaticallyTaggedValue<T>(_ type: T.Type,
+                                                   from object: ASN1Object) throws -> T where T: Decodable {
         let taggingContext = self.context.automaticTaggingContext!
 
-        return try self.decodeTagged(type, from: object, with: taggingContext.metadataForNextTag(), skipTaggedValues: true)
+        return try self.decodeTagged(type,
+                                     from: object,
+                                     with: taggingContext.metadataForNextTag(),
+                                     skipTaggedValues: true)
     }
 
-    private func decodePrimitiveValue<T>(_ type: T.Type, from object: ASN1Object, verifiedTag: Bool = false) throws -> T where T: ASN1DecodableType {
+    private func decodePrimitiveValue<T>(_ type: T.Type,
+                                         from object: ASN1Object,
+                                         verifiedTag: Bool = false) throws -> T where T: ASN1DecodableType {
         let expectedTag = ASN1DecodingContext.tag(for: type)
         var verifiedTag = verifiedTag
 
@@ -260,7 +286,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
         guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Expected \(expectedTag) when decoding \(self.object)")
+                                                debugDescription: "Expected \(expectedTag) when " +
+                                                "decoding \(self.object)")
             throw DecodingError.typeMismatch(type, context)
         }
 
@@ -311,7 +338,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
                       items.count == 1,
                       let firstObject = object.data.items!.first else {
                     let context = DecodingError.Context(codingPath: self.codingPath,
-                                                        debugDescription: "Tag \(tag) for single value container must wrap a single value only")
+                                                        debugDescription: "Tag \(tag) for single value container " +
+                                                        "must wrap a single value only")
                     throw DecodingError.typeMismatch(type, context)
                 }
                 unwrappedObject = firstObject
@@ -325,7 +353,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
             }
         } else {
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Expected universal tag \(innerTag) for primitive object \(object)")
+                                                debugDescription: "Expected universal tag \(innerTag) " +
+                                                "for primitive object \(object)")
             throw DecodingError.typeMismatch(type, context)
         }
 
@@ -339,7 +368,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
         self.context.currentTag = tag
 
-        let value = try self.decode(type, from: unwrappedObject, skipTaggedValues: verifiedUniversalTag || skipTaggedValues)
+        let value = try self.decode(type,
+                                    from: unwrappedObject,
+                                    skipTaggedValues: verifiedUniversalTag || skipTaggedValues)
 
         if !metadata.validateValueConstraints(value) {
             let context = DecodingError.Context(codingPath: self.codingPath,
@@ -360,8 +391,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
         }
 
         if let type = type as? ASN1ObjectSetCodable.Type {
-            self.context.objectSetCodingContext = ASN1ObjectSetCodingContext(objectSetType: type,
-                                                                             encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
+            self.context.objectSetCodingContext =
+                ASN1ObjectSetCodingContext(objectSetType: type,
+                                           encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
         }
 
         let sortedObject = self.context.encodeAsSet ? object.sortedByTag : object
@@ -385,7 +417,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return (self.userInfo[CodingUserInfoKey.ASN1ExplicitExtensibilityMarkerRequired] as? Bool) ?? false
     }
 
-    private func validateExtensibility<T>(_ type: T.Type, from object: ASN1Object, with decoder: ASN1DecoderImpl) throws where T: Decodable {
+    private func validateExtensibility<T>(_ type: T.Type,
+                                          from object: ASN1Object,
+                                          with decoder: ASN1DecoderImpl) throws where T: Decodable {
         if self.explicitExtensibilityMarkerRequired,
            type is (any ASN1ExtensibleType).Type == false,
            let container = decoder.container,
@@ -393,7 +427,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
            let items = container.object.data.items,
            container.currentIndex < items.count {
             let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Expected no more than \(container.currentIndex) items when decoding \(type); received \(items.count)")
+                                                debugDescription: "Expected no more than \(container.currentIndex) " +
+                                                "items when decoding \(type); received \(items.count)")
             throw DecodingError.typeMismatch(type, context)
         }
     }

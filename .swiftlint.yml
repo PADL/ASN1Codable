@@ -1,16 +1,15 @@
 disabled_rules:
   - missing_docs
   - todo
-  - force_cast
   - extension_access_modifier
   - strict_fileprivate
   - no_fallthrough_only
   - file_name
-  - line_length
   - unavailable_function
   - file_length
   - force_unwrapping
   - identifier_name
+  - type_name
 opt_in_rules:
   - attributes
   - empty_count
@@ -46,7 +45,6 @@ included:
   - Sources
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Sources/HeimASN1Translator
-  - Sources/CLI
   - Package.swift
   - .build/
   - vendor/

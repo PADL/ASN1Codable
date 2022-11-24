@@ -30,7 +30,8 @@ final class ASN1EncoderImpl {
          objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil) {
         self.codingPath = codingPath
         self.userInfo = userInfo
-        self.context = ASN1EncodingContext(taggingEnvironment: taggingEnvironment ?? .explicit, objectSetTypeDictionary: objectSetTypeDictionary)
+        self.context = ASN1EncodingContext(taggingEnvironment: taggingEnvironment ?? .explicit,
+                                           objectSetTypeDictionary: objectSetTypeDictionary)
     }
 
     init(codingPath: [CodingKey] = [],

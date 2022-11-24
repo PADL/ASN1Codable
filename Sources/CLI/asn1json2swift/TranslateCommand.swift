@@ -28,19 +28,25 @@ struct TranslateCommand: CommandProtocol {
     let verb: String = "translate"
     let function: String = "Translate asn1compile JSON output to Swift"
 
+    var provenanceInformation: String {
+        let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
+        let provenanceInformation = ([executableName] +
+                                     CommandLine.arguments[1..<CommandLine.arguments.count - 1]).joined(separator: " ")
+
+        return provenanceInformation
+    }
+
     func run(_ options: Options) -> Result<(), Error> {
         let file = URL(fileURLWithPath: (options.input as NSString).expandingTildeInPath)
 
-        let typeMapDictionary: [String: String]?
+        var typeMapDictionary = [String: String]()
 
         if let typeMaps = options.typeMaps {
             let pairs: [(String, String)] = typeMaps.map {
                 let values = $0.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
                 return (String(values[0]), String(values[1]))
             }
-            typeMapDictionary = Dictionary(pairs, uniquingKeysWith: { return $1 })
-        } else {
-            typeMapDictionary = nil
+            typeMapDictionary = Dictionary(pairs) { return $1 }
         }
 
         var conformancesDictionary: [String: NSMutableArray] = [:]
@@ -66,8 +72,6 @@ struct TranslateCommand: CommandProtocol {
             outputStream = OutputStream(toMemory: ())
         }
 
-        let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
-        let provenanceInformation = ([executableName] + CommandLine.arguments[1..<CommandLine.arguments.count - 1]).joined(separator: " ")
         let translator = HeimASN1Translator(typeMaps: typeMapDictionary,
                                             additionalConformances: conformancesDictionary as? [String: [String]],
                                             provenanceInformation: provenanceInformation)
@@ -79,7 +83,10 @@ struct TranslateCommand: CommandProtocol {
             outputStream.close()
 
             if options.output == nil {
-                let data = outputStream.property(forKey: Stream.PropertyKey.dataWrittenToMemoryStreamKey) as! Data
+                guard let data = outputStream.property(forKey:
+                                                        Stream.PropertyKey.dataWrittenToMemoryStreamKey) as? Data else {
+                    return .failure(.failedToOpenOutputStream)
+                }
                 let string = String(data: data, encoding: .utf8)!
                 print("\(string)")
             }
@@ -93,10 +100,15 @@ struct TranslateCommand: CommandProtocol {
     struct Options: OptionsProtocol {
         let input: String
         let output: String?
+        // swiftlint:disable discouraged_optional_collection
         let typeMaps: [String]?
+        // swiftlint:disable discouraged_optional_collection
         let conformances: [String]?
 
-        static func create(_ input: String) -> (_ output: String?) -> (_ typeMaps: [String]?) -> (_ conformances: [String]?) -> Options {
+        static func create(_ input: String) ->
+            (_ output: String?) ->
+                (_ typeMaps: [String]?) ->
+                    (_ conformances: [String]?) -> Options {
             return { (_ output: String?) in { (_ typeMaps: [String]?) in { (_ conformances: [String]?) in
                 return Options(input: input, output: output, typeMaps: typeMaps, conformances: conformances)
             }}}
@@ -104,10 +116,18 @@ struct TranslateCommand: CommandProtocol {
 
         static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<Error>> {
             return create
-                    <*> m <| Option<String>(key: "input", defaultValue: "", usage: "path to JSON output from asn1_compile")
-                    <*> m <| Option<String?>(key: "output", defaultValue: nil, usage: "path to Swift output file")
-                    <*> m <| Option<[String]?>(key: "map-type", defaultValue: nil, usage: "replace ASN.1 type with user-defined Swift type")
-                    <*> m <| Option<[String]?>(key: "conform-type", defaultValue: nil, usage: "add Swift protocol conformance to type")
+                    <*> m <| Option<String>(key: "input",
+                                            defaultValue: "",
+                                            usage: "path to JSON output from asn1_compile")
+                    <*> m <| Option<String?>(key: "output",
+                                             defaultValue: nil,
+                                             usage: "path to Swift output file")
+                    <*> m <| Option<[String]?>(key: "map-type",
+                                               defaultValue: nil,
+                                               usage: "replace ASN.1 type with user-defined Swift type")
+                    <*> m <| Option<[String]?>(key: "conform-type",
+                                               defaultValue: nil,
+                                               usage: "add Swift protocol conformance to type")
         }
     }
 }

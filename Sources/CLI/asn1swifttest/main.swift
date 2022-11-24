@@ -25,7 +25,7 @@ public struct TestStruct: Codable, ASN1ApplicationTaggedType {
     var version: Int = 1
 
     @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, Data>
-    var data: Data = Data()
+    var data = Data()
 
     @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString>
     var bitString = BitString([0x02, 0x03, 0xcc])
@@ -55,7 +55,7 @@ public struct TestStruct: Codable, ASN1ApplicationTaggedType {
 
 struct SignatureWrapper: Codable {
     @ASN1ContextTagged<ASN1TagNumber$1, ASN1DefaultTagging, Data>
-    var signatureValue: Data = Data()
+    var signatureValue = Data()
 
     var someString = "hello, world"
 }
@@ -63,7 +63,7 @@ struct SignatureWrapper: Codable {
 let ts = TestStruct()
 
 struct TestType: Codable, ASN1ApplicationTaggedType {
-    public static var tagNumber: UInt = 25
+    static var tagNumber: UInt = 25
 
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
         case someInteger = 0
@@ -73,7 +73,7 @@ struct TestType: Codable, ASN1ApplicationTaggedType {
 
     var someInteger: UInt32 = 0
     @GeneralizedTime
-    var someTime: Date = Date()
+    var someTime = Date()
     @PrintableString
     var someString: String?
 }
@@ -85,13 +85,13 @@ testValue.someString = "Hello"
 
 // https://www.oss.com/asn1/resources/asn1-made-simple/asn1-quick-reference/asn1-tags.html
 struct ImplicitAutoType: Codable, ASN1ContextTaggedType {
-    public static var tagNumber: UInt = 0
+    static var tagNumber: UInt = 0
     var name = "John"
     var age = 25
 }
 
 struct ExplicitAutoType: Codable, ASN1ContextTaggedType {
-    public static var tagNumber: UInt = 0
+    static var tagNumber: UInt = 0
     var name = "John"
     var age = 25
 }
@@ -109,7 +109,7 @@ struct AutoType: Codable {
     var oid = autoEnum
 }
 
-let automatic: AutoType = AutoType()
+let automatic = AutoType()
 
 let foobar = Set(["Hello", "World!"])
 
@@ -165,7 +165,7 @@ public struct SomethingContainer: Codable {
     var v4 = String("Hello")
     var v5 = [Something.string("HI"), Something.integer(3142)]
      */
-    var v6: TestStructWrapper = TestStructWrapper()
+    var v6 = TestStructWrapper()
     /*
     var v7: TestType = testValue
     var v8: AutoEnum = autoEnum
@@ -176,7 +176,7 @@ public struct SomethingContainer: Codable {
 
 let something = SomethingContainer()
 
-let setTest = Set(arrayLiteral: "surely this is the biggest value", "B", "a", "CCC")
+let setTest = Set(["surely this is the biggest value", "B", "a", "CCC"])
 
 func test() {
     // let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")

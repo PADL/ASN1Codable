@@ -38,7 +38,8 @@ extension Optional: ExpressibleByString where Wrapped == String {
 }
 
 @propertyWrapper
-public struct GeneralString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct GeneralString<Value: Codable & ExpressibleByString>:
+    Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -55,7 +56,8 @@ public struct GeneralString<Value: Codable & ExpressibleByString>: Codable, Equa
 }
 
 @propertyWrapper
-public struct IA5String<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct IA5String<Value: Codable & ExpressibleByString>:
+    Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -72,7 +74,8 @@ public struct IA5String<Value: Codable & ExpressibleByString>: Codable, Equatabl
 }
 
 @propertyWrapper
-public struct UTF8String<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct UTF8String<Value: Codable & ExpressibleByString>:
+    Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -89,7 +92,8 @@ public struct UTF8String<Value: Codable & ExpressibleByString>: Codable, Equatab
 }
 
 @propertyWrapper
-public struct UniversalString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct UniversalString<Value: Codable & ExpressibleByString>:
+    Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -106,7 +110,8 @@ public struct UniversalString<Value: Codable & ExpressibleByString>: Codable, Eq
 }
 
 @propertyWrapper
-public struct BMPString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct BMPString<Value: Codable & ExpressibleByString>:
+    Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -123,7 +128,8 @@ public struct BMPString<Value: Codable & ExpressibleByString>: Codable, Equatabl
 }
 
 @propertyWrapper
-public struct PrintableString<Value: Codable & ExpressibleByString>: Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+public struct PrintableString<Value: Codable & ExpressibleByString>:
+    Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {

@@ -198,7 +198,9 @@ extension ASN1EncoderImpl.SingleValueContainer {
         return object
     }
 
-    private func encodeTagged<T: Encodable>(_ value: T, with metadata: ASN1Metadata, skipTaggedValues: Bool = false) throws -> ASN1Object? {
+    private func encodeTagged<T: Encodable>(_ value: T,
+                                            with metadata: ASN1Metadata,
+                                            skipTaggedValues: Bool = false) throws -> ASN1Object? {
         if !metadata.validateValueConstraints(value) {
             let context = EncodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Value \(value) outside of value constraint")
@@ -222,9 +224,8 @@ extension ASN1EncoderImpl.SingleValueContainer {
                 tagging = .explicit
             }
 
-            if tag.isUniversal {
-                precondition(value is ASN1EncodableType)
-                wrappedObject = try (value as! ASN1EncodableType).asn1encode(tag: tag)
+            if tag.isUniversal, let value = value as? ASN1EncodableType {
+                wrappedObject = try value.asn1encode(tag: tag)
             } else if tagging == .implicit && self.context.enumCodingState == .enum {
                 wrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: tag)
             } else {
@@ -277,8 +278,9 @@ extension ASN1EncoderImpl.SingleValueContainer {
 
         if let value = value as? ASN1ObjectSetCodable {
             let type = type(of: value)
+            let encodeAsOctetString = type is ASN1ObjectSetOctetStringCodable.Type
             self.context.objectSetCodingContext = ASN1ObjectSetCodingContext(objectSetType: type,
-                                                                             encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
+                                                                             encodeAsOctetString: encodeAsOctetString)
         }
 
         let encoder = ASN1EncoderImpl(codingPath: self.codingPath,

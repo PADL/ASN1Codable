@@ -194,8 +194,11 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         return try self.decodeUnkeyedSingleValue(type)
     }
 
-    func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
-        let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: try self.currentObject(nestedContainer: true),
+    func nestedContainer<NestedKey>(
+        keyedBy type: NestedKey.Type
+    ) throws -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
+        let currentObject = try self.currentObject(nestedContainer: true)
+        let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: currentObject,
                                                                       codingPath: self.nestedCodingPath,
                                                                       userInfo: self.userInfo,
                                                                       context: self.context.decodingNestedContainer())
@@ -206,7 +209,8 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     func nestedUnkeyedContainer() throws -> UnkeyedDecodingContainer {
-        let container = try ASN1DecoderImpl.UnkeyedContainer(object: try self.currentObject(nestedContainer: true),
+        let currentObject = try self.currentObject(nestedContainer: true)
+        let container = try ASN1DecoderImpl.UnkeyedContainer(object: currentObject,
                                                              codingPath: self.nestedCodingPath,
                                                              userInfo: self.userInfo,
                                                              context: self.context.decodingNestedContainer())
@@ -218,13 +222,15 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 
     func superDecoder() throws -> Decoder {
         let context = DecodingError.Context(codingPath: self.codingPath,
-                                            debugDescription: "ASN1DecoderImpl.UnkeyedContainer does not yet support super decoders")
+                                            debugDescription: "ASN1DecoderImpl.UnkeyedContainer does " +
+                                            "not yet support super decoders")
         throw DecodingError.dataCorrupted(context)
     }
 }
 
 extension ASN1DecoderImpl.UnkeyedContainer {
-    private func nestedSingleValueContainer(_ object: ASN1Object, context: ASN1DecodingContext) -> ASN1DecoderImpl.SingleValueContainer {
+    private func nestedSingleValueContainer(_ object: ASN1Object,
+                                            context: ASN1DecodingContext) -> ASN1DecoderImpl.SingleValueContainer {
         let container = ASN1DecoderImpl.SingleValueContainer(object: object,
                                                              codingPath: self.nestedCodingPath,
                                                              userInfo: self.userInfo,

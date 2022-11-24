@@ -58,7 +58,8 @@ public struct ASN1ObjectSetValue: Codable {
                 } else if let data = self.wrappedValue as? Data {
                     berData = data
                 } else {
-                    fatalError("Object set type \(String(describing: objectSetCodingContext.valueType)) not mapped to a type, but wrapped value is not Data")
+                    fatalError("Object set type \(String(describing: objectSetCodingContext.valueType)) " +
+                               "not mapped to a type, but wrapped value is not Data")
                 }
 
                 try container.encode(berData)

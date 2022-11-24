@@ -90,6 +90,7 @@ extension ASN1DecoderImpl {
     static func isNilOrWrappedNil<T>(_ value: T) -> Bool where T: Decodable {
         var wrappedValue: any Decodable = value
 
+        // swiftlint:disable force_cast
         while wrappedValue is any ASN1TaggedWrappedValue {
             wrappedValue = (wrappedValue as! any ASN1TaggedWrappedValue).wrappedValue
         }

@@ -20,8 +20,7 @@ import Foundation
 
 struct ParseCommand: CommandProtocol {
     enum Error: Swift.Error {
-        case unsupportedMode(_: String)
-        case base64DecodingError
+        case fileReadError
         case decodingError
         case encodingError
         case jsonEncodingError
@@ -30,19 +29,18 @@ struct ParseCommand: CommandProtocol {
     let verb: String = "parse"
     let function: String = "Parse ASN.1 encoded file or from cmd-line input"
 
-    func run(_ options: Options) -> Result<(), Error> {
+    func data(options: Options) -> Data? {
+        var data: Data?
         let fileContents: Data?
 
         if !options.file.isEmpty {
             let file = URL(fileURLWithPath: (options.file as NSString).expandingTildeInPath)
             fileContents = try? Data(contentsOf: file)
         } else if options.string.isEmpty {
-            return .failure(.unsupportedMode("No string or valid file path passed"))
+            return nil
         } else {
             fileContents = nil
         }
-
-        var data: Data?
 
         if let fileContents = fileContents {
             var didBegin = false
@@ -67,8 +65,12 @@ struct ParseCommand: CommandProtocol {
             }
         }
 
-        guard let data = data, !data.isEmpty else {
-            return .failure(.base64DecodingError)
+        return data
+    }
+
+    func run(_ options: Options) -> Result<(), Error> {
+        guard let data = self.data(options: options), !data.isEmpty else {
+            return .failure(.fileReadError)
         }
         guard let cert = CertificateCreateWithData(kCFAllocatorDefault, data as CFData) else {
             return .failure(.decodingError)
@@ -89,7 +91,7 @@ struct ParseCommand: CommandProtocol {
 
             print("-----BEGIN CERTIFICATE-----")
             let chunks = (encoded as Data).base64EncodedString().chunks(ofCount: 64)
-            chunks.forEach({ print($0) })
+            chunks.forEach { print($0) }
             print("-----END CERTIFICATE-----")
         }
 
@@ -109,7 +111,11 @@ struct ParseCommand: CommandProtocol {
         let reencode: Bool
         let san: Bool
 
-        static func create(_ file: String) -> (_ string: String) -> (_ json: Bool) -> (_ reencode: Bool) -> (_ san: Bool) -> Options {
+        static func create(_ file: String) ->
+            (_ string: String) ->
+                (_ json: Bool) ->
+                    (_ reencode: Bool) ->
+                        (_ san: Bool) -> Options {
             return { (string: String) in { (json: Bool) in { (reencode: Bool) in { (san: Bool) in
                 Options(file: file,
                         string: string,

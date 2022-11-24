@@ -257,8 +257,12 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
-    func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
-        let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: try self.currentObject(nestedContainer: true),
+    func nestedContainer<NestedKey>(
+        keyedBy type: NestedKey.Type,
+        forKey key: Key
+    ) throws -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
+        let currentObject = try self.currentObject(nestedContainer: true)
+        let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: currentObject,
                                                                       codingPath: self.nestedCodingPath(forKey: key),
                                                                       userInfo: self.userInfo,
                                                                       context: self.context.decodingNestedContainer())
@@ -269,7 +273,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     func nestedUnkeyedContainer(forKey key: Key) throws -> UnkeyedDecodingContainer {
-        let container = try ASN1DecoderImpl.UnkeyedContainer(object: try self.currentObject(nestedContainer: true),
+        let currentObject = try self.currentObject(nestedContainer: true)
+        let container = try ASN1DecoderImpl.UnkeyedContainer(object: currentObject,
                                                              codingPath: self.nestedCodingPath(forKey: key),
                                                              userInfo: self.userInfo,
                                                              context: self.context.decodingNestedContainer())
@@ -281,7 +286,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
     func superDecoder() throws -> Decoder {
         let context = DecodingError.Context(codingPath: self.codingPath,
-                                            debugDescription: "ASN1DecoderImpl.KeyedContainer does not yet support super decoders")
+                                            debugDescription: "ASN1DecoderImpl.KeyedContainer does " +
+                                            "not yet support super decoders")
         throw DecodingError.dataCorrupted(context)
     }
 
