@@ -271,6 +271,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return try T(from: object)
     }
 
+    // swiftlint:disable cyclomatic_complexity
+    // swiftlint:disable function_body_length
     private func decodeTagged<T>(_ type: T.Type,
                                  from object: ASN1Object,
                                  with metadata: ASN1Metadata,
@@ -305,7 +307,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
                 // FIXME propagate originalEncoding
                 unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
             } else {
-                guard let items = object.data.items, items.count == 1, let firstObject = object.data.items!.first else {
+                guard let items = object.data.items,
+                      items.count == 1,
+                      let firstObject = object.data.items!.first else {
                     let context = DecodingError.Context(codingPath: self.codingPath,
                                                         debugDescription: "Tag \(tag) for single value container must wrap a single value only")
                     throw DecodingError.typeMismatch(type, context)
@@ -362,8 +366,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
         let sortedObject = self.context.encodeAsSet ? object.sortedByTag : object
 
-        let decoder = ASN1DecoderImpl(object: sortedObject, codingPath: self.codingPath,
-                                      userInfo: self.userInfo, context: self.context)
+        let decoder = ASN1DecoderImpl(object: sortedObject,
+                                      codingPath: self.codingPath,
+                                      userInfo: self.userInfo,
+                                      context: self.context)
         let value = try T(from: decoder)
 
         try self.validateExtensibility(type, from: sortedObject, with: decoder)

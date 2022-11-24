@@ -70,7 +70,8 @@ public struct ASN1ObjectSetValue: Codable {
                 }
             }
         } catch {
-            debugPrint("Failed to encode object set value \(String(describing: self.wrappedValue)) for type \(objectSetCodingContext.objectSetType): \(error)")
+            debugPrint("Failed to encode object set value \(String(describing: self.wrappedValue)) " +
+                       "for type \(objectSetCodingContext.objectSetType): \(error)")
             throw error
         }
     }

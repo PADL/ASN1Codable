@@ -17,8 +17,8 @@
 import Foundation
 import ASN1Kit
 
-fileprivate extension ASN1DecodedTag {
-    var tagType: UInt8 {
+extension ASN1DecodedTag {
+    fileprivate var tagType: UInt8 {
         switch self {
         case .universal:
             return ASN1Tag.universal
@@ -31,7 +31,7 @@ fileprivate extension ASN1DecodedTag {
         }
     }
 
-    var tagNo: UInt {
+    fileprivate var tagNo: UInt {
         switch self {
         case .universal(let tagNo):
             return UInt(tagNo.rawValue)

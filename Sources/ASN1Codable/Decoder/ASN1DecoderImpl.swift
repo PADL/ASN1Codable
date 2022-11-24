@@ -33,7 +33,8 @@ final class ASN1DecoderImpl {
         self.object = object
         self.codingPath = codingPath
         self.userInfo = userInfo
-        self.context = ASN1DecodingContext(taggingEnvironment: taggingEnvironment ?? .explicit, objectSetTypeDictionary: objectSetTypeDictionary)
+        self.context = ASN1DecodingContext(taggingEnvironment: taggingEnvironment ?? .explicit,
+                                           objectSetTypeDictionary: objectSetTypeDictionary)
     }
 
     init(object: ASN1Object,

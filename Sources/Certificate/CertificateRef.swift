@@ -17,7 +17,7 @@
 import Foundation
 import ASN1Codable
 
-internal extension Certificate {
+extension Certificate {
     static func _fromCertificateRef(_ certificateRef: CertificateRef!) -> Certificate? {
         if certificateRef == nil { return nil }
         return unsafeBitCast(certificateRef, to: Certificate.self)

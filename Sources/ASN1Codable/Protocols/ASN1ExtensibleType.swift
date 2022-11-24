@@ -19,8 +19,10 @@ import Foundation
 public protocol ASN1ExtensibleType {
 }
 
-public extension CodingUserInfoKey {
+extension CodingUserInfoKey {
     /// If `true`, require explicit extensibility markers (through conformance of the `ASN1ExtensibleType`
     /// protocol) to accept ASN.1 objects with more fields than the equivalent Swift structure.
-    static var ASN1ExplicitExtensibilityMarkerRequired: Self { return Self(rawValue: "ASN1ExplicitExtensibilityMarkerRequired")! }
+    public static var ASN1ExplicitExtensibilityMarkerRequired: Self {
+        return Self(rawValue: "ASN1ExplicitExtensibilityMarkerRequired")!
+    }
 }

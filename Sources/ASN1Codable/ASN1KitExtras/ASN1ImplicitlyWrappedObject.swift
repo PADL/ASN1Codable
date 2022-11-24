@@ -35,7 +35,7 @@ struct ASN1ImplicitlyWrappedObject: ASN1Object {
         return self.data.length
     }
 
-    public var constructed: Bool {
+    var constructed: Bool {
         if case .constructed = data {
             return true
         } else {

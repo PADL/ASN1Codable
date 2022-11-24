@@ -36,6 +36,7 @@ extension ASN1EncoderImpl {
             return containers.count
         }
 
+        // swiftlint:disable nesting
         struct Index: CodingKey {
             var stringValue: String {
                     return "\(self.intValue!)"

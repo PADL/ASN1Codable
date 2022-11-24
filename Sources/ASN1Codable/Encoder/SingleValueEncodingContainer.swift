@@ -25,7 +25,7 @@ extension ASN1EncoderImpl {
         var userInfo: [CodingUserInfoKey: Any]
 
         var context: ASN1EncodingContext
-        var didEncode: Bool = false
+        var didEncode = false
 
         private(set) var object: ASN1Object? {
             get {

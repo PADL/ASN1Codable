@@ -39,6 +39,7 @@ extension ASN1DecoderImpl {
             self.context = context
         }
 
+        // swiftlint:disable nesting
         struct Index: CodingKey {
             var stringValue: String {
                 return "\(self.intValue!)"

@@ -33,12 +33,13 @@ public func CertificateCopyData(_ certificate: CertificateRef?) -> CFData? {
 }
 
 extension Certificate {
+    // swiftlint:disable discouraged_optional_collection
     func rdns(identifiedBy oid: AttributeType) -> [String]? {
         guard case .rdnSequence(let rdns) = self.tbsCertificate.subject, !rdns.isEmpty else {
             return nil
         }
 
-        return rdns.compactMap { $0.first(where: { $0.type == oid })?.value }
+        return rdns.compactMap { $0.first { $0.type == oid }?.value }
     }
 
     var rdnCount: Int {

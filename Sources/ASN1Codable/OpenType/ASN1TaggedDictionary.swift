@@ -25,6 +25,7 @@ public struct ASN1TaggedDictionary {
         self.wrappedValue = wrappedValue
     }
 
+    // swiftlint:disable identifier_name
     public func _bridgeToObjectiveC() -> NSDictionary {
         return self.wrappedValue.mapValues {
             return $0.value as? NSObject
@@ -52,7 +53,7 @@ extension ASN1TaggedDictionary: Encodable {
         if let encoder = encoder as? ASN1EncoderImpl {
             var container = encoder.container(keyedBy: ASN1TaggedDictionaryCodingKey.self)
 
-            try self.wrappedValue.keys.sorted(by: { $0 < $1 }).forEach {
+            try self.wrappedValue.keys.sorted { $0 < $1 }.forEach {
                 let key = ASN1TaggedDictionaryCodingKey(tagNo: $0)
                 try container.encode(self.wrappedValue[$0], forKey: key)
             }
@@ -71,14 +72,14 @@ private struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
         self.tagNo = tagNo
     }
 
-    public init?(stringValue: String) {
+    init?(stringValue: String) {
         guard let tagNo = UInt(stringValue) else {
             return nil
         }
         self.tagNo = tagNo
     }
 
-    public init?(intValue: Int) {
+    init?(intValue: Int) {
         if intValue < 0 {
             return nil
         }
@@ -86,11 +87,11 @@ private struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
         self.tagNo = UInt(intValue)
     }
 
-    public var stringValue: String {
+    var stringValue: String {
         return "[\(self.tagNo)]"
     }
 
-    public var intValue: Int? {
+    var intValue: Int? {
         return self.tagNo < Int.max ? Int(tagNo) : nil
     }
 }

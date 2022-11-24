@@ -47,7 +47,8 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, Equatabl
         return try self.wrappedValue.withUnsafeMutableBytes(body)
     }
 
-    public mutating func replaceSubrange<C>(_ subrange: Range<Data.Index>, with newElements: __owned C) where C: Collection, C.Element == Element {
+    public mutating func replaceSubrange<C>(_ subrange: Range<Data.Index>,
+                                            with newElements: __owned C) where C: Collection, C.Element == Element {
         self.wrappedValue.replaceSubrange(subrange, with: newElements)
     }
 

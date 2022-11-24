@@ -286,8 +286,10 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     func superDecoder(forKey key: Key) throws -> Decoder {
-        throw DecodingError.dataCorruptedError(forKey: key, in: self,
-                                               debugDescription: "ASN1DecoderImpl.KeyedContainer does not yet support super decoders")
+        throw DecodingError.dataCorruptedError(forKey: key,
+                                               in: self,
+                                               debugDescription: "ASN1DecoderImpl.KeyedContainer does " +
+                                               "not yet support super decoders")
     }
 }
 

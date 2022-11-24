@@ -20,7 +20,7 @@ import ASN1Codable
 
 extension Certificate {
     func `extension`<T>(_ extnID: ObjectIdentifier) -> T? where T: Codable {
-        return self.tbsCertificate.extensions?.first(where: { $0.extnID == extnID })?.extnValue as? T
+        return self.tbsCertificate.extensions?.first { $0.extnID == extnID }?.extnValue as? T
     }
 
     var componentAttributes: NSDictionary? {
@@ -31,6 +31,7 @@ extension Certificate {
         return attributes._bridgeToObjectiveC()
     }
 
+    // swiftlint:disable discouraged_optional_collection
     var subjectAltName: [GeneralName]? {
         return self.extension(id_x509_ce_subjectAltName)
     }
@@ -73,11 +74,7 @@ extension Name: CustomStringConvertible {
     var description: String {
         switch self {
         case .rdnSequence(let rdns):
-            return ([""] + rdns.map { relativeDistinguishedName in
-                relativeDistinguishedName.map { attributeValueAssertion in
-                    String(describing: attributeValueAssertion)
-                }.joined(separator: ",")
-            }).joined(separator: "/")
+            return ([""] + rdns.map { $0.map { String(describing: $0) }.joined(separator: ",") }).joined(separator: "/")
         }
 
     }
