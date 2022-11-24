@@ -149,7 +149,8 @@ public struct ASN1IntegerBitString <Value>: Codable, ASN1CodableType where Value
         }
 
         var data = Data(count: Value.bitWidth / 8)
-        data.replaceSubrange(data.endIndex - bitString.wrappedValue.count..<data.endIndex, with: bitString.wrappedValue)
+        data.replaceSubrange(data.endIndex - bitString.wrappedValue.count..<data.endIndex,
+                             with: bitString.wrappedValue)
 
         self.wrappedValue = Value(data.withUnsafeBytes { $0.load(as: Value.self) }).bigEndian
     }
