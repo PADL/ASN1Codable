@@ -52,21 +52,21 @@ public final class HeimASN1Translator {
     }
 
     let options: Options
-    let typeMaps: [String:TypeMap]
+    let typeMaps: [String: TypeMap]
     weak var parent: HeimASN1Translator?
     private let provenanceInformation: String?
-    let additionalConformances: [String:[String]]
-    private(set) var module: HeimASN1Module? = nil
+    let additionalConformances: [String: [String]]
+    private(set) var module: HeimASN1Module?
     private var imports = [HeimASN1ModuleRef]()
     private var typeRefCache = Set<String>()
     private var typeDefsByName = [String: HeimASN1TypeDef]()
     private var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
     private var typeDefs = [HeimASN1TypeDef]()
-    private(set) var url: URL? = nil
+    private(set) var url: URL?
 
     public init(options: Options = Options(),
-                typeMaps: [String:String]? = nil,
-                additionalConformances: [String:[String]]? = nil,
+                typeMaps: [String: String]? = nil,
+                additionalConformances: [String: [String]]? = nil,
                 provenanceInformation: String? = nil) {
         self.options = options
         self.typeMaps = (typeMaps ?? [:]).mapValues {
@@ -84,8 +84,8 @@ public final class HeimASN1Translator {
     }
 
     init(options: Options = Options(),
-         typeMaps: [String:TypeMap]? = nil,
-         additionalConformances: [String:[String]]? = nil) {
+         typeMaps: [String: TypeMap]? = nil,
+         additionalConformances: [String: [String]]? = nil) {
         self.options = options
         self.typeMaps = typeMaps ?? [:]
         self.additionalConformances = additionalConformances ?? [:]
@@ -114,7 +114,7 @@ public final class HeimASN1Translator {
         swiftImports.insert("AnyCodable")
         swiftImports.insert("ASN1Codable")
 
-        self.apply { typeDef, stop in
+        self.apply { typeDef, _ in
             if let decoration = typeDef.decorate {
                 decoration.forEach {
                     if !$0.headerName.isEmpty { swiftImports.insert($0.headerName) }
@@ -130,10 +130,10 @@ public final class HeimASN1Translator {
     }
 
     lazy var maxTagValue: UInt? = {
-        var maxTagValue: UInt? = nil
+        var maxTagValue: UInt?
         var foundNonUniversalMember = false
 
-        self.apply { typeDef, stop in
+        self.apply { typeDef, _ in
             var _maxTagValue: UInt = maxTagValue ?? 0
 
             if let tagValue = typeDef.nonUniversalTagValue, tagValue > _maxTagValue {
@@ -285,7 +285,7 @@ public final class HeimASN1Translator {
 
 extension HeimASN1Translator {
     fileprivate func apply(with typeDef: HeimASN1TypeDef,
-                           _ block: (_ type: HeimASN1TypeDef, _ stop: inout Bool) -> (),
+                           _ block: (_ type: HeimASN1TypeDef, _ stop: inout Bool) -> Void,
                            _ stop: inout Bool) {
         block(typeDef, &stop)
         if stop { return }
@@ -299,7 +299,7 @@ extension HeimASN1Translator {
         }
     }
 
-    func apply(_ block: (_ type: HeimASN1TypeDef, _ stop: inout Bool) -> ()) {
+    func apply(_ block: (_ type: HeimASN1TypeDef, _ stop: inout Bool) -> Void) {
         var stop = false
         self.typeDefs.forEach { typeDef in
             self.apply(with: typeDef, block, &stop)

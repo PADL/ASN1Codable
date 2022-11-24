@@ -25,7 +25,7 @@ extension ASN1EncoderImpl {
         var userInfo: [CodingUserInfoKey: Any]
         var context: ASN1EncodingContext
 
-        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey : Any],
+        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any],
              context: ASN1EncodingContext = ASN1EncodingContext()) {
             self.codingPath = codingPath
             self.userInfo = userInfo
@@ -148,12 +148,12 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
         try container.encode(value)
     }
 
-    func encode<T>(_ value: T) throws where T : Encodable {
+    func encode<T>(_ value: T) throws where T: Encodable {
         var container = self.nestedSingleValueContainer(context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
 
-    func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {
+    func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> where NestedKey: CodingKey {
         let container = ASN1EncoderImpl.KeyedContainer<NestedKey>(codingPath: self.nestedCodingPath,
                                                                   userInfo: self.userInfo,
                                                                   context: self.context)
@@ -195,4 +195,3 @@ extension ASN1EncoderImpl.UnkeyedContainer {
         return object
     }
 }
-

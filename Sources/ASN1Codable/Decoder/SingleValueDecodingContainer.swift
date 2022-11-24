@@ -25,7 +25,7 @@ extension ASN1DecoderImpl {
         var userInfo: [CodingUserInfoKey: Any]
         var context: ASN1DecodingContext
 
-        init(object: ASN1Object, codingPath: [CodingKey], userInfo: [CodingUserInfoKey : Any],
+        init(object: ASN1Object, codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any],
              context: ASN1DecodingContext = ASN1DecodingContext()) {
             self.object = object
             self.codingPath = codingPath
@@ -100,7 +100,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         try self.decodeFixedWidthIntegerValue(type)
     }
 
-    func decode<T>(_ type: T.Type) throws -> T where T : Decodable {
+    func decode<T>(_ type: T.Type) throws -> T where T: Decodable {
         try self.withASN1Throwing {
             try self.decode(type, from: self.object)
         }
@@ -132,7 +132,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         self.codingPath[index] = ASN1PlaceholderCodingKey(self.tagCodingKey!)
     }
 
-    private func decode<T>(_ type: T.Type, from object: ASN1Object, skipTaggedValues: Bool = false) throws -> T where T : Decodable {
+    private func decode<T>(_ type: T.Type, from object: ASN1Object, skipTaggedValues: Bool = false) throws -> T where T: Decodable {
         let value: T
 
         // FIXME required for top-level decoders
@@ -162,7 +162,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
     /// this function is required because the Swift runtime decodeIfPresent()
     /// does not know how to handle optionals inside our tagged propertry wrappers
     /// this code mirrors decodeKeyedSingleValueIfPresent() in KeyedDecodingContainer.swift
-    private func decodeIfPresent<T>(_ type: T.Type, from object: ASN1Object, skipTaggedValues: Bool = false) throws -> T? where T : Decodable {
+    private func decodeIfPresent<T>(_ type: T.Type, from object: ASN1Object, skipTaggedValues: Bool = false) throws -> T? where T: Decodable {
         let value: T?
 
         if object.isNull {
@@ -171,7 +171,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             do {
                 value = try self.decode(T.self, from: object, skipTaggedValues: skipTaggedValues)
             } catch {
-                if let error = error as? DecodingError, case .typeMismatch(_, _) = error {
+                if let error = error as? DecodingError, case .typeMismatch = error {
                     value = nil
                 } else {
                     throw error
@@ -346,7 +346,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return value
     }
 
-    private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T : Decodable {
+    private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable {
         self.context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1SetCodable.Type
 
         if self.context.taggingEnvironment == .automatic {
@@ -379,7 +379,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return (self.userInfo[CodingUserInfoKey.ASN1ExplicitExtensibilityMarkerRequired] as? Bool) ?? false
     }
 
-    private func validateExtensibility<T>(_ type: T.Type, from object: ASN1Object, with decoder: ASN1DecoderImpl) throws where T : Decodable {
+    private func validateExtensibility<T>(_ type: T.Type, from object: ASN1Object, with decoder: ASN1DecoderImpl) throws where T: Decodable {
         if self.explicitExtensibilityMarkerRequired,
            type is (any ASN1ExtensibleType).Type == false,
            let container = decoder.container,
@@ -393,7 +393,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
     }
 
     private func nilLiteral<T: OptionalProtocol>(_ type: T.Type) -> T {
-        return Optional<Decodable>.init(nilLiteral: ()) as! T
+        return Decodable?.init(nilLiteral: ()) as! T
     }
 
     private func isWrappedOptional<T: ASN1TaggedWrappedValue>(_ type: T.Type) -> Bool {
@@ -443,4 +443,3 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return 0
     }
 }
-

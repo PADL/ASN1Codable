@@ -75,7 +75,7 @@ struct TestType: Codable, ASN1ApplicationTaggedType {
     @GeneralizedTime
     var someTime: Date = Date()
     @PrintableString
-    var someString: String? = nil
+    var someString: String?
 }
 
 var testValue = TestType()
@@ -83,7 +83,7 @@ testValue.someInteger = 1234
 testValue.someTime = Date()
 testValue.someString = "Hello"
 
-//https://www.oss.com/asn1/resources/asn1-made-simple/asn1-quick-reference/asn1-tags.html
+// https://www.oss.com/asn1/resources/asn1-made-simple/asn1-quick-reference/asn1-tags.html
 struct ImplicitAutoType: Codable, ASN1ContextTaggedType {
     public static var tagNumber: UInt = 0
     var name = "John"
@@ -130,7 +130,7 @@ public enum Something: Codable, Hashable, Equatable {
 
     case string(String)
     case integer(Int)
-    case array(Array<String>)
+    case array([String])
 }
 
 public struct TestStructWrapper: Codable {
@@ -176,18 +176,17 @@ public struct SomethingContainer: Codable {
 
 let something = SomethingContainer()
 
-
 let setTest = Set(arrayLiteral: "surely this is the biggest value", "B", "a", "CCC")
 
-func test() -> Void {
-    //let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
+func test() {
+    // let oi = try! ObjectIdentifier.from(string: "1.2.840.113549.1.1.11")
     do {
         let valueToEncode = something
 
         print("Encoding value: \(String(describing: valueToEncode))")
 
         let asn1Encoder = ASN1Encoder()
-        //asn1Encoder.taggingEnvironment = .automatic
+        // asn1Encoder.taggingEnvironment = .automatic
         let berData = try asn1Encoder.encode(valueToEncode)
 
         let base64 = berData.base64EncodedString()
@@ -199,7 +198,7 @@ func test() -> Void {
         let value = try asn1Decoder.decode(type(of: valueToEncode), from: berData)
 
         print("Decoded value: \(String(describing: value))")
-        //print("Extensions \(String(describing: value.tbsCertificate.extensions))")
+        // print("Extensions \(String(describing: value.tbsCertificate.extensions))")
 
         // reencode as JSON
         dumpJSONData(value)

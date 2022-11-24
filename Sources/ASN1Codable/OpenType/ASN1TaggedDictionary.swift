@@ -19,9 +19,9 @@ import ASN1Kit
 import AnyCodable
 
 public struct ASN1TaggedDictionary {
-    fileprivate var wrappedValue: Dictionary<UInt, AnyCodable>
+    fileprivate var wrappedValue: [UInt: AnyCodable]
 
-    init(wrappedValue: Dictionary<UInt, AnyCodable>) {
+    init(wrappedValue: [UInt: AnyCodable]) {
         self.wrappedValue = wrappedValue
     }
 
@@ -64,7 +64,7 @@ extension ASN1TaggedDictionary: Encodable {
     }
 }
 
-fileprivate struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
+private struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
     var tagNo: UInt
 
     init(tagNo: UInt) {

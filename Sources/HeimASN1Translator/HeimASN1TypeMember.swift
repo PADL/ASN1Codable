@@ -19,10 +19,10 @@ import ASN1Kit
 import AnyCodable
 
 indirect enum HeimASN1TypeMember: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable {
-    case dictionary(Dictionary<String, AnyCodable>)
+    case dictionary([String: AnyCodable])
     case typeDef(HeimASN1TypeDef)
 
-    var dictionaryValue: Dictionary<String, AnyCodable>? {
+    var dictionaryValue: [String: AnyCodable]? {
         if case .dictionary(let type) = self {
             return type
         } else {
@@ -79,7 +79,7 @@ indirect enum HeimASN1TypeMember: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRep
         switch self {
         case .typeDef(let type):
             return type.swiftType
-        case .dictionary(_):
+        case .dictionary:
             fatalError("unimplemented")
         }
     }

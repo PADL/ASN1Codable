@@ -39,7 +39,7 @@ extension ASN1EncoderImpl {
             }
         }
 
-        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey : Any],
+        init(codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any],
              context: ASN1EncodingContext = ASN1EncodingContext()) {
             self.codingPath = codingPath
             self.userInfo = userInfo

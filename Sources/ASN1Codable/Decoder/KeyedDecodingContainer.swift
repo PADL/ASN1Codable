@@ -30,7 +30,7 @@ extension ASN1DecoderImpl {
 
         init(object: ASN1Object,
              codingPath: [CodingKey],
-             userInfo: [CodingUserInfoKey : Any],
+             userInfo: [CodingUserInfoKey: Any],
              context: ASN1DecodingContext) throws {
             self.object = object
             self.codingPath = codingPath
@@ -56,7 +56,7 @@ extension ASN1Object {
         }
 
         return items.allSatisfy {
-            if case .taggedTag(_) = $0.tag {
+            if case .taggedTag = $0.tag {
                 return true
             } else {
                 return false
@@ -193,7 +193,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
-    func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T : Decodable {
+    func decodeIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T: Decodable {
         return try self.decodeKeyedSingleValueIfPresent(type, forKey: key)
     }
 
@@ -257,7 +257,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return try self.decodeKeyedSingleValue(type, forKey: key)
     }
 
-    func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> where NestedKey : CodingKey {
+    func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type, forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
         let container = try ASN1DecoderImpl.KeyedContainer<NestedKey>(object: try self.currentObject(nestedContainer: true),
                                                                       codingPath: self.nestedCodingPath(forKey: key),
                                                                       userInfo: self.userInfo,

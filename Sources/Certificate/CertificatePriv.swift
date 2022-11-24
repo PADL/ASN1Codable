@@ -21,18 +21,15 @@ import Network
 @_cdecl("CertificateCreateWithBytes")
 public func CertificateCreateWithBytes(_ allocator: CFAllocator!,
                                        _ bytes: [UInt8],
-                                       _ der_length: CFIndex) -> CertificateRef?
-{
+                                       _ der_length: CFIndex) -> CertificateRef? {
     let data = Data(bytes: bytes, count: der_length)
     return Certificate.create(with: data)
 }
 
-
 @_cdecl("CertificateCreateWithKeychainItem")
 public func CertificateCreateWithKeychainItem(_ allocator: CFAllocator!,
                                               _ der_certificate: CFData,
-                                              _ keychain_item: CFTypeRef) -> CertificateRef?
-{
+                                              _ keychain_item: CFTypeRef) -> CertificateRef? {
     guard let certificate: CertificateRef = Certificate.create(with: der_certificate as Data) else {
         return nil
     }
@@ -41,17 +38,14 @@ public func CertificateCreateWithKeychainItem(_ allocator: CFAllocator!,
 }
 
 @_cdecl("CertificateCopyComponentAttributes")
-public func CertificateCopyComponentAttributes(_ certificate: CertificateRef?) -> CFDictionary?
-{
+public func CertificateCopyComponentAttributes(_ certificate: CertificateRef?) -> CFDictionary? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
 
     return certificate.componentAttributes
 }
 
-
 @_cdecl("CertificateGetSubjectKeyID")
-public func CertificateGetSubjectKeyID(_ certificate: CertificateRef?) -> CFData?
-{
+public func CertificateGetSubjectKeyID(_ certificate: CertificateRef?) -> CFData? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
     guard let subjectKeyID: Data = certificate.extension(id_x509_ce_subjectKeyIdentifier) else { return nil }
 
@@ -59,23 +53,20 @@ public func CertificateGetSubjectKeyID(_ certificate: CertificateRef?) -> CFData
 }
 
 @_cdecl("CertificateSetKeychainItem")
-public func CertificateSetKeychainItem(_ certificate: CertificateRef?, _ keychain_item: CFTypeRef) -> OSStatus
-{
+public func CertificateSetKeychainItem(_ certificate: CertificateRef?, _ keychain_item: CFTypeRef) -> OSStatus {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return errSecParam }
     certificate._keychain_item = keychain_item
     return errSecSuccess
 }
 
 @_cdecl("CertificateGetLength")
-public func CertificateGetLength(_ certificate: CertificateRef) -> CFIndex
-{
+public func CertificateGetLength(_ certificate: CertificateRef) -> CFIndex {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return 0 }
     return certificate._save?.count ?? 0
 }
 
 @_cdecl("CertificateCopyIPAddresses")
-public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> CFArray?
-{
+public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> CFArray? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
     guard let datas = certificate.subjectAltName?.compactMap({
         if case .iPAddress(let ipAddress) = $0 {
@@ -96,8 +87,7 @@ public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> CFArray
 }
 
 @_cdecl("CertificateCopyRFC822Names")
-public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray?
-{
+public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
 
     var names = [String]()
@@ -118,15 +108,13 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray
 }
 
 @_cdecl("CertificateCopyCommonNames")
-public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> CFArray?
-{
+public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> CFArray? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
     return certificate.rdns(identifiedBy: id_at_commonName) as CFArray?
 }
 
 @_cdecl("CertificateCopyDescriptionsFromSAN")
-public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> CFArray?
-{
+public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> CFArray? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
     guard let names = certificate.subjectAltName?.map({ String(describing: $0) }), !names.isEmpty else {
         return nil
@@ -135,8 +123,7 @@ public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) ->
 }
 
 @_cdecl("CertificateCopyDataReencoded")
-public func CertificateCopyDataReencoded(_ certificate: CertificateRef) -> CFData?
-{
+public func CertificateCopyDataReencoded(_ certificate: CertificateRef) -> CFData? {
     let certificate = Certificate._fromCertificateRef(certificate)!
     let asn1Encoder = ASN1Encoder()
 
@@ -148,8 +135,7 @@ public func CertificateCopyDataReencoded(_ certificate: CertificateRef) -> CFDat
 }
 
 @_cdecl("CertificateCopyJSONDescription")
-public func CertificateCopyJSONDescription(_ certificate: CertificateRef) -> CFString?
-{
+public func CertificateCopyJSONDescription(_ certificate: CertificateRef) -> CFString? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
 
     let jsonEncoder = JSONEncoder()

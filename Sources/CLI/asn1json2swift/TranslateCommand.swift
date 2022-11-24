@@ -31,7 +31,7 @@ struct TranslateCommand: CommandProtocol {
     func run(_ options: Options) -> Result<(), Error> {
         let file = URL(fileURLWithPath: (options.input as NSString).expandingTildeInPath)
 
-        let typeMapDictionary: [String:String]?
+        let typeMapDictionary: [String: String]?
 
         if let typeMaps = options.typeMaps {
             let pairs: [(String, String)] = typeMaps.map {
@@ -43,7 +43,7 @@ struct TranslateCommand: CommandProtocol {
             typeMapDictionary = nil
         }
 
-        var conformancesDictionary: [String:NSMutableArray] = [:]
+        var conformancesDictionary: [String: NSMutableArray] = [:]
 
         if let conformances = options.conformances {
             conformances.forEach {
@@ -69,7 +69,7 @@ struct TranslateCommand: CommandProtocol {
         let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
         let provenanceInformation = ([executableName] + CommandLine.arguments[1..<CommandLine.arguments.count - 1]).joined(separator: " ")
         let translator = HeimASN1Translator(typeMaps: typeMapDictionary,
-                                            additionalConformances: conformancesDictionary as? [String:[String]],
+                                            additionalConformances: conformancesDictionary as? [String: [String]],
                                             provenanceInformation: provenanceInformation)
 
         do {

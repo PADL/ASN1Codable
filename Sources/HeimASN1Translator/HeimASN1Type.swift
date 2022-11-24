@@ -256,7 +256,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
     }
 
     private func emitUniversal(_ universal: HeimASN1UniversalType, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
-        //let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
+        // let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
         let swiftType = self.swiftType!
         let constant = containingTypeDef.constant ?? false
 

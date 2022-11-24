@@ -42,7 +42,7 @@ struct ParseCommand: CommandProtocol {
             fileContents = nil
         }
 
-        var data: Data? = nil
+        var data: Data?
 
         if let fileContents = fileContents {
             var didBegin = false
@@ -89,7 +89,7 @@ struct ParseCommand: CommandProtocol {
 
             print("-----BEGIN CERTIFICATE-----")
             let chunks = (encoded as Data).base64EncodedString().chunks(ofCount: 64)
-            chunks.forEach( { print($0) })
+            chunks.forEach({ print($0) })
             print("-----END CERTIFICATE-----")
         }
 
@@ -123,7 +123,7 @@ struct ParseCommand: CommandProtocol {
         }
 
         static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<Error>> {
-            //swiftlint:disable:previous identifier_name
+            // swiftlint:disable:previous identifier_name
             return create
                     <*> m <| Option(key: "file", defaultValue: "", usage: "path to PEM encoded file")
                     <*> m <| Option(key: "string", defaultValue: "", usage: "string passed as ASN.1 encoded base64")

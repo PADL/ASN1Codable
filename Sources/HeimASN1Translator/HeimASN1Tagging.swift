@@ -44,4 +44,3 @@ enum HeimASN1TagClass: String, Codable {
     case context = "CONTEXT"
     case `private` = "PRIVATE"
 }
-

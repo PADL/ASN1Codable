@@ -38,4 +38,3 @@ internal extension Certificate {
         }
     }
 }
-

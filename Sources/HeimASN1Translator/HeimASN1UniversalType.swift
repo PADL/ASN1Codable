@@ -132,4 +132,3 @@ enum HeimASN1UniversalType: String, Codable, HeimASN1SwiftTypeRepresentable, Hei
         return tag
     }
 }
-

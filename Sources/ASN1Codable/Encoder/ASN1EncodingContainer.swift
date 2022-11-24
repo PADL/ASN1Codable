@@ -21,4 +21,3 @@ protocol ASN1EncodingContainer {
     var object: ASN1Object? { get }
     var context: ASN1EncodingContext { get }
 }
-

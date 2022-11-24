@@ -200,7 +200,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
     var isUniformlyContextTagged: Bool {
         guard let members = self.members, !members.isEmpty else { return false }
 
-        var taggingEnvironment: HeimASN1TaggingEnvironment? = nil
+        var taggingEnvironment: HeimASN1TaggingEnvironment?
 
         let isUniformlyContextTagged: Bool = members.reduce(true, {
             guard $0 == true,
@@ -486,7 +486,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                     if let members = self.members, !members.isEmpty {
                         let highestUsedMember: Int = members.lastIndex(where: { $0.bitStringTag != nil })! + 1
 
-                        //highestUsedMember = members.last { }
+                        // highestUsedMember = members.last { }
                         let rawType = try(closestIntTypeForOptionSet(highestUsedMember))
 
                         outputStream.write("\(visibility)struct _\(self.generatedName): \(self.swiftConformances("OptionSet")) {\n")
@@ -571,7 +571,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
 
         var membersOf = [HeimASN1TypeDef]()
 
-        self.translator?.apply { typeDef, stop in
+        self.translator?.apply { typeDef, _ in
             if let members = typeDef.members, members.contains(where: { member in
                 // members look like: {name: fieldname, type: {name: typeNameOfContainingType, ttype: typeRef, alias: true}
 

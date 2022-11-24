@@ -19,8 +19,8 @@ import ASN1Kit
 
 public final class ASN1Encoder {
     public var userInfo: [CodingUserInfoKey: Any] = [:]
-    public var taggingEnvironment: ASN1Tagging? = nil
-    public var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
+    public var taggingEnvironment: ASN1Tagging?
+    public var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary?
 
     public init() {
     }

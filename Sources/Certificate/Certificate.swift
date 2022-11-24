@@ -20,15 +20,13 @@ import ASN1Codable
 
 @_cdecl("CertificateCreateWithData")
 public func CertificateCreateWithData(_ allocator: CFAllocator!,
-                                      _ der_certificate: CFData?) -> CertificateRef?
-{
+                                      _ der_certificate: CFData?) -> CertificateRef? {
     guard let der_certificate = der_certificate else { return nil }
     return Certificate.create(with: der_certificate as Data)
 }
 
 @_cdecl("CertificateCopyData")
-public func CertificateCopyData(_ certificate: CertificateRef?) -> CFData?
-{
+public func CertificateCopyData(_ certificate: CertificateRef?) -> CFData? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
     guard let data = certificate._save else { return nil }
     return data as CFData
@@ -50,8 +48,7 @@ extension Certificate {
 }
 
 @_cdecl("CertificateCopySubjectSummary")
-public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFString?
-{
+public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFString? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
 
     let summary: String

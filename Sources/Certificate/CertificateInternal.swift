@@ -18,8 +18,7 @@ import Foundation
 import ASN1Codable
 
 @_cdecl("CertificateCopyIPAddressDatas")
-public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> CFArray?
-{
+public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> CFArray? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
     guard let datas = certificate.subjectAltName?.compactMap({
         if case .iPAddress(let ipAddress) = $0 {
@@ -34,8 +33,7 @@ public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> CFAr
 }
 
 @_cdecl("CertificateCopyDNSNamesFromSAN")
-public func CertificateCopyDNSNamesFromSAN(_ certificate: CertificateRef) -> CFArray?
-{
+public func CertificateCopyDNSNamesFromSAN(_ certificate: CertificateRef) -> CFArray? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
 
     guard let datas = certificate.subjectAltName?.compactMap({
@@ -51,8 +49,7 @@ public func CertificateCopyDNSNamesFromSAN(_ certificate: CertificateRef) -> CFA
 }
 
 @_cdecl("CertificateCopyRFC822NamesFromSAN")
-public func CertificateCopyRFC822NamesFromSAN(_ certificate: CertificateRef) -> CFArray?
-{
+public func CertificateCopyRFC822NamesFromSAN(_ certificate: CertificateRef) -> CFArray? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
 
     guard let names = certificate.subjectAltName?.compactMap({

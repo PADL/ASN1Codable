@@ -97,7 +97,7 @@ extension ASN1DecodingContainer {
             // if we've reached the end of the SEQUENCE or SET, we still need to initialise
             // the remaining wrapped objects; pad the object set with null instances.
             object = ASN1Null
-        } else if self.object.constructed, let items = self.object.data.items, self.currentIndex < items.count  {
+        } else if self.object.constructed, let items = self.object.data.items, self.currentIndex < items.count {
             // return the object at the current index
             object = items[self.currentIndex]
         } else {
