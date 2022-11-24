@@ -235,7 +235,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
     
     private func encodeAutomaticallyTaggedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
         let taggingContext = self.context.automaticTaggingContext!
-        return try self.encodeTagged(value, with: taggingContext.metadata(), skipTaggedValues: true)
+        return try self.encodeTagged(value, with: taggingContext.metadataForNextTag(), skipTaggedValues: true)
     }
     
     private func encodeFixedWithIntegerValue<T>(_ value: T) throws -> ASN1Object? where T: FixedWidthInteger {
