@@ -38,12 +38,13 @@ class HeimASN1ModuleRef: Codable {
     
     func `import`(translator: HeimASN1Translator) throws {
         let file: URL
+        let path = "\(self.name).json"
         
         if let parentURL = translator.url {
             let containingURL = parentURL.deletingLastPathComponent()
-            file = containingURL.appendingPathComponent(self.name)
+            file = containingURL.appendingPathComponent(path)
         } else {
-            file = URL(fileURLWithPath: self.name)
+            file = URL(fileURLWithPath: path)
         }
 
         var options: HeimASN1Translator.Options = translator.options
