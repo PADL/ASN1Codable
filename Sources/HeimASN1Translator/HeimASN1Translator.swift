@@ -55,6 +55,7 @@ public final class HeimASN1Translator {
     let typeMaps: [String:TypeMap]
     weak var parent: HeimASN1Translator?
     private let provenanceInformation: String?
+    let additionalConformances: [String:[String]]
     private(set) var module: HeimASN1Module? = nil
     private var imports = [HeimASN1ModuleRef]()
     private var typeRefCache = Set<String>()
@@ -65,6 +66,7 @@ public final class HeimASN1Translator {
 
     public init(options: Options = Options(),
                 typeMaps: [String:String]? = nil,
+                additionalConformances: [String:[String]]? = nil,
                 provenanceInformation: String? = nil) {
         self.options = options
         self.typeMaps = (typeMaps ?? [:]).mapValues {
@@ -77,13 +79,16 @@ public final class HeimASN1Translator {
                 return TypeMap.alias($0)
             }
         }
+        self.additionalConformances = additionalConformances ?? [:]
         self.provenanceInformation = provenanceInformation
     }
     
     init(options: Options = Options(),
-         typeMaps: [String:TypeMap]? = nil) {
+         typeMaps: [String:TypeMap]? = nil,
+         additionalConformances: [String:[String]]? = nil) {
         self.options = options
         self.typeMaps = typeMaps ?? [:]
+        self.additionalConformances = additionalConformances ?? [:]
         self.provenanceInformation = nil
     }
 

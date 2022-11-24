@@ -50,7 +50,9 @@ class HeimASN1ModuleRef: Codable {
         var options: HeimASN1Translator.Options = translator.options
         options.insert(.isImportedModule)
         
-        self.translator = HeimASN1Translator(options: options, typeMaps: translator.typeMaps)
+        self.translator = HeimASN1Translator(options: options,
+                                             typeMaps: translator.typeMaps,
+                                             additionalConformances: translator.additionalConformances)
         self.translator!.parent = translator
         try self.translator!.import(file)
     }

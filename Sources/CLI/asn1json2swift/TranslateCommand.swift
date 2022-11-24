@@ -43,6 +43,18 @@ struct TranslateCommand: CommandProtocol {
             typeMapDictionary = nil
         }
         
+        var conformancesDictionary: [String:NSMutableArray] = [:]
+        
+        if let conformances = options.conformances {
+            conformances.forEach {
+                let values = $0.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
+                let typeName = String(values[0])
+                let conformances = conformancesDictionary[typeName] ?? NSMutableArray()
+                conformances.add(String(values[1]))
+                conformancesDictionary[typeName] = conformances
+            }
+        }
+        
         var outputStream: OutputStream
         
         if let output = options.output {
@@ -57,6 +69,7 @@ struct TranslateCommand: CommandProtocol {
         let executableName = (CommandLine.arguments[0] as NSString).lastPathComponent
         let provenanceInformation = ([executableName] + CommandLine.arguments[1..<CommandLine.arguments.count - 1]).joined(separator: " ")
         let translator = HeimASN1Translator(typeMaps: typeMapDictionary,
+                                            additionalConformances: conformancesDictionary as? [String:[String]],
                                             provenanceInformation: provenanceInformation)
 
         do {
@@ -81,11 +94,12 @@ struct TranslateCommand: CommandProtocol {
         let input: String
         let output: String?
         let typeMaps: [String]?
+        let conformances: [String]?
 
-        static func create(_ input: String) -> (_ output: String?) -> (_ typeMaps: [String]?) -> Options {
-            return { (_ output: String?) in { (_ typeMaps: [String]?) in
-                return Options(input: input, output: output, typeMaps: typeMaps)
-            }}
+        static func create(_ input: String) -> (_ output: String?) -> (_ typeMaps: [String]?) -> (_ conformances: [String]?) -> Options {
+            return { (_ output: String?) in { (_ typeMaps: [String]?) in { (_ conformances: [String]?) in
+                return Options(input: input, output: output, typeMaps: typeMaps, conformances: conformances)
+            }}}
         }
         
         static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<Error>> {
@@ -93,6 +107,7 @@ struct TranslateCommand: CommandProtocol {
                     <*> m <| Option<String>(key: "input", defaultValue: "", usage: "path to JSON output from asn1_compile")
                     <*> m <| Option<String?>(key: "output", defaultValue: nil, usage: "path to Swift output file")
                     <*> m <| Option<[String]?>(key: "map-type", defaultValue: nil, usage: "replace ASN.1 type with user-defined Swift type")
+                    <*> m <| Option<[String]?>(key: "conform-type", defaultValue: nil, usage: "add Swift protocol conformance to type")
         }
     }
 }

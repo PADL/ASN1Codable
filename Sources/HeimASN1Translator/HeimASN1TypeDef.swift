@@ -342,6 +342,16 @@ class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             let isOctetString: Bool = valueMember?.typeDefValue?.type?.tag == ASN1DecodedTag.universal(.octetString)
             conformances.append(isOctetString ? "ASN1Codable.ASN1ObjectSetOctetStringCodable" : "ASN1Codable.ASN1ObjectSetCodable")
         }
+        
+        // now add any additional user specificied conformances
+        // it would make more sense to use a Set but, we do want to preserve
+        // order for readability
+        if let additionalConformances = self.translator?.additionalConformances[self.generatedName] {
+            additionalConformances.filter { !conformances.contains($0) }.forEach {
+                conformances.append($0)
+            }
+        }
+        
         return conformances
     }
     

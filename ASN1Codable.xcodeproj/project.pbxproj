@@ -1041,7 +1041,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export DYLD_FRAMEWORK_PATH=$BUILT_PRODUCTS_DIR\nexport INPUT_FILE_BASE=rfc2459\nexport INPUT_FILE_PATH=$SRCROOT/Sources/Certificate/$INPUT_FILE_BASE.json\n\n$BUILT_PRODUCTS_DIR/asn1json2swift translate \\\n    --input $INPUT_FILE_PATH \\\n    --output $DERIVED_FILE_DIR/$INPUT_FILE_BASE.swift \\\n    --map-type DirectoryString:String,AppleComponentAttributes:ASN1TaggedDictionary,Certificate:@class\n";
+			shellScript = "export DYLD_FRAMEWORK_PATH=$BUILT_PRODUCTS_DIR\nexport INPUT_FILE_BASE=rfc2459\nexport INPUT_FILE_PATH=$SRCROOT/Sources/Certificate/$INPUT_FILE_BASE.json\n\n$BUILT_PRODUCTS_DIR/asn1json2swift translate \\\n    --input $INPUT_FILE_PATH \\\n    --output $DERIVED_FILE_DIR/$INPUT_FILE_BASE.swift \\\n    --map-type DirectoryString:String,AppleComponentAttributes:ASN1TaggedDictionary,Certificate:@class \\\n    --conform-type Name:Hashable,Name:Equatable\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

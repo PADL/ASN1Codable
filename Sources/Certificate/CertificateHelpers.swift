@@ -69,18 +69,6 @@ extension AttributeTypeAndValue: CustomStringConvertible {
     }
 }
 
-extension KRB5PrincipalName: CustomStringConvertible {
-    public var description: String {
-        "\(self.principalName.name_string.map { String(describing: $0 )}.joined(separator: "/"))@\(self.realm)"
-    }
-}
-
-extension OtherName: CustomStringConvertible {
-    public var description: String {
-        return "\(self.type_id.friendlyName)={\(self.value)}"
-    }
-}
-
 extension Name: CustomStringConvertible {
     var description: String {
         switch self {
@@ -92,27 +80,6 @@ extension Name: CustomStringConvertible {
             }).joined(separator: "/")
         }
 
-    }
-}
-
-// FIXME add synthesis of these to the translator
-
-extension Name: Equatable {
-    static func == (lhs: Name, rhs: Name) -> Bool {
-        if case .rdnSequence(let lhs) = lhs,
-           case .rdnSequence(let rhs) = rhs {
-            return lhs == rhs
-        } else {
-            return false
-        }
-    }
-}
-
-extension Name: Hashable {
-    func hash(into hasher: inout Hasher) {
-        if case .rdnSequence(let self) = self {
-            hasher.combine(self)
-        }
     }
 }
 
@@ -144,8 +111,20 @@ extension GeneralName: CustomStringConvertible {
     }
 }
 
+extension OtherName: CustomStringConvertible {
+    public var description: String {
+        return "\(self.type_id.friendlyName)={\(self.value)}"
+    }
+}
+
 extension HardwareModuleName: CustomStringConvertible {
     var description: String {
         return "\(self.hwType.friendlyName)=\(self.hwSerialNum.base64EncodedString())"
+    }
+}
+
+extension KRB5PrincipalName: CustomStringConvertible {
+    public var description: String {
+        "\(self.principalName.name_string.map { String(describing: $0 )}.joined(separator: "/"))@\(self.realm)"
     }
 }
