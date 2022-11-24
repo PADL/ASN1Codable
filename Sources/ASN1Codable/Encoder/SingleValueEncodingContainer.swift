@@ -199,9 +199,15 @@ extension ASN1EncoderImpl.SingleValueContainer {
     }
     
     private func encodeTagged<T: Encodable>(_ value: T, with metadata: ASN1Metadata, skipTaggedValues: Bool = false) throws -> ASN1Object? {
-        let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
+        if !metadata.validateValueConstraints(value) {
+            let context = EncodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Value \(value) outside of value constraint")
+            throw EncodingError.invalidValue(value, context)
+        }
         
-        if let object = object, object.validateConstraints(with: metadata) {
+        let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
+
+        if let object = object, !metadata.validateSizeConstraints(object) {
             let context = EncodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Value for \(object) outside of size constraint")
             throw EncodingError.invalidValue(value, context)

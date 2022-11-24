@@ -27,11 +27,12 @@ public struct ASN1Metadata: Equatable {
     var tagging: ASN1Tagging?
     /// size constraints restrict the length of BitString, Data, String, Array or Set
     var sizeConstraints: ClosedRange<Int>?
+    /// value constraints for integer types (and, eventually, string types)
+    var valueConstraints: ClosedRange<Int>?
     
     public init(tag: ASN1DecodedTag? = nil, tagging: ASN1Tagging? = nil) {
         self.tag = tag
         self.tagging = tagging
-        self.sizeConstraints = nil
     }
 }
 
@@ -87,5 +88,46 @@ extension ASN1Metadata: CustomDebugStringConvertible {
         }
         
         return debugDescription
+    }
+}
+
+extension ASN1Metadata {
+    func validateSizeConstraints(_ object: ASN1Object) -> Bool {
+        let validatedSizeConstraints: Bool
+
+        if let sizeConstraints = self.sizeConstraints {
+            switch object.data {
+            case .primitive(let data):
+                validatedSizeConstraints = sizeConstraints.contains(data.count)
+                break
+            case .constructed(let items):
+                validatedSizeConstraints = sizeConstraints.contains(items.count)
+                break
+            }
+        } else {
+            validatedSizeConstraints = true
+        }
+        
+        return validatedSizeConstraints
+    }
+    
+    private func validateIntegerValueConstraints<T: FixedWidthInteger>(_ value: T) -> Bool {
+        let validatedValueConstraints: Bool
+        
+        if let valueConstraints = self.valueConstraints {
+            validatedValueConstraints = value >= Int.min && value <= Int.max && valueConstraints.contains(Int(value))
+        } else {
+            validatedValueConstraints = true
+        }
+        
+        return validatedValueConstraints
+    }
+    
+    func validateValueConstraints<T>(_ value: T) -> Bool {
+        if let value = value as? any FixedWidthInteger {
+            return self.validateIntegerValueConstraints(value)
+        }
+        
+        return true
     }
 }

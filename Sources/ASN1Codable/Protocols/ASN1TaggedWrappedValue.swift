@@ -27,6 +27,10 @@ public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible, Custom
 }
 
 extension ASN1TaggedWrappedValue {
+    static var wrappedType: Value.Type {
+        return Value.self
+    }
+
     public var projectedValue: ASN1Metadata {
         return Self.metadata
     }

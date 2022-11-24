@@ -35,10 +35,6 @@ extension ASN1DecoderImpl {
     }
 }
 
-fileprivate extension ASN1TaggedWrappedValue {
-    static var wrappedType: Value.Type { return Value.self }
-}
-
 extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     func decodeNil() -> Bool {
         return object.isNull
@@ -278,12 +274,6 @@ extension ASN1DecoderImpl.SingleValueContainer {
                                  from object: ASN1Object,
                                  with metadata: ASN1Metadata,
                                  skipTaggedValues: Bool = false) throws -> T where T: Decodable {
-        if !object.validateConstraints(with: metadata) {
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Value for \(object) outside of size constraint")
-            throw DecodingError.dataCorrupted(context)
-        }
-        
         guard let tag = metadata.tag else {
             // FIXME should this happen? precondition check? (perhaps if only size constraints?)
             return try self.decode(type, from: object, skipTaggedValues: skipTaggedValues)
@@ -328,11 +318,25 @@ extension ASN1DecoderImpl.SingleValueContainer {
             throw DecodingError.typeMismatch(type, context)
         }
         
+        if !metadata.validateSizeConstraints(unwrappedObject) {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Value for \(object) outside of size constraint")
+            throw DecodingError.dataCorrupted(context)
+        }
+
         let verifiedUniversalTag = !object.constructed && tag.isUniversal
         
         self.context.currentTag = tag
         
-        return try self.decode(type, from: unwrappedObject, skipTaggedValues: verifiedUniversalTag || skipTaggedValues)
+        let value = try self.decode(type, from: unwrappedObject, skipTaggedValues: verifiedUniversalTag || skipTaggedValues)
+        
+        if !metadata.validateValueConstraints(value) {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Value for \(object) outside of value constraint")
+            throw DecodingError.dataCorrupted(context)
+        }
+
+        return value
     }
 
     private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T : Decodable {
