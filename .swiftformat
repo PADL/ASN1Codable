@@ -1,0 +1,8 @@
+--indent 4
+--someAny false
+--self insert
+--wrapparameters before-first
+--extensionacl on-declarations
+--swiftversion 5.7
+--disable wrapMultilineStatementBraces
+--disable opaqueGenericParameters
