@@ -200,6 +200,13 @@ extension ASN1EncoderImpl.SingleValueContainer {
     
     private func encodeTagged<T: Encodable>(_ value: T, with metadata: ASN1Metadata, skipTaggedValues: Bool = false) throws -> ASN1Object? {
         let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
+        
+        if let object = object, object.validateConstraints(with: metadata) {
+            let context = EncodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Value for \(object) outside of size constraint")
+            throw EncodingError.invalidValue(value, context)
+        }
+        
         let tagging = metadata.tagging ?? self.context.taggingEnvironment
         
         if let object = object, let tag = metadata.tag {

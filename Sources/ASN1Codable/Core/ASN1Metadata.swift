@@ -21,12 +21,17 @@ import ASN1Kit
 /// like range limits and default values. Currently synthesised from property wrapper Swift type metadata
 /// but could also be associated with coding keys
 public struct ASN1Metadata: Equatable {
+    /// the tag type and number
     var tag: ASN1DecodedTag?
+    /// the tagging environment (IMPLICIT or EXPLICIT)
     var tagging: ASN1Tagging?
+    /// size constraints restrict the length of BitString, Data, String, Array or Set
+    var sizeConstraints: ClosedRange<Int>?
     
     public init(tag: ASN1DecodedTag? = nil, tagging: ASN1Tagging? = nil) {
         self.tag = tag
         self.tagging = tagging
+        self.sizeConstraints = nil
     }
 }
 

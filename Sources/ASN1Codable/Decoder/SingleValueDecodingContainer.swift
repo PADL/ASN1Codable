@@ -278,8 +278,14 @@ extension ASN1DecoderImpl.SingleValueContainer {
                                  from object: ASN1Object,
                                  with metadata: ASN1Metadata,
                                  skipTaggedValues: Bool = false) throws -> T where T: Decodable {
+        if !object.validateConstraints(with: metadata) {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Value for \(object) outside of size constraint")
+            throw DecodingError.dataCorrupted(context)
+        }
+        
         guard let tag = metadata.tag else {
-            // FIXME should this happen? precondition check?
+            // FIXME should this happen? precondition check? (perhaps if only size constraints?)
             return try self.decode(type, from: object, skipTaggedValues: skipTaggedValues)
         }
                 
