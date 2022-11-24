@@ -82,9 +82,11 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         let keys: [Key]
 
         if Key.self is ASN1TagCodingKey.Type && self.object.containsOnlyTaggedItems {
-            // this is part of the escape hatch to support Apple's component attributes
-            // type, which is a SEQUENCE of arbitrary explicitly tagged values, which
-            // are not known until runtime
+            // this serves both as an escape hatch to support Apple's component attributes
+            // certificate extension (which is a SEQUENCE of arbitrary tagged values), and
+            // also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
+            // used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
+            // uniform tagging to Swift types 
             let items = self.object.data.items!
             keys = items.compactMap { Key(intValue: Int($0.tagNo!)) }
         } else {
@@ -300,7 +302,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
     
     func superDecoder(forKey key: Key) throws -> Decoder {
-        throw DecodingError.dataCorruptedError(forKey: key, in: self, debugDescription: "ASN1DecoderImpl.KeyedContainer does not yet support super decoders")
+        throw DecodingError.dataCorruptedError(forKey: key, in: self,
+                                               debugDescription: "ASN1DecoderImpl.KeyedContainer does not yet support super decoders")
     }
 }
 

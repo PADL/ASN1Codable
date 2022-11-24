@@ -86,7 +86,10 @@ struct ASN1DecodingContext: ASN1CodingContext {
         }
     }
     
-    /// synthesizes an CodingKey from a reflected enum case name. Does not work with custom coding keys.
+    /// synthesizes an CodingKey from a reflected enum case name
+    ///
+    /// only works with custom coding keys that conform to ASN1TagCodingKey and contain
+    /// the tag number
     func enumCodingKey<Key>(_ keyType: Key.Type, object: ASN1Object) -> Key? where Key: CodingKey {
         if case .taggedTag(let tagNo) = object.tag, keyType is ASN1TagCodingKey.Type {
             return Key(intValue: Int(tagNo))
