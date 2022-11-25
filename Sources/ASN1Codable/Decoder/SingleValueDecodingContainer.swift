@@ -306,7 +306,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return try T(from: object)
     }
 
-    private func validateAndDecodeUnwrappedTaggedObject<T>(
+    private func validateAndDecodeUnwrappedTagged<T>(
         _ type: T.Type,
         from unwrappedObject: ASN1Object,
         with metadata: ASN1Metadata,
@@ -393,10 +393,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
             throw DecodingError.typeMismatch(type, context)
         }
 
-        return try self.validateAndDecodeUnwrappedTaggedObject(type,
-                                                               from: unwrappedObject,
-                                                               with: metadata,
-                                                               skipTaggedValues: skipTaggedValues)
+        return try self.validateAndDecodeUnwrappedTagged(type,
+                                                         from: unwrappedObject,
+                                                         with: metadata,
+                                                         skipTaggedValues: skipTaggedValues)
     }
 
     private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable {
