@@ -52,7 +52,7 @@ extension ASN1DecoderImpl {
 
 extension ASN1Object {
     // returns true if we have a SEQUENCE/SET of context tagged items
-    fileprivate var containsOnlyTaggedItems: Bool {
+    var containsOnlyTaggedItems: Bool {
         guard let items = self.data.items else {
             return false
         }

@@ -1,8 +1,6 @@
 disabled_rules:
   - missing_docs
   - todo
-  - extension_access_modifier
-  - strict_fileprivate
   - no_fallthrough_only
   - file_name
   - unavailable_function
