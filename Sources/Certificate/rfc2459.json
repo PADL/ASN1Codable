@@ -859,7 +859,7 @@
 }
 },{"name":"parameters","gen_name":"parameters","optional":false,"type":{"name":"PublicKeyAlgorithmIdentifier","gen_name":"parameters","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_PUBLIC-KEY","objectsetname":"PublicKeyAlgorithms","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","opentypeids":["id_ecPublicKey","id_dsa","id_pkcs1_rsaEncryption","id_ecDH","id_ecMQV"],
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ALGORITHM-TYPE","objectsetname":"PublicKeyAlgorithms","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","opentypeids":["id_ecPublicKey","id_dsa","id_pkcs1_rsaEncryption","id_ecDH","id_ecMQV"],
 "members":[{"name":"PublicKeyAlgorithmIdentifier","gen_name":"*pk_ec","is_type":true,"exported":true,"typedef":false,"ttype":"ECParameters","alias":true
 }
 ,{"name":"PublicKeyAlgorithmIdentifier","gen_name":"*pk_dsa","is_type":true,"exported":true,"typedef":false,"ttype":"DSAParams","alias":true
@@ -884,7 +884,7 @@
 }
 },{"name":"parameters","gen_name":"parameters","optional":false,"type":{"name":"SignatureAlgorithmIdentifier","gen_name":"parameters","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_SIGNATURE-ALGORITHM","objectsetname":"SignatureAlgs","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","opentypeids":["id_ecdsa_with_SHA1","id_pkcs1_md2WithRSAEncryption","id_pkcs1_md5WithRSAEncryption","id_pkcs1_sha1WithRSAEncryption","id_pkcs1_sha256WithRSAEncryption","id_pkcs1_sha384WithRSAEncryption","id_pkcs1_sha512WithRSAEncryption"],
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ALGORITHM-TYPE","objectsetname":"SignatureAlgs","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","opentypeids":["id_ecdsa_with_SHA1","id_pkcs1_md2WithRSAEncryption","id_pkcs1_md5WithRSAEncryption","id_pkcs1_sha1WithRSAEncryption","id_pkcs1_sha256WithRSAEncryption","id_pkcs1_sha384WithRSAEncryption","id_pkcs1_sha512WithRSAEncryption"],
 "members":[{"name":"SignatureAlgorithmIdentifier","gen_name":"*sa_ecdsaWithSHA1","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":5,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"SignatureAlgorithmIdentifier","gen_name":"*sa_ecdsaWithSHA1","is_type":true,"exported":false,"typedef":false,"ttype":"NULL","ctype":"int"}
@@ -925,7 +925,7 @@
 }
 },{"name":"parameters","gen_name":"parameters","optional":false,"type":{"name":"DigestAlgorithmIdentifier","gen_name":"parameters","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_DIGEST-ALGORITHM","objectsetname":"HashAlgs","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","opentypeids":["id_secsig_sha_1","id_sha256","id_sha384","id_sha512","id_sha224"],
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ALGORITHM-TYPE","objectsetname":"HashAlgs","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","opentypeids":["id_secsig_sha_1","id_sha256","id_sha384","id_sha512","id_sha224"],
 "members":[{"name":"DigestAlgorithmIdentifier","gen_name":"*mda_sha1","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":5,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DigestAlgorithmIdentifier","gen_name":"*mda_sha1","is_type":true,"exported":false,"typedef":false,"ttype":"NULL","ctype":"int"}
