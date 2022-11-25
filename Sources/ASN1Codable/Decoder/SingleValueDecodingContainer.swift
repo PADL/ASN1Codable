@@ -306,8 +306,33 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return try T(from: object)
     }
 
-    // swiftlint:disable cyclomatic_complexity
-    // swiftlint:disable function_body_length
+    private func validateAndDecodeUnwrappedTaggedObject<T>(
+        _ type: T.Type,
+        from unwrappedObject: ASN1Object,
+        with metadata: ASN1Metadata,
+        skipTaggedValues: Bool = false
+    ) throws -> T where T: Decodable {
+        if !metadata.validateSizeConstraints(unwrappedObject) {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Value for \(object) outside of size constraint")
+            throw DecodingError.dataCorrupted(context)
+        }
+
+        let verifiedUniversalTag = !object.constructed && metadata.tag!.isUniversal
+
+        let value = try self.decode(type,
+                                    from: unwrappedObject,
+                                    skipTaggedValues: verifiedUniversalTag || skipTaggedValues)
+
+        if !metadata.validateValueConstraints(value) {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Value for \(object) outside of value constraint")
+            throw DecodingError.dataCorrupted(context)
+        }
+
+        return value
+    }
+
     private func decodeTagged<T>(
         _ type: T.Type,
         from object: ASN1Object,
@@ -368,25 +393,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
             throw DecodingError.typeMismatch(type, context)
         }
 
-        if !metadata.validateSizeConstraints(unwrappedObject) {
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Value for \(object) outside of size constraint")
-            throw DecodingError.dataCorrupted(context)
-        }
-
-        let verifiedUniversalTag = !object.constructed && tag.isUniversal
-
-        let value = try self.decode(type,
-                                    from: unwrappedObject,
-                                    skipTaggedValues: verifiedUniversalTag || skipTaggedValues)
-
-        if !metadata.validateValueConstraints(value) {
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Value for \(object) outside of value constraint")
-            throw DecodingError.dataCorrupted(context)
-        }
-
-        return value
+        return try self.validateAndDecodeUnwrappedTaggedObject(type,
+                                                               from: unwrappedObject,
+                                                               with: metadata,
+                                                               skipTaggedValues: skipTaggedValues)
     }
 
     private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable {
