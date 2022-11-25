@@ -188,7 +188,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
             object = try self.encodeTaggedKeyedValue(value, forKey: key)
         } else if !skipTaggedValues, let value = value as? ASN1TaggedType {
             object = try self.encodeTaggedValue(value)
-        } else if let value = value as? any(Encodable & ASN1TaggedWrappedValue) {
+        } else if let value = value as? any(Encodable & ASN1TaggedValue) {
             object = try self.encodeTaggedWrappedValue(value)
         } else if !skipTaggedValues, self.context.automaticTaggingContext != nil {
             object = try self.encodeAutomaticallyTaggedValue(value)
@@ -251,7 +251,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
         try self.encodeTagged(value, with: T.metadata, skipTaggedValues: true)
     }
 
-    private func encodeTaggedWrappedValue<T: Encodable & ASN1TaggedWrappedValue>(_ value: T) throws -> ASN1Object? {
+    private func encodeTaggedWrappedValue<T: Encodable & ASN1TaggedValue>(_ value: T) throws -> ASN1Object? {
         try self.encodeTagged(value.wrappedValue, with: T.metadata)
     }
 

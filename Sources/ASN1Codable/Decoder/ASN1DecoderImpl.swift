@@ -95,8 +95,8 @@ extension ASN1DecoderImpl {
         var wrappedValue: any Decodable = value
 
         // swiftlint:disable force_cast
-        while wrappedValue is any ASN1TaggedWrappedValue {
-            wrappedValue = (wrappedValue as! any ASN1TaggedWrappedValue).wrappedValue
+        while wrappedValue is any ASN1TaggedValue {
+            wrappedValue = (wrappedValue as! any ASN1TaggedValue).wrappedValue
         }
 
         // FIXME: first assignment is to silence warnings

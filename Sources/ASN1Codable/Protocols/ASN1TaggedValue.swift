@@ -17,8 +17,8 @@
 import Foundation
 import ASN1Kit
 
-public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible,
-    CustomDebugStringConvertible, ASN1TaggedTypeRepresentable {
+public protocol ASN1TaggedValue: Codable, CustomStringConvertible,
+    CustomDebugStringConvertible, ASN1TypeMetadataRepresentable {
     associatedtype Value: Codable
 
     var wrappedValue: Value { get set }
@@ -27,7 +27,7 @@ public protocol ASN1TaggedWrappedValue: Codable, CustomStringConvertible,
     init(wrappedValue: Value)
 }
 
-extension ASN1TaggedWrappedValue {
+extension ASN1TaggedValue {
     static var wrappedType: Value.Type {
         Value.self
     }
@@ -72,8 +72,8 @@ extension ASN1TaggedWrappedValue {
 }
 
 extension KeyedDecodingContainer {
-    func decode<T: ExpressibleByNilLiteral, U: ASN1TaggedWrappedValue>(_ type: U.Type, forKey key: K) throws ->
-        any ASN1TaggedWrappedValue where U.Value == T {
+    func decode<T: ExpressibleByNilLiteral, U: ASN1TaggedValue>(_ type: U.Type, forKey key: K) throws ->
+        any ASN1TaggedValue where U.Value == T {
         if let value = try self.decodeIfPresent(type, forKey: key) {
             return value
         }

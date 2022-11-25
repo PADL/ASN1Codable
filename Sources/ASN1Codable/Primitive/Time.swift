@@ -35,7 +35,7 @@ extension Date?: ExpressibleByDate {
 
 @propertyWrapper
 public struct GeneralizedTime<Value: Codable & ExpressibleByDate>:
-    Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+    Codable, Equatable, Hashable, ASN1TaggedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -53,7 +53,7 @@ public struct GeneralizedTime<Value: Codable & ExpressibleByDate>:
 
 @propertyWrapper
 public struct UTCTime<Value: Codable & ExpressibleByDate>:
-    Codable, Equatable, Hashable, ASN1TaggedWrappedValue {
+    Codable, Equatable, Hashable, ASN1TaggedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {

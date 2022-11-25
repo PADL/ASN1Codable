@@ -18,7 +18,7 @@ import Foundation
 import ASN1Kit
 
 @propertyWrapper
-public struct ASN1PrivateTagged<Tag, Tagging, Value>: Codable, ASN1TaggedWrappedValue
+public struct ASN1PrivateTagged<Tag, Tagging, Value>: Codable, ASN1TaggedValue
     where Tag: ASN1TagNumberRepresentable,
     Tagging: ASN1TaggingRepresentable,
     Value: Codable {

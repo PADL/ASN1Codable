@@ -19,6 +19,6 @@ import ASN1Kit
 
 /// any Swift type that has a tag or a tagging environment
 
-public protocol ASN1TaggedTypeRepresentable {
+public protocol ASN1TypeMetadataRepresentable {
     static var metadata: ASN1Metadata { get }
 }
