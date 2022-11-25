@@ -183,71 +183,156 @@ id-at-emailAddress          AttributeType ::=
 
 id-x509-ce OBJECT IDENTIFIER ::= {joint-iso-ccitt(2) ds(5) 29}
 
-_ALGORITHM-TYPE ::= CLASS { -- Heimdal extension
+ParamOptions ::= ENUMERATED {
+   required(0),         -- Parameters MUST be encoded in structure
+   preferredPresent(1), -- Parameters SHOULD be encoded in structure
+   preferredAbsent(2),  -- Parameters SHOULD NOT be encoded in structure
+   absent(3),           -- Parameters MUST NOT be encoded in structure
+   inheritable(4),      -- Parameters are inherited if not present
+   optional(5),         -- Parameters MAY be encoded in the structure
+   ...
+}
+
+---
+--- Public key algorithms
+---
+
+_PUBLIC-KEY ::= CLASS {
     &id     OBJECT IDENTIFIER UNIQUE,
     &Type   OPTIONAL
 }
 
-AlgorithmIdentifier{_ALGORITHM-TYPE:AlgorithmIdentifierSet} ::= SEQUENCE {
-    algorithm   _ALGORITHM-TYPE.&id({AlgorithmIdentifierSet}),
-    parameters  _ALGORITHM-TYPE.&Type({AlgorithmIdentifierSet}{@algorithm})
+PublicKeyAlgorithmIdentifier{_PUBLIC-KEY:PublicKeyAlgSet} ::= SEQUENCE {
+    algorithm   _PUBLIC-KEY.&id({PublicKeyAlgSet}),
+    parameters  _PUBLIC-KEY.&Type({PublicKeyAlgSet}{@algorithm})
 }
-
-pk-rsa _ALGORITHM-TYPE ::= {
+pk-rsa _PUBLIC-KEY ::= {
     &id id-pkcs1-rsaEncryption,
     &Type NULL
 }
-
-DSA-Params ::= SEQUENCE {
-    p   INTEGER,
-    q   INTEGER,
-    g   INTEGER
-}
-
-pk-dsa _ALGORITHM-TYPE ::= {
+pk-dsa _PUBLIC-KEY ::= {
     &id id-dsa,
-    &Type DSA-Params
+    &Type DSAParams
+}
+pk-dh _PUBLIC-KEY ::= {
+    &id id-dhpublicnumber,
+    &Type DomainParameters
+}
+pk-ec _PUBLIC-KEY ::= {
+    &id id-ecPublicKey,
+    &Type ECParameters
+}
+pk-ecDH _PUBLIC-KEY ::= {
+    &id id-ecDH,
+    &Type ECParameters
+}
+pk-ecMQV _PUBLIC-KEY ::= {
+    &id id-ecMQV,
+    &Type ECParameters
+}
+PublicKeyAlgorithms _PUBLIC-KEY ::= {
+    pk-rsa
+  | pk-dsa
+  | pk-ec
+  | pk-ecDH
+  | pk-ecMQV
 }
 
---- When any of these three OIDs appears within the ASN.1 type
---- AlgorithmIdentifier, the parameters component of that type SHALL be
---- the ASN.1 type NULL.
-sa-md2WithRSAEncryption _ALGORITHM-TYPE ::= {
+PublicKeyAlgorithmIdentifier ::= PublicKeyAlgorithmIdentifier{PublicKeyAlgorithms}
+
+---
+--- Signature algorithms
+---
+
+_SIGNATURE-ALGORITHM ::= CLASS { -- Heimdal extension
+    &id     OBJECT IDENTIFIER UNIQUE,
+    &Type   OPTIONAL
+}
+
+SignatureAlgorithmIdentifier{_SIGNATURE-ALGORITHM:SignatureAlgSet} ::= SEQUENCE {
+    algorithm   _SIGNATURE-ALGORITHM.&id({SignatureAlgSet}),
+    parameters  _SIGNATURE-ALGORITHM.&Type({SignatureAlgSet}{@algorithm})
+}
+sa-rsaWithMD2 _SIGNATURE-ALGORITHM ::= {
     &id id-pkcs1-md2WithRSAEncryption,
     &Type NULL
 }
-sa-md5WithRSAEncryption _ALGORITHM-TYPE ::= {
+sa-rsaWithMD5 _SIGNATURE-ALGORITHM ::= {
     &id id-pkcs1-md5WithRSAEncryption,
     &Type NULL
 }
-sa-sha1WithRSAEncryption _ALGORITHM-TYPE ::= {
+sa-rsaWithSHA1 _SIGNATURE-ALGORITHM ::= {
     &id id-pkcs1-sha1WithRSAEncryption,
     &Type NULL
 }
-sa-sha256WithRSAEncryption _ALGORITHM-TYPE ::= {
+sa-rsaWithSHA256 _SIGNATURE-ALGORITHM ::= {
     &id id-pkcs1-sha256WithRSAEncryption,
     &Type NULL
 }
-sa-sha384WithRSAEncryption _ALGORITHM-TYPE ::= {
+sa-rsaWithSHA384 _SIGNATURE-ALGORITHM ::= {
     &id id-pkcs1-sha384WithRSAEncryption,
     &Type NULL
 }
-sa-sha512WithRSAEncryption _ALGORITHM-TYPE ::= {
+sa-rsaWithSHA512 _SIGNATURE-ALGORITHM ::= {
     &id id-pkcs1-sha512WithRSAEncryption,
     &Type NULL
 }
-KnownAlgorithmIdentifiers _ALGORITHM-TYPE ::= {
-    pk-rsa
-  | pk-dsa
-  | sa-md2WithRSAEncryption
-  | sa-md5WithRSAEncryption
-  | sa-sha1WithRSAEncryption
-  | sa-sha256WithRSAEncryption
-  | sa-sha384WithRSAEncryption
-  | sa-sha512WithRSAEncryption
+sa-ecdsaWithSHA1 _SIGNATURE-ALGORITHM ::= {
+    &id id-ecdsa-with-SHA1,
+    &Type NULL
+}
+SignatureAlgs _SIGNATURE-ALGORITHM ::= {
+    sa-rsaWithMD2
+  | sa-rsaWithMD5
+  | sa-rsaWithSHA1
+  | sa-rsaWithSHA256
+  | sa-rsaWithSHA384
+  | sa-rsaWithSHA512
+  | sa-ecdsaWithSHA1
+}
+SignatureAlgorithmIdentifier ::= SignatureAlgorithmIdentifier{SignatureAlgs}
+
+_DIGEST-ALGORITHM ::= CLASS { -- Heimdal extension
+    &id     OBJECT IDENTIFIER UNIQUE,
+    &Type   OPTIONAL
 }
 
-AlgorithmIdentifier ::= AlgorithmIdentifier{KnownAlgorithmIdentifiers}
+---
+--- Digest (hash) algorithms
+---
+
+DigestAlgorithmIdentifier{_DIGEST-ALGORITHM:HashAlgSet} ::= SEQUENCE {
+    algorithm   _DIGEST-ALGORITHM.&id({HashAlgSet}),
+    parameters  _DIGEST-ALGORITHM.&Type({HashAlgSet}{@algorithm})
+}
+mda-sha1 _DIGEST-ALGORITHM ::= {
+    &id id-secsig-sha-1,
+    &Type NULL
+}
+mda-sha224 _DIGEST-ALGORITHM ::= {
+    &id id-sha224,
+    &Type NULL
+}
+mda-sha256 _DIGEST-ALGORITHM ::= {
+    &id id-sha256,
+    &Type NULL
+}
+mda-sha384 _DIGEST-ALGORITHM ::= {
+    &id id-sha384,
+    &Type NULL
+}
+mda-sha512 _DIGEST-ALGORITHM ::= {
+    &id id-sha512,
+    &Type NULL
+}
+HashAlgs _DIGEST-ALGORITHM ::= {
+    mda-sha1
+  | mda-sha224
+  | mda-sha256
+  | mda-sha384
+  | mda-sha512
+}
+DigestAlgorithmIdentifier ::= DigestAlgorithmIdentifier{HashAlgs}
 
 AttributeType ::=   OBJECT IDENTIFIER
 
@@ -311,7 +396,7 @@ Validity ::= SEQUENCE {
 UniqueIdentifier  ::=  BIT STRING
 
 SubjectPublicKeyInfo  ::=  SEQUENCE  {
-     algorithm            AlgorithmIdentifier,
+     algorithm            PublicKeyAlgorithmIdentifier,
      subjectPublicKey     BIT STRING
 }
 
@@ -364,7 +449,7 @@ Extensions  ::=  SEQUENCE SIZE (1..MAX) OF Extension
 TBSCertificate  ::=  SEQUENCE  {
      version         [0]  Version OPTIONAL, -- EXPLICIT nnn DEFAULT 1,
      serialNumber         CertificateSerialNumber,
-     signature            AlgorithmIdentifier,
+     signature            SignatureAlgorithmIdentifier,
      issuer               Name,
      validity             Validity,
      subject              Name,
@@ -379,7 +464,7 @@ TBSCertificate  ::=  SEQUENCE  {
 
 Certificate  ::=  SEQUENCE  {
      tbsCertificate       TBSCertificate,
-     signatureAlgorithm   AlgorithmIdentifier,
+     signatureAlgorithm   SignatureAlgorithmIdentifier,
      signatureValue       BIT STRING
 }
 
@@ -643,7 +728,7 @@ RSAPrivateKey ::= SEQUENCE {
 }
 
 DigestInfo ::= SEQUENCE {
-	digestAlgorithm AlgorithmIdentifier,
+	digestAlgorithm DigestAlgorithmIdentifier,
 	digest OCTET STRING
 }
 
@@ -897,7 +982,7 @@ StrengthOfFunction ::= ENUMERATED {
 }
 URIReference ::= SEQUENCE {
     uniformResourceIdentifier IA5String, -- (SIZE (1..URIMAX))
-    hashAlgorithm AlgorithmIdentifier OPTIONAL,
+    hashAlgorithm DigestAlgorithmIdentifier OPTIONAL,
     hashValue BIT STRING OPTIONAL
 }
 EvaluationStatus ::= ENUMERATED {
