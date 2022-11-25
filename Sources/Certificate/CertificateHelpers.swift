@@ -82,15 +82,15 @@ extension DirectoryString: CustomStringConvertible {
     var description: String {
         switch self {
         case .ia5String(let ia5String):
-            return ia5String.description
+            return String(describing: ia5String)
         case .printableString(let printableString):
-            return printableString.description
+            return String(describing: printableString)
         case .universalString(let universalString):
-            return universalString.description
+            return String(describing: universalString)
         case .utf8String(let utf8String):
-            return utf8String.description
+            return String(describing: utf8String)
         case .bmpString(let bmpString):
-            return bmpString.description
+            return String(describing: bmpString)
         }
     }
 }
