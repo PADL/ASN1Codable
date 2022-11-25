@@ -291,17 +291,6 @@ extension ASN1DecoderImpl.SingleValueContainer {
         verifiedTag: Bool = false
     ) throws -> T where T: ASN1DecodableType {
         let expectedTag = ASN1DecodingContext.tag(for: type)
-        var verifiedTag = verifiedTag
-
-        /// if an untagged String is being decoded, then accept any ASN.1 string type. This
-        /// allows DirectoryString to be a typealias of String rather than a cumbersome enum
-        /// which requires the caller to explicitly unwrap values (at the expense of somes
-        /// additional state to note the current tag).
-        if !verifiedTag, type is String.Type, object.tag.isString,
-           !(self.context.currentTag?.isString ?? false) { // tag is empty or not a string
-            precondition(expectedTag.isString)
-            verifiedTag = true
-        }
 
         guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
             let context = DecodingError.Context(codingPath: self.codingPath,
@@ -386,8 +375,6 @@ extension ASN1DecoderImpl.SingleValueContainer {
         }
 
         let verifiedUniversalTag = !object.constructed && tag.isUniversal
-
-        self.context.currentTag = tag
 
         let value = try self.decode(type,
                                     from: unwrappedObject,

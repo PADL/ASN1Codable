@@ -28,8 +28,6 @@ struct ASN1DecodingContext: ASN1CodingContext {
     var encodeAsSet = false
     /// the current enum type being decoded
     var currentEnumType: Any.Type?
-    /// the innermost decoded tag: this is used for allowing any string type to be represented by an untagged String
-    var currentTag: ASN1DecodedTag?
     /// state for open type decoding
     var objectSetCodingContext: ASN1ObjectSetCodingContext?
     /// state for AUTOMATIC tagging
