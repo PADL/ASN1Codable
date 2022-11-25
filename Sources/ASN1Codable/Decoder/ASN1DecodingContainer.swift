@@ -47,7 +47,7 @@ extension ASN1DecodingContainer {
         self.object.constructed && self.object.data.items?.isEmpty ?? true
     }
 
-    private func _validate() throws {
+    private func validate() throws {
         let isUnkeyedContainer = self is UnkeyedDecodingContainer
 
         if !self.object.constructed, self.context.enumCodingState == .none, !self.object.isNull {
@@ -63,7 +63,7 @@ extension ASN1DecodingContainer {
         }
     }
 
-    private func _validateNestedContainer(_ object: ASN1Object) throws {
+    private func validateNestedContainer(_ object: ASN1Object) throws {
         if object.constructed, object.tag.isUniversal {
             if self.context.encodeAsSet, object.tag != .universal(.set) {
                 let context = DecodingError.Context(codingPath: codingPath,
@@ -87,7 +87,7 @@ extension ASN1DecodingContainer {
 
     /// returns the current object in a keyed or unkeyed decoding container,
     /// subject to some validation checks
-    private func _currentObject(for _: Decodable.Type? = nil, nestedContainer: Bool) throws -> ASN1Object {
+    private func currentObject(nestedContainer: Bool) throws -> ASN1Object {
         let object: ASN1Object
 
         if self.context.enumCodingState != .none || self.object.isNull {
@@ -108,10 +108,10 @@ extension ASN1DecodingContainer {
             throw DecodingError.dataCorrupted(context)
         }
 
-        try self._validate()
+        try self.validate()
 
         if nestedContainer {
-            try self._validateNestedContainer(object)
+            try self.validateNestedContainer(object)
         }
 
         return object
@@ -121,7 +121,7 @@ extension ASN1DecodingContainer {
     /// they will hint to the caller to skip the field if OPTIONAL (see below)
     func currentObject(for type: Decodable.Type? = nil, nestedContainer: Bool = false) throws -> ASN1Object {
         do {
-            return try self._currentObject(for: type, nestedContainer: nestedContainer)
+            return try self.currentObject(nestedContainer: nestedContainer)
         } catch {
             if let type, case DecodingError.dataCorrupted(let context) = error {
                 // retype the error as a typeMismatch, which the field is OPTIONAL
