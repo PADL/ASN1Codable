@@ -70,14 +70,3 @@ extension ASN1TaggedValue {
         return debugDescription
     }
 }
-
-extension KeyedDecodingContainer {
-    func decode<T: ExpressibleByNilLiteral, U: ASN1TaggedValue>(_ type: U.Type, forKey key: K) throws ->
-        any ASN1TaggedValue where U.Value == T {
-        if let value = try self.decodeIfPresent(type, forKey: key) {
-            return value
-        }
-
-        return U(wrappedValue: nil)
-    }
-}
