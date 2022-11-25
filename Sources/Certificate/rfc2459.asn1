@@ -198,14 +198,15 @@ _ALGORITHM-TYPE ::= CLASS { -- Heimdal extension
     &Type   OPTIONAL
 }
 
+AlgorithmIdentifier{_ALGORITHM-TYPE:AlgorithmSet} ::= SEQUENCE {
+    algorithm   _ALGORITHM-TYPE.&id({AlgorithmSet}),
+    parameters  _ALGORITHM-TYPE.&Type({AlgorithmSet}{@algorithm})
+}
+
 ---
 --- Public key algorithms
 ---
 
-PublicKeyAlgorithmIdentifier{_ALGORITHM-TYPE:PublicKeyAlgSet} ::= SEQUENCE {
-    algorithm   _ALGORITHM-TYPE.&id({PublicKeyAlgSet}),
-    parameters  _ALGORITHM-TYPE.&Type({PublicKeyAlgSet}{@algorithm})
-}
 pk-rsa _ALGORITHM-TYPE ::= {
     &id id-pkcs1-rsaEncryption,
     &Type NULL
@@ -239,16 +240,12 @@ PublicKeyAlgorithms _ALGORITHM-TYPE ::= {
   | pk-ecMQV
 }
 
-PublicKeyAlgorithmIdentifier ::= PublicKeyAlgorithmIdentifier{PublicKeyAlgorithms}
+PublicKeyAlgorithmIdentifier ::= AlgorithmIdentifier{PublicKeyAlgorithms}
 
 ---
 --- Signature algorithms
 ---
 
-SignatureAlgorithmIdentifier{_ALGORITHM-TYPE:SignatureAlgSet} ::= SEQUENCE {
-    algorithm   _ALGORITHM-TYPE.&id({SignatureAlgSet}),
-    parameters  _ALGORITHM-TYPE.&Type({SignatureAlgSet}{@algorithm})
-}
 sa-rsaWithMD2 _ALGORITHM-TYPE ::= {
     &id id-pkcs1-md2WithRSAEncryption,
     &Type NULL
@@ -288,16 +285,12 @@ SignatureAlgs _ALGORITHM-TYPE ::= {
   | sa-ecdsaWithSHA1
 }
 
-SignatureAlgorithmIdentifier ::= SignatureAlgorithmIdentifier{SignatureAlgs}
+SignatureAlgorithmIdentifier ::= AlgorithmIdentifier{SignatureAlgs}
 
 ---
 --- Digest (hash) algorithms
 ---
 
-DigestAlgorithmIdentifier{_ALGORITHM-TYPE:HashAlgSet} ::= SEQUENCE {
-    algorithm   _ALGORITHM-TYPE.&id({HashAlgSet}),
-    parameters  _ALGORITHM-TYPE.&Type({HashAlgSet}{@algorithm})
-}
 mda-sha1 _ALGORITHM-TYPE ::= {
     &id id-secsig-sha-1,
     &Type NULL
@@ -327,7 +320,7 @@ HashAlgs _ALGORITHM-TYPE ::= {
   | mda-sha512
 }
 
-DigestAlgorithmIdentifier ::= DigestAlgorithmIdentifier{HashAlgs}
+DigestAlgorithmIdentifier ::= AlgorithmIdentifier{HashAlgs}
 
 AttributeType ::=   OBJECT IDENTIFIER
 
