@@ -48,4 +48,8 @@ extension ASN1CodableTests {
     func test_encode_OCTET_STRING() {
         self.test_encode(Data([0xA2, 0x4F]), encodedAs: Data([0x04, 0x02, 0xA2, 0x4F]))
     }
+    
+    func test_encode_NULL() {
+        self.test_encode(Null(), encodedAs: Data([0x05, 0x00]))
+    }
 }

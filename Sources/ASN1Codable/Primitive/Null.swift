@@ -16,7 +16,12 @@
 
 import Foundation
 
-public struct Null: Codable {}
+public struct Null: Codable {
+    public init() {}
+}
+
+extension Null: Equatable {}
+extension Null: Hashable {}
 
 extension Null: ASN1DecodableType {
     public init(from asn1: ASN1Object) throws {

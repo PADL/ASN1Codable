@@ -40,6 +40,7 @@ class ASN1CodableTests: XCTestCase {
     static var allTests: [String: (ASN1CodableTests) -> () throws -> Void] =
         ["test_encode_INTEGER": test_encode_INTEGER,
          "test_encode_ENUMERATED": test_encode_ENUMERATED,
-         "test_encode_OCTET_STRING": test_encode_OCTET_STRING
+         "test_encode_OCTET_STRING": test_encode_OCTET_STRING,
+         "test_encode_NULL": test_encode_NULL
          ]
 }
