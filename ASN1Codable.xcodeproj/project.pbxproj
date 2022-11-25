@@ -18,7 +18,7 @@
 		D33AC5DD29120492003190DC /* OptionalProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5DC29120492003190DC /* OptionalProtocol.swift */; };
 		D33AC5DF29121744003190DC /* ASN1NullObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5DE29121744003190DC /* ASN1NullObject.swift */; };
 		D351DC35290E849200540132 /* ASN1Codable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1Codable.framework */; };
-		D351DC3A290E849200540132 /* ASN1CodableTests in Sources */ = {isa = PBXBuildFile; fileRef = D351DC39290E849200540132 /* ASN1CodableTests */; };
+		D351DC3A290E849200540132 /* ASN1CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC39290E849200540132 /* ASN1CodableTests.swift */; };
 		D351DC62290E8AAF00540132 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC5E290E8AAF00540132 /* main.swift */; };
 		D351DC86290E8AF700540132 /* ASN1TaggedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC66290E8AF700540132 /* ASN1TaggedValue.swift */; };
 		D351DC88290E8AF700540132 /* ASN1CodingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC68290E8AF700540132 /* ASN1CodingContext.swift */; };
@@ -229,7 +229,7 @@
 		D33AC5DE29121744003190DC /* ASN1NullObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1NullObject.swift; sourceTree = "<group>"; };
 		D351DC2A290E849200540132 /* ASN1Codable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASN1Codable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC34290E849200540132 /* ASN1CodableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ASN1CodableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D351DC39290E849200540132 /* ASN1CodableTests */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ASN1CodableTests; path = ../Tests/ASN1CodableTests; sourceTree = "<group>"; };
+		D351DC39290E849200540132 /* ASN1CodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1CodableTests.swift; sourceTree = "<group>"; };
 		D351DC4B290E8A4A00540132 /* asn1swifttest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = asn1swifttest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC5C290E8AAF00540132 /* CertificateHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateHelpers.swift; sourceTree = "<group>"; };
 		D351DC5D290E8AAF00540132 /* asn1bridgetest.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = asn1bridgetest.entitlements; sourceTree = "<group>"; };
@@ -453,7 +453,7 @@
 		D351DC38290E849200540132 /* ASN1CodableTests */ = {
 			isa = PBXGroup;
 			children = (
-				D351DC39290E849200540132 /* ASN1CodableTests */,
+				D351DC39290E849200540132 /* ASN1CodableTests.swift */,
 			);
 			name = ASN1CodableTests;
 			path = Tests/ASN1CodableTests;
@@ -1111,7 +1111,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D351DC3A290E849200540132 /* ASN1CodableTests in Sources */,
+				D351DC3A290E849200540132 /* ASN1CodableTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

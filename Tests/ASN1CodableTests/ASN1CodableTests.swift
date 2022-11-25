@@ -18,7 +18,6 @@ import XCTest
 @testable import ASN1Codable
 
 class ASN1CodableTests: XCTestCase {
-
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -33,6 +32,9 @@ class ASN1CodableTests: XCTestCase {
         // Any test you write for XCTest can be annotated as throws and async.
         // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
         // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+        try Self.allTests.forEach { test in
+            try test.1(self)()
+        }
     }
 
     func testPerformanceExample() throws {
@@ -42,4 +44,25 @@ class ASN1CodableTests: XCTestCase {
         }
     }
 
+    static var allTests: [String: (ASN1CodableTests) -> () throws -> Void] = ["test_encode_INTEGER": test_encode_INTEGER]
+}
+
+extension ASN1CodableTests {
+    func test_encode<T: Codable & Equatable>(_ value: T, encodedAs data: Data) {
+        do {
+            let encoder = ASN1Encoder()
+            let encoded = try encoder.encode(value)
+            XCTAssertEqual(encoded, data)
+
+            let decoder = ASN1Decoder()
+            let decoded = try decoder.decode(T.self, from: data)
+            XCTAssertEqual(decoded, value)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+
+    func test_encode_INTEGER() {
+        self.test_encode(Int(72), encodedAs: Data([0x02, 0x01, 0x48]))
+    }
 }
