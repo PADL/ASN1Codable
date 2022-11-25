@@ -37,32 +37,9 @@ class ASN1CodableTests: XCTestCase {
         }
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
-    static var allTests: [String: (ASN1CodableTests) -> () throws -> Void] = ["test_encode_INTEGER": test_encode_INTEGER]
-}
-
-extension ASN1CodableTests {
-    func test_encode<T: Codable & Equatable>(_ value: T, encodedAs data: Data) {
-        do {
-            let encoder = ASN1Encoder()
-            let encoded = try encoder.encode(value)
-            XCTAssertEqual(encoded, data)
-
-            let decoder = ASN1Decoder()
-            let decoded = try decoder.decode(T.self, from: data)
-            XCTAssertEqual(decoded, value)
-        } catch {
-            XCTFail(error.localizedDescription)
-        }
-    }
-
-    func test_encode_INTEGER() {
-        self.test_encode(Int(72), encodedAs: Data([0x02, 0x01, 0x48]))
-    }
+    static var allTests: [String: (ASN1CodableTests) -> () throws -> Void] =
+        ["test_encode_INTEGER": test_encode_INTEGER,
+         "test_encode_ENUMERATED": test_encode_ENUMERATED,
+         "test_encode_OCTET_STRING": test_encode_OCTET_STRING
+         ]
 }
