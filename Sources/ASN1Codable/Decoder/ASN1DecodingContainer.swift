@@ -43,7 +43,7 @@ extension ASN1DecodingContainer {
         return self.currentIndex >= count
     }
 
-    private var _isEmptySequence: Bool {
+    private var isEmptySequence: Bool {
         self.object.constructed && self.object.data.items?.isEmpty ?? true
     }
 
@@ -55,7 +55,7 @@ extension ASN1DecodingContainer {
                                                 debugDescription: "\(isUnkeyedContainer ? "Unkeyed" : "Keyed") " +
                                                     "container expected a constructed ASN.1 object")
             throw DecodingError.dataCorrupted(context)
-        } else if isUnkeyedContainer, !self._isEmptySequence, self.isAtEnd {
+        } else if isUnkeyedContainer, !self.isEmptySequence, self.isAtEnd {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Unkeyed decoding container is " +
                                                     "already at end of ASN.1 object")
