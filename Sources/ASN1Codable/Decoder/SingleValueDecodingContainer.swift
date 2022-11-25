@@ -112,7 +112,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
 }
 
 extension ASN1DecoderImpl.SingleValueContainer {
-    private func withASN1Throwing<T: Decodable>(_ block: () throws -> T) throws -> T {
+    func withASN1Throwing<T: Decodable>(_ block: () throws -> T) throws -> T {
         do {
             return try block()
         } catch let error as ASN1Error {

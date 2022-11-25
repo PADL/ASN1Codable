@@ -80,7 +80,8 @@ public struct ASN1ObjectSetValue: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
 
-        guard let decoder = decoder as? ASN1DecoderImpl else {
+        guard let decoder = decoder as? ASN1DecoderImpl,
+              let container = container as? ASN1DecoderImpl.SingleValueContainer else {
             self.wrappedValue = try container.decode(AnyCodable.self)
             return
         }
@@ -100,16 +101,20 @@ public struct ASN1ObjectSetValue: Codable {
                 if let type {
                     self.wrappedValue = try ASN1Decoder().decode(type, from: berData)
                 } else {
-                    debugPrint("Unknown object set type \(valueType), decoding as Data")
                     self.wrappedValue = berData
                 }
             } else {
                 if let type {
                     self.wrappedValue = try container.decode(type)
                 } else {
-                    debugPrint("Unknown object set type \(valueType), decoding as nil")
-                    self.wrappedValue = nil
+                    self.wrappedValue = try container.withASN1Throwing {
+                        try container.object.serialize()
+                    }
                 }
+            }
+
+            if type == nil {
+                debugPrint("Unknown object set type \(valueType), preserving encoded value")
             }
         } catch {
             debugPrint("Failed to decode object set type \(valueType): \(error)")
