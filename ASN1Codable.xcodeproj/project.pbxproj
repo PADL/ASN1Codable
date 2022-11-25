@@ -790,6 +790,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D3C9B6F9293053F3003540B1 /* PBXTargetDependency */,
 			);
 			name = cert2json;
 			packageProductDependencies = (
@@ -813,6 +814,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D3C9B6FB293053FB003540B1 /* PBXTargetDependency */,
 				D3F2887E292C69440006CD82 /* PBXTargetDependency */,
 				D3F28878292C56D50006CD82 /* PBXTargetDependency */,
 			);
@@ -1205,6 +1207,14 @@
 			isa = PBXTargetDependency;
 			target = D351DC29290E849200540132 /* ASN1Codable */;
 			targetProxy = D351DCCC290EC5EE00540132 /* PBXContainerItemProxy */;
+		};
+		D3C9B6F9293053F3003540B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = D3C9B6F8293053F3003540B1 /* SwiftLintPlugin */;
+		};
+		D3C9B6FB293053FB003540B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = D3C9B6FA293053FB003540B1 /* SwiftLintPlugin */;
 		};
 		D3D6E7DE292F4FF000198A86 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1941,6 +1951,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D3D13E6229133A2200218279 /* XCRemoteSwiftPackageReference "AnyCodable" */;
 			productName = AnyCodable;
+		};
+		D3C9B6F8293053F3003540B1 /* SwiftLintPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
+			productName = "plugin:SwiftLintPlugin";
+		};
+		D3C9B6FA293053FB003540B1 /* SwiftLintPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
+			productName = "plugin:SwiftLintPlugin";
 		};
 		D3D13E60291339FA00218279 /* ASN1Kit */ = {
 			isa = XCSwiftPackageProductDependency;
