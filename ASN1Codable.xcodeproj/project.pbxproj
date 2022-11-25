@@ -65,6 +65,7 @@
 		D3C67EC42925B6840018F3D3 /* TranslateCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C67EC02925ADBE0018F3D3 /* TranslateCommand.swift */; };
 		D3C67EC52925B6870018F3D3 /* VersionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C67EC22925ADC60018F3D3 /* VersionCommand.swift */; };
 		D3C9B72429309B52003540B1 /* ASN1CodableTests+Primitive.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C9B72329309B52003540B1 /* ASN1CodableTests+Primitive.swift */; };
+		D3C9B72729309C17003540B1 /* ASN1CodableTests+Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C9B72629309C17003540B1 /* ASN1CodableTests+Sequence.swift */; };
 		D3D13E61291339FA00218279 /* ASN1Kit in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E60291339FA00218279 /* ASN1Kit */; };
 		D3D13E6429133A2200218279 /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6329133A2200218279 /* AnyCodable */; };
 		D3D13E6729133AB600218279 /* Echo in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6629133AB600218279 /* Echo */; };
@@ -280,6 +281,7 @@
 		D3C67EC02925ADBE0018F3D3 /* TranslateCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslateCommand.swift; sourceTree = "<group>"; };
 		D3C67EC22925ADC60018F3D3 /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
 		D3C9B72329309B52003540B1 /* ASN1CodableTests+Primitive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ASN1CodableTests+Primitive.swift"; sourceTree = "<group>"; };
+		D3C9B72629309C17003540B1 /* ASN1CodableTests+Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ASN1CodableTests+Sequence.swift"; sourceTree = "<group>"; };
 		D3D13E6C291342D500218279 /* cert2json */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cert2json; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3D13E6E291342D500218279 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D3D13E7B2913434200218279 /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
@@ -457,6 +459,7 @@
 			children = (
 				D351DC39290E849200540132 /* ASN1CodableTests.swift */,
 				D3C9B72329309B52003540B1 /* ASN1CodableTests+Primitive.swift */,
+				D3C9B72629309C17003540B1 /* ASN1CodableTests+Sequence.swift */,
 			);
 			name = ASN1CodableTests;
 			path = Tests/ASN1CodableTests;
@@ -1115,6 +1118,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3C9B72429309B52003540B1 /* ASN1CodableTests+Primitive.swift in Sources */,
+				D3C9B72729309C17003540B1 /* ASN1CodableTests+Sequence.swift in Sources */,
 				D351DC3A290E849200540132 /* ASN1CodableTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
