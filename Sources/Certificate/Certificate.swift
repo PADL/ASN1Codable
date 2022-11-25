@@ -54,7 +54,7 @@ extension Certificate {
             return nil
         }
 
-        return rdns.compactMap { $0.first { $0.type == oid }?.value }
+        return rdns.compactMap { String(describing: $0.first { $0.type == oid }?.value) }
     }
 
     var rdnCount: Int {

@@ -78,6 +78,23 @@ extension Name: CustomStringConvertible {
     }
 }
 
+extension DirectoryString: CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .ia5String(let ia5String):
+            return ia5String.description
+        case .printableString(let printableString):
+            return printableString.description
+        case .universalString(let universalString):
+            return universalString.description
+        case .utf8String(let utf8String):
+            return utf8String.description
+        case .bmpString(let bmpString):
+            return bmpString.description
+        }
+    }
+}
+
 // FIXME: OpenSSL style
 extension GeneralName: CustomStringConvertible {
     var description: String {
