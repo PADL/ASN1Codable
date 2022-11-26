@@ -17,24 +17,14 @@
 import XCTest
 import ASN1Codable
 
-/*
- PersonnelRecord ::= SEQUENCE {
-         name     OCTET STRING,
-         location INTEGER { homeOffice(0),
-                            fieldOffice(1),
-                            roving(2)},
-         age      INTEGER OPTIONAL
- }
- */
-
-struct PersonnelRecord: Codable, Equatable {
-    var name: Data
-    var location: Int
-    var age: Int?
-}
-
 extension ASN1CodableTests {
     func test_encode_PersonnelRecord() {
+        struct PersonnelRecord: Codable, Equatable {
+            var name: Data
+            var location: Int
+            var age: Int?
+        }
+
         self.test_encode(PersonnelRecord(name: Data([0x62, 0x69, 0x67, 0x20, 0x68, 0x65, 0x61, 0x64]),
                                          location: 2,
                                          age: 26),
@@ -44,8 +34,4 @@ extension ASN1CodableTests {
     func test_encode_SEQUENCE() {
         test_encode_PersonnelRecord()
     }
-
 }
-
-//        self.test_encode(Color.blue, encodedAs: Data([0x0A, 0x01, 0x01]))
-
