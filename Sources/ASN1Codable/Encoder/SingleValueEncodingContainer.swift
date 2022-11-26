@@ -291,8 +291,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
                                       context: self.context)
         try value.encode(to: encoder)
 
-        if let object = encoder.object, var value = value as? ASN1PreserveBinary {
-            // Note this requires the value to be a class
+        if let object = encoder.object, let value = value as? ASN1PreserveBinary {
             value._save = try object.serialize()
         }
 

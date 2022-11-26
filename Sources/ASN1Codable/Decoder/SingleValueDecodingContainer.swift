@@ -419,8 +419,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
         try self.validateExtensibility(type, from: sortedObject, with: decoder)
 
-        if var value = value as? ASN1PreserveBinary {
-            value._save = sortedObject.originalEncoding
+        if let value = value as? ASN1PreserveBinary {
+            value._save = object.originalEncoding
         }
 
         return value
