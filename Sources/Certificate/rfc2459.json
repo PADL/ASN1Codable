@@ -832,15 +832,15 @@
 "ttype":
 {"name":"DomainParameters","gen_name":"g","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"heim_integer"}
 }
-},{"name":"q","gen_name":"q","optional":true,"type":{"name":"DomainParameters","gen_name":"*q","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
+},{"name":"q","gen_name":"q","optional":true,"defval":null,"type":{"name":"DomainParameters","gen_name":"*q","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DomainParameters","gen_name":"*q","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"heim_integer"}
 }
-},{"name":"j","gen_name":"j","optional":true,"type":{"name":"DomainParameters","gen_name":"*j","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
+},{"name":"j","gen_name":"j","optional":true,"defval":null,"type":{"name":"DomainParameters","gen_name":"*j","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DomainParameters","gen_name":"*j","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"heim_integer"}
 }
-},{"name":"validationParms","gen_name":"validationParms","optional":true,"type":{"name":"DomainParameters","gen_name":"*validationParms","is_type":true,"exported":true,"typedef":false,"ttype":"ValidationParms","alias":true
+},{"name":"validationParms","gen_name":"validationParms","optional":true,"defval":null,"type":{"name":"DomainParameters","gen_name":"*validationParms","is_type":true,"exported":true,"typedef":false,"ttype":"ValidationParms","alias":true
 }
 }]}
 }
@@ -859,7 +859,8 @@
 }
 },{"name":"parameters","gen_name":"parameters","optional":false,"type":{"name":"PublicKeyAlgorithmIdentifier","gen_name":"parameters","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ALGORITHM-TYPE","objectsetname":"PublicKeyAlgorithms","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","members":[{"name":"PublicKeyAlgorithmIdentifier","gen_name":"*pk_ec","is_type":true,"exported":true,"typedef":false,"ttype":"ECParameters","alias":true
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ALGORITHM-TYPE","objectsetname":"PublicKeyAlgorithms","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","opentypeids":["id_ecPublicKey","id_dsa","id_pkcs1_rsaEncryption","id_ecDH","id_ecMQV"],
+"members":[{"name":"PublicKeyAlgorithmIdentifier","gen_name":"*pk_ec","is_type":true,"exported":true,"typedef":false,"ttype":"ECParameters","alias":true
 }
 ,{"name":"PublicKeyAlgorithmIdentifier","gen_name":"*pk_dsa","is_type":true,"exported":true,"typedef":false,"ttype":"DSAParams","alias":true
 }
@@ -883,7 +884,8 @@
 }
 },{"name":"parameters","gen_name":"parameters","optional":false,"type":{"name":"SignatureAlgorithmIdentifier","gen_name":"parameters","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ALGORITHM-TYPE","objectsetname":"SignatureAlgs","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","members":[{"name":"SignatureAlgorithmIdentifier","gen_name":"*sa_ecdsaWithSHA1","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":5,"tagenv":"EXPLICIT",
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ALGORITHM-TYPE","objectsetname":"SignatureAlgs","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","opentypeids":["id_ecdsa_with_SHA1","id_pkcs1_md2WithRSAEncryption","id_pkcs1_md5WithRSAEncryption","id_pkcs1_sha1WithRSAEncryption","id_pkcs1_sha256WithRSAEncryption","id_pkcs1_sha384WithRSAEncryption","id_pkcs1_sha512WithRSAEncryption"],
+"members":[{"name":"SignatureAlgorithmIdentifier","gen_name":"*sa_ecdsaWithSHA1","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":5,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"SignatureAlgorithmIdentifier","gen_name":"*sa_ecdsaWithSHA1","is_type":true,"exported":false,"typedef":false,"ttype":"NULL","ctype":"int"}
 }
@@ -923,7 +925,8 @@
 }
 },{"name":"parameters","gen_name":"parameters","optional":false,"type":{"name":"DigestAlgorithmIdentifier","gen_name":"parameters","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ALGORITHM-TYPE","objectsetname":"HashAlgs","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","members":[{"name":"DigestAlgorithmIdentifier","gen_name":"*mda_sha1","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":5,"tagenv":"EXPLICIT",
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ALGORITHM-TYPE","objectsetname":"HashAlgs","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","opentypeids":["id_secsig_sha_1","id_sha256","id_sha384","id_sha512","id_sha224"],
+"members":[{"name":"DigestAlgorithmIdentifier","gen_name":"*mda_sha1","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":5,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DigestAlgorithmIdentifier","gen_name":"*mda_sha1","is_type":true,"exported":false,"typedef":false,"ttype":"NULL","ctype":"int"}
 }
@@ -957,7 +960,7 @@
 "ttype":
 {"name":"DirectoryString","gen_name":"printableString","is_type":true,"exported":false,"typedef":false,"ttype":"PrintableString","ctype":"heim_printable_string"}
 }
-,{"name":"DirectoryString","gen_name":"universalString","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":25,"tagenv":"EXPLICIT",
+,{"name":"DirectoryString","gen_name":"universalString","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":28,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DirectoryString","gen_name":"universalString","is_type":true,"exported":false,"typedef":false,"ttype":"UniversalString","ctype":"heim_universal_string"}
 }
@@ -1050,7 +1053,7 @@
 "ttype":
 {"name":"Extension","gen_name":"extnID","is_type":true,"exported":false,"typedef":false,"ttype":"OBJECT IDENTIFIER","ctype":"heim_oid"}
 }
-},{"name":"critical","gen_name":"critical","optional":false,"type":{"name":"Extension","gen_name":"critical","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+},{"name":"critical","gen_name":"critical","optional":false,"defval":false,"type":{"name":"Extension","gen_name":"critical","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"Extension","gen_name":"critical","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
@@ -1058,7 +1061,8 @@
 "ttype":
 {"name":"Extension","gen_name":"extnValue","is_type":true,"exported":false,"typedef":false,"ttype":"OCTET STRING","ctype":"heim_octet_string"}
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_EXTENSION","objectsetname":"CertExtensions","typeidmember":"extnID","opentypemember":"extnValue","typeidfield":"id","opentypefield":"ExtnType","members":[{"name":"Extension","gen_name":"*ext_HeimPkinitPrincMaxLife","is_type":true,"exported":true,"typedef":false,"ttype":"HeimPkinitPrincMaxLifeSecs","alias":true
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_EXTENSION","objectsetname":"CertExtensions","typeidmember":"extnID","opentypemember":"extnValue","typeidfield":"id","opentypefield":"ExtnType","opentypeids":["id_heim_ce_pkinit_princ_max_life","id_apple_ce_MACIPAddress","id_apple_ce_appleComponentAttributes","id_pkix_pe_authorityInfoAccess","id_pkix_pe_subjectInfoAccess","id_pkix_pe_proxyCertInfo","id_x509_ce_subjectDirectoryAttributes","id_x509_ce_subjectKeyIdentifier","id_x509_ce_keyUsage","id_x509_ce_privateKeyUsagePeriod","id_x509_ce_subjectAltName","id_x509_ce_issuerAltName","id_x509_ce_basicConstraints","id_x509_ce_nameConstraints","id_x509_ce_cRLDistributionPoints","id_x509_ce_certificatePolicies","id_x509_ce_policyMappings","id_x509_ce_authorityKeyIdentifier","id_x509_ce_policyConstraints","id_x509_ce_extKeyUsage","id_x509_ce_freshestCRL","id_x509_ce_inhibitAnyPolicy"],
+"members":[{"name":"Extension","gen_name":"*ext_HeimPkinitPrincMaxLife","is_type":true,"exported":true,"typedef":false,"ttype":"HeimPkinitPrincMaxLifeSecs","alias":true
 }
 ,{"name":"Extension","gen_name":"*ext_AppleMACIPAddress","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":12,"tagenv":"EXPLICIT",
 "ttype":
@@ -1117,7 +1121,7 @@
 {"name":"TBSCertificate","gen_name":"TBSCertificate","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TBSCertificate","gen_name":"TBSCertificate","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct TBSCertificate","preserve":true,"members":[
-{"name":"version","gen_name":"version","optional":true,"type":{"name":"TBSCertificate","gen_name":"*version","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
+{"name":"version","gen_name":"version","optional":true,"defval":null,"type":{"name":"TBSCertificate","gen_name":"*version","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TBSCertificate","gen_name":"*version","is_type":true,"exported":true,"typedef":false,"ttype":"Version","alias":true
 }
@@ -1134,15 +1138,15 @@
 }
 },{"name":"subjectPublicKeyInfo","gen_name":"subjectPublicKeyInfo","optional":false,"type":{"name":"TBSCertificate","gen_name":"subjectPublicKeyInfo","is_type":true,"exported":true,"typedef":false,"ttype":"SubjectPublicKeyInfo","alias":true
 }
-},{"name":"issuerUniqueID","gen_name":"issuerUniqueID","optional":true,"type":{"name":"TBSCertificate","gen_name":"*issuerUniqueID","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
+},{"name":"issuerUniqueID","gen_name":"issuerUniqueID","optional":true,"defval":null,"type":{"name":"TBSCertificate","gen_name":"*issuerUniqueID","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"TBSCertificate","gen_name":"*issuerUniqueID","is_type":true,"exported":false,"typedef":false,"ttype":"BIT STRING","ctype":"heim_bit_string"}
 }
-},{"name":"subjectUniqueID","gen_name":"subjectUniqueID","optional":true,"type":{"name":"TBSCertificate","gen_name":"*subjectUniqueID","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":2,"tagenv":"IMPLICIT",
+},{"name":"subjectUniqueID","gen_name":"subjectUniqueID","optional":true,"defval":null,"type":{"name":"TBSCertificate","gen_name":"*subjectUniqueID","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":2,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"TBSCertificate","gen_name":"*subjectUniqueID","is_type":true,"exported":false,"typedef":false,"ttype":"BIT STRING","ctype":"heim_bit_string"}
 }
-},{"name":"extensions","gen_name":"extensions","optional":true,"type":{"name":"TBSCertificate","gen_name":"*extensions","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":3,"tagenv":"EXPLICIT",
+},{"name":"extensions","gen_name":"extensions","optional":true,"defval":null,"type":{"name":"TBSCertificate","gen_name":"*extensions","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":3,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TBSCertificate","gen_name":"*extensions","is_type":true,"exported":true,"typedef":false,"ttype":"Extensions","alias":true
 }
@@ -1160,7 +1164,7 @@
 "ttype":
 {"name":"Certificate","gen_name":"signatureValue","is_type":true,"exported":false,"typedef":false,"ttype":"BIT STRING","ctype":"heim_bit_string"}
 }
-}],"decorate":{"type":"CFTypeRef","name":"_keychain_item", "optional":true}}
+}],"decorate":[{"type":"CFTypeRef","name":"_keychain_item","optional":true,"external":true,"pointer":false,"void_star":false,"struct_star":false,"copy_function":"","free_function":"","header_name":"Foundation"}]}
 }
 {"name":"Certificates","gen_name":"Certificates","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
@@ -1193,7 +1197,7 @@
 "ttype":
 {"name":"DHParameter","gen_name":"base","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"heim_integer"}
 }
-},{"name":"privateValueLength","gen_name":"privateValueLength","optional":true,"type":{"name":"DHParameter","gen_name":"*privateValueLength","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
+},{"name":"privateValueLength","gen_name":"privateValueLength","optional":true,"defval":null,"type":{"name":"DHParameter","gen_name":"*privateValueLength","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DHParameter","gen_name":"*privateValueLength","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"heim_integer"}
 }
@@ -1211,7 +1215,8 @@
 {"name":"OtherName","gen_name":"value","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
 }
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_OTHER-NAME","objectsetname":"KnownOtherNameTypes","typeidmember":"type-id","opentypemember":"value","typeidfield":"id","opentypefield":"Type","members":[{"name":"OtherName","gen_name":"*on_pkinit_ms_san","is_type":true,"exported":true,"typedef":false,"ttype":"AliasUTF8String","alias":true
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_OTHER-NAME","objectsetname":"KnownOtherNameTypes","typeidmember":"type-id","opentypemember":"value","typeidfield":"id","opentypefield":"Type","opentypeids":["id_pkix_on_pkinit_ms_san","id_pkix_on_pkinit_san","id_pkix_on_permanentIdentifier","id_pkix_on_hardwareModuleName","id_pkix_on_xmppAddr","id_pkix_on_dnsSRV"],
+"members":[{"name":"OtherName","gen_name":"*on_pkinit_ms_san","is_type":true,"exported":true,"typedef":false,"ttype":"AliasUTF8String","alias":true
 }
 ,{"name":"OtherName","gen_name":"*on_krb5PrincipalName","is_type":true,"exported":true,"typedef":false,"ttype":"KRB5PrincipalName","alias":true
 }
@@ -1240,7 +1245,7 @@
 "ttype":
 {"name":"GeneralName","gen_name":"dNSName","is_type":true,"exported":false,"typedef":false,"ttype":"IA5String","ctype":"heim_ia5_string"}
 }
-,{"name":"GeneralName","gen_name":"directoryName","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":4,"tagenv":"EXPLICIT",
+,{"name":"GeneralName","gen_name":"directoryName","is_type":true,"exported":false,"typedef":false,"desired_tagenv":"IMPLICIT","tagclass":"CONTEXT","tagvalue":4,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"GeneralName","gen_name":"directoryName","is_type":true,"exported":true,"typedef":false,"ttype":"Name","alias":true
 }
@@ -1268,11 +1273,11 @@
 {"name":"PrivateKeyUsagePeriod","gen_name":"PrivateKeyUsagePeriod","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"PrivateKeyUsagePeriod","gen_name":"PrivateKeyUsagePeriod","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct PrivateKeyUsagePeriod","members":[
-{"name":"notBefore","gen_name":"notBefore","optional":true,"type":{"name":"PrivateKeyUsagePeriod","gen_name":"*notBefore","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
+{"name":"notBefore","gen_name":"notBefore","optional":true,"defval":null,"type":{"name":"PrivateKeyUsagePeriod","gen_name":"*notBefore","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"PrivateKeyUsagePeriod","gen_name":"*notBefore","is_type":true,"exported":false,"typedef":false,"ttype":"GeneralizedTime","ctype":"time_t"}
 }
-},{"name":"notAfter","gen_name":"notAfter","optional":true,"type":{"name":"PrivateKeyUsagePeriod","gen_name":"*notAfter","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
+},{"name":"notAfter","gen_name":"notAfter","optional":true,"defval":null,"type":{"name":"PrivateKeyUsagePeriod","gen_name":"*notAfter","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"PrivateKeyUsagePeriod","gen_name":"*notAfter","is_type":true,"exported":false,"typedef":false,"ttype":"GeneralizedTime","ctype":"time_t"}
 }
@@ -1287,7 +1292,8 @@
 }
 },{"name":"qualifier","gen_name":"qualifier","optional":false,"type":{"name":"PolicyQualifierInfo","gen_name":"qualifier","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_POLICYQUALIFIERINFO","objectsetname":"KnownPolicyQualifiers","typeidmember":"policyQualifierId","opentypemember":"qualifier","typeidfield":"id","opentypefield":"Type","members":[{"name":"PolicyQualifierInfo","gen_name":"*pq_CPS","is_type":true,"exported":true,"typedef":false,"ttype":"AliasIA5String","alias":true
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_POLICYQUALIFIERINFO","objectsetname":"KnownPolicyQualifiers","typeidmember":"policyQualifierId","opentypemember":"qualifier","typeidfield":"id","opentypefield":"Type","opentypeids":["id_pkix_qt_cps","id_pkix_qt_unotice"],
+"members":[{"name":"PolicyQualifierInfo","gen_name":"*pq_CPS","is_type":true,"exported":true,"typedef":false,"ttype":"AliasIA5String","alias":true
 }
 ,{"name":"PolicyQualifierInfo","gen_name":"*pq_UserNotice","is_type":true,"exported":true,"typedef":false,"ttype":"UserNotice","alias":true
 }
@@ -1306,7 +1312,7 @@
 {"name":"PolicyInformation","gen_name":"PolicyInformation","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct PolicyInformation","members":[
 {"name":"policyIdentifier","gen_name":"policyIdentifier","optional":false,"type":{"name":"PolicyInformation","gen_name":"policyIdentifier","is_type":true,"exported":true,"typedef":false,"ttype":"CertPolicyId","alias":true
 }
-},{"name":"policyQualifiers","gen_name":"policyQualifiers","optional":true,"type":{"name":"PolicyInformation","gen_name":"*policyQualifiers","is_type":true,"exported":true,"typedef":false,"ttype":"PolicyQualifierInfos","alias":true
+},{"name":"policyQualifiers","gen_name":"policyQualifiers","optional":true,"defval":null,"type":{"name":"PolicyInformation","gen_name":"*policyQualifiers","is_type":true,"exported":true,"typedef":false,"ttype":"PolicyQualifierInfos","alias":true
 }
 }]}
 }
@@ -1350,9 +1356,9 @@
 {"name":"UserNotice","gen_name":"UserNotice","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"UserNotice","gen_name":"UserNotice","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct UserNotice","members":[
-{"name":"noticeRef","gen_name":"noticeRef","optional":true,"type":{"name":"UserNotice","gen_name":"*noticeRef","is_type":true,"exported":true,"typedef":false,"ttype":"NoticeReference","alias":true
+{"name":"noticeRef","gen_name":"noticeRef","optional":true,"defval":null,"type":{"name":"UserNotice","gen_name":"*noticeRef","is_type":true,"exported":true,"typedef":false,"ttype":"NoticeReference","alias":true
 }
-},{"name":"explicitText","gen_name":"explicitText","optional":true,"type":{"name":"UserNotice","gen_name":"*explicitText","is_type":true,"exported":true,"typedef":false,"ttype":"DisplayText","alias":true
+},{"name":"explicitText","gen_name":"explicitText","optional":true,"defval":null,"type":{"name":"UserNotice","gen_name":"*explicitText","is_type":true,"exported":true,"typedef":false,"ttype":"DisplayText","alias":true
 }
 }]}
 }
@@ -1375,18 +1381,18 @@
 {"name":"AuthorityKeyIdentifier","gen_name":"AuthorityKeyIdentifier","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"AuthorityKeyIdentifier","gen_name":"AuthorityKeyIdentifier","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct AuthorityKeyIdentifier","members":[
-{"name":"keyIdentifier","gen_name":"keyIdentifier","optional":true,"type":{"name":"AuthorityKeyIdentifier","gen_name":"*keyIdentifier","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
+{"name":"keyIdentifier","gen_name":"keyIdentifier","optional":true,"defval":null,"type":{"name":"AuthorityKeyIdentifier","gen_name":"*keyIdentifier","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"AuthorityKeyIdentifier","gen_name":"*keyIdentifier","is_type":true,"exported":false,"typedef":false,"ttype":"OCTET STRING","ctype":"heim_octet_string"}
 }
-},{"name":"authorityCertIssuer","gen_name":"authorityCertIssuer","optional":true,"type":{"name":"AuthorityKeyIdentifier","gen_name":"*authorityCertIssuer","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
+},{"name":"authorityCertIssuer","gen_name":"authorityCertIssuer","optional":true,"defval":null,"type":{"name":"AuthorityKeyIdentifier","gen_name":"*authorityCertIssuer","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"AuthorityKeyIdentifier","gen_name":"*authorityCertIssuer","is_type":true,"exported":false,"typedef":false,"ttype":"SEQUENCE OF","ctype":"struct AuthorityKeyIdentifier_authorityCertIssuer","members":[{"name":"AuthorityKeyIdentifier_authorityCertIssuer","gen_name":"len","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"unsigned int"}
 ,{"name":"AuthorityKeyIdentifier_authorityCertIssuer","gen_name":"*val","is_type":true,"exported":true,"typedef":false,"ttype":"GeneralName","alias":true
 }
 ]}
 }
-},{"name":"authorityCertSerialNumber","gen_name":"authorityCertSerialNumber","optional":true,"type":{"name":"AuthorityKeyIdentifier","gen_name":"*authorityCertSerialNumber","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":2,"tagenv":"IMPLICIT",
+},{"name":"authorityCertSerialNumber","gen_name":"authorityCertSerialNumber","optional":true,"defval":null,"type":{"name":"AuthorityKeyIdentifier","gen_name":"*authorityCertSerialNumber","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":2,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"AuthorityKeyIdentifier","gen_name":"*authorityCertSerialNumber","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"heim_integer"}
 }
@@ -1397,11 +1403,11 @@
 {"name":"BasicConstraints","gen_name":"BasicConstraints","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"BasicConstraints","gen_name":"BasicConstraints","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct BasicConstraints","members":[
-{"name":"cA","gen_name":"cA","optional":false,"type":{"name":"BasicConstraints","gen_name":"cA","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+{"name":"cA","gen_name":"cA","optional":false,"defval":false,"type":{"name":"BasicConstraints","gen_name":"cA","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"BasicConstraints","gen_name":"cA","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
-},{"name":"pathLenConstraint","gen_name":"pathLenConstraint","optional":true,"type":{"name":"BasicConstraints","gen_name":"*pathLenConstraint","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
+},{"name":"pathLenConstraint","gen_name":"pathLenConstraint","optional":true,"defval":null,"type":{"name":"BasicConstraints","gen_name":"*pathLenConstraint","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"BasicConstraints","gen_name":"*pathLenConstraint","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"unsigned int"}
 }
@@ -1412,12 +1418,12 @@
 {"name":"GeneralSubtree","gen_name":"GeneralSubtree","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct GeneralSubtree","members":[
 {"name":"base","gen_name":"base","optional":false,"type":{"name":"GeneralSubtree","gen_name":"base","is_type":true,"exported":true,"typedef":false,"ttype":"GeneralName","alias":true
 }
-},{"name":"minimum","gen_name":"minimum","optional":false,"type":{"name":"GeneralSubtree","gen_name":"minimum","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
+},{"name":"minimum","gen_name":"minimum","optional":false,"defval":0,"type":{"name":"GeneralSubtree","gen_name":"minimum","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"GeneralSubtree","gen_name":"minimum","is_type":true,"exported":true,"typedef":false,"ttype":"BaseDistance","alias":true
 }
 }
-},{"name":"maximum","gen_name":"maximum","optional":true,"type":{"name":"GeneralSubtree","gen_name":"*maximum","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
+},{"name":"maximum","gen_name":"maximum","optional":true,"defval":null,"type":{"name":"GeneralSubtree","gen_name":"*maximum","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"GeneralSubtree","gen_name":"*maximum","is_type":true,"exported":true,"typedef":false,"ttype":"BaseDistance","alias":true
 }
@@ -1434,14 +1440,14 @@
 {"name":"NameConstraints","gen_name":"NameConstraints","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"NameConstraints","gen_name":"NameConstraints","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct NameConstraints","members":[
-{"name":"permittedSubtrees","gen_name":"permittedSubtrees","optional":true,"type":{"name":"NameConstraints","gen_name":"*permittedSubtrees","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
+{"name":"permittedSubtrees","gen_name":"permittedSubtrees","optional":true,"defval":null,"type":{"name":"NameConstraints","gen_name":"*permittedSubtrees","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"NameConstraints","gen_name":"*permittedSubtrees","is_type":true,"exported":false,"typedef":false,"ttype":"SEQUENCE OF","ctype":"struct NameConstraints_permittedSubtrees","members":[{"name":"NameConstraints_permittedSubtrees","gen_name":"len","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"unsigned int"}
 ,{"name":"NameConstraints_permittedSubtrees","gen_name":"*val","is_type":true,"exported":true,"typedef":false,"ttype":"GeneralSubtree","alias":true
 }
 ]}
 }
-},{"name":"excludedSubtrees","gen_name":"excludedSubtrees","optional":true,"type":{"name":"NameConstraints","gen_name":"*excludedSubtrees","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
+},{"name":"excludedSubtrees","gen_name":"excludedSubtrees","optional":true,"defval":null,"type":{"name":"NameConstraints","gen_name":"*excludedSubtrees","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"NameConstraints","gen_name":"*excludedSubtrees","is_type":true,"exported":false,"typedef":false,"ttype":"SEQUENCE OF","ctype":"struct NameConstraints_excludedSubtrees","members":[{"name":"NameConstraints_excludedSubtrees","gen_name":"len","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"unsigned int"}
 ,{"name":"NameConstraints_excludedSubtrees","gen_name":"*val","is_type":true,"exported":true,"typedef":false,"ttype":"GeneralSubtree","alias":true
@@ -1476,17 +1482,17 @@
 {"name":"DistributionPoint","gen_name":"DistributionPoint","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DistributionPoint","gen_name":"DistributionPoint","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct DistributionPoint","members":[
-{"name":"distributionPoint","gen_name":"distributionPoint","optional":true,"type":{"name":"DistributionPoint","gen_name":"*distributionPoint","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
+{"name":"distributionPoint","gen_name":"distributionPoint","optional":true,"defval":null,"type":{"name":"DistributionPoint","gen_name":"*distributionPoint","is_type":true,"exported":false,"typedef":false,"desired_tagenv":"IMPLICIT","tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"DistributionPoint","gen_name":"*distributionPoint","is_type":true,"exported":true,"typedef":false,"ttype":"DistributionPointName","alias":true
 }
 }
-},{"name":"reasons","gen_name":"reasons","optional":true,"type":{"name":"DistributionPoint","gen_name":"*reasons","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
+},{"name":"reasons","gen_name":"reasons","optional":true,"defval":null,"type":{"name":"DistributionPoint","gen_name":"*reasons","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"DistributionPoint","gen_name":"*reasons","is_type":true,"exported":true,"typedef":false,"ttype":"DistributionPointReasonFlags","alias":true
 }
 }
-},{"name":"cRLIssuer","gen_name":"cRLIssuer","optional":true,"type":{"name":"DistributionPoint","gen_name":"*cRLIssuer","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":2,"tagenv":"IMPLICIT",
+},{"name":"cRLIssuer","gen_name":"cRLIssuer","optional":true,"defval":null,"type":{"name":"DistributionPoint","gen_name":"*cRLIssuer","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":2,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"DistributionPoint","gen_name":"*cRLIssuer","is_type":true,"exported":true,"typedef":false,"ttype":"GeneralNames","alias":true
 }
@@ -1644,11 +1650,11 @@
 {"name":"PermanentIdentifier","gen_name":"PermanentIdentifier","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"PermanentIdentifier","gen_name":"PermanentIdentifier","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct PermanentIdentifier","members":[
-{"name":"identifierValue","gen_name":"identifierValue","optional":true,"type":{"name":"PermanentIdentifier","gen_name":"*identifierValue","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":12,"tagenv":"EXPLICIT",
+{"name":"identifierValue","gen_name":"identifierValue","optional":true,"defval":null,"type":{"name":"PermanentIdentifier","gen_name":"*identifierValue","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":12,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"PermanentIdentifier","gen_name":"*identifierValue","is_type":true,"exported":false,"typedef":false,"ttype":"UTF8String","ctype":"heim_utf8_string"}
 }
-},{"name":"assigner","gen_name":"assigner","optional":true,"type":{"name":"PermanentIdentifier","gen_name":"*assigner","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":6,"tagenv":"EXPLICIT",
+},{"name":"assigner","gen_name":"assigner","optional":true,"defval":null,"type":{"name":"PermanentIdentifier","gen_name":"*assigner","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":6,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"PermanentIdentifier","gen_name":"*assigner","is_type":true,"exported":false,"typedef":false,"ttype":"OBJECT IDENTIFIER","ctype":"heim_oid"}
 }
@@ -1686,7 +1692,7 @@
 "ttype":
 {"name":"ProxyPolicy","gen_name":"policyLanguage","is_type":true,"exported":false,"typedef":false,"ttype":"OBJECT IDENTIFIER","ctype":"heim_oid"}
 }
-},{"name":"policy","gen_name":"policy","optional":true,"type":{"name":"ProxyPolicy","gen_name":"*policy","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":4,"tagenv":"EXPLICIT",
+},{"name":"policy","gen_name":"policy","optional":true,"defval":null,"type":{"name":"ProxyPolicy","gen_name":"*policy","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":4,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"ProxyPolicy","gen_name":"*policy","is_type":true,"exported":false,"typedef":false,"ttype":"OCTET STRING","ctype":"heim_octet_string"}
 }
@@ -1695,7 +1701,7 @@
 {"name":"ProxyCertInfo","gen_name":"ProxyCertInfo","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"ProxyCertInfo","gen_name":"ProxyCertInfo","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct ProxyCertInfo","members":[
-{"name":"pCPathLenConstraint","gen_name":"pCPathLenConstraint","optional":true,"type":{"name":"ProxyCertInfo","gen_name":"*pCPathLenConstraint","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
+{"name":"pCPathLenConstraint","gen_name":"pCPathLenConstraint","optional":true,"defval":null,"type":{"name":"ProxyCertInfo","gen_name":"*pCPathLenConstraint","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"ProxyCertInfo","gen_name":"*pCPathLenConstraint","is_type":true,"exported":false,"typedef":false,"ttype":"INTEGER","ctype":"unsigned int"}
 }
@@ -1706,45 +1712,45 @@
 {"name":"TPMSecurityAssertions","gen_name":"TPMSecurityAssertions","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"TPMSecurityAssertions","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":true,"ctype":"struct TPMSecurityAssertions","members":[
-{"name":"version","gen_name":"version","optional":false,"type":{"name":"TPMSecurityAssertions","gen_name":"version","is_type":true,"exported":true,"typedef":false,"ttype":"TPMVersion","alias":true
+{"name":"version","gen_name":"version","optional":false,"defval":0,"type":{"name":"TPMSecurityAssertions","gen_name":"version","is_type":true,"exported":true,"typedef":false,"ttype":"TPMVersion","alias":true
 }
-},{"name":"fieldUpgradable","gen_name":"fieldUpgradable","optional":false,"type":{"name":"TPMSecurityAssertions","gen_name":"fieldUpgradable","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+},{"name":"fieldUpgradable","gen_name":"fieldUpgradable","optional":false,"defval":false,"type":{"name":"TPMSecurityAssertions","gen_name":"fieldUpgradable","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"fieldUpgradable","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
-},{"name":"ekGenerationType","gen_name":"ekGenerationType","optional":true,"type":{"name":"TPMSecurityAssertions","gen_name":"*ekGenerationType","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
+},{"name":"ekGenerationType","gen_name":"ekGenerationType","optional":true,"defval":null,"type":{"name":"TPMSecurityAssertions","gen_name":"*ekGenerationType","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"*ekGenerationType","is_type":true,"exported":true,"typedef":false,"ttype":"EKGenerationType","alias":true
 }
 }
-},{"name":"ekGenerationLocation","gen_name":"ekGenerationLocation","optional":true,"type":{"name":"TPMSecurityAssertions","gen_name":"*ekGenerationLocation","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"EXPLICIT",
+},{"name":"ekGenerationLocation","gen_name":"ekGenerationLocation","optional":true,"defval":null,"type":{"name":"TPMSecurityAssertions","gen_name":"*ekGenerationLocation","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"*ekGenerationLocation","is_type":true,"exported":true,"typedef":false,"ttype":"EKGenerationLocation","alias":true
 }
 }
-},{"name":"ekCertificateGenerationLocation","gen_name":"ekCertificateGenerationLocation","optional":true,"type":{"name":"TPMSecurityAssertions","gen_name":"*ekCertificateGenerationLocation","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":2,"tagenv":"EXPLICIT",
+},{"name":"ekCertificateGenerationLocation","gen_name":"ekCertificateGenerationLocation","optional":true,"defval":null,"type":{"name":"TPMSecurityAssertions","gen_name":"*ekCertificateGenerationLocation","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":2,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"*ekCertificateGenerationLocation","is_type":true,"exported":true,"typedef":false,"ttype":"EKCertificateGenerationLocation","alias":true
 }
 }
-},{"name":"ccInfo","gen_name":"ccInfo","optional":true,"type":{"name":"TPMSecurityAssertions","gen_name":"*ccInfo","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":3,"tagenv":"EXPLICIT",
+},{"name":"ccInfo","gen_name":"ccInfo","optional":true,"defval":null,"type":{"name":"TPMSecurityAssertions","gen_name":"*ccInfo","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":3,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"*ccInfo","is_type":true,"exported":true,"typedef":false,"ttype":"CommonCriteriaMeasures","alias":true
 }
 }
-},{"name":"fipsLevel","gen_name":"fipsLevel","optional":true,"type":{"name":"TPMSecurityAssertions","gen_name":"*fipsLevel","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":4,"tagenv":"EXPLICIT",
+},{"name":"fipsLevel","gen_name":"fipsLevel","optional":true,"defval":null,"type":{"name":"TPMSecurityAssertions","gen_name":"*fipsLevel","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":4,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"*fipsLevel","is_type":true,"exported":true,"typedef":false,"ttype":"FIPSLevel","alias":true
 }
 }
-},{"name":"iso9000Certified","gen_name":"iso9000Certified","optional":false,"type":{"name":"TPMSecurityAssertions","gen_name":"iso9000Certified","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":5,"tagenv":"EXPLICIT",
+},{"name":"iso9000Certified","gen_name":"iso9000Certified","optional":false,"defval":false,"type":{"name":"TPMSecurityAssertions","gen_name":"iso9000Certified","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":5,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"iso9000Certified","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"iso9000Certified","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
 }
-},{"name":"iso9000Uri","gen_name":"iso9000Uri","optional":true,"type":{"name":"TPMSecurityAssertions","gen_name":"*iso9000Uri","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":22,"tagenv":"EXPLICIT",
+},{"name":"iso9000Uri","gen_name":"iso9000Uri","optional":true,"defval":null,"type":{"name":"TPMSecurityAssertions","gen_name":"*iso9000Uri","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":22,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"TPMSecurityAssertions","gen_name":"*iso9000Uri","is_type":true,"exported":false,"typedef":false,"ttype":"IA5String","ctype":"heim_ia5_string"}
 }
@@ -1776,9 +1782,9 @@
 "ttype":
 {"name":"URIReference","gen_name":"uniformResourceIdentifier","is_type":true,"exported":false,"typedef":false,"ttype":"IA5String","ctype":"heim_ia5_string"}
 }
-},{"name":"hashAlgorithm","gen_name":"hashAlgorithm","optional":true,"type":{"name":"URIReference","gen_name":"*hashAlgorithm","is_type":true,"exported":true,"typedef":false,"ttype":"DigestAlgorithmIdentifier","alias":true
+},{"name":"hashAlgorithm","gen_name":"hashAlgorithm","optional":true,"defval":null,"type":{"name":"URIReference","gen_name":"*hashAlgorithm","is_type":true,"exported":true,"typedef":false,"ttype":"DigestAlgorithmIdentifier","alias":true
 }
-},{"name":"hashValue","gen_name":"hashValue","optional":true,"type":{"name":"URIReference","gen_name":"*hashValue","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":3,"tagenv":"EXPLICIT",
+},{"name":"hashValue","gen_name":"hashValue","optional":true,"defval":null,"type":{"name":"URIReference","gen_name":"*hashValue","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":3,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"URIReference","gen_name":"*hashValue","is_type":true,"exported":false,"typedef":false,"ttype":"BIT STRING","ctype":"heim_bit_string"}
 }
@@ -1795,29 +1801,29 @@
 }
 },{"name":"evaluationStatus","gen_name":"evaluationStatus","optional":false,"type":{"name":"CommonCriteriaMeasures","gen_name":"evaluationStatus","is_type":true,"exported":true,"typedef":false,"ttype":"EvaluationStatus","alias":true
 }
-},{"name":"plus","gen_name":"plus","optional":false,"type":{"name":"CommonCriteriaMeasures","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+},{"name":"plus","gen_name":"plus","optional":false,"defval":false,"type":{"name":"CommonCriteriaMeasures","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"CommonCriteriaMeasures","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
-},{"name":"strengthOfFunction","gen_name":"strengthOfFunction","optional":true,"type":{"name":"CommonCriteriaMeasures","gen_name":"*strengthOfFunction","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
+},{"name":"strengthOfFunction","gen_name":"strengthOfFunction","optional":true,"defval":null,"type":{"name":"CommonCriteriaMeasures","gen_name":"*strengthOfFunction","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"CommonCriteriaMeasures","gen_name":"*strengthOfFunction","is_type":true,"exported":true,"typedef":false,"ttype":"StrengthOfFunction","alias":true
 }
 }
-},{"name":"profileOid","gen_name":"profileOid","optional":true,"type":{"name":"CommonCriteriaMeasures","gen_name":"*profileOid","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
+},{"name":"profileOid","gen_name":"profileOid","optional":true,"defval":null,"type":{"name":"CommonCriteriaMeasures","gen_name":"*profileOid","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"CommonCriteriaMeasures","gen_name":"*profileOid","is_type":true,"exported":false,"typedef":false,"ttype":"OBJECT IDENTIFIER","ctype":"heim_oid"}
 }
-},{"name":"profileUri","gen_name":"profileUri","optional":true,"type":{"name":"CommonCriteriaMeasures","gen_name":"*profileUri","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":2,"tagenv":"IMPLICIT",
+},{"name":"profileUri","gen_name":"profileUri","optional":true,"defval":null,"type":{"name":"CommonCriteriaMeasures","gen_name":"*profileUri","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":2,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"CommonCriteriaMeasures","gen_name":"*profileUri","is_type":true,"exported":true,"typedef":false,"ttype":"URIReference","alias":true
 }
 }
-},{"name":"targetOid","gen_name":"targetOid","optional":true,"type":{"name":"CommonCriteriaMeasures","gen_name":"*targetOid","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":3,"tagenv":"IMPLICIT",
+},{"name":"targetOid","gen_name":"targetOid","optional":true,"defval":null,"type":{"name":"CommonCriteriaMeasures","gen_name":"*targetOid","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":3,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"CommonCriteriaMeasures","gen_name":"*targetOid","is_type":true,"exported":false,"typedef":false,"ttype":"OBJECT IDENTIFIER","ctype":"heim_oid"}
 }
-},{"name":"targetUri","gen_name":"targetUri","optional":true,"type":{"name":"CommonCriteriaMeasures","gen_name":"*targetUri","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":4,"tagenv":"IMPLICIT",
+},{"name":"targetUri","gen_name":"targetUri","optional":true,"defval":null,"type":{"name":"CommonCriteriaMeasures","gen_name":"*targetUri","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":4,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"CommonCriteriaMeasures","gen_name":"*targetUri","is_type":true,"exported":true,"typedef":false,"ttype":"URIReference","alias":true
 }
@@ -1833,7 +1839,7 @@
 }
 },{"name":"level","gen_name":"level","optional":false,"type":{"name":"FIPSLevel","gen_name":"level","is_type":true,"exported":true,"typedef":false,"ttype":"SecurityLevel","alias":true
 }
-},{"name":"plus","gen_name":"plus","optional":false,"type":{"name":"FIPSLevel","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
+},{"name":"plus","gen_name":"plus","optional":false,"defval":false,"type":{"name":"FIPSLevel","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":1,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"FIPSLevel","gen_name":"plus","is_type":true,"exported":false,"typedef":false,"ttype":"BOOLEAN","ctype":"unsigned int"}
 }
@@ -1867,7 +1873,8 @@
 }
 },{"name":"value","gen_name":"value","optional":false,"type":{"name":"SingleAttribute","gen_name":"value","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
 }
-}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ATTRIBUTE","objectsetname":"SupportedAttributes","typeidmember":"type","opentypemember":"value","typeidfield":"id","opentypefield":"Type","members":[{"name":"SingleAttribute","gen_name":"*at_domainComponent","is_type":true,"exported":true,"typedef":false,"ttype":"AliasIA5String","alias":true
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ATTRIBUTE","objectsetname":"SupportedAttributes","typeidmember":"type","opentypemember":"value","typeidfield":"id","opentypefield":"Type","opentypeids":["id_domainComponent","id_at_emailAddress","id_at_commonName","id_at_surname","id_at_serialNumber","id_at_countryName","id_at_localityName","id_at_stateOrProvinceName","id_at_organizationName","id_at_organizationalUnitName","id_at_title","id_at_name","id_at_givenName","id_at_initials","id_at_generationQualifier","id_at_dnQualifier","id_at_pseudonym","tcg_at_tpmManufacturer","tcg_at_tpmModel","tcg_at_tpmVersion","tcg_at_tpmSpecification","tcg_at_tpmSecurityAssertions"],
+"members":[{"name":"SingleAttribute","gen_name":"*at_domainComponent","is_type":true,"exported":true,"typedef":false,"ttype":"AliasIA5String","alias":true
 }
 ,{"name":"SingleAttribute","gen_name":"*at_emailAddress","is_type":true,"exported":true,"typedef":false,"ttype":"AliasIA5String","alias":true
 }
@@ -1928,7 +1935,8 @@
 }
 ]}
 }
-}],"opentype":{"opentype":true,"arraytype":true,"classname":"_ATTRIBUTE","objectsetname":"SupportedAttributes","typeidmember":"type","opentypemember":"values","typeidfield":"id","opentypefield":"Type","members":[{"name":"AttributeSet","gen_name":"*at_domainComponent","is_type":true,"exported":true,"typedef":false,"ttype":"AliasIA5String","alias":true
+}],"opentype":{"opentype":true,"arraytype":true,"classname":"_ATTRIBUTE","objectsetname":"SupportedAttributes","typeidmember":"type","opentypemember":"values","typeidfield":"id","opentypefield":"Type","opentypeids":["id_domainComponent","id_at_emailAddress","id_at_commonName","id_at_surname","id_at_serialNumber","id_at_countryName","id_at_localityName","id_at_stateOrProvinceName","id_at_organizationName","id_at_organizationalUnitName","id_at_title","id_at_name","id_at_givenName","id_at_initials","id_at_generationQualifier","id_at_dnQualifier","id_at_pseudonym","tcg_at_tpmManufacturer","tcg_at_tpmModel","tcg_at_tpmVersion","tcg_at_tpmSpecification","tcg_at_tpmSecurityAssertions"],
+"members":[{"name":"AttributeSet","gen_name":"*at_domainComponent","is_type":true,"exported":true,"typedef":false,"ttype":"AliasIA5String","alias":true
 }
 ,{"name":"AttributeSet","gen_name":"*at_emailAddress","is_type":true,"exported":true,"typedef":false,"ttype":"AliasIA5String","alias":true
 }
@@ -1985,12 +1993,12 @@
 {"name":"PolicyConstraints","gen_name":"PolicyConstraints","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
 {"name":"PolicyConstraints","gen_name":"PolicyConstraints","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct PolicyConstraints","members":[
-{"name":"requireExplicitPolicy","gen_name":"requireExplicitPolicy","optional":true,"type":{"name":"PolicyConstraints","gen_name":"*requireExplicitPolicy","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
+{"name":"requireExplicitPolicy","gen_name":"requireExplicitPolicy","optional":true,"defval":null,"type":{"name":"PolicyConstraints","gen_name":"*requireExplicitPolicy","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"PolicyConstraints","gen_name":"*requireExplicitPolicy","is_type":true,"exported":true,"typedef":false,"ttype":"SkipCerts","alias":true
 }
 }
-},{"name":"inhibitPolicyMapping","gen_name":"inhibitPolicyMapping","optional":true,"type":{"name":"PolicyConstraints","gen_name":"*inhibitPolicyMapping","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
+},{"name":"inhibitPolicyMapping","gen_name":"inhibitPolicyMapping","optional":true,"defval":null,"type":{"name":"PolicyConstraints","gen_name":"*inhibitPolicyMapping","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"PolicyConstraints","gen_name":"*inhibitPolicyMapping","is_type":true,"exported":true,"typedef":false,"ttype":"SkipCerts","alias":true
 }
