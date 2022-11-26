@@ -164,7 +164,7 @@ enum TESTChoice2: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
     case i1(Swift.Int32)
 }
 
-struct TESTImplicitInner: Codable {
+struct TESTImplicitInner: Codable, Equatable {
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
         case foo = 127
     }
@@ -172,7 +172,7 @@ struct TESTImplicitInner: Codable {
     var foo: Swift.Int32
 }
 
-struct TESTImplicit: Codable {
+struct TESTImplicit: Codable, Equatable {
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
         case ti1 = 0
         case ti2 = 1
@@ -184,7 +184,7 @@ struct TESTImplicit: Codable {
     var ti3: Int
 }
 
-struct TESTImplicit2: Codable {
+struct TESTImplicit2: Codable, Equatable {
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
         case ti1 = 0
         case ti3 = 2
@@ -196,7 +196,7 @@ struct TESTImplicit2: Codable {
     var ti4: TESTInteger?
 }
 
-enum TESTImplicit3Inner: Codable {
+enum TESTImplicit3Inner: Codable, Equatable {
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
         case i1 = 1
     }
@@ -204,7 +204,7 @@ enum TESTImplicit3Inner: Codable {
     case i1(Swift.Int32)
 }
 
-enum TESTImplicit3: Codable {
+enum TESTImplicit3: Codable, Equatable {
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
         case ti1 = 0
         case ti2 = 5
@@ -214,7 +214,7 @@ enum TESTImplicit3: Codable {
     case ti2(TESTImplicit3Inner)
 }
 
-enum TESTImplicit4: Codable {
+enum TESTImplicit4: Codable, Equatable {
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
         case ti1 = 0
         case ti2 = 5
@@ -224,7 +224,7 @@ enum TESTImplicit4: Codable {
     case ti2(TESTChoice2)
 }
 
-struct TESTAllocInner: Codable {
+struct TESTAllocInner: Codable, Equatable {
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
         case ai = 0
     }
@@ -232,7 +232,7 @@ struct TESTAllocInner: Codable {
     var ai: TESTInteger
 }
 
-struct TESTAlloc: Codable {
+struct TESTAlloc: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case tagless
         case three
@@ -245,7 +245,7 @@ struct TESTAlloc: Codable {
     var tagless2: AnyCodable?
 }
 
-struct TESTOptional: Codable {
+struct TESTOptional: Codable, Equatable {
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
         case zero = 0
         case one = 1
@@ -265,7 +265,7 @@ typealias TESTSeqSizeOf3 = [TESTInteger]
 
 typealias TESTSeqSizeOf4 = [TESTInteger]
 
-struct TESTSeqOf2: Codable {
+struct TESTSeqOf2: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case strings
     }
@@ -273,7 +273,7 @@ struct TESTSeqOf2: Codable {
     var strings: [GeneralString<String>]
 }
 
-struct TESTSeqOf3: Codable {
+struct TESTSeqOf3: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case strings
     }
@@ -281,7 +281,7 @@ struct TESTSeqOf3: Codable {
     var strings: [GeneralString<String>]?
 }
 
-struct TESTPreserve: Codable {
+struct TESTPreserve: Codable, Equatable {
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
         case zero = 0
         case one = 1

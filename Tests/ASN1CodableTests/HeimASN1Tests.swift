@@ -109,4 +109,52 @@ extension ASN1CodableTests {
         self.test_encodeDecode(c1, encodedAs: td[0])
         self.test_encodeDecode(c2, encodedAs: td[1])
     }
+
+    func test_implicit() {
+        /*
+         * UNIV CONS Sequence = 14 bytes {
+         *   CONTEXT PRIM tag 0 = 1 bytes [0] IMPLICIT content
+         *   CONTEXT CONS tag 1 = 6 bytes [1]
+         *     CONTEXT CONS tag 127 = 3 bytes [127]
+         *       UNIV PRIM Integer = integer 2
+         *   CONTEXT PRIM tag 2 = 1 bytes [2] IMPLICIT content
+         * }
+         */
+        let test1 = try! Data(hex: "300e800100a106bf7f03020102820103")
+        let c0 = TESTImplicit(ti1: 0, ti2: TESTImplicitInner(foo: 2), ti3: 3)
+        self.test_encodeDecode(c0, encodedAs: test1)
+
+        /*
+         * UNIV CONS Sequence = 10 bytes {
+         *   CONTEXT PRIM tag 0 = 1 bytes [0] IMPLICIT content
+         *   CONTEXT PRIM tag 2 = 1 bytes [2] IMPLICIT content
+         *   CONTEXT PRIM tag 51 = 1 bytes [51] IMPLICIT content
+         * }
+         */
+        let test2 = try! Data(hex: "300a8001018201039f330104")
+        let c1 = TESTImplicit2(ti1: 1,
+                               ti3: TESTInteger3(wrappedValue: TESTInteger2(wrappedValue: 3)),
+                               ti4: 4)
+        self.test_encodeDecode(c1, encodedAs: test2)
+
+        /*
+         * CONTEXT CONS tag 5 = 5 bytes [5]
+         *   CONTEXT CONS tag 1 = 3 bytes [1]
+         *     UNIV PRIM Integer = integer 5
+         */
+        let test3 = try! Data(hex: "a505a103020105")
+        let c2 = TESTImplicit3.ti2(TESTImplicit3Inner.i1(5))
+        self.test_encodeDecode(c2, encodedAs: test3)
+
+        /*
+         * Notice: same as tests3[].bytes.
+         *
+         * CONTEXT CONS tag 5 = 5 bytes [5]
+         *   CONTEXT CONS tag 1 = 3 bytes [1]
+         *     UNIV PRIM Integer = integer 5
+         */
+        let test4 = test3
+        let c3 = TESTImplicit4.ti2(TESTChoice2.i1(5))
+        self.test_encodeDecode(c3, encodedAs: test4)
+    }
 }
