@@ -122,7 +122,6 @@ extension ASN1CodableTests {
     }
 
     func test_encode_SEQUENCE_PrivateTaggedTestStruct_CodingKey() {
-
         let data = Data(base64Encoded: "/2QWMBSgAwIBAaEFBAMCA/+iBgMEAAIDzA==")!
         self.test_encodeDecode(TestClass(), encodedAs: data)
     }

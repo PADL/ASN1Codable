@@ -18,14 +18,6 @@ import XCTest
 @testable import ASN1Codable
 
 class ASN1CodableTests: XCTestCase {
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func test_encodeDecode<T: Codable & Equatable>(
         _ value: T,
         encodedAs data: Data,
@@ -48,7 +40,9 @@ class ASN1CodableTests: XCTestCase {
 
             if let preserved = decoded as? ASN1PreserveBinary {
                 XCTAssertNotNil(preserved._save)
-                XCTAssertEqual(data, preserved._save)
+                XCTAssertEqual(data, preserved._save, "Expected preserved data " +
+                               "\(String(describing: preserved._save?.hexString())) to " +
+                               "match \(data.hexString())")
             }
         } catch {
             XCTFail(error.localizedDescription)
