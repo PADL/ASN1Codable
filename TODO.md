@@ -6,3 +6,4 @@
 - super decoders
 - propagate originalEncoding (\_save) in all cases
 - ASN1RawRepresentableBitString<BInt>
+- AnyCodable, make it ASN.1 compile to eliminate special cases
