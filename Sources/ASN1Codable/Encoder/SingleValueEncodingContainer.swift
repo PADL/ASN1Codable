@@ -198,6 +198,10 @@ extension ASN1EncoderImpl.SingleValueContainer {
             object = try self.encodeConstructedValue(value)
         }
 
+        if let object, let value = value as? ASN1PreserveBinary {
+            value._save = try object.serialize()
+        }
+
         return object
     }
 
@@ -290,10 +294,6 @@ extension ASN1EncoderImpl.SingleValueContainer {
                                       userInfo: self.userInfo,
                                       context: self.context)
         try value.encode(to: encoder)
-
-        if let object = encoder.object, let value = value as? ASN1PreserveBinary {
-            value._save = try object.serialize()
-        }
 
         if self.context.encodeAsSet {
             return encoder.object?.sortedByTag

@@ -40,7 +40,7 @@ class ASN1CodableTests: XCTestCase {
 
             if let preserved = decoded as? ASN1PreserveBinary {
                 XCTAssertNotNil(preserved._save)
-                XCTAssertEqual(data, preserved._save, "Expected preserved data " +
+                XCTAssertEqual(preserved._save, data, "Expected preserved data " +
                                "\(String(describing: preserved._save?.hexString())) to " +
                                "match \(data.hexString())")
             }
