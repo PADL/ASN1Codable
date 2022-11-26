@@ -18,6 +18,31 @@ import XCTest
 import ASN1Codable
 
 extension ASN1CodableTests {
+    func test_CHOICE_Division() {
+        enum Division: Codable, Equatable {
+            struct Manufacturing: Codable, Equatable {
+                var plantID: Int
+                var majorProduct: Data
+            }
+
+            struct RAndD: Codable, Equatable {
+                var labID: Int
+                var currentProject: Data
+            }
+
+            case manufacturing(Manufacturing)
+            case r_and_d(RAndD)
+        }
+
+        let r_and_d = Division.RAndD(labID: 48, currentProject: Data([0x44, 0x58, 0x2D, 0x37]))
+        let currentAssignment = Division.r_and_d(r_and_d)
+
+        self.test_encode(currentAssignment,
+                         encodedAs: Data([0xA1, 0x09, 0x80, 0x01, 0x30, 0x81, 0x04, 0x44,
+                                          0x58, 0x2D, 0x37]),
+                         taggingEnvironment: .automatic)
+    }
+
     func test_encode_SEQUENCE_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable {
             var name: Data
@@ -33,6 +58,14 @@ extension ASN1CodableTests {
                                           0x01, 0x1A]))
     }
 
+    func test_encode_SEQUENCE_OF_INTEGER() {
+        let weeklyHighs = [10, 12, -2, 8]
+
+        self.test_encode(weeklyHighs,
+                         encodedAs: Data([0x30, 0x0C, 0x02, 0x01, 0x0A, 0x02, 0x01, 0x0C,
+                                          0x02, 0x01, 0xFE, 0x02, 0x01, 0x08]))
+    }
+
     func test_encode_SET_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable, ASN1SetCodable {
             var name: Data
@@ -42,11 +75,19 @@ extension ASN1CodableTests {
 
         self.test_encode(PersonnelRecord(name: Data([0x44, 0x61, 0x76, 0x79, 0x20, 0x4A, 0x6F, 0x6E,
                                                      0x65, 0x73]),
-                                         location: 0,
-                                         age: 44),
+                         location: 0,
+                         age: 44),
                          encodedAs: Data([0x31, 0x12, 0x80, 0x0A, 0x44, 0x61, 0x76, 0x79,
                                           0x20, 0x4A, 0x6F, 0x6E, 0x65, 0x73, 0x81, 0x01,
                                           0x00, 0x82, 0x01, 0x2C]),
                          taggingEnvironment: .automatic)
+    }
+
+    func test_encode_SET_OF_INTEGER() {
+        let weeklyHighs = Set([10, 12, -2, 8])
+
+        self.test_encode(weeklyHighs,
+                         encodedAs: Data([0x31, 0x0C, 0x02, 0x01, 0x08, 0x02, 0x01, 0x0A,
+                                          0x02, 0x01, 0x0C, 0x02, 0x01, 0xFE]))
     }
 }

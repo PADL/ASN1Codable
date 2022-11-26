@@ -25,4 +25,20 @@ class ASN1CodableTests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
+
+    func test_encode<T: Codable & Equatable>(_ value: T, encodedAs data: Data, taggingEnvironment: ASN1Tagging? = nil) {
+        do {
+            let encoder = ASN1Encoder()
+            encoder.taggingEnvironment = taggingEnvironment
+            let encoded = try encoder.encode(value)
+            XCTAssertEqual(encoded, data, "Expected encoded data \(encoded.hexString()) to match \(data.hexString())")
+
+            let decoder = ASN1Decoder()
+            decoder.taggingEnvironment = taggingEnvironment
+            let decoded = try decoder.decode(T.self, from: data)
+            XCTAssertEqual(decoded, value, "Expected decoded value \(decoded) to match input value \(value)")
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
 }
