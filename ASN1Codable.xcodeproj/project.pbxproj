@@ -53,7 +53,6 @@
 		D37C1CDD29322C0F007264EA /* Commandant in Frameworks */ = {isa = PBXBuildFile; productRef = D37C1CDC29322C0F007264EA /* Commandant */; };
 		D37C1CDF29322C14007264EA /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = D37C1CDE29322C14007264EA /* Algorithms */; };
 		D37C1CE029322C22007264EA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E6E291342D500218279 /* main.swift */; };
-		D37C1CE129322C22007264EA /* cert2json-Bridging-Header.h in Sources */ = {isa = PBXBuildFile; fileRef = D363A44B292B311C007476B4 /* cert2json-Bridging-Header.h */; };
 		D37C1CE229322C22007264EA /* VersionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E7B2913434200218279 /* VersionCommand.swift */; };
 		D37C1CE329322C22007264EA /* ParseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D13E7D291343A500218279 /* ParseCommand.swift */; };
 		D37C1CE429322C22007264EA /* Data+HexString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3826416292ACE0700808667 /* Data+HexString.swift */; };
@@ -244,9 +243,8 @@
 		D3565C7B293233C3002236A5 /* HeimASN1TestTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeimASN1TestTypes.swift; sourceTree = "<group>"; };
 		D3565C7D29323768002236A5 /* HeimASN1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeimASN1Tests.swift; sourceTree = "<group>"; };
 		D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1TagCodingKey.swift; sourceTree = "<group>"; };
-		D363A44B292B311C007476B4 /* cert2json-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cert2json-Bridging-Header.h"; sourceTree = "<group>"; };
+		D363A44B292B311C007476B4 /* certutil-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "certutil-Bridging-Header.h"; sourceTree = "<group>"; };
 		D37C1CD429322C00007264EA /* certutil */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = certutil; sourceTree = BUILT_PRODUCTS_DIR; };
-		D37C1CD629322C00007264EA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D382641229299C6400808667 /* ASN1Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1Metadata.swift; sourceTree = "<group>"; };
 		D3826416292ACE0700808667 /* Data+HexString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+HexString.swift"; sourceTree = "<group>"; };
 		D3826418292AD1F400808667 /* ASN1TaggedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1TaggedDictionary.swift; sourceTree = "<group>"; };
@@ -387,7 +385,6 @@
 				D3FB2DB52919C47C00BC72AF /* HeimASN1Translator */,
 				D3FB2DC12919C47C00BC72AF /* HeimASN1TranslatorTests */,
 				D3F28859292C44AD0006CD82 /* CertificateTests */,
-				D37C1CD529322C00007264EA /* certutil */,
 				D351DC2B290E849200540132 /* Products */,
 				D351DC44290E898300540132 /* Frameworks */,
 				D3D6E7C1292DB12E00198A86 /* Recovered References */,
@@ -509,19 +506,11 @@
 			path = Decoder;
 			sourceTree = "<group>";
 		};
-		D37C1CD529322C00007264EA /* certutil */ = {
-			isa = PBXGroup;
-			children = (
-				D37C1CD629322C00007264EA /* main.swift */,
-			);
-			path = certutil;
-			sourceTree = "<group>";
-		};
 		D3D13E6D291342D500218279 /* certutil */ = {
 			isa = PBXGroup;
 			children = (
 				D3D13E6E291342D500218279 /* main.swift */,
-				D363A44B292B311C007476B4 /* cert2json-Bridging-Header.h */,
+				D363A44B292B311C007476B4 /* certutil-Bridging-Header.h */,
 				D3D13E7B2913434200218279 /* VersionCommand.swift */,
 				D3D13E7D291343A500218279 /* ParseCommand.swift */,
 				D3826416292ACE0700808667 /* Data+HexString.swift */,
@@ -1078,7 +1067,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D37C1CE029322C22007264EA /* main.swift in Sources */,
-				D37C1CE129322C22007264EA /* cert2json-Bridging-Header.h in Sources */,
 				D37C1CE229322C22007264EA /* VersionCommand.swift in Sources */,
 				D37C1CE329322C22007264EA /* ParseCommand.swift in Sources */,
 				D37C1CE429322C22007264EA /* Data+HexString.swift in Sources */,
@@ -1426,6 +1414,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Sources/CLI/certutil/certutil-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -1439,6 +1428,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Sources/CLI/certutil/certutil-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
