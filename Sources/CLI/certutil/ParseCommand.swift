@@ -16,6 +16,7 @@
 
 import Commandant
 import Algorithms
+import DataKit
 import Foundation
 
 struct ParseCommand: CommandProtocol {
@@ -61,7 +62,9 @@ struct ParseCommand: CommandProtocol {
         } else {
             data = Data(base64Encoded: options.string)
             if data == nil {
-                data = Data(hexString: options.string)
+                do {
+                    data = try Data(hex: options.string)
+                } catch {}
             }
         }
 
