@@ -191,7 +191,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
                 } else {
                     defaultValueString = String(describing: defaultValue.value)
                 }
-                outputStream.write("\t\tget { return self.\(generatedName) ?? \(defaultValueString) }\n")
+                outputStream.write("\t\tget { self.\(generatedName) ?? \(defaultValueString) }\n")
                 outputStream.write("\t\tset { self.\(generatedName) = newValue }\n")
                 outputStream.write("\t}\n")
             }
