@@ -42,4 +42,12 @@ extension ASN1CodingContext {
             self.enumCodingState = .none
         }
     }
+
+    mutating func automaticTagging<T>(_ type: T.Type) {
+        if self.taggingEnvironment == .automatic {
+            self.automaticTaggingContext = ASN1AutomaticTaggingContext(T.self)
+        } else {
+            self.automaticTaggingContext = nil
+        }
+    }
 }

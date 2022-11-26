@@ -39,7 +39,7 @@ extension String?: ExpressibleByString {
 
 @propertyWrapper
 public struct GeneralString<Value: Codable & ExpressibleByString>:
-    Codable, Equatable, Hashable, ASN1TaggedValue {
+    Codable, Equatable, Hashable, ASN1UniversalTaggedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -57,7 +57,7 @@ public struct GeneralString<Value: Codable & ExpressibleByString>:
 
 @propertyWrapper
 public struct IA5String<Value: Codable & ExpressibleByString>:
-    Codable, Equatable, Hashable, ASN1TaggedValue {
+    Codable, Equatable, Hashable, ASN1UniversalTaggedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -75,7 +75,7 @@ public struct IA5String<Value: Codable & ExpressibleByString>:
 
 @propertyWrapper
 public struct UTF8String<Value: Codable & ExpressibleByString>:
-    Codable, Equatable, Hashable, ASN1TaggedValue {
+    Codable, Equatable, Hashable, ASN1UniversalTaggedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -93,7 +93,7 @@ public struct UTF8String<Value: Codable & ExpressibleByString>:
 
 @propertyWrapper
 public struct UniversalString<Value: Codable & ExpressibleByString>:
-    Codable, Equatable, Hashable, ASN1TaggedValue {
+    Codable, Equatable, Hashable, ASN1UniversalTaggedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -111,7 +111,7 @@ public struct UniversalString<Value: Codable & ExpressibleByString>:
 
 @propertyWrapper
 public struct BMPString<Value: Codable & ExpressibleByString>:
-    Codable, Equatable, Hashable, ASN1TaggedValue {
+    Codable, Equatable, Hashable, ASN1UniversalTaggedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {
@@ -129,7 +129,7 @@ public struct BMPString<Value: Codable & ExpressibleByString>:
 
 @propertyWrapper
 public struct PrintableString<Value: Codable & ExpressibleByString>:
-    Codable, Equatable, Hashable, ASN1TaggedValue {
+    Codable, Equatable, Hashable, ASN1UniversalTaggedValue {
     public var wrappedValue: Value
 
     public init(wrappedValue: Value) {

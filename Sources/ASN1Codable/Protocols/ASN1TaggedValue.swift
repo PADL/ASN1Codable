@@ -27,6 +27,8 @@ public protocol ASN1TaggedValue: Codable, CustomStringConvertible,
     init(wrappedValue: Value)
 }
 
+public protocol ASN1UniversalTaggedValue: ASN1TaggedValue {}
+
 extension ASN1TaggedValue {
     static var wrappedType: Value.Type {
         Value.self

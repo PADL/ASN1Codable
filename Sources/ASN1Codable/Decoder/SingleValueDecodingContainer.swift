@@ -152,10 +152,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
             value = try self.decodeTaggedKeyedValue(type, from: object, forKey: key)
         } else if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
             value = try self.decodeTaggedValue(type, from: object) as! T
-        } else if let type = type as? any(Decodable & ASN1TaggedValue).Type {
-            value = try self.decodeTaggedWrappedValue(type, from: object) as! T
         } else if !skipTaggedValues, self.context.automaticTaggingContext != nil {
             value = try self.decodeAutomaticallyTaggedValue(type, from: object)
+        } else if let type = type as? any(Decodable & ASN1TaggedValue).Type {
+            value = try self.decodeTaggedWrappedValue(type, from: object) as! T
         } else if let type = type as? ASN1DecodableType.Type {
             value = try self.decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
         } else if let type = type as? OptionalProtocol.Type,
@@ -401,12 +401,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
     private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable {
         self.context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1SetCodable.Type
-
-        if self.context.taggingEnvironment == .automatic {
-            self.context.automaticTaggingContext = ASN1AutomaticTaggingContext(type)
-        } else {
-            self.context.automaticTaggingContext = nil
-        }
+        self.context.automaticTagging(type)
 
         if let type = type as? ASN1ObjectSetCodable.Type {
             self.context.objectSetCodingContext =

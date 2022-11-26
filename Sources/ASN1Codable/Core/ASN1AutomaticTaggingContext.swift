@@ -31,7 +31,8 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         if let metadata = reflect(type) as? StructMetadata {
             let hasTaggedFields = metadata.descriptor.fields.records.contains {
                 guard let fieldType = metadata.type(of: $0.mangledTypeName),
-                      let wrappedFieldType = fieldType as? any ASN1TaggedValue.Type else {
+                      let wrappedFieldType = fieldType as? any ASN1TaggedValue.Type,
+                      !(wrappedFieldType is any ASN1UniversalTaggedValue.Type) else {
                     return false
                 }
                 return wrappedFieldType.metadata.tag != nil
@@ -43,7 +44,8 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         } else if let metadata = reflect(type) as? EnumMetadata {
             let hasTaggedFields = metadata.descriptor.fields.records.contains {
                 guard let fieldType = metadata.type(of: $0.mangledTypeName),
-                      let wrappedFieldType = fieldType as? any ASN1TaggedValue.Type else {
+                      let wrappedFieldType = fieldType as? any ASN1TaggedValue.Type,
+                      !(wrappedFieldType is any ASN1UniversalTaggedValue.Type) else {
                     return false
                 }
                 return wrappedFieldType.metadata.tag != nil
