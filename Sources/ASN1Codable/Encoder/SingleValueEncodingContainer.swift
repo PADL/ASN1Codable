@@ -212,35 +212,38 @@ extension ASN1EncoderImpl.SingleValueContainer {
             throw EncodingError.invalidValue(value, context)
         }
 
-        let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
+        let wrappedObject: ASN1Object?
 
-        if let object, !metadata.validateSizeConstraints(object) {
-            let context = EncodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Value for \(object) outside of size constraint")
-            throw EncodingError.invalidValue(value, context)
-        }
-
-        if let object, let tag = metadata.tag {
-            let wrappedObject: ASN1Object
+        if let tag = metadata.tag, tag.isUniversal, let value = value as? ASN1EncodableType {
+            wrappedObject = try value.asn1encode(tag: tag)
+        } else {
             var tagging = metadata.tagging ?? self.context.taggingEnvironment
-
             if tagging == .implicit, self.context.enumCodingState == .enum {
                 /// IMPLICIT tagging of types that are CHOICE types have the tag converted to EXPLICIT
                 tagging = .explicit
             }
 
-            if tag.isUniversal, let value = value as? ASN1EncodableType {
-                wrappedObject = try value.asn1encode(tag: tag)
-            } else if tagging == .implicit, self.context.enumCodingState == .enum {
-                wrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: tag)
-            } else {
-                wrappedObject = object.wrap(with: tag, constructed: tagging != .implicit)
-            }
+            let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
 
-            return wrappedObject
-        } else {
-            return object
+            if let object, let tag = metadata.tag {
+                if tagging == .implicit, self.context.enumCodingState == .enum {
+                    wrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: tag)
+                } else {
+                    wrappedObject = object.wrap(with: tag, constructed: tagging != .implicit)
+                }
+            } else {
+                wrappedObject = object
+            }
         }
+
+        if let wrappedObject, !metadata.validateSizeConstraints(wrappedObject) {
+            let context = EncodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Value for \(wrappedObject) outside " +
+                                                                   "of size constraint")
+            throw EncodingError.invalidValue(value, context)
+        }
+
+        return wrappedObject
     }
 
     private func encodeTaggedKeyedValue<T: Encodable>(_ value: T, forKey key: ASN1TagCodingKey) throws -> ASN1Object? {
