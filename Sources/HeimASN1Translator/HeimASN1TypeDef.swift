@@ -493,11 +493,12 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                         var index: UInt = 0
 
                         members.forEach { member in
+                            defer { index += 1 }
+
                             guard let tag = member.bitStringTag else {
                                 return
                             }
                             outputStream.write("\tstatic let \(tag) = _\(self.generatedName)(rawValue: 1 << \(index))\n")
-                            index += 1
                         }
                         outputStream.write("}\n\n")
                     }
