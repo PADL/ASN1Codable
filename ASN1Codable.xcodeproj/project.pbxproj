@@ -242,6 +242,7 @@
 		D351DCE1290EF91B00540132 /* ASN1DecodingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecodingContainer.swift; sourceTree = "<group>"; };
 		D3565C7B293233C3002236A5 /* HeimASN1TestTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeimASN1TestTypes.swift; sourceTree = "<group>"; };
 		D3565C7D29323768002236A5 /* HeimASN1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeimASN1Tests.swift; sourceTree = "<group>"; };
+		D3565C7F2932AC70002236A5 /* CertificateTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CertificateTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1TagCodingKey.swift; sourceTree = "<group>"; };
 		D363A44B292B311C007476B4 /* certutil-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "certutil-Bridging-Header.h"; sourceTree = "<group>"; };
 		D37C1CD429322C00007264EA /* certutil */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = certutil; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -602,6 +603,7 @@
 			isa = PBXGroup;
 			children = (
 				D3F2885A292C44AD0006CD82 /* CertificateTests.swift */,
+				D3565C7F2932AC70002236A5 /* CertificateTests-Bridging-Header.h */,
 			);
 			name = CertificateTests;
 			path = Tests/CertificateTests;
@@ -1516,6 +1518,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Tests/CertificateTests/CertificateTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -1534,6 +1537,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Tests/CertificateTests/CertificateTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

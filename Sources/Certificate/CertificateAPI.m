@@ -58,3 +58,13 @@ OSStatus CertificateCopyEmailAddresses(CertificateRef certificate, CFArrayRef * 
     }
     return errSecSuccess;
 }
+
+CFDataRef CertificateCopySerialNumberData(CertificateRef certificate, CFErrorRef *error) {
+    if (!certificate) {
+        if (error) {
+                *error = CFErrorCreate(NULL, kCFErrorDomainOSStatus, errSecInvalidCertificate, NULL);
+        }
+        return NULL;
+    }
+    return _CertificateCopySerialNumberData(certificate);
+}

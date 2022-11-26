@@ -11,5 +11,18 @@
 #import <Security/Security.h>
 
 #define errSecInternal (-26276)
+#define errSecDecode (-26265)
+#define errSecInvalidCertificate errSecDecode
+
+CF_ASSUME_NONNULL_BEGIN
+CF_IMPLICIT_BRIDGING_ENABLED
+
+__nullable
+CFDataRef _CertificateCopySerialNumberData(CertificateRef certificate);
+
+CFIndex _CertificateGetRetainCount(CertificateRef certificate);
+
+CF_IMPLICIT_BRIDGING_DISABLED
+CF_ASSUME_NONNULL_END
 
 #endif /* CertificateAPI_h */

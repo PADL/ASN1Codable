@@ -54,7 +54,14 @@ extension Certificate {
             return nil
         }
 
-        return rdns.compactMap { String(describing: $0.first { $0.type == oid }?.value) }
+        let strings: [String] = rdns.compactMap {
+            guard let first = $0.first(where: { $0.type == oid }) else { return nil }
+            return String(describing: first)
+        }
+
+        guard !strings.isEmpty else { return nil }
+
+        return strings
     }
 
     var rdnCount: Int {
@@ -85,4 +92,10 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFSt
     }
 
     return summary as CFString
+}
+
+@_cdecl("_CertificateCopySerialNumberData")
+func _CertificateCopySerialNumberData(_ certificate: CertificateRef) -> CFData? {
+    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
+    return certificate.serialNumberData
 }

@@ -45,6 +45,9 @@ CertificateCopyCommonName(CertificateRef certificate, CFStringRef * __nonnull CF
 OSStatus
 CertificateCopyEmailAddresses(CertificateRef certificate, CFArrayRef * __nonnull CF_RETURNS_RETAINED emailAddresses);
 
+__nullable
+CFDataRef CertificateCopySerialNumberData(CertificateRef certificate, CFErrorRef *error);
+
 CF_IMPLICIT_BRIDGING_DISABLED
 CF_ASSUME_NONNULL_END
 

@@ -28,3 +28,8 @@ extension Certificate {
         return unsafeBitCast(certificate, to: CertificateRef.self)
     }
 }
+
+@_cdecl("_CertificateGetRetainCount")
+func _CertificateGetRetainCount(_ certificate: CertificateRef) -> CFIndex {
+    CFGetRetainCount(unsafeBitCast(certificate, to: CFTypeRef.self))
+}
