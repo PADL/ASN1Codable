@@ -62,7 +62,8 @@ extension ASN1EncoderImpl: Encoder {
     /// - parameter type: The key type to use for the container.
     /// - returns: A new keyed encoding container.
     func container<Key>(keyedBy _: Key.Type) -> KeyedEncodingContainer<Key> where Key: CodingKey {
-        precondition(self.container == nil)
+        // FIXME: investigate why we are reusing single value contained here
+        precondition(self.container == nil || self.context.objectSetCodingContext != nil)
 
         let container = KeyedContainer<Key>(codingPath: self.codingPath,
                                             userInfo: self.userInfo,
@@ -81,7 +82,8 @@ extension ASN1EncoderImpl: Encoder {
     ///
     /// - returns: A new empty unkeyed container.
     func unkeyedContainer() -> UnkeyedEncodingContainer {
-        precondition(self.container == nil)
+        // FIXME: investigate why we are reusing single value contained here
+        precondition(self.container == nil || self.context.objectSetCodingContext != nil)
 
         let container = UnkeyedContainer(codingPath: self.codingPath,
                                          userInfo: self.userInfo,
