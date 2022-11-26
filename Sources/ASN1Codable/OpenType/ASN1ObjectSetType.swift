@@ -49,3 +49,7 @@ public struct ASN1ObjectSetType<ValueType>: Codable where ValueType: Codable & H
         }
     }
 }
+
+extension ASN1ObjectSetType: Equatable where ValueType: Equatable {}
+
+extension ASN1ObjectSetType: Hashable where ValueType: Hashable {}

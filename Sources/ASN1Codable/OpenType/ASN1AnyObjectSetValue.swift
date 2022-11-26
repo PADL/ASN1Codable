@@ -20,7 +20,7 @@ import AnyCodable
 
 /// Represents a type-erased object set value.
 @propertyWrapper
-public struct ASN1AnyObjectSetValue: Codable, Hashable {
+public struct ASN1AnyObjectSetValue: Codable, Equatable, Hashable {
     public typealias Value = AnyCodable
 
     public var wrappedValue: Value
@@ -34,6 +34,7 @@ public struct ASN1AnyObjectSetValue: Codable, Hashable {
     }
 
     public init(from decoder: Decoder) throws {
-        self.wrappedValue = AnyCodable(try ASN1ObjectSetValue(from: decoder))
+        let objectSetValue = try ASN1ObjectSetValue(from: decoder)
+        self.wrappedValue = AnyCodable(objectSetValue.wrappedValue)
     }
 }
