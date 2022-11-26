@@ -265,7 +265,7 @@ extension ASN1DecoderImpl.UnkeyedContainer {
     private func decodeUnkeyedSingleValueIfPresent<T>(_ type: T.Type) throws -> T? where T: Decodable {
         let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
                                                         context: self.context.decodingSingleValue(type))
-        var value: T?
+        let value: T?
 
         if object.isNull {
             value = nil
