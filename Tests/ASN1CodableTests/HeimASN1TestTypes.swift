@@ -146,7 +146,7 @@ struct TESTSeq: Codable {
     var tag3: Swift.Int32 = .init()
 }
 
-enum TESTChoice1: Codable, ASN1Codable.ASN1ExtensibleType {
+enum TESTChoice1: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
         case i1 = 1
         case i2 = 2
@@ -156,7 +156,7 @@ enum TESTChoice1: Codable, ASN1Codable.ASN1ExtensibleType {
     case i2(Swift.Int32)
 }
 
-enum TESTChoice2: Codable, ASN1Codable.ASN1ExtensibleType {
+enum TESTChoice2: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
         case i1 = 1
     }

@@ -98,4 +98,15 @@ extension ASN1CodableTests {
             }
         }
     }
+
+    func test_choice() {
+        let td: [Data] = [Data([0xA1, 0x03, 0x02, 0x01, 0x01]),
+                          Data([0xA2, 0x03, 0x02, 0x01, 0x02])]
+
+        let c1 = TESTChoice1.i1(1)
+        let c2 = TESTChoice1.i2(2)
+
+        self.test_encodeDecode(c1, encodedAs: td[0])
+        self.test_encodeDecode(c2, encodedAs: td[1])
+    }
 }
