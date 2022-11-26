@@ -27,7 +27,7 @@ extension ASN1CodableTests {
         struct OpenType: Codable, Equatable, ASN1ObjectSetCodable {
             static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
-                ot_Int: Int.self
+                ot_Int: Int.self,
             ]
 
             enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
@@ -53,7 +53,7 @@ extension ASN1CodableTests {
         struct OpenType: Codable, Equatable, ASN1ObjectSetOctetStringCodable {
             static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
-                ot_Int: Int.self
+                ot_Int: Int.self,
             ]
 
             enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
@@ -79,7 +79,7 @@ extension ASN1CodableTests {
         struct OpenType: Codable, ASN1ObjectSetCodable {
             static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
-                ot_Int: Int.self
+                ot_Int: Int.self,
             ]
 
             enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
@@ -104,7 +104,7 @@ extension ASN1CodableTests {
         struct OpenType: Codable, ASN1ObjectSetOctetStringCodable {
             static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
-                ot_Int: Int.self
+                ot_Int: Int.self,
             ]
 
             enum CodingKeys: Int, ASN1ExplicitTagCodingKey {

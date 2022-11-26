@@ -49,7 +49,6 @@ struct _TESTBitString: OptionSet, Codable {
     static let thirtyone = _TESTBitString(rawValue: 1 << 31)
 }
 
-
 typealias TESTBitString64 = ASN1RawRepresentableBitString<_TESTBitString64>
 struct _TESTBitString64: OptionSet, Codable {
     var rawValue: UInt64
@@ -64,8 +63,6 @@ struct _TESTBitString64: OptionSet, Codable {
     static let thirtytwo = _TESTBitString64(rawValue: 1 << 32)
     static let sixtythree = _TESTBitString64(rawValue: 1 << 63)
 }
-
-
 
 typealias TESTMechType = ObjectIdentifier
 
@@ -98,23 +95,26 @@ struct TESTDefault: Codable {
     @UTF8String
     var _name: String?
     var name: String {
-        get { return self._name ?? "Heimdal" }
+        get { self._name ?? "Heimdal" }
         set { self._name = newValue }
     }
+
     @ASN1ContextTagged<TEST.ASN1TagNumber$0, ASN1Codable.ASN1ExplicitTagging, TESTuint32?>
     var _version: TESTuint32?
     var version: TESTuint32 {
-        get { return self._version ?? 8 }
+        get { self._version ?? 8 }
         set { self._version = newValue }
     }
+
     var _maxint: TESTuint64?
     var maxint: TESTuint64 {
-        get { return self._maxint ?? 9223372036854775807 }
+        get { self._maxint ?? 9_223_372_036_854_775_807 }
         set { self._maxint = newValue }
     }
+
     var _works: Bool?
     var works: Bool {
-        get { return self._works ?? true }
+        get { self._works ?? true }
         set { self._works = newValue }
     }
 }
@@ -138,12 +138,12 @@ struct TESTSeq: Codable {
     }
 
     @ASN1ContextTagged<TEST.ASN1TagNumber$0, ASN1Codable.ASN1ExplicitTagging, Swift.Int32>
-    var tag0: Swift.Int32 = Swift.Int32()
+    var tag0: Swift.Int32 = .init()
     @ASN1ContextTagged<TEST.ASN1TagNumber$1, ASN1Codable.ASN1ExplicitTagging, TESTLargeTag>
-    var tag1: TESTLargeTag = TESTLargeTag(foo: 0, bar: 0)
+    var tag1: TESTLargeTag = .init(foo: 0, bar: 0)
     var tagless: Swift.Int32
     @ASN1ContextTagged<TEST.ASN1TagNumber$2, ASN1Codable.ASN1ExplicitTagging, Swift.Int32>
-    var tag3: Swift.Int32 = Swift.Int32()
+    var tag3: Swift.Int32 = .init()
 }
 
 enum TESTChoice1: Codable, ASN1Codable.ASN1ExtensibleType {
@@ -163,8 +163,6 @@ enum TESTChoice2: Codable, ASN1Codable.ASN1ExtensibleType {
 
     case i1(Swift.Int32)
 }
-
-
 
 struct TESTImplicitInner: Codable {
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
@@ -243,7 +241,7 @@ struct TESTAlloc: Codable {
 
     var tagless: TESTAllocInner?
     @ASN1ContextTagged<TEST.ASN1TagNumber$1, ASN1Codable.ASN1ExplicitTagging, Swift.Int32>
-    var three: Swift.Int32 = Swift.Int32()
+    var three: Swift.Int32 = .init()
     var tagless2: AnyCodable?
 }
 
@@ -257,22 +255,22 @@ struct TESTOptional: Codable {
     var one: Swift.Int32?
 }
 
-typealias TESTSeqOf = Array<TESTInteger>
+typealias TESTSeqOf = [TESTInteger]
 
-typealias TESTSeqSizeOf1 = Array<TESTInteger>
+typealias TESTSeqSizeOf1 = [TESTInteger]
 
-typealias TESTSeqSizeOf2 = Array<TESTInteger>
+typealias TESTSeqSizeOf2 = [TESTInteger]
 
-typealias TESTSeqSizeOf3 = Array<TESTInteger>
+typealias TESTSeqSizeOf3 = [TESTInteger]
 
-typealias TESTSeqSizeOf4 = Array<TESTInteger>
+typealias TESTSeqSizeOf4 = [TESTInteger]
 
 struct TESTSeqOf2: Codable {
     enum CodingKeys: String, CodingKey {
         case strings
     }
 
-    var strings: Array<GeneralString<String>>
+    var strings: [GeneralString<String>]
 }
 
 struct TESTSeqOf3: Codable {
@@ -280,7 +278,7 @@ struct TESTSeqOf3: Codable {
         case strings
     }
 
-    var strings: Array<GeneralString<String>>?
+    var strings: [GeneralString<String>]?
 }
 
 struct TESTPreserve: Codable {
@@ -293,11 +291,11 @@ struct TESTPreserve: Codable {
     var one: TESTInteger
 }
 
-typealias TESTMechTypeList = Array<TESTMechType>
+typealias TESTMechTypeList = [TESTMechType]
 
 public struct TESTExtension: Codable, ASN1Codable.ASN1ObjectSetOctetStringCodable {
-    public static let knownTypes: [AnyHashable : Codable.Type] = [
-        id_test_default : TESTDefault.self,
+    public static let knownTypes: [AnyHashable: Codable.Type] = [
+        id_test_default: TESTDefault.self,
     ]
 
     enum CodingKeys: String, CodingKey {
@@ -310,9 +308,10 @@ public struct TESTExtension: Codable, ASN1Codable.ASN1ObjectSetOctetStringCodabl
     var extnID: ObjectIdentifier
     var _critical: Bool?
     var critical: Bool {
-        get { return self._critical ?? false }
+        get { self._critical ?? false }
         set { self._critical = newValue }
     }
+
     @ASN1ObjectSetValue
     var extnValue: (any Codable)?
 }
@@ -324,7 +323,7 @@ struct TESTExtensible: Codable {
     }
 
     var version: BigNumber.BInt
-    var extensions: Array<TESTExtension>
+    var extensions: [TESTExtension]
 }
 
 struct my_vers {

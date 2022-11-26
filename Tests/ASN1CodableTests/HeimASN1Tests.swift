@@ -49,19 +49,17 @@
  * SUCH DAMAGE.
  */
 
-
 import XCTest
 import ASN1Codable
 import BigNumber
 
 /// various tests translated from Heimdal
-/// 
+///
 extension ASN1CodableTests {
     func test_encode_TESTLargeTag() {
         let lt1 = TESTLargeTag(foo: 1, bar: 2)
         self.test_encodeDecode(lt1,
-                               encodedAs: Data([0x30, 0x0d, 0xbf, 0x7f, 0x03, 0x02, 0x01, 0x01,
-                                                0xbf, 0x81, 0x00, 0x03, 0x02, 0x01, 0x02]))
+                               encodedAs: Data([0x30, 0x0D, 0xBF, 0x7F, 0x03, 0x02, 0x01, 0x01,
+                                                0xBF, 0x81, 0x00, 0x03, 0x02, 0x01, 0x02]))
     }
-
 }

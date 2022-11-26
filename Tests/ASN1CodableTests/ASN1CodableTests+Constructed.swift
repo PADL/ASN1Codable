@@ -47,7 +47,7 @@ class TestClass: Codable, Equatable, ASN1PrivateTaggedType, ASN1PreserveBinary {
     var bitString = BitString([0x02, 0x03, 0xCC])
 
     static func == (lhs: TestClass, rhs: TestClass) -> Bool {
-        return lhs.version == rhs.version &&
+        lhs.version == rhs.version &&
             lhs.data == rhs.data &&
             lhs.bitString == rhs.bitString
     }
