@@ -5,3 +5,4 @@
 - support for nested SEQUENCE (structs)
 - super decoders
 - propagate originalEncoding (\_save) in all cases
+- ASN1RawRepresentableBitString<BInt>

@@ -46,6 +46,7 @@
 		D351DCE5290EF95E00540132 /* KeyedDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCDC290EF91B00540132 /* KeyedDecodingContainer.swift */; };
 		D351DCE6290EF95E00540132 /* UnkeyedDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCDF290EF91B00540132 /* UnkeyedDecodingContainer.swift */; };
 		D351DCE7290EF95E00540132 /* SingleValueDecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCDD290EF91B00540132 /* SingleValueDecodingContainer.swift */; };
+		D3565C7C293233C3002236A5 /* HeimASN1TestTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565C7B293233C3002236A5 /* HeimASN1TestTypes.swift */; };
 		D363A44A292AF21C007476B4 /* ASN1TagCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */; };
 		D37C1CDB29322C09007264EA /* Certificate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F2884E292C44AD0006CD82 /* Certificate.framework */; };
 		D37C1CDD29322C0F007264EA /* Commandant in Frameworks */ = {isa = PBXBuildFile; productRef = D37C1CDC29322C0F007264EA /* Commandant */; };
@@ -239,6 +240,7 @@
 		D351DCDF290EF91B00540132 /* UnkeyedDecodingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnkeyedDecodingContainer.swift; sourceTree = "<group>"; };
 		D351DCE0290EF91B00540132 /* ASN1Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1Decoder.swift; sourceTree = "<group>"; };
 		D351DCE1290EF91B00540132 /* ASN1DecodingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecodingContainer.swift; sourceTree = "<group>"; };
+		D3565C7B293233C3002236A5 /* HeimASN1TestTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeimASN1TestTypes.swift; sourceTree = "<group>"; };
 		D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1TagCodingKey.swift; sourceTree = "<group>"; };
 		D363A44B292B311C007476B4 /* cert2json-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "cert2json-Bridging-Header.h"; sourceTree = "<group>"; };
 		D37C1CD429322C00007264EA /* certutil */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = certutil; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -430,6 +432,7 @@
 				D3C9B72629309C17003540B1 /* ASN1CodableTests+Constructed.swift */,
 				D3C9B72C2931FE4C003540B1 /* ASN1CodableTests+OpenType.swift */,
 				D3C9B72329309B52003540B1 /* ASN1CodableTests+Primitive.swift */,
+				D3565C7B293233C3002236A5 /* HeimASN1TestTypes.swift */,
 			);
 			name = ASN1CodableTests;
 			path = Tests/ASN1CodableTests;
@@ -1059,6 +1062,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3C9B72429309B52003540B1 /* ASN1CodableTests+Primitive.swift in Sources */,
+				D3565C7C293233C3002236A5 /* HeimASN1TestTypes.swift in Sources */,
 				D3C9B72D2931FE4C003540B1 /* ASN1CodableTests+OpenType.swift in Sources */,
 				D3C9B72729309C17003540B1 /* ASN1CodableTests+Constructed.swift in Sources */,
 				D351DC3A290E849200540132 /* ASN1CodableTests.swift in Sources */,
