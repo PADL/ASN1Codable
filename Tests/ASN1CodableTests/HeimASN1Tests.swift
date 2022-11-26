@@ -1,19 +1,3 @@
-//
-// Copyright (c) 2022 PADL Software Pty Ltd
-//
-// Licensed under the Apache License, Version 2.0 (the License);
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an 'AS IS' BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-
 /*
  * Copyright (c) 1999 - 2005 Kungliga Tekniska Högskolan
  * (Royal Institute of Technology, Stockholm, Sweden).
@@ -156,5 +140,27 @@ extension ASN1CodableTests {
         let test4 = test3
         let c3 = TESTImplicit4.ti2(TESTChoice2.i1(5))
         self.test_encodeDecode(c3, encodedAs: test4)
+    }
+
+    /*
+     UNIV CONS Sequence 12
+       UNIV CONS Sequence 5
+         CONTEXT CONS 0 3
+           UNIV PRIM Integer 1 01
+       CONTEXT CONS 1 3
+         UNIV PRIM Integer 1 03
+
+     UNIV CONS Sequence 5
+       CONTEXT CONS 1 3
+         UNIV PRIM Integer 1 03
+
+     UNIV CONS Sequence 8
+       CONTEXT CONS 1 3
+         UNIV PRIM Integer 1 04
+       UNIV PRIM Integer 1 05
+
+     */
+    func test_taglessalloc() {
+        let test1 = try! Data(hex: "300c3005a003020101a103020103")
     }
 }
