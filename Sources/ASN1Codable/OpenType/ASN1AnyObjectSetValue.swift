@@ -30,7 +30,8 @@ public struct ASN1AnyObjectSetValue: Codable, Equatable, Hashable {
     }
 
     public func encode(to encoder: Encoder) throws {
-        try self.wrappedValue.encode(to: encoder)
+        let objectSetValue = ASN1ObjectSetValue(wrappedValue: self.wrappedValue)
+        try objectSetValue.encode(to: encoder)
     }
 
     public init(from decoder: Decoder) throws {
