@@ -56,10 +56,46 @@ import BigNumber
 /// various tests translated from Heimdal
 ///
 extension ASN1CodableTests {
-    func test_encode_TESTLargeTag() {
+    func test_large_tag() {
         let lt1 = TESTLargeTag(foo: 1, bar: 2)
         self.test_encodeDecode(lt1,
                                encodedAs: Data([0x30, 0x0D, 0xBF, 0x7F, 0x03, 0x02, 0x01, 0x01,
                                                 0xBF, 0x81, 0x00, 0x03, 0x02, 0x01, 0x02]))
+    }
+
+    func test_tag_length() {
+        struct TestData {
+            let ok: Bool
+            let expectedLen: Int
+            let data: Data
+        }
+
+        let td: [TestData] = [TestData(ok: true, expectedLen: 3, data: Data([0x02, 0x01, 0x00])),
+                              TestData(ok: true, expectedLen: 3, data: Data([0x02, 0x01, 0x7F])),
+                              TestData(ok: true, expectedLen: 4, data: Data([0x02, 0x02, 0x00, 0x80])),
+                              TestData(ok: true, expectedLen: 4, data: Data([0x02, 0x02, 0x01, 0x00])),
+                              TestData(ok: true, expectedLen: 4, data: Data([0x02, 0x02, 0x02, 0x00])),
+                              TestData(ok: false, expectedLen: 0, data: Data([0x02, 0x02, 0x00])),
+                              TestData(ok: false, expectedLen: 0, data: Data([0x02, 0x7F, 0x7F])),
+                              TestData(ok: false, expectedLen: 0, data: Data([0x02, 0x03, 0x00, 0x80])),
+                              TestData(ok: false, expectedLen: 0, data: Data([0x02, 0x7F, 0x01, 0x00])),
+                              TestData(ok: false, expectedLen: 0, data: Data([0x02, 0xFF, 0x7F, 0x02, 0x00]))]
+
+        let values: [UInt32] = [0, 127, 128, 256, 512,
+                                0, 127, 128, 256, 512]
+
+        for i in 0 ..< values.count {
+            let decoder = ASN1Decoder()
+            do {
+                let decoded = try decoder.decode(UInt32.self, from: td[i].data)
+                if td[i].ok {
+                    XCTAssertEqual(decoded, values[i])
+                } else {
+                    XCTAssertNotEqual(decoded, values[i])
+                }
+            } catch {
+                XCTAssertEqual(false, td[i].ok)
+            }
+        }
     }
 }
