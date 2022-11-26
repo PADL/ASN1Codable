@@ -43,7 +43,7 @@ extension ASN1CodingContext {
         }
     }
 
-    mutating func automaticTagging<T>(_ type: T.Type) {
+    mutating func automaticTagging<T>(_: T.Type) {
         if self.taggingEnvironment == .automatic {
             self.automaticTaggingContext = ASN1AutomaticTaggingContext(T.self)
         } else {

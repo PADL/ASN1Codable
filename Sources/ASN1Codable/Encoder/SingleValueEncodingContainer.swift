@@ -239,7 +239,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
         if let wrappedObject, !metadata.validateSizeConstraints(wrappedObject) {
             let context = EncodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Value for \(wrappedObject) outside " +
-                                                                   "of size constraint")
+                                                    "of size constraint")
             throw EncodingError.invalidValue(value, context)
         }
 
