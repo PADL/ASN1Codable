@@ -390,6 +390,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
             } else {
                 unwrappedObject = object
             }
+        } else if tagging == .implicit {
+            // may have multiple layers of erased IMPLICIT tags
+            unwrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: innerTag)
         } else {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected universal tag \(innerTag) " +

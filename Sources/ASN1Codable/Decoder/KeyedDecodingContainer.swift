@@ -75,13 +75,24 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     var allKeys: [Key] {
         let keys: [Key]
 
-        if Key.self is ASN1TagCodingKey.Type, self.object.containsOnlyTaggedItems {
+        if Key.self is ASN1TagCodingKey.Type {
             /// this serves both as an escape hatch to support Apple's component attributes
             /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and
             /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
             /// used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
             /// uniform tagging to Swift types
-            keys = self.unsafelyUnwrappedItems.compactMap { Key(intValue: Int($0.tagNo!)) }
+            if self.context.enumCodingState == .enum,
+               case .taggedTag(let tagNo) = self.object.tag,
+               let key = Key(intValue: Int(tagNo)) {
+                keys = [key]
+            } else if self.object.containsOnlyTaggedItems {
+                keys = self.unsafelyUnwrappedItems.compactMap {
+                    guard case .taggedTag(let tagNo) = $0.tag else { return nil }
+                    return Key(intValue: Int(tagNo))
+                }
+            } else {
+                keys = []
+            }
         } else {
             let currentObject: ASN1Object
 
@@ -105,10 +116,18 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     func contains(_ key: Key) -> Bool {
-        if let key = key as? ASN1TagCodingKey, self.object.containsOnlyTaggedItems {
-            /// per the similar code path in allKeys, this returns true if we have a uniformly
-            /// tagged structure and the tag represented by `key` is present
-            return self.unsafelyUnwrappedItems.contains { $0.tag == .taggedTag(UInt(key.intValue!)) }
+        if let key = key as? ASN1TagCodingKey {
+            if self.context.enumCodingState == .enum,
+               case .taggedTag(let tagNo) = self.object.tag,
+               let keyTagNo = key.intValue {
+                return keyTagNo == tagNo
+            } else if self.object.containsOnlyTaggedItems {
+                /// per the similar code path in allKeys, this returns true if we have a uniformly
+                /// tagged structure and the tag represented by `key` is present
+                return self.unsafelyUnwrappedItems.contains { $0.tag == .taggedTag(UInt(key.intValue!)) }
+            } else {
+                return false
+            }
         } else {
             let currentObject: ASN1Object
 
