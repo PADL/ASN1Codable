@@ -16,6 +16,7 @@
 
 import Foundation
 import ASN1Kit
+import AnyCodable
 
 extension ASN1DecoderImpl {
     final class UnkeyedContainer: ASN1DecodingContainer {
@@ -264,13 +265,14 @@ extension ASN1DecoderImpl.UnkeyedContainer {
     private func decodeUnkeyedSingleValueIfPresent<T>(_ type: T.Type) throws -> T? where T: Decodable {
         let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
                                                         context: self.context.decodingSingleValue(type))
-        let value: T?
+        var value: T?
 
         if object.isNull {
             value = nil
         } else {
             do {
                 value = try container.decode(type)
+                if AnyCodable.isNullAnyCodable(value) { return nil } // FIXME abstraction violation
             } catch {
                 if let error = error as? DecodingError, case .typeMismatch = error {
                     return nil

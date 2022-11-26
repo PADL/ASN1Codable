@@ -36,6 +36,7 @@
 import XCTest
 import ASN1Codable
 import BigNumber
+import AnyCodable
 
 /// various tests translated from Heimdal
 ///
@@ -162,5 +163,22 @@ extension ASN1CodableTests {
      */
     func test_taglessalloc() {
         let test1 = try! Data(hex: "300c3005a003020101a103020103")
+        let c1 = TESTAlloc(tagless: TESTAllocInner(ai: 1), three: 3)
+        self.test_encodeDecode(c1, encodedAs: test1)
+
+        let test2 = try! Data(hex: "3005a103020103")
+        let c2 = TESTAlloc(tagless: nil, three: 3)
+        self.test_encodeDecode(c2, encodedAs: test2)
+
+        // FIXME: AnyCodable Data does not round trip
+        /*
+         let test3 = try! Data(hex: "3008a103020104020105")
+         let c3 = TESTAlloc(tagless: nil, three: 4, tagless2: AnyCodable(Data([0x02, 0x01, 0x05])))
+         self.test_encodeDecode(c3, encodedAs: test3)
+          */
+
+        let test4 = try! Data(hex: "3008a103020104020101")
+        let c4 = TESTAlloc(tagless: nil, three: 4, tagless2: AnyCodable(1))
+        self.test_encodeDecode(c4, encodedAs: test4)
     }
 }

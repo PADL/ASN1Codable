@@ -63,7 +63,7 @@ extension ASN1EncoderImpl: Encoder {
     /// - returns: A new keyed encoding container.
     func container<Key>(keyedBy _: Key.Type) -> KeyedEncodingContainer<Key> where Key: CodingKey {
         // FIXME: AnyCodable breaks this
-        //precondition(self.container == nil)
+        // precondition(self.container == nil)
 
         let container = KeyedContainer<Key>(codingPath: self.codingPath,
                                             userInfo: self.userInfo,
@@ -83,7 +83,7 @@ extension ASN1EncoderImpl: Encoder {
     /// - returns: A new empty unkeyed container.
     func unkeyedContainer() -> UnkeyedEncodingContainer {
         // FIXME: AnyCodable breaks this
-        //precondition(self.container == nil)
+        // precondition(self.container == nil)
 
         let container = UnkeyedContainer(codingPath: self.codingPath,
                                          userInfo: self.userInfo,
@@ -104,7 +104,7 @@ extension ASN1EncoderImpl: Encoder {
     /// - returns: A new empty single value container.
     func singleValueContainer() -> SingleValueEncodingContainer {
         // FIXME: AnyCodable breaks this
-        //precondition(self.container == nil)
+        // precondition(self.container == nil)
 
         let container = SingleValueContainer(codingPath: self.codingPath,
                                              userInfo: self.userInfo,
