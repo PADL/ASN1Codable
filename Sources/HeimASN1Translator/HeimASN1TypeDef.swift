@@ -436,7 +436,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                     }
 
                     if let openType = self.openType {
-                        outputStream.write("\t\(visibility)static let knownTypes: [AnyHashable : Codable.Type] = [\n")
+                        outputStream.write("\t\(visibility)static let knownTypes: [AnyHashable: Codable.Type] = [\n")
                         openType.members.forEach {
                             let identifier = openType.typeId(for: $0)
                             let typeName = $0.swiftType!

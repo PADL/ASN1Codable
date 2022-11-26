@@ -319,7 +319,7 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         if bareSwiftType == "String" {
             return "\"\""
         } else {
-            return "\(bareSwiftType)()"
+            return ".init()"
         }
     }
 
