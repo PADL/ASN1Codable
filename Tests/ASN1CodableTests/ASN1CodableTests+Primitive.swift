@@ -18,13 +18,15 @@ import XCTest
 import ASN1Codable
 
 extension ASN1CodableTests {
-    func test_encode<T: Codable & Equatable>(_ value: T, encodedAs data: Data) {
+    func test_encode<T: Codable & Equatable>(_ value: T, encodedAs data: Data, taggingEnvironment: ASN1Tagging? = nil) {
         do {
             let encoder = ASN1Encoder()
+            encoder.taggingEnvironment = taggingEnvironment
             let encoded = try encoder.encode(value)
             XCTAssertEqual(encoded, data)
 
             let decoder = ASN1Decoder()
+            decoder.taggingEnvironment = taggingEnvironment
             let decoded = try decoder.decode(T.self, from: data)
             XCTAssertEqual(decoded, value)
         } catch {
