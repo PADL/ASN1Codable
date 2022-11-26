@@ -16,7 +16,7 @@
 
 import Foundation
 
-public protocol ASN1PreserveBinary {
+public protocol ASN1PreserveBinary: class {
     // swiftlint:disable identifier_name
     var _save: Data? { get set }
 }
