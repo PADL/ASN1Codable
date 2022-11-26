@@ -18,7 +18,7 @@ import XCTest
 import ASN1Codable
 
 extension ASN1CodableTests {
-    func test_encode_PersonnelRecord() {
+    func test_encode_SEQUENCE_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable {
             var name: Data
             var location: Int
@@ -32,7 +32,7 @@ extension ASN1CodableTests {
                                           0x02, 0x01, 0x02, 0x02, 0x01, 0x1A]))
     }
     
-    func test_encode_Building() {
+    func test_encode_SET_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable, ASN1SetCodable {
             var name: Data
             var location: Int
