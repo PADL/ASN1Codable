@@ -318,7 +318,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             throw DecodingError.dataCorrupted(context)
         }
 
-        let verifiedUniversalTag = !object.constructed && metadata.tag!.isUniversal
+        let verifiedUniversalTag = !unwrappedObject.constructed && metadata.tag!.isUniversal
 
         let value = try self.decode(type,
                                     from: unwrappedObject,
