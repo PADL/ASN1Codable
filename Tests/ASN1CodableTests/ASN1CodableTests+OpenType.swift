@@ -21,6 +21,7 @@ import AnyCodable
 let ot_String = ObjectIdentifier(rawValue: "1.0")!
 let ot_Int = ObjectIdentifier(rawValue: "1.1")!
 
+// swiftlint:disable force_try nesting
 extension ASN1CodableTests {
     func test_encode_ObjectSetAny() {
         struct OpenType: Codable, Equatable, ASN1ObjectSetCodable {

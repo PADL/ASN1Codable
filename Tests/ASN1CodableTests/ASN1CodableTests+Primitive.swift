@@ -52,7 +52,11 @@ extension ASN1CodableTests {
     func test_encode_GeneralizedTime() {
         let dateComponents = DateComponents(calendar: Calendar(identifier: .gregorian),
                                             timeZone: TimeZone(secondsFromGMT: 0),
-                                            year: 1996, month: 04, day: 15, hour: 20, minute: 30)
+                                            year: 1996,
+                                            month: 04,
+                                            day: 15,
+                                            hour: 20,
+                                            minute: 30)
         self.test_encodeDecode(GeneralizedTime(wrappedValue: dateComponents.date!),
                                encodedAs: Data([0x18, 0x0F, 0x31, 0x39, 0x39, 0x36, 0x30, 0x34,
                                                 0x31, 0x35, 0x32, 0x30, 0x33, 0x30, 0x30, 0x30,
@@ -95,7 +99,11 @@ extension ASN1CodableTests {
     func test_UTCTime() {
         let dateComponents = DateComponents(calendar: Calendar(identifier: .gregorian),
                                             timeZone: TimeZone(secondsFromGMT: 0),
-                                            year: 1996, month: 04, day: 15, hour: 20, minute: 30)
+                                            year: 1996,
+                                            month: 04,
+                                            day: 15,
+                                            hour: 20,
+                                            minute: 30)
         self.test_encodeDecode(UTCTime(wrappedValue: dateComponents.date!),
                                encodedAs: Data([0x17, 0x0D, 0x39, 0x36, 0x30, 0x34, 0x31, 0x35,
                                                 0x32, 0x30, 0x33, 0x30, 0x30, 0x30, 0x5A]))

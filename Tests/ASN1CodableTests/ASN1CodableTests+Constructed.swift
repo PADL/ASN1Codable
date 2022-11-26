@@ -17,23 +17,24 @@
 import XCTest
 import ASN1Codable
 
+enum Division: Codable, Equatable {
+    struct Manufacturing: Codable, Equatable {
+        var plantID: Int
+        var majorProduct: Data
+    }
+
+    struct RAndD: Codable, Equatable {
+        var labID: Int
+        var currentProject: Data
+    }
+
+    case manufacturing(Manufacturing)
+    case r_and_d(RAndD)
+}
+
+// swiftlint:disable nesting
 extension ASN1CodableTests {
     func test_CHOICE_Division() {
-        enum Division: Codable, Equatable {
-            struct Manufacturing: Codable, Equatable {
-                var plantID: Int
-                var majorProduct: Data
-            }
-
-            struct RAndD: Codable, Equatable {
-                var labID: Int
-                var currentProject: Data
-            }
-
-            case manufacturing(Manufacturing)
-            case r_and_d(RAndD)
-        }
-
         let r_and_d = Division.RAndD(labID: 48, currentProject: Data([0x44, 0x58, 0x2D, 0x37]))
         let currentAssignment = Division.r_and_d(r_and_d)
 
