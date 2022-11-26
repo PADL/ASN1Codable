@@ -10,7 +10,6 @@
 		D30F2DE72920A77B009299A3 /* HeimASN1Tagging.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30F2DE62920A77B009299A3 /* HeimASN1Tagging.swift */; };
 		D30F2DE92920A7A4009299A3 /* HeimASN1Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30F2DE82920A7A4009299A3 /* HeimASN1Module.swift */; };
 		D30F2DEB2920A818009299A3 /* Data+Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30F2DEA2920A818009299A3 /* Data+Extras.swift */; };
-		D30F2E0029221671009299A3 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		D31CABA5291B787300D299F0 /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = D31CABA4291B787300D299F0 /* AnyCodable */; };
 		D33AC5D52910F626003190DC /* ASN1UniversalTagRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D42910F626003190DC /* ASN1UniversalTagRepresentable.swift */; };
 		D33AC5D72910F789003190DC /* ASN1DecodingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5D62910F789003190DC /* ASN1DecodingContext.swift */; };
@@ -19,7 +18,6 @@
 		D33AC5DF29121744003190DC /* ASN1NullObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33AC5DE29121744003190DC /* ASN1NullObject.swift */; };
 		D351DC35290E849200540132 /* ASN1Codable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1Codable.framework */; };
 		D351DC3A290E849200540132 /* ASN1CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC39290E849200540132 /* ASN1CodableTests.swift */; };
-		D351DC62290E8AAF00540132 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC5E290E8AAF00540132 /* main.swift */; };
 		D351DC86290E8AF700540132 /* ASN1TaggedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC66290E8AF700540132 /* ASN1TaggedValue.swift */; };
 		D351DC88290E8AF700540132 /* ASN1CodingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC68290E8AF700540132 /* ASN1CodingContext.swift */; };
 		D351DC89290E8AF700540132 /* ASN1ObjectSetCodingContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC69290E8AF700540132 /* ASN1ObjectSetCodingContext.swift */; };
@@ -41,7 +39,6 @@
 		D351DC9C290E8AF700540132 /* ASN1PrivateTagged.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC80290E8AF700540132 /* ASN1PrivateTagged.swift */; };
 		D351DCA0290E8AF700540132 /* ASN1ContextTagged.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DC84290E8AF700540132 /* ASN1ContextTagged.swift */; };
 		D351DCB9290EAC2500540132 /* ASN1KitExported.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCB8290EAC2500540132 /* ASN1KitExported.swift */; };
-		D351DCCA290EC5EE00540132 /* ASN1Codable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D351DC2A290E849200540132 /* ASN1Codable.framework */; };
 		D351DCDA290ECE3200540132 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCD9290ECE3200540132 /* Box.swift */; };
 		D351DCE2290EF95E00540132 /* ASN1Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCE0290EF91B00540132 /* ASN1Decoder.swift */; };
 		D351DCE3290EF95E00540132 /* ASN1DecodingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D351DCE1290EF91B00540132 /* ASN1DecodingContainer.swift */; };
@@ -66,6 +63,7 @@
 		D3C67EC52925B6870018F3D3 /* VersionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C67EC22925ADC60018F3D3 /* VersionCommand.swift */; };
 		D3C9B72429309B52003540B1 /* ASN1CodableTests+Primitive.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C9B72329309B52003540B1 /* ASN1CodableTests+Primitive.swift */; };
 		D3C9B72729309C17003540B1 /* ASN1CodableTests+Constructed.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C9B72629309C17003540B1 /* ASN1CodableTests+Constructed.swift */; };
+		D3C9B72D2931FE4C003540B1 /* ASN1CodableTests+OpenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C9B72C2931FE4C003540B1 /* ASN1CodableTests+OpenType.swift */; };
 		D3D13E61291339FA00218279 /* ASN1Kit in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E60291339FA00218279 /* ASN1Kit */; };
 		D3D13E6429133A2200218279 /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6329133A2200218279 /* AnyCodable */; };
 		D3D13E6729133AB600218279 /* Echo in Frameworks */ = {isa = PBXBuildFile; productRef = D3D13E6629133AB600218279 /* Echo */; };
@@ -122,13 +120,6 @@
 			remoteGlobalIDString = D351DC29290E849200540132;
 			remoteInfo = ASN1Codable;
 		};
-		D351DCCC290EC5EE00540132 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D351DC21290E849200540132 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D351DC29290E849200540132;
-			remoteInfo = ASN1Codable;
-		};
 		D3F28857292C44AD0006CD82 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D351DC21290E849200540132 /* Project object */;
@@ -167,15 +158,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		D351DC49290E8A4A00540132 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		D3D13E6A291342D500218279 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -232,10 +214,7 @@
 		D351DC2A290E849200540132 /* ASN1Codable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASN1Codable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC34290E849200540132 /* ASN1CodableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ASN1CodableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC39290E849200540132 /* ASN1CodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1CodableTests.swift; sourceTree = "<group>"; };
-		D351DC4B290E8A4A00540132 /* asn1swifttest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = asn1swifttest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D351DC5C290E8AAF00540132 /* CertificateHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CertificateHelpers.swift; sourceTree = "<group>"; };
-		D351DC5D290E8AAF00540132 /* asn1bridgetest.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = asn1bridgetest.entitlements; sourceTree = "<group>"; };
-		D351DC5E290E8AAF00540132 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D351DC66290E8AF700540132 /* ASN1TaggedValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1TaggedValue.swift; sourceTree = "<group>"; };
 		D351DC68290E8AF700540132 /* ASN1CodingContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1CodingContext.swift; sourceTree = "<group>"; };
 		D351DC69290E8AF700540132 /* ASN1ObjectSetCodingContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1ObjectSetCodingContext.swift; sourceTree = "<group>"; };
@@ -282,6 +261,7 @@
 		D3C67EC22925ADC60018F3D3 /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
 		D3C9B72329309B52003540B1 /* ASN1CodableTests+Primitive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ASN1CodableTests+Primitive.swift"; sourceTree = "<group>"; };
 		D3C9B72629309C17003540B1 /* ASN1CodableTests+Constructed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ASN1CodableTests+Constructed.swift"; sourceTree = "<group>"; };
+		D3C9B72C2931FE4C003540B1 /* ASN1CodableTests+OpenType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ASN1CodableTests+OpenType.swift"; sourceTree = "<group>"; };
 		D3D13E6C291342D500218279 /* cert2json */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cert2json; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3D13E6E291342D500218279 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D3D13E7B2913434200218279 /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
@@ -338,14 +318,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D351DC35290E849200540132 /* ASN1Codable.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D351DC48290E8A4A00540132 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D351DCCA290EC5EE00540132 /* ASN1Codable.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,7 +397,6 @@
 			children = (
 				D351DC2A290E849200540132 /* ASN1Codable.framework */,
 				D351DC34290E849200540132 /* ASN1CodableTests.xctest */,
-				D351DC4B290E8A4A00540132 /* asn1swifttest */,
 				D3D13E6C291342D500218279 /* cert2json */,
 				D3FB2DB42919C47C00BC72AF /* HeimASN1Translator.framework */,
 				D3FB2DBD2919C47C00BC72AF /* HeimASN1TranslatorTests.xctest */,
@@ -458,8 +429,9 @@
 			isa = PBXGroup;
 			children = (
 				D351DC39290E849200540132 /* ASN1CodableTests.swift */,
-				D3C9B72329309B52003540B1 /* ASN1CodableTests+Primitive.swift */,
 				D3C9B72629309C17003540B1 /* ASN1CodableTests+Constructed.swift */,
+				D3C9B72C2931FE4C003540B1 /* ASN1CodableTests+OpenType.swift */,
+				D3C9B72329309B52003540B1 /* ASN1CodableTests+Primitive.swift */,
 			);
 			name = ASN1CodableTests;
 			path = Tests/ASN1CodableTests;
@@ -470,15 +442,6 @@
 			children = (
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		D351DC4C290E8A4A00540132 /* asn1swifttest */ = {
-			isa = PBXGroup;
-			children = (
-				D351DC5D290E8AAF00540132 /* asn1bridgetest.entitlements */,
-				D351DC5E290E8AAF00540132 /* main.swift */,
-			);
-			path = asn1swifttest;
 			sourceTree = "<group>";
 		};
 		D351DC65290E8AF700540132 /* Core */ = {
@@ -647,7 +610,6 @@
 			isa = PBXGroup;
 			children = (
 				D3FB2DD02919C4C800BC72AF /* asn1json2swift */,
-				D351DC4C290E8A4A00540132 /* asn1swifttest */,
 				D3D13E6D291342D500218279 /* cert2json */,
 			);
 			name = CLI;
@@ -765,24 +727,6 @@
 			productName = ASN1CodableTests;
 			productReference = D351DC34290E849200540132 /* ASN1CodableTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		D351DC4A290E8A4A00540132 /* asn1swifttest */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D351DC4F290E8A4A00540132 /* Build configuration list for PBXNativeTarget "asn1swifttest" */;
-			buildPhases = (
-				D351DC47290E8A4A00540132 /* Sources */,
-				D351DC48290E8A4A00540132 /* Frameworks */,
-				D351DC49290E8A4A00540132 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D351DCCD290EC5EE00540132 /* PBXTargetDependency */,
-			);
-			name = asn1swifttest;
-			productName = asn1swifttest;
-			productReference = D351DC4B290E8A4A00540132 /* asn1swifttest */;
-			productType = "com.apple.product-type.tool";
 		};
 		D3D13E6B291342D500218279 /* cert2json */ = {
 			isa = PBXNativeTarget;
@@ -925,10 +869,6 @@
 					D351DC33290E849200540132 = {
 						CreatedOnToolsVersion = 14.0.1;
 					};
-					D351DC4A290E8A4A00540132 = {
-						CreatedOnToolsVersion = 14.0.1;
-						LastSwiftMigration = 1400;
-					};
 					D3D13E6B291342D500218279 = {
 						CreatedOnToolsVersion = 14.0.1;
 						LastSwiftMigration = 1400;
@@ -975,7 +915,6 @@
 			targets = (
 				D351DC29290E849200540132 /* ASN1Codable */,
 				D351DC33290E849200540132 /* ASN1CodableTests */,
-				D351DC4A290E8A4A00540132 /* asn1swifttest */,
 				D3D13E6B291342D500218279 /* cert2json */,
 				D3FB2DB32919C47C00BC72AF /* HeimASN1Translator */,
 				D3FB2DBC2919C47C00BC72AF /* HeimASN1TranslatorTests */,
@@ -1118,17 +1057,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3C9B72429309B52003540B1 /* ASN1CodableTests+Primitive.swift in Sources */,
+				D3C9B72D2931FE4C003540B1 /* ASN1CodableTests+OpenType.swift in Sources */,
 				D3C9B72729309C17003540B1 /* ASN1CodableTests+Constructed.swift in Sources */,
 				D351DC3A290E849200540132 /* ASN1CodableTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D351DC47290E8A4A00540132 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D30F2E0029221671009299A3 /* (null) in Sources */,
-				D351DC62290E8AAF00540132 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1210,11 +1141,6 @@
 			isa = PBXTargetDependency;
 			target = D351DC29290E849200540132 /* ASN1Codable */;
 			targetProxy = D351DC36290E849200540132 /* PBXContainerItemProxy */;
-		};
-		D351DCCD290EC5EE00540132 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D351DC29290E849200540132 /* ASN1Codable */;
-			targetProxy = D351DCCC290EC5EE00540132 /* PBXContainerItemProxy */;
 		};
 		D3C9B6F9293053F3003540B1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1483,51 +1409,6 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		D351DC50290E8A4A00540132 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = T53Q9CN4T9;
-				ENABLE_HARDENED_RUNTIME = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"@executable_path/ASN1Codable.framework/Versions/Current/Frameworks",
-					"@executable_path",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.padl.asn1swifttest;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		D351DC51290E8A4A00540132 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = T53Q9CN4T9;
-				ENABLE_HARDENED_RUNTIME = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"@executable_path/ASN1Codable.framework/Versions/Current/Frameworks",
-					"@executable_path",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.padl.asn1swifttest;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -1826,15 +1707,6 @@
 			buildConfigurations = (
 				D351DC42290E849200540132 /* Debug */,
 				D351DC43290E849200540132 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D351DC4F290E8A4A00540132 /* Build configuration list for PBXNativeTarget "asn1swifttest" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D351DC50290E8A4A00540132 /* Debug */,
-				D351DC51290E8A4A00540132 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

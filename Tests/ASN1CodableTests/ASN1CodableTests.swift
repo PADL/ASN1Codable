@@ -26,17 +26,41 @@ class ASN1CodableTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func test_encode<T: Codable & Equatable>(_ value: T, encodedAs data: Data, taggingEnvironment: ASN1Tagging? = nil) {
+    func test_encodeDecode<T: Codable & Equatable>(
+        _ value: T,
+        encodedAs data: Data,
+        taggingEnvironment: ASN1Tagging? = nil
+    ) {
+        self.test_encode(value, encodedAs: data, taggingEnvironment: taggingEnvironment)
+        self.test_decode(value, encodedAs: data, taggingEnvironment: taggingEnvironment)
+    }
+
+    func test_decode<T: Decodable & Equatable>(
+        _ value: T,
+        encodedAs data: Data,
+        taggingEnvironment: ASN1Tagging? = nil
+    ) {
+        do {
+            let decoder = ASN1Decoder()
+            decoder.taggingEnvironment = taggingEnvironment
+            let decoded = try decoder.decode(T.self, from: data)
+            XCTAssertEqual(decoded, value)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+
+    func test_encode<T: Encodable>(
+        _ value: T,
+        encodedAs data: Data,
+        taggingEnvironment: ASN1Tagging? = nil
+    ) {
         do {
             let encoder = ASN1Encoder()
             encoder.taggingEnvironment = taggingEnvironment
             let encoded = try encoder.encode(value)
             XCTAssertEqual(encoded, data, "Expected encoded data \(encoded.hexString()) to match \(data.hexString())")
 
-            let decoder = ASN1Decoder()
-            decoder.taggingEnvironment = taggingEnvironment
-            let decoded = try decoder.decode(T.self, from: data)
-            XCTAssertEqual(decoded, value, "Expected decoded value \(decoded) to match input value \(value)")
         } catch {
             XCTFail(error.localizedDescription)
         }
