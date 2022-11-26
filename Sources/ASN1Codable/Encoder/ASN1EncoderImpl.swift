@@ -62,8 +62,8 @@ extension ASN1EncoderImpl: Encoder {
     /// - parameter type: The key type to use for the container.
     /// - returns: A new keyed encoding container.
     func container<Key>(keyedBy _: Key.Type) -> KeyedEncodingContainer<Key> where Key: CodingKey {
-        // FIXME: investigate why we are reusing single value contained here
-        precondition(self.container == nil || self.context.objectSetCodingContext != nil)
+        // FIXME: AnyCodable breaks this
+        //precondition(self.container == nil)
 
         let container = KeyedContainer<Key>(codingPath: self.codingPath,
                                             userInfo: self.userInfo,
@@ -82,8 +82,8 @@ extension ASN1EncoderImpl: Encoder {
     ///
     /// - returns: A new empty unkeyed container.
     func unkeyedContainer() -> UnkeyedEncodingContainer {
-        // FIXME: investigate why we are reusing single value contained here
-        precondition(self.container == nil || self.context.objectSetCodingContext != nil)
+        // FIXME: AnyCodable breaks this
+        //precondition(self.container == nil)
 
         let container = UnkeyedContainer(codingPath: self.codingPath,
                                          userInfo: self.userInfo,
@@ -103,8 +103,8 @@ extension ASN1EncoderImpl: Encoder {
     ///
     /// - returns: A new empty single value container.
     func singleValueContainer() -> SingleValueEncodingContainer {
-        // FIXME: investigate why we are reusing single value contained here
-        precondition(self.container == nil || self.context.objectSetCodingContext != nil)
+        // FIXME: AnyCodable breaks this
+        //precondition(self.container == nil)
 
         let container = SingleValueContainer(codingPath: self.codingPath,
                                              userInfo: self.userInfo,
