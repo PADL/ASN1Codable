@@ -37,7 +37,7 @@ extension ASN1CodableTests {
     func test_encode_INTEGER() {
         self.test_encode(Int(72), encodedAs: Data([0x02, 0x01, 0x48]))
     }
-    
+
     func test_encode_ENUMERATED() {
         enum Color: Int, Codable {
             case red = 0
@@ -46,11 +46,11 @@ extension ASN1CodableTests {
         }
         self.test_encode(Color.blue, encodedAs: Data([0x0A, 0x01, 0x01]))
     }
-    
+
     func test_encode_OCTET_STRING() {
         self.test_encode(Data([0xA2, 0x4F]), encodedAs: Data([0x04, 0x02, 0xA2, 0x4F]))
     }
-    
+
     func test_encode_NULL() {
         self.test_encode(Null(), encodedAs: Data([0x05, 0x00]))
     }
