@@ -32,7 +32,27 @@ enum Division: Codable, Equatable {
     case r_and_d(RAndD)
 }
 
-// swiftlint:disable nesting
+class TestClass: Codable, Equatable, ASN1PrivateTaggedType, ASN1PreserveBinary {
+    static var tagNumber: UInt = 100
+
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case version = 0
+        case data = 1
+        case bitString = 2
+    }
+
+    var _save: Data?
+    var version: Int = 1
+    var data = Data([0x02, 0x03, 0xFF])
+    var bitString = BitString([0x02, 0x03, 0xCC])
+
+    static func == (lhs: TestClass, rhs: TestClass) -> Bool {
+        return lhs.version == rhs.version &&
+            lhs.data == rhs.data &&
+            lhs.bitString == rhs.bitString
+    }
+}
+
 extension ASN1CodableTests {
     func test_CHOICE_Division() {
         let r_and_d = Division.RAndD(labID: 48, currentProject: Data([0x44, 0x58, 0x2D, 0x37]))
@@ -47,6 +67,8 @@ extension ASN1CodableTests {
     func test_encode_SEQUENCE_ApplicationTaggedTestStruct_PropertyWrapper() {
         struct TestStruct: Codable, Equatable, ASN1ApplicationTaggedType {
             static var tagNumber: UInt = 100
+
+            var _save: Data?
 
             @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>
             var version: Int = 1
@@ -100,22 +122,9 @@ extension ASN1CodableTests {
     }
 
     func test_encode_SEQUENCE_PrivateTaggedTestStruct_CodingKey() {
-        struct TestStruct: Codable, Equatable, ASN1PrivateTaggedType {
-            static var tagNumber: UInt = 100
-
-            enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-                case version = 0
-                case data = 1
-                case bitString = 2
-            }
-
-            var version: Int = 1
-            var data = Data([0x02, 0x03, 0xFF])
-            var bitString = BitString([0x02, 0x03, 0xCC])
-        }
 
         let data = Data(base64Encoded: "/2QWMBSgAwIBAaEFBAMCA/+iBgMEAAIDzA==")!
-        self.test_encodeDecode(TestStruct(), encodedAs: data)
+        self.test_encodeDecode(TestClass(), encodedAs: data)
     }
 
     func test_encode_SEQUENCE_AutoType() {

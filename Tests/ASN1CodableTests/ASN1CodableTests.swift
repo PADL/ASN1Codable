@@ -45,6 +45,11 @@ class ASN1CodableTests: XCTestCase {
             decoder.taggingEnvironment = taggingEnvironment
             let decoded = try decoder.decode(T.self, from: data)
             XCTAssertEqual(decoded, value)
+
+            if let preserved = decoded as? ASN1PreserveBinary {
+                XCTAssertNotNil(preserved._save)
+                XCTAssertEqual(data, preserved._save)
+            }
         } catch {
             XCTFail(error.localizedDescription)
         }
@@ -60,7 +65,6 @@ class ASN1CodableTests: XCTestCase {
             encoder.taggingEnvironment = taggingEnvironment
             let encoded = try encoder.encode(value)
             XCTAssertEqual(encoded, data, "Expected encoded data \(encoded.hexString()) to match \(data.hexString())")
-
         } catch {
             XCTFail(error.localizedDescription)
         }
