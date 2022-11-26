@@ -51,7 +51,7 @@ extension ASN1Object {
                                lhsSerialized.count)
                     }
                 }
-                return cmp > 0
+                return cmp < 0
             } else {
                 return lhsSerialized.count < rhsSerialized.count
             }
