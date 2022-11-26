@@ -45,7 +45,7 @@ extension ASN1CodableTests {
 
     func test_encode_SEQUENCE_ApplicationTaggedTestStruct_PropertyWrapper() {
         struct TestStruct: Codable, Equatable, ASN1ApplicationTaggedType {
-            public static var tagNumber: UInt = 100
+            static var tagNumber: UInt = 100
 
             @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>
             var version: Int = 1
@@ -82,7 +82,7 @@ extension ASN1CodableTests {
 
     func test_encode_SEQUENCE_PrivateTaggedTestStruct_PropertyWrapper() {
         struct TestStruct: Codable, Equatable, ASN1PrivateTaggedType {
-            public static var tagNumber: UInt = 100
+            static var tagNumber: UInt = 100
 
             @ASN1ContextTagged<ASN1TagNumber$0, ASN1DefaultTagging, Int>
             var version: Int = 1
@@ -100,7 +100,7 @@ extension ASN1CodableTests {
 
     func test_encode_SEQUENCE_PrivateTaggedTestStruct_CodingKey() {
         struct TestStruct: Codable, Equatable, ASN1PrivateTaggedType {
-            public static var tagNumber: UInt = 100
+            static var tagNumber: UInt = 100
 
             enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
                 case version = 0
@@ -190,7 +190,7 @@ extension ASN1CodableTests {
 
     func test_encode_IMPLICIT_SEQUENCE_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable, ASN1ContextTaggedType {
-            public static var tagNumber: UInt = 0
+            static var tagNumber: UInt = 0
 
             @UTF8String var name: String = "John"
             var age: Int = 25
@@ -204,7 +204,7 @@ extension ASN1CodableTests {
 
     func test_encode_EXPLICIT_SEQUENCE_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable, ASN1ContextTaggedType {
-            public static var tagNumber: UInt = 0
+            static var tagNumber: UInt = 0
 
             @UTF8String var name: String = "John"
             var age: Int = 25

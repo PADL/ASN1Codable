@@ -24,9 +24,9 @@ let ot_Int = ObjectIdentifier(rawValue: "1.1")!
 extension ASN1CodableTests {
     func test_encode_ObjectSetAny() {
         struct OpenType: Codable, Equatable, ASN1ObjectSetCodable {
-            public static let knownTypes: [AnyHashable: Codable.Type] = [
+            static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
-                ot_Int: Int.self,
+                ot_Int: Int.self
             ]
 
             enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
@@ -50,9 +50,9 @@ extension ASN1CodableTests {
 
     func test_encode_ObjectSetAnyOctetString() {
         struct OpenType: Codable, Equatable, ASN1ObjectSetOctetStringCodable {
-            public static let knownTypes: [AnyHashable: Codable.Type] = [
+            static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
-                ot_Int: Int.self,
+                ot_Int: Int.self
             ]
 
             enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
@@ -76,9 +76,9 @@ extension ASN1CodableTests {
 
     func test_encode_ObjectSet() {
         struct OpenType: Codable, ASN1ObjectSetCodable {
-            public static let knownTypes: [AnyHashable: Codable.Type] = [
+            static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
-                ot_Int: Int.self,
+                ot_Int: Int.self
             ]
 
             enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
@@ -101,9 +101,9 @@ extension ASN1CodableTests {
 
     func test_encode_ObjectSetOctetString() {
         struct OpenType: Codable, ASN1ObjectSetOctetStringCodable {
-            public static let knownTypes: [AnyHashable: Codable.Type] = [
+            static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
-                ot_Int: Int.self,
+                ot_Int: Int.self
             ]
 
             enum CodingKeys: Int, ASN1ExplicitTagCodingKey {

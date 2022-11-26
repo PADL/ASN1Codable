@@ -41,6 +41,7 @@ opt_in_rules:
   - closure_end_indentation
 included:
   - Sources
+  - Tests
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Sources/HeimASN1Translator
   - Package.swift
