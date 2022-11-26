@@ -119,7 +119,7 @@ struct TESTDefault: Codable {
     }
 }
 
-struct TESTLargeTag: Codable {
+struct TESTLargeTag: Codable, Equatable {
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
         case foo = 127
         case bar = 128
