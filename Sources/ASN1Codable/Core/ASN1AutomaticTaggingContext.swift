@@ -97,12 +97,8 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         return .taggedTag(self.tagNo)
     }
 
-    private var tagging: ASN1Tagging {
-        self.enumMetadata != nil ? .explicit : .implicit
-    }
-
     func metadataForNextTag() -> ASN1Metadata {
-        ASN1Metadata(tag: self.nextTag(), tagging: self.tagging)
+        ASN1Metadata(tag: self.nextTag(), tagging: .implicit)
     }
 
     var description: String {
