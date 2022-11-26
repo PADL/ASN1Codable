@@ -272,7 +272,7 @@ extension ASN1DecoderImpl.UnkeyedContainer {
         } else {
             do {
                 value = try container.decode(type)
-                if AnyCodable.isNullAnyCodable(value) { return nil } // FIXME abstraction violation
+                if AnyCodable.isNullAnyCodable(value) { return nil } // FIXME: abstraction violation
             } catch {
                 if let error = error as? DecodingError, case .typeMismatch = error {
                     return nil
