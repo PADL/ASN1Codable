@@ -94,7 +94,7 @@ let berData = try ASN1Encoder().encode(someValue)
 let decodedValue = try ASN1Decoder().decode(AType.self, from: berData)
 ```
 
-The source distribution includes a `cert2json` tool which reads a PEM-encoded certificate and outputs a JSON representation, using the native Swift JSON encoder. It also can re-encode the certificate to ASN.1, useful for verifying round-tripping. The API `cert2json` uses is provided by `Certificate.framework`, which is a C API modeled on the macOS Security framework and implemented in Swift using ASN1Codable.
+The source distribution includes a `certutil` tool which reads a PEM-encoded certificate and outputs a JSON representation, using the native Swift JSON encoder. It also can re-encode the certificate to ASN.1, useful for verifying round-tripping. The API `certutil` uses is provided by `Certificate.framework`, which is a C API modeled on the macOS Security framework and implemented in Swift using ASN1Codable.
 
 The RFC2459 ASN.1 is based on Heimdal's and was translated from the JSON using the `asn1json2swift` tool. You will need to use the master branch of Heimdal if you wish to recompile the ASN.1 as the translator depends on some new features of the ASN.1 compiler.
 
