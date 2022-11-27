@@ -18,12 +18,22 @@ import Foundation
 import Network
 import ASN1Codable
 
+extension CertificateRef {
+    var _swiftObject: Certificate {
+        unsafeBitCast(self, to: Certificate.self)
+    }
+}
+
 extension Certificate {
+    var _cfObject: CertificateRef {
+        unsafeBitCast(Unmanaged<Certificate>.passRetained(self), to: CertificateRef.self)
+    }
+
     static func create(with der_certificate: Data) -> CertificateRef? {
         do {
             let decoder = ASN1Decoder()
             let certificate = try decoder.decode(Certificate.self, from: der_certificate as Data)
-            return certificate._certificateRef
+            return certificate._cfObject
         } catch {
             debugPrint("Failed to decode certificate: \(error)")
             return nil
@@ -42,7 +52,7 @@ public func CertificateCreateWithData(
 
 @_cdecl("CertificateCopyData")
 public func CertificateCopyData(_ certificate: CertificateRef?) -> CFData? {
-    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
+    guard let certificate = certificate?._swiftObject else { return nil }
     guard let data = certificate._save else { return nil }
     return data as CFData
 }
@@ -72,8 +82,7 @@ extension Certificate {
 
 @_cdecl("CertificateCopySubjectSummary")
 public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFString? {
-    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
-
+    let certificate = certificate._swiftObject
     let summary: String
 
     // FIXME: mirror Security.framework, currently just returns a DN
@@ -81,10 +90,10 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFSt
         summary = cn[0]
     } else if certificate.rdnCount != 0 {
         summary = certificate.tbsCertificate.subject.description
-    } else if let emails = CertificateCopyRFC822Names(certificate._certificateRef),
+    } else if let emails = CertificateCopyRFC822Names(certificate._cfObject),
               let email = (emails as NSArray).firstObject as? String {
         summary = email
-    } else if let dns = CertificateCopyDNSNamesFromSAN(certificate._certificateRef),
+    } else if let dns = CertificateCopyDNSNamesFromSAN(certificate._cfObject),
               let dns = (dns as NSArray).firstObject as? String {
         summary = dns
     } else {
@@ -96,6 +105,6 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFSt
 
 @_cdecl("_CertificateCopySerialNumberData")
 public func _CertificateCopySerialNumberData(_ certificate: CertificateRef) -> CFData? {
-    guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
+    let certificate = certificate._swiftObject
     return certificate.serialNumberData
 }
