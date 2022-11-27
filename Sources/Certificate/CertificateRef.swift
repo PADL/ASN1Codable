@@ -30,6 +30,6 @@ extension Certificate {
 }
 
 @_cdecl("_CertificateGetRetainCount")
-func _CertificateGetRetainCount(_ certificate: CertificateRef) -> CFIndex {
+public func _CertificateGetRetainCount(_ certificate: CertificateRef) -> CFIndex {
     CFGetRetainCount(unsafeBitCast(certificate, to: CFTypeRef.self))
 }

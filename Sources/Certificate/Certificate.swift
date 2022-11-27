@@ -95,7 +95,7 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFSt
 }
 
 @_cdecl("_CertificateCopySerialNumberData")
-func _CertificateCopySerialNumberData(_ certificate: CertificateRef) -> CFData? {
+public func _CertificateCopySerialNumberData(_ certificate: CertificateRef) -> CFData? {
     guard let certificate = Certificate._fromCertificateRef(certificate) else { return nil }
     return certificate.serialNumberData
 }
