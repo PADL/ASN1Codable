@@ -19,7 +19,7 @@ import ASN1Codable
 
 extension Certificate {
     static func _fromCertificateRef(_ certificateRef: CertificateRef!) -> Certificate? {
-        if certificateRef == nil { return nil }
+        guard let certificateRef else { return nil }
         return unsafeBitCast(certificateRef, to: Certificate.self)
     }
 
@@ -27,9 +27,4 @@ extension Certificate {
         let certificate = Unmanaged<Certificate>.passRetained(self)
         return unsafeBitCast(certificate, to: CertificateRef.self)
     }
-}
-
-@_cdecl("_CertificateGetRetainCount")
-public func _CertificateGetRetainCount(_ certificate: CertificateRef) -> CFIndex {
-    CFGetRetainCount(unsafeBitCast(certificate, to: CFTypeRef.self))
 }

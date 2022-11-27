@@ -27,7 +27,7 @@
 #import <Certificate/CertificateInternal.h>
 #import <Certificate/CertificatePriv.h>
 
-#import "CertificateAPI.h"
+#import "CertificateAPIImpl.h"
 #import "CFRelease.h"
 
 OSStatus CertificateCopyCommonName(CertificateRef certificate, CFStringRef *commonName)
