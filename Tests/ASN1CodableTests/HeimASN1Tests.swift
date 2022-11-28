@@ -334,26 +334,26 @@ extension ASN1CodableTests {
 
 // swiftlint:disable force_try nesting
 extension ASN1CodableTests {
-    typealias KeyUsage = ASN1RawRepresentableBitString<_KeyUsage>
-    struct _KeyUsage: OptionSet, Codable, Equatable {
-        var rawValue: UInt16
+    func test_bit_string() {
+        typealias KeyUsage = ASN1RawRepresentableBitString<_KeyUsage>
+        struct _KeyUsage: OptionSet, Codable, Equatable {
+            var rawValue: UInt16
 
-        init(rawValue: UInt16) {
-            self.rawValue = rawValue
+            init(rawValue: UInt16) {
+                self.rawValue = rawValue
+            }
+
+            static let digitalSignature = _KeyUsage(rawValue: 1 << 0)
+            static let nonRepudiation = _KeyUsage(rawValue: 1 << 1)
+            static let keyEncipherment = _KeyUsage(rawValue: 1 << 2)
+            static let dataEncipherment = _KeyUsage(rawValue: 1 << 3)
+            static let keyAgreement = _KeyUsage(rawValue: 1 << 4)
+            static let keyCertSign = _KeyUsage(rawValue: 1 << 5)
+            static let cRLSign = _KeyUsage(rawValue: 1 << 6)
+            static let encipherOnly = _KeyUsage(rawValue: 1 << 7)
+            static let decipherOnly = _KeyUsage(rawValue: 1 << 8)
         }
 
-        static let digitalSignature = _KeyUsage(rawValue: 1 << 0)
-        static let nonRepudiation = _KeyUsage(rawValue: 1 << 1)
-        static let keyEncipherment = _KeyUsage(rawValue: 1 << 2)
-        static let dataEncipherment = _KeyUsage(rawValue: 1 << 3)
-        static let keyAgreement = _KeyUsage(rawValue: 1 << 4)
-        static let keyCertSign = _KeyUsage(rawValue: 1 << 5)
-        static let cRLSign = _KeyUsage(rawValue: 1 << 6)
-        static let encipherOnly = _KeyUsage(rawValue: 1 << 7)
-        static let decipherOnly = _KeyUsage(rawValue: 1 << 8)
-    }
-
-    func test_bit_string() {
         let test0 = try! Data(hex: "03020780")
         let c0 = _KeyUsage.digitalSignature
         self.test_encodeDecode(KeyUsage(wrappedValue: c0), encodedAs: test0)
@@ -369,5 +369,49 @@ extension ASN1CodableTests {
         let test3 = try! Data(hex: "030100")
         let c3 = _KeyUsage()
         self.test_encodeDecode(KeyUsage(wrappedValue: c3), encodedAs: test3)
+    }
+
+    func test_bit_string_rfc1510() {
+        typealias TicketFlags = ASN1RawRepresentableBitString<_TicketFlags>
+        struct _TicketFlags: OptionSet, Codable, ASN1RFC1510RawRepresentable {
+            var rawValue: UInt32
+
+            init(rawValue: UInt32) {
+                self.rawValue = rawValue
+            }
+
+            static let reserved = _TicketFlags(rawValue: 1 << 0)
+            static let forwardable = _TicketFlags(rawValue: 1 << 1)
+            static let forwarded = _TicketFlags(rawValue: 1 << 2)
+            static let proxiable = _TicketFlags(rawValue: 1 << 3)
+            static let proxy = _TicketFlags(rawValue: 1 << 4)
+            static let may_postdate = _TicketFlags(rawValue: 1 << 5)
+            static let postdated = _TicketFlags(rawValue: 1 << 6)
+            static let invalid = _TicketFlags(rawValue: 1 << 7)
+            static let renewable = _TicketFlags(rawValue: 1 << 8)
+            static let initial = _TicketFlags(rawValue: 1 << 9)
+            static let pre_authent = _TicketFlags(rawValue: 1 << 10)
+            static let hw_authent = _TicketFlags(rawValue: 1 << 11)
+            static let transited_policy_checked = _TicketFlags(rawValue: 1 << 12)
+            static let ok_as_delegate = _TicketFlags(rawValue: 1 << 13)
+            static let enc_pa_rep = _TicketFlags(rawValue: 1 << 15)
+            static let anonymous = _TicketFlags(rawValue: 1 << 16)
+        }
+
+        let test0 = try! Data(hex: "03050080000000")
+        let tf0 = _TicketFlags.reserved
+        self.test_encodeDecode(TicketFlags(wrappedValue: tf0), encodedAs: test0)
+
+        let test1 = try! Data(hex: "03050040200000")
+        let tf1 = _TicketFlags([.forwardable, .pre_authent])
+        self.test_encodeDecode(TicketFlags(wrappedValue: tf1), encodedAs: test1)
+
+        let test2 = try! Data(hex: "03050000200000")
+        let tf2 = _TicketFlags.pre_authent
+        self.test_encodeDecode(TicketFlags(wrappedValue: tf2), encodedAs: test2)
+
+        let test3 = try! Data(hex: "03050000000000")
+        let tf3 = _TicketFlags()
+        self.test_encodeDecode(TicketFlags(wrappedValue: tf3), encodedAs: test3)
     }
 }
