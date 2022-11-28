@@ -16,7 +16,6 @@
 
 import Foundation
 import ASN1Kit
-import AnyCodable
 
 extension ASN1DecoderImpl {
     final class KeyedContainer<Key>: ASN1DecodingContainer where Key: CodingKey {
@@ -364,7 +363,7 @@ extension ASN1DecoderImpl.KeyedContainer {
         } else {
             do {
                 value = try container.decode(type)
-                if AnyCodable.isNullAnyCodable(value) { return nil } // FIXME: abstraction violation
+                if isNullAnyCodable(value) { return nil } // FIXME: abstraction violation
             } catch {
                 if let error = error as? DecodingError, case .typeMismatch = error {
                     return nil

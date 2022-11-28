@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import ASN1Kit
 
 extension ASN1EncoderImpl {
     final class KeyedContainer<Key>: ASN1EncodingContainer where Key: CodingKey {

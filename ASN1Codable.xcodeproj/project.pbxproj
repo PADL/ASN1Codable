@@ -50,7 +50,7 @@
 		D3565C7E29323768002236A5 /* HeimASN1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565C7D29323768002236A5 /* HeimASN1Tests.swift */; };
 		D3565C822932BD2D002236A5 /* DataKit in Frameworks */ = {isa = PBXBuildFile; productRef = D3565C812932BD2D002236A5 /* DataKit */; };
 		D3565C842932BD35002236A5 /* DataKit in Frameworks */ = {isa = PBXBuildFile; productRef = D3565C832932BD35002236A5 /* DataKit */; };
-		D3565C862932C68A002236A5 /* AnyCodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565C852932C68A002236A5 /* AnyCodable+Extensions.swift */; };
+		D3565C862932C68A002236A5 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565C852932C68A002236A5 /* AnyCodable.swift */; };
 		D3565C8A29343802002236A5 /* FixedWidthInteger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565C8929343802002236A5 /* FixedWidthInteger.swift */; };
 		D363A44A292AF21C007476B4 /* ASN1TagCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */; };
 		D37C1CDB29322C09007264EA /* Certificate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F2884E292C44AD0006CD82 /* Certificate.framework */; };
@@ -245,7 +245,7 @@
 		D3565C7B293233C3002236A5 /* HeimASN1TestTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeimASN1TestTypes.swift; sourceTree = "<group>"; };
 		D3565C7D29323768002236A5 /* HeimASN1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeimASN1Tests.swift; sourceTree = "<group>"; };
 		D3565C7F2932AC70002236A5 /* CertificateTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CertificateTests-Bridging-Header.h"; sourceTree = "<group>"; };
-		D3565C852932C68A002236A5 /* AnyCodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnyCodable+Extensions.swift"; sourceTree = "<group>"; };
+		D3565C852932C68A002236A5 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyCodable.swift; sourceTree = "<group>"; };
 		D3565C8929343802002236A5 /* FixedWidthInteger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedWidthInteger.swift; sourceTree = "<group>"; };
 		D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1TagCodingKey.swift; sourceTree = "<group>"; };
 		D363A44B292B311C007476B4 /* certutil-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "certutil-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -477,6 +477,7 @@
 		D351DC78290E8AF700540132 /* Primitive */ = {
 			isa = PBXGroup;
 			children = (
+				D3565C852932C68A002236A5 /* AnyCodable.swift */,
 				D3D13E8829146B7400218279 /* Base.swift */,
 				D3D13E8329134A4B00218279 /* BInt.swift */,
 				D351DC7A290E8AF700540132 /* BitString.swift */,
@@ -547,7 +548,6 @@
 		D3D6E7C5292DBAD700198A86 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				D3565C852932C68A002236A5 /* AnyCodable+Extensions.swift */,
 				D351DCD9290ECE3200540132 /* Box.swift */,
 				D33AC5DC29120492003190DC /* OptionalProtocol.swift */,
 			);
@@ -1023,7 +1023,7 @@
 				D3D6E7CD292DC88600198A86 /* ASN1AnyObjectSetValue.swift in Sources */,
 				D3565C8A29343802002236A5 /* FixedWidthInteger.swift in Sources */,
 				D351DC98290E8AF700540132 /* BitString.swift in Sources */,
-				D3565C862932C68A002236A5 /* AnyCodable+Extensions.swift in Sources */,
+				D3565C862932C68A002236A5 /* AnyCodable.swift in Sources */,
 				D351DCE7290EF95E00540132 /* SingleValueDecodingContainer.swift in Sources */,
 				D351DC89290E8AF700540132 /* ASN1ObjectSetCodingContext.swift in Sources */,
 				D351DCE2290EF95E00540132 /* ASN1Decoder.swift in Sources */,

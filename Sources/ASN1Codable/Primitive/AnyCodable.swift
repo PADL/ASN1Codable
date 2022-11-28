@@ -18,16 +18,16 @@ import Foundation
 import AnyCodable
 
 extension AnyCodable {
-    static func isNullAnyCodable<T: Decodable>(_ value: T?) -> Bool {
-        guard let value = value as? Self else { return false }
-        return value.isNull
-    }
-
-    private var isNull: Bool {
+    fileprivate var isNull: Bool {
         if let value = self.value as? NSNull {
             return value == NSNull()
         } else {
             return false
         }
     }
+}
+
+func isNullAnyCodable<T: Decodable>(_ value: T?) -> Bool {
+    guard let value = value as? AnyCodable else { return false }
+    return value.isNull
 }
