@@ -414,4 +414,14 @@ extension ASN1CodableTests {
         let tf3 = _TicketFlags()
         self.test_encodeDecode(TicketFlags(wrappedValue: tf3), encodedAs: test3)
     }
+
+    func test_time() {
+        let test0 = try! Data(hex: "180f31393730303130313031313833315a")
+        let t0 = GeneralizedTime(wrappedValue: Date(timeIntervalSince1970: 4711))
+        self.test_encodeDecode(t0, encodedAs: test0)
+
+        let test1 = try! Data(hex: "180f32303039303532343032303234305a")
+        let t1 = GeneralizedTime(wrappedValue: Date(timeIntervalSince1970: 1_243_130_560))
+        self.test_encodeDecode(t1, encodedAs: test1)
+    }
 }
