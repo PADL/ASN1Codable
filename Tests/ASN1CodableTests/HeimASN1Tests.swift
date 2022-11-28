@@ -38,7 +38,7 @@ import ASN1Codable
 import BigNumber
 import AnyCodable
 
-// swiftlint:disable force_try
+// swiftlint:disable force_try nesting
 extension ASN1CodableTests {
     func test_large_tag() {
         let lt1 = TESTLargeTag(foo: 1, bar: 2)
@@ -92,6 +92,25 @@ extension ASN1CodableTests {
 
         self.test_encodeDecode(c1, encodedAs: td[0])
         self.test_encodeDecode(c2, encodedAs: td[1])
+    }
+
+    func test_decorated() {
+        var td = TESTDecorated(version: 3)
+
+        td.version2 = 5
+        td.version3 = my_vers(v: 5)
+
+        do {
+            let encoder = ASN1Encoder()
+            let encoded = try encoder.encode(td)
+
+            let decoder = ASN1Decoder()
+            let tnd = try decoder.decode(TESTNotDecorated.self, from: encoded)
+
+            XCTAssertEqual(td.version, tnd.version)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
     }
 
     func test_implicit() {
@@ -330,10 +349,7 @@ extension ASN1CodableTests {
         XCTAssertEqual(c3.maxint, 2_147_483_647)
         XCTAssertEqual(c3.works, true)
     }
-}
 
-// swiftlint:disable force_try nesting
-extension ASN1CodableTests {
     func test_bit_string() {
         typealias KeyUsage = ASN1RawRepresentableBitString<_KeyUsage>
         struct _KeyUsage: OptionSet, Codable, Equatable {
