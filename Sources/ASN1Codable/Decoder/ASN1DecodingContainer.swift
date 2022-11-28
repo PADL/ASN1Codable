@@ -19,6 +19,7 @@ import ASN1Kit
 
 protocol ASN1DecodingContainer {
     var codingPath: [CodingKey] { get }
+    var userInfo: [CodingUserInfoKey: Any] { get }
     var object: ASN1Object { get }
     var context: ASN1DecodingContext { get set }
     var currentIndex: Int { get }
@@ -131,5 +132,9 @@ extension ASN1DecodingContainer {
                 throw error
             }
         }
+    }
+
+    var disableSetSorting: Bool {
+        self.userInfo[CodingUserInfoKey.ASN1DisableSetSorting] as? Bool ?? false
     }
 }

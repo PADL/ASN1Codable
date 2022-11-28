@@ -403,7 +403,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
                                            encodeAsOctetString: type is ASN1ObjectSetOctetStringCodable.Type)
         }
 
-        let sortedObject = self.context.encodeAsSet ? object.sortedByTag : object
+        let sortedObject = self.context.encodeAsSet && !self.disableSetSorting ? object.sortedByTag : object
 
         let decoder = ASN1DecoderImpl(object: sortedObject,
                                       codingPath: self.codingPath,

@@ -17,15 +17,15 @@
 import Foundation
 import ASN1Kit
 
-protocol ASN1EncodingContainer {
-    var codingPath: [CodingKey] { get }
-    var userInfo: [CodingUserInfoKey: Any] { get }
-    var object: ASN1Object? { get }
-    var context: ASN1EncodingContext { get set }
-}
+extension CodingUserInfoKey {
+    /// If `true`, require explicit extensibility markers (through conformance of the `ASN1ExtensibleType`
+    /// protocol) to accept ASN.1 objects with more fields than the equivalent Swift structure.
+    public static var ASN1ExplicitExtensibilityMarkerRequired: Self {
+        Self(rawValue: "com.padl.ASN1Codable.ASN1ExplicitExtensibilityMarkerRequired")!
+    }
 
-extension ASN1EncodingContainer {
-    var disableSetSorting: Bool {
-        self.userInfo[CodingUserInfoKey.ASN1DisableSetSorting] as? Bool ?? false
+    /// if `true`, disable sorting of SETs (producing BER instead of DER)
+    public static var ASN1DisableSetSorting: Self {
+        Self(rawValue: "com.padl.ASN1Codable.ASN1DisableSetSorting")!
     }
 }

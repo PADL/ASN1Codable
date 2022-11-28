@@ -145,6 +145,24 @@ public struct PrintableString<Value: Codable & ExpressibleByString>:
     }
 }
 
+@propertyWrapper
+public struct VisibleString<Value: Codable & ExpressibleByString>:
+    Codable, Equatable, Hashable, ASN1UniversalTaggedValue {
+    public var wrappedValue: Value
+
+    public init(wrappedValue: Value) {
+        self.wrappedValue = wrappedValue
+    }
+
+    public init() where Value: ExpressibleByNilLiteral {
+        self.wrappedValue = nil
+    }
+
+    public static var metadata: ASN1Metadata {
+        ASN1Metadata(tag: .universal(.visibleString))
+    }
+}
+
 extension ASN1DecodedTag {
     var isString: Bool {
         switch self {

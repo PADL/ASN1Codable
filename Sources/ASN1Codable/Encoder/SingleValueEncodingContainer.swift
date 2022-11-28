@@ -296,7 +296,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
                                       context: self.context)
         try value.encode(to: encoder)
 
-        if self.context.encodeAsSet {
+        if self.context.encodeAsSet, !self.disableSetSorting {
             return encoder.object?.sortedByTag
         } else {
             return encoder.object
