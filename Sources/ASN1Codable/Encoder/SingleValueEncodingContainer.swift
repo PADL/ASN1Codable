@@ -269,21 +269,15 @@ extension ASN1EncoderImpl.SingleValueContainer {
 
     private func encodeFixedWidthIntegerValue<T>(_ value: T) throws -> ASN1Object? where T: FixedWidthInteger {
         let tag: ASN1DecodedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
-        let fixedWidthIntegerValue: (any FixedWidthInteger & ASN1EncodableType)? = T.isSigned ? Int(exactly: value) : UInt(exactly: value)
-        guard let fixedWidthIntegerValue else {
-            let context = EncodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Value \(value) does not fit within \(T.isSigned ? "Int" : "UInt")")
-            throw EncodingError.invalidValue(value, context)
-        }
-
-        return try fixedWidthIntegerValue.asn1encode(tag: tag)
+        return try value.asn1encode(tag: tag)
     }
 
     private func encodePrimitiveValue<T: ASN1EncodableType>(_ value: T) throws -> ASN1Object? {
         if let value = value as? any FixedWidthInteger {
             return try self.encodeFixedWidthIntegerValue(value)
+        } else {
+            return try value.asn1encode(tag: nil)
         }
-        return try value.asn1encode(tag: nil)
     }
 
     private func encodeConstructedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
