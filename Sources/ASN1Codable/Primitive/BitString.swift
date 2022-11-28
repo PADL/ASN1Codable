@@ -17,9 +17,7 @@
 import Foundation
 import ASN1Kit
 
-// FIXME: need to deal with bit strings that are not byte multiples
-
-public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, Equatable, Hashable, ASN1CodableType {
+public struct BitString: MutableDataProtocol, ContiguousBytes, Equatable, Hashable {
     public var startIndex: Data.Index { self.wrappedValue.startIndex }
     public var endIndex: Data.Index { self.wrappedValue.endIndex }
     public var regions: CollectionOfOne<BitString> { CollectionOfOne(self) }
@@ -53,7 +51,23 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, Equatabl
     ) where C: Collection, C.Element == Element {
         self.wrappedValue.replaceSubrange(subrange, with: newElements)
     }
+}
 
+extension BitString: Decodable {
+    public init(from decoder: Decoder) throws {
+        precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
+        self.wrappedValue = try Data(from: decoder)
+    }
+}
+
+extension BitString: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        precondition(!(encoder is ASN1Codable.ASN1EncoderImpl))
+        try self.wrappedValue.encode(to: encoder)
+    }
+}
+
+extension BitString: ASN1DecodableType {
     public init(from asn1: ASN1Object) throws {
         switch (asn1.tag, asn1.data) {
         case (ASN1DecodedTag.universal(.bitString), .primitive(let data)):
@@ -62,125 +76,14 @@ public struct BitString: MutableDataProtocol, ContiguousBytes, Codable, Equatabl
             throw ASN1Error.malformedEncoding("Invalid tag \(asn1.tag) for BitString")
         }
     }
+}
 
+extension BitString: ASN1EncodableType {
     public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
-        try self.wrappedValue.asn1bitStringEncode(unused: 0, tag: tag)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        precondition(!(encoder is ASN1Codable.ASN1EncoderImpl))
-        try self.wrappedValue.encode(to: encoder)
-    }
-
-    public init(from decoder: Decoder) throws {
-        precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
-        self.wrappedValue = try Data(from: decoder)
-    }
-
-    init(from binaryInteger: any BinaryInteger) throws {
-        // FIXME: should not round to byte boundary
-        let data = Swift.withUnsafeBytes(of: Int(binaryInteger).bigEndian) { Data($0) }
-        let index = data.firstIndex { $0 != 0 }
-        self.wrappedValue = data.advanced(by: index ?? 0)
+        return try self.wrappedValue.asn1bitStringEncode(tag: tag)
     }
 }
 
 extension BitString: ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Tag { .bitString }
 }
-
-@propertyWrapper
-public struct ASN1RawRepresentableBitString<Value>: Codable, ASN1CodableType where
-    Value: RawRepresentable & Codable,
-    Value.RawValue: FixedWidthInteger & Codable {
-    public var wrappedValue: Value
-
-    public init(wrappedValue: Value) {
-        self.wrappedValue = wrappedValue
-    }
-
-    public init() where Value: ExpressibleByNilLiteral {
-        self.wrappedValue = nil
-    }
-
-    public init(from asn1: ASN1Object) throws {
-        let rawValue = try ASN1IntegerBitString<Value.RawValue>(from: asn1)
-        guard let value = Value(rawValue: rawValue.wrappedValue) else {
-            throw ASN1Error.malformedEncoding("Could not initialize \(Value.self) from \(rawValue)")
-        }
-        self.init(wrappedValue: value)
-    }
-
-    public func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Object {
-        let bitString = ASN1IntegerBitString<Value.RawValue>(wrappedValue: wrappedValue.rawValue)
-        return try bitString.asn1encode(tag: tag)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        precondition(!(encoder is ASN1Codable.ASN1EncoderImpl))
-        try self.wrappedValue.encode(to: encoder)
-    }
-
-    public init(from decoder: Decoder) throws {
-        precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
-        self.wrappedValue = try Value(from: decoder)
-    }
-}
-
-extension ASN1RawRepresentableBitString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { .bitString }
-}
-
-extension ASN1RawRepresentableBitString: Equatable where Value: Equatable {}
-
-extension ASN1RawRepresentableBitString: Hashable where Value: Hashable {}
-
-@propertyWrapper
-public struct ASN1IntegerBitString<Value>: Codable, ASN1CodableType where Value: FixedWidthInteger & Codable {
-    public var wrappedValue: Value
-
-    public init(wrappedValue: Value) {
-        self.wrappedValue = wrappedValue
-    }
-
-    public init() where Value: ExpressibleByNilLiteral {
-        self.wrappedValue = nil
-    }
-
-    public init(from asn1: ASN1Object) throws {
-        let bitString = try BitString(from: asn1)
-
-        guard Value.bitWidth >= bitString.count * 8 else {
-            throw ASN1Error.malformedEncoding("Integer encoded in \(asn1) too large for \(Value.bitWidth)-bit integer")
-        }
-
-        var data = Data(count: Value.bitWidth / 8)
-        data.replaceSubrange(data.endIndex - bitString.wrappedValue.count ..< data.endIndex,
-                             with: bitString.wrappedValue)
-
-        self.wrappedValue = Value(data.withUnsafeBytes { $0.load(as: Value.self) }).bigEndian
-    }
-
-    public func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Object {
-        let bitString = try BitString(from: self.wrappedValue)
-        return try bitString.asn1encode(tag: tag)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        precondition(!(encoder is ASN1Codable.ASN1EncoderImpl))
-        try self.wrappedValue.encode(to: encoder)
-    }
-
-    public init(from decoder: Decoder) throws {
-        precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
-        self.wrappedValue = try Value(from: decoder)
-    }
-}
-
-extension ASN1IntegerBitString: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { .bitString }
-}
-
-extension ASN1IntegerBitString: Equatable where Value: Equatable {}
-
-extension ASN1IntegerBitString: Hashable where Value: Hashable {}

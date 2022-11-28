@@ -55,6 +55,7 @@
 		D3565CAC29345579002236A5 /* X690SampleTestTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565CAB29345579002236A5 /* X690SampleTestTypes.swift */; };
 		D3565CAE293464D4002236A5 /* X690SampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565CAD293464D4002236A5 /* X690SampleTests.swift */; };
 		D3565CB129346A48002236A5 /* ASN1UserInfoKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565CAF29346A0A002236A5 /* ASN1UserInfoKeys.swift */; };
+		D3565CB329348743002236A5 /* ASN1RawRepresentableBitString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565CB229348743002236A5 /* ASN1RawRepresentableBitString.swift */; };
 		D363A44A292AF21C007476B4 /* ASN1TagCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */; };
 		D37C1CDB29322C09007264EA /* Certificate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F2884E292C44AD0006CD82 /* Certificate.framework */; };
 		D37C1CDD29322C0F007264EA /* Commandant in Frameworks */ = {isa = PBXBuildFile; productRef = D37C1CDC29322C0F007264EA /* Commandant */; };
@@ -253,6 +254,7 @@
 		D3565CAB29345579002236A5 /* X690SampleTestTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = X690SampleTestTypes.swift; sourceTree = "<group>"; };
 		D3565CAD293464D4002236A5 /* X690SampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = X690SampleTests.swift; sourceTree = "<group>"; };
 		D3565CAF29346A0A002236A5 /* ASN1UserInfoKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1UserInfoKeys.swift; sourceTree = "<group>"; };
+		D3565CB229348743002236A5 /* ASN1RawRepresentableBitString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1RawRepresentableBitString.swift; sourceTree = "<group>"; };
 		D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1TagCodingKey.swift; sourceTree = "<group>"; };
 		D363A44B292B311C007476B4 /* certutil-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "certutil-Bridging-Header.h"; sourceTree = "<group>"; };
 		D37C1CD429322C00007264EA /* certutil */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = certutil; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -487,6 +489,7 @@
 			isa = PBXGroup;
 			children = (
 				D3565C852932C68A002236A5 /* AnyCodable.swift */,
+				D3565CB229348743002236A5 /* ASN1RawRepresentableBitString.swift */,
 				D3D13E8829146B7400218279 /* Base.swift */,
 				D3D13E8329134A4B00218279 /* BInt.swift */,
 				D351DC7A290E8AF700540132 /* BitString.swift */,
@@ -1049,6 +1052,7 @@
 				D3FB2DA12918597900BC72AF /* ASN1ImplicitlyWrappedObject.swift in Sources */,
 				D33AC5D92910F796003190DC /* ASN1EncodingContext.swift in Sources */,
 				D3D6E7C3292DBA5D00198A86 /* ASN1SetCodable.swift in Sources */,
+				D3565CB329348743002236A5 /* ASN1RawRepresentableBitString.swift in Sources */,
 				D351DC9C290E8AF700540132 /* ASN1PrivateTagged.swift in Sources */,
 				D33AC5DD29120492003190DC /* OptionalProtocol.swift in Sources */,
 				D351DCE3290EF95E00540132 /* ASN1DecodingContainer.swift in Sources */,
