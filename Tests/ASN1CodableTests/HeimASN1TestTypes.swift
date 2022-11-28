@@ -277,6 +277,7 @@ struct TESTSeqOf2: Codable, Equatable {
     var strings: [GeneralString<String>]
 }
 
+// swiftlint:disable discouraged_optional_collection
 struct TESTSeqOf3: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case strings
@@ -285,6 +286,7 @@ struct TESTSeqOf3: Codable, Equatable {
     var strings: [GeneralString<String>]?
 }
 
+// swiftlint:disable discouraged_optional_collection
 struct TESTSeqOf4: Codable, Equatable {
     struct B1: Codable, Equatable {
         var s1: Data

@@ -38,7 +38,7 @@ import ASN1Codable
 import BigNumber
 import AnyCodable
 
-// swiftlint:disable force_try nesting
+// swiftlint:disable force_try
 extension ASN1CodableTests {
     func test_large_tag() {
         let lt1 = TESTLargeTag(foo: 1, bar: 2)
@@ -235,13 +235,24 @@ extension ASN1CodableTests {
             "020900ffffffffffffffff0209008000000000000000040004020102040400010203a2" +
             "31302f040002010104020102020900ffffffffffffffff040400010203020900800000" +
             "000000000004010002050100000000")
-        let b1 = TESTSeqOf4.B1(s1: Data(), s2: Data([0x01, 0x02]), u1: 1, u2: 18_446_744_073_709_551_615)
-        let b2 = TESTSeqOf4.B2(u1: 1, u2: 18_446_744_073_709_551_615, u3: 9_223_372_036_854_775_808,
-                               s1: Data(), s2: Data([0x01, 0x02]), s3: Data([0x00, 0x01, 0x02, 0x03]))
-        let b3 = TESTSeqOf4.B3(s1: Data(), u1: 1,
-                               s2: Data([0x01, 0x02]), u2: 18_446_744_073_709_551_615,
-                               s3: Data([0x00, 0x01, 0x02, 0x03]), u3: 9_223_372_036_854_775_808,
-                               s4: Data([0x00]), u4: 4_294_967_296)
+        let b1 = TESTSeqOf4.B1(s1: Data(),
+                               s2: Data([0x01, 0x02]),
+                               u1: 1,
+                               u2: 18_446_744_073_709_551_615)
+        let b2 = TESTSeqOf4.B2(u1: 1,
+                               u2: 18_446_744_073_709_551_615,
+                               u3: 9_223_372_036_854_775_808,
+                               s1: Data(),
+                               s2: Data([0x01, 0x02]),
+                               s3: Data([0x00, 0x01, 0x02, 0x03]))
+        let b3 = TESTSeqOf4.B3(s1: Data(),
+                               u1: 1,
+                               s2: Data([0x01, 0x02]),
+                               u2: 18_446_744_073_709_551_615,
+                               s3: Data([0x00, 0x01, 0x02, 0x03]),
+                               u3: 9_223_372_036_854_775_808,
+                               s4: Data([0x00]),
+                               u4: 4_294_967_296)
         var c3 = TESTSeqOf4()
         c3.b1 = [b1]
         c3.b2 = [b2]

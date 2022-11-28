@@ -8,6 +8,7 @@ disabled_rules:
   - force_unwrapping
   - identifier_name
   - type_name
+  - trailing_comma
 opt_in_rules:
   - attributes
   - empty_count
