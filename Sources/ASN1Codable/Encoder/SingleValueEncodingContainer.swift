@@ -83,61 +83,61 @@ extension ASN1EncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
 
     func encode(_ value: Int) throws {
         try self.withASN1Throwing(value) {
-            try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWidthIntegerValue(value)
         }
     }
 
     func encode(_ value: Int8) throws {
         try self.withASN1Throwing(value) {
-            try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWidthIntegerValue(value)
         }
     }
 
     func encode(_ value: Int16) throws {
         try self.withASN1Throwing(value) {
-            try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWidthIntegerValue(value)
         }
     }
 
     func encode(_ value: Int32) throws {
         try self.withASN1Throwing(value) {
-            try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWidthIntegerValue(value)
         }
     }
 
     func encode(_ value: Int64) throws {
         try self.withASN1Throwing(value) {
-            try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWidthIntegerValue(value)
         }
     }
 
     func encode(_ value: UInt) throws {
         try self.withASN1Throwing(value) {
-            try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWidthIntegerValue(value)
         }
     }
 
     func encode(_ value: UInt8) throws {
         try self.withASN1Throwing(value) {
-            try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWidthIntegerValue(value)
         }
     }
 
     func encode(_ value: UInt16) throws {
         try self.withASN1Throwing(value) {
-            try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWidthIntegerValue(value)
         }
     }
 
     func encode(_ value: UInt32) throws {
         try self.withASN1Throwing(value) {
-            try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWidthIntegerValue(value)
         }
     }
 
     func encode(_ value: UInt64) throws {
         try self.withASN1Throwing(value) {
-            try self.encodeFixedWithIntegerValue(value)
+            try self.encodeFixedWidthIntegerValue(value)
         }
     }
 
@@ -267,14 +267,21 @@ extension ASN1EncoderImpl.SingleValueContainer {
         return try self.encodeTagged(value, with: taggingContext.metadataForNextTag(), skipTaggedValues: true)
     }
 
-    private func encodeFixedWithIntegerValue<T>(_ value: T) throws -> ASN1Object? where T: FixedWidthInteger {
+    private func encodeFixedWidthIntegerValue<T>(_ value: T) throws -> ASN1Object? where T: FixedWidthInteger {
         let tag: ASN1DecodedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
-        return T.isSigned ? try Int(value).asn1encode(tag: tag) : try UInt(value).asn1encode(tag: tag)
+        let fixedWidthIntegerValue: (any FixedWidthInteger & ASN1EncodableType)? = T.isSigned ? Int(exactly: value) : UInt(exactly: value)
+        guard let fixedWidthIntegerValue else {
+            let context = EncodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Value \(value) does not fit within \(T.isSigned ? "Int" : "UInt")")
+            throw EncodingError.invalidValue(value, context)
+        }
+
+        return try fixedWidthIntegerValue.asn1encode(tag: tag)
     }
 
     private func encodePrimitiveValue<T: ASN1EncodableType>(_ value: T) throws -> ASN1Object? {
         if let value = value as? any FixedWidthInteger {
-            return try self.encodeFixedWithIntegerValue(value)
+            return try self.encodeFixedWidthIntegerValue(value)
         }
         return try value.asn1encode(tag: nil)
     }

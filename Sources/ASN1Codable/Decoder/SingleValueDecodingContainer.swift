@@ -226,12 +226,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             throw DecodingError.dataCorrupted(context)
         }
 
-        guard type.bitWidth >= data.count * 8 else {
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Integer encoded in \(self.object) " +
-                                                    "too large for \(type.bitWidth)-bit integer")
-            throw DecodingError.dataCorrupted(context)
-        }
+        let fixedWidthIntegerValue: any FixedWidthInteger
 
         // FIXME: can FixedWidthInteger be larger than platform integer?
         if T.isSigned {
@@ -241,7 +236,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
                                                         "too large for platform signed integer")
                 throw DecodingError.dataCorrupted(context)
             }
-            return T(value)
+            fixedWidthIntegerValue = value
         } else {
             guard let value = data.unsignedIntValue else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
@@ -249,8 +244,17 @@ extension ASN1DecoderImpl.SingleValueContainer {
                                                         "too large for platform unsigned integer")
                 throw DecodingError.dataCorrupted(context)
             }
-            return T(value)
+            fixedWidthIntegerValue = value
         }
+
+        guard let value = T(exactly: fixedWidthIntegerValue) else {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Integer encoded in \(self.object) " +
+                                                    "too large for type \(type)")
+            throw DecodingError.dataCorrupted(context)
+        }
+
+        return value
     }
 
     private func decodeTaggedKeyedValue<T>(
