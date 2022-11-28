@@ -310,6 +310,16 @@ extension ASN1CodableTests {
         self.test_encodeDecode(c1, encodedAs: test1)
     }
 
+    func test_mechtypelist() {
+        let test = try! Data(hex: "302E06092A864882F71201020206092A864886F712010202060A2B06010401823702021" +
+            "E060A2B06010401823702020A")
+        let mtl: TESTMechTypeList = [ObjectIdentifier(rawValue: "1.2.840.48018.1.2.2")!,
+                                     ObjectIdentifier(rawValue: "1.2.840.113554.1.2.2")!,
+                                     ObjectIdentifier(rawValue: "1.3.6.1.4.1.311.2.2.30")!,
+                                     ObjectIdentifier(rawValue: "1.3.6.1.4.1.311.2.2.10")!]
+        self.test_encodeDecode(mtl, encodedAs: test)
+    }
+
     func test_default() {
         let test0 = try! Data(hex: "3000")
         let c0 = TESTDefault()
