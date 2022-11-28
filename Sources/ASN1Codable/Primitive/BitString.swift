@@ -131,6 +131,10 @@ extension ASN1RawRepresentableBitString: ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Tag { .bitString }
 }
 
+extension ASN1RawRepresentableBitString: Equatable where Value: Equatable {}
+
+extension ASN1RawRepresentableBitString: Hashable where Value: Hashable {}
+
 @propertyWrapper
 public struct ASN1IntegerBitString<Value>: Codable, ASN1CodableType where Value: FixedWidthInteger & Codable {
     public var wrappedValue: Value
@@ -176,3 +180,7 @@ public struct ASN1IntegerBitString<Value>: Codable, ASN1CodableType where Value:
 extension ASN1IntegerBitString: ASN1UniversalTagRepresentable {
     static var tagNo: ASN1Tag { .bitString }
 }
+
+extension ASN1IntegerBitString: Equatable where Value: Equatable {}
+
+extension ASN1IntegerBitString: Hashable where Value: Hashable {}
