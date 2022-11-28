@@ -48,6 +48,6 @@ public protocol ASN1ContextTaggedType: ASN1TaggedType {}
 extension ASN1ContextTaggedType {
     public static var metadata: ASN1Metadata {
         ASN1Metadata(tag: .taggedTag(self.tagNumber),
-                     tagging: self is ASN1ImplicitlyTaggedType.Type ? .implicit : nil)
+                     tagging: self.tagging)
     }
 }

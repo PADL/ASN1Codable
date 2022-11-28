@@ -25,3 +25,19 @@ public protocol ASN1TaggedType: ASN1TypeMetadataRepresentable, Codable {
 
 // for when the entire type is implicitly tagged
 public protocol ASN1ImplicitlyTaggedType {}
+public protocol ASN1ExplicitlyTaggedType {}
+public protocol ASN1AutomaticallyTaggedType {}
+
+extension ASN1TaggedType {
+    static var tagging: ASN1Tagging? {
+        if self is ASN1ImplicitlyTaggedType.Type {
+            return .implicit
+        } else if self is ASN1ExplicitlyTaggedType {
+            return .explicit
+        } else if self is ASN1AutomaticallyTaggedType {
+            return .automatic
+        } else {
+            return nil
+        }
+    }
+}
