@@ -80,7 +80,7 @@ extension BitString: ASN1DecodableType {
 
 extension BitString: ASN1EncodableType {
     public func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
-        return try self.wrappedValue.asn1bitStringEncode(tag: tag)
+        try self.wrappedValue.asn1bitStringEncode(tag: tag)
     }
 }
 
