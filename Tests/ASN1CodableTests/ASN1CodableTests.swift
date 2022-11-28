@@ -21,19 +21,28 @@ class ASN1CodableTests: XCTestCase {
     func test_encodeDecode<T: Codable & Equatable>(
         _ value: T,
         encodedAs data: Data,
+        userInfo: [CodingUserInfoKey: Any] = [:],
         taggingEnvironment: ASN1Tagging? = nil
     ) {
-        self.test_encode(value, encodedAs: data, taggingEnvironment: taggingEnvironment)
-        self.test_decode(value, encodedAs: data, taggingEnvironment: taggingEnvironment)
+        self.test_encode(value,
+                         encodedAs: data,
+                         userInfo: userInfo,
+                         taggingEnvironment: taggingEnvironment)
+        self.test_decode(value,
+                         encodedAs: data,
+                         userInfo: userInfo,
+                         taggingEnvironment: taggingEnvironment)
     }
 
     func test_decode<T: Decodable & Equatable>(
         _ value: T,
         encodedAs data: Data,
+        userInfo: [CodingUserInfoKey: Any] = [:],
         taggingEnvironment: ASN1Tagging? = nil
     ) {
         do {
             let decoder = ASN1Decoder()
+            decoder.userInfo = userInfo
             decoder.taggingEnvironment = taggingEnvironment
             let decoded = try decoder.decode(T.self, from: data)
             XCTAssertEqual(decoded, value)
@@ -52,10 +61,12 @@ class ASN1CodableTests: XCTestCase {
     func test_encode<T: Encodable>(
         _ value: T,
         encodedAs data: Data,
+        userInfo: [CodingUserInfoKey: Any] = [:],
         taggingEnvironment: ASN1Tagging? = nil
     ) {
         do {
             let encoder = ASN1Encoder()
+            encoder.userInfo = userInfo
             encoder.taggingEnvironment = taggingEnvironment
             let encoded = try encoder.encode(value)
             XCTAssertEqual(encoded, data, "Expected encoded data \(encoded.hexString()) to match \(data.hexString())")
