@@ -102,6 +102,8 @@ enum HeimASN1UniversalType: String, Codable, HeimASN1SwiftTypeRepresentable, Hei
             tag = .utf8String
         case .bmpString:
             tag = .bmpString
+        case .visibleString:
+            tag = .visibleString
         case .choice:
             tag = .implicit
         default:

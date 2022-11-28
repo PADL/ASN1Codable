@@ -22,3 +22,6 @@ import ASN1Kit
 public protocol ASN1TaggedType: ASN1TypeMetadataRepresentable, Codable {
     static var tagNumber: UInt { get }
 }
+
+// for when the entire type is implicitly tagged
+public protocol ASN1ImplicitlyTaggedType {}

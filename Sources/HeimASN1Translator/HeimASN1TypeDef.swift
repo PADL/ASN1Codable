@@ -329,6 +329,9 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
             } else if tag.isUniversal == false {
                 conformances.append("ASN1Codable.ASN1PrivateTaggedType")
             }
+            if self.parent?.taggingEnvironment == .implicit {
+                conformances.append("ASN1Codable.ASN1ImplicitlyTaggedType")
+            }
         }
         if let tType = self.tType, case .universal(let type) = tType, type == .set {
             conformances.append("ASN1Codable.ASN1SetCodable")
@@ -397,6 +400,19 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
             }
         }
         outputStream.write("\t}\n\n")
+    }
+
+    var hasSwiftTypeDefinition: Bool {
+        guard self.isTypeDef ?? false, self.cType != nil, let tType = self.tType else {
+            return false
+        }
+
+        guard case .universal(let type) = tType,
+              type == .sequence || type == .set || type == .choice else {
+            return false
+        }
+
+        return true
     }
 
     func emit(_ outputStream: inout OutputStream) throws {
