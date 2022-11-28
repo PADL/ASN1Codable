@@ -331,3 +331,43 @@ extension ASN1CodableTests {
         XCTAssertEqual(c3.works, true)
     }
 }
+
+// swiftlint:disable force_try nesting
+extension ASN1CodableTests {
+    typealias KeyUsage = ASN1RawRepresentableBitString<_KeyUsage>
+    struct _KeyUsage: OptionSet, Codable, Equatable {
+        var rawValue: UInt16
+
+        init(rawValue: UInt16) {
+            self.rawValue = rawValue
+        }
+
+        static let digitalSignature = _KeyUsage(rawValue: 1 << 0)
+        static let nonRepudiation = _KeyUsage(rawValue: 1 << 1)
+        static let keyEncipherment = _KeyUsage(rawValue: 1 << 2)
+        static let dataEncipherment = _KeyUsage(rawValue: 1 << 3)
+        static let keyAgreement = _KeyUsage(rawValue: 1 << 4)
+        static let keyCertSign = _KeyUsage(rawValue: 1 << 5)
+        static let cRLSign = _KeyUsage(rawValue: 1 << 6)
+        static let encipherOnly = _KeyUsage(rawValue: 1 << 7)
+        static let decipherOnly = _KeyUsage(rawValue: 1 << 8)
+    }
+
+    func test_bit_string() {
+        let test0 = try! Data(hex: "03020780")
+        let c0 = _KeyUsage.digitalSignature
+        self.test_encodeDecode(KeyUsage(wrappedValue: c0), encodedAs: test0)
+
+        let test1 = try! Data(hex: "030205a0")
+        let c1 = _KeyUsage([.digitalSignature, .keyEncipherment])
+        self.test_encodeDecode(KeyUsage(wrappedValue: c1), encodedAs: test1)
+
+        let test2 = try! Data(hex: "0303070080")
+        let c2 = _KeyUsage.decipherOnly
+        self.test_encodeDecode(KeyUsage(wrappedValue: c2), encodedAs: test2)
+
+        let test3 = try! Data(hex: "030100")
+        let c3 = _KeyUsage()
+        self.test_encodeDecode(KeyUsage(wrappedValue: c3), encodedAs: test3)
+    }
+}
