@@ -18,6 +18,7 @@ import Foundation
 import AnyCodable
 
 extension AnyCodable {
+    // swiftlint:disable strict_fileprivate
     fileprivate var isNull: Bool {
         if let value = self.value as? NSNull {
             return value == NSNull()
