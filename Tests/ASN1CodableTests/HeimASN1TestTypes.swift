@@ -79,6 +79,15 @@ struct TESTOutOfOrderFoo: Codable {
     var bar: TESTOutOfOrderBar
 }
 
+class TESTCircular: Codable, Equatable {
+    static func == (lhs: TESTCircular, rhs: TESTCircular) -> Bool {
+        lhs.name == rhs.name && lhs.next == rhs.next
+    }
+
+    var name: String
+    var next: TESTCircular?
+}
+
 struct TESTDefault: Codable {
     enum CodingKeys: String, CodingKey {
         case _name = "name"
