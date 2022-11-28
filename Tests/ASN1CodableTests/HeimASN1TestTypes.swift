@@ -1,8 +1,3 @@
-/// HeimASN1Translator generated 2022-11-26 11:52:16 +0000
-/// asn1json2swift translate --conform-type Name:Hashable,Name:Equatable,Foo:Hashable --map-type DirectoryString:String,Certificate:@class --input
-/// defines ASN.1 module TEST with explicit tagging
-/// imports ASN.1 module heim
-
 import ASN1Codable
 import Foundation
 import AnyCodable
@@ -279,6 +274,44 @@ struct TESTSeqOf3: Codable, Equatable {
     }
 
     var strings: [GeneralString<String>]?
+}
+
+struct TESTSeqOf4: Codable, Equatable {
+    struct B1: Codable, Equatable {
+        var s1: Data
+        var s2: Data
+        var u1: TESTuint64
+        var u2: TESTuint64
+    }
+
+    @ASN1ContextTagged<TEST.ASN1TagNumber$0, ASN1Codable.ASN1ExplicitTagging, [B1]?>
+    var b1: [B1]?
+
+    struct B2: Codable, Equatable {
+        var u1: TESTuint64
+        var u2: TESTuint64
+        var u3: TESTuint64
+        var s1: Data
+        var s2: Data
+        var s3: Data
+    }
+
+    @ASN1ContextTagged<TEST.ASN1TagNumber$1, ASN1Codable.ASN1ImplicitTagging, [B2]?>
+    var b2: [B2]?
+
+    struct B3: Codable, Equatable {
+        var s1: Data
+        var u1: TESTuint64
+        var s2: Data
+        var u2: TESTuint64
+        var s3: Data
+        var u3: TESTuint64
+        var s4: Data
+        var u4: TESTuint64
+    }
+
+    @ASN1ContextTagged<TEST.ASN1TagNumber$2, ASN1Codable.ASN1ImplicitTagging, [B3]?>
+    var b3: [B3]?
 }
 
 struct TESTPreserve: Codable, Equatable {

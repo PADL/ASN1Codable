@@ -105,9 +105,9 @@ extension ASN1CodableTests {
          *   CONTEXT PRIM tag 2 = 1 bytes [2] IMPLICIT content
          * }
          */
-        let test1 = try! Data(hex: "300e800100a106bf7f03020102820103")
+        let test0 = try! Data(hex: "300e800100a106bf7f03020102820103")
         let c0 = TESTImplicit(ti1: 0, ti2: TESTImplicitInner(foo: 2), ti3: 3)
-        self.test_encodeDecode(c0, encodedAs: test1)
+        self.test_encodeDecode(c0, encodedAs: test0)
 
         /*
          * UNIV CONS Sequence = 10 bytes {
@@ -116,20 +116,20 @@ extension ASN1CodableTests {
          *   CONTEXT PRIM tag 51 = 1 bytes [51] IMPLICIT content
          * }
          */
-        let test2 = try! Data(hex: "300a8001018201039f330104")
+        let test1 = try! Data(hex: "300a8001018201039f330104")
         let c1 = TESTImplicit2(ti1: 1,
                                ti3: TESTInteger3(wrappedValue: TESTInteger2(wrappedValue: 3)),
                                ti4: 4)
-        self.test_encodeDecode(c1, encodedAs: test2)
+        self.test_encodeDecode(c1, encodedAs: test1)
 
         /*
          * CONTEXT CONS tag 5 = 5 bytes [5]
          *   CONTEXT CONS tag 1 = 3 bytes [1]
          *     UNIV PRIM Integer = integer 5
          */
-        let test3 = try! Data(hex: "a505a103020105")
+        let test2 = try! Data(hex: "a505a103020105")
         let c2 = TESTImplicit3.ti2(TESTImplicit3Inner.i1(5))
-        self.test_encodeDecode(c2, encodedAs: test3)
+        self.test_encodeDecode(c2, encodedAs: test2)
 
         /*
          * Notice: same as tests3[].bytes.
@@ -138,9 +138,9 @@ extension ASN1CodableTests {
          *   CONTEXT CONS tag 1 = 3 bytes [1]
          *     UNIV PRIM Integer = integer 5
          */
-        let test4 = test3
+        let test3 = test2
         let c3 = TESTImplicit4.ti2(TESTChoice2.i1(5))
-        self.test_encodeDecode(c3, encodedAs: test4)
+        self.test_encodeDecode(c3, encodedAs: test3)
     }
 
     /*
@@ -180,5 +180,73 @@ extension ASN1CodableTests {
         let test4 = try! Data(hex: "3008a103020104020101")
         let c4 = TESTAlloc(tagless: nil, three: 4, tagless2: AnyCodable(1))
         self.test_encodeDecode(c4, encodedAs: test4)
+    }
+
+    /*
+     UNIV CONS Sequence 5
+       CONTEXT CONS 0 3
+         UNIV PRIM Integer 1 00
+
+     UNIV CONS Sequence 5
+       CONTEXT CONS 1 3
+         UNIV PRIM Integer 1 03
+
+     UNIV CONS Sequence 10
+       CONTEXT CONS 0 3
+         UNIV PRIM Integer 1 00
+       CONTEXT CONS 1 3
+         UNIV PRIM Integer 1 01
+
+     */
+    func test_optional() {
+        let test0 = try! Data(hex: "3000")
+        let c0 = TESTOptional(zero: nil, one: nil)
+        self.test_encodeDecode(c0, encodedAs: test0)
+
+        let test1 = try! Data(hex: "3005a003020100")
+        let c1 = TESTOptional(zero: 0, one: nil)
+        self.test_encodeDecode(c1, encodedAs: test1)
+
+        let test2 = try! Data(hex: "3005a103020101")
+        let c2 = TESTOptional(zero: nil, one: 1)
+        self.test_encodeDecode(c2, encodedAs: test2)
+
+        let test3 = try! Data(hex: "300aa003020100a103020101")
+        let c3 = TESTOptional(zero: 0, one: 1)
+        self.test_encodeDecode(c3, encodedAs: test3)
+    }
+
+    func test_seq4() {
+        let test0 = try! Data(hex: "3000")
+        let c0 = TESTSeqOf4()
+        self.test_encodeDecode(c0, encodedAs: test0)
+
+        let test1 = try! Data(hex: "3002a100")
+        var c1 = TESTSeqOf4()
+        c1.b2 = []
+        self.test_encodeDecode(c1, encodedAs: test1)
+
+        let test2 = try! Data(hex: "3006a0023000a100")
+        var c2 = TESTSeqOf4()
+        c2.b1 = []
+        c2.b2 = []
+        self.test_encodeDecode(c2, encodedAs: test2)
+
+        let test3 = try! Data(hex: "3076a01830163014040004020102020101020900ffffffffffffffffa1273025020101" +
+            "020900ffffffffffffffff0209008000000000000000040004020102040400010203a2" +
+            "31302f040002010104020102020900ffffffffffffffff040400010203020900800000" +
+            "000000000004010002050100000000")
+        let b1 = TESTSeqOf4.B1(s1: Data(), s2: Data([0x01, 0x02]), u1: 1, u2: 18_446_744_073_709_551_615)
+        let b2 = TESTSeqOf4.B2(u1: 1, u2: 18_446_744_073_709_551_615, u3: 9_223_372_036_854_775_808,
+                               s1: Data(), s2: Data([0x01, 0x02]), s3: Data([0x00, 0x01, 0x02, 0x03]))
+        let b3 = TESTSeqOf4.B3(s1: Data(), u1: 1,
+                               s2: Data([0x01, 0x02]), u2: 18_446_744_073_709_551_615,
+                               s3: Data([0x00, 0x01, 0x02, 0x03]), u3: 9_223_372_036_854_775_808,
+                               s4: Data([0x00]), u4: 4_294_967_296)
+        var c3 = TESTSeqOf4()
+        c3.b1 = [b1]
+        c3.b2 = [b2]
+        c3.b3 = [b3]
+        self.test_encodeDecode(c3, encodedAs: test3)
     }
 }
