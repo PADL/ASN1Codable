@@ -88,7 +88,7 @@ class TESTCircular: Codable, Equatable {
     var next: TESTCircular?
 }
 
-struct TESTDefault: Codable {
+struct TESTDefault: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case _name = "name"
         case _version = "version"

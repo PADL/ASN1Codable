@@ -288,4 +288,46 @@ extension ASN1CodableTests {
         let c1 = TESTSeqOf5(b: [b])
         self.test_encodeDecode(c1, encodedAs: test1)
     }
+
+    func test_default() {
+        let test0 = try! Data(hex: "3000")
+        let c0 = TESTDefault()
+        self.test_encodeDecode(c0, encodedAs: test0)
+        XCTAssertEqual(c0.name, "Heimdal")
+        XCTAssertEqual(c0.version, 8)
+        XCTAssertEqual(c0.maxint, 9_223_372_036_854_775_807)
+        XCTAssertEqual(c0.works, true)
+
+        let test1 = try! Data(hex: "30170c076865696d64616ca00302010702047fffffff010100")
+        var c1 = TESTDefault()
+        c1.name = "heimdal"
+        c1.version = 7
+        c1.maxint = 2_147_483_647
+        c1.works = false
+        self.test_encodeDecode(c1, encodedAs: test1)
+        XCTAssertEqual(c1.name, "heimdal")
+        XCTAssertEqual(c1.version, 7)
+        XCTAssertEqual(c1.maxint, 2_147_483_647)
+        XCTAssertEqual(c1.works, false)
+
+        let test2 = try! Data(hex: "3008a003020107010100")
+        var c2 = TESTDefault()
+        c2.version = 7
+        c2.works = false
+        self.test_encodeDecode(c2, encodedAs: test2)
+        XCTAssertEqual(c2.name, "Heimdal")
+        XCTAssertEqual(c2.version, 7)
+        XCTAssertEqual(c2.maxint, 9_223_372_036_854_775_807)
+        XCTAssertEqual(c2.works, false)
+
+        let test3 = try! Data(hex: "300f0c076865696d64616c02047fffffff")
+        var c3 = TESTDefault()
+        c3.name = "heimdal"
+        c3.maxint = 2_147_483_647
+        self.test_encodeDecode(c3, encodedAs: test3)
+        XCTAssertEqual(c3.name, "heimdal")
+        XCTAssertEqual(c3.version, 8)
+        XCTAssertEqual(c3.maxint, 2_147_483_647)
+        XCTAssertEqual(c3.works, true)
+    }
 }
