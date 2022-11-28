@@ -113,6 +113,8 @@ extension ASN1CodableTests {
         }
     }
 
+    // FIXME: can't implement test_decorated_choice() as no stored values on enums
+
     func test_implicit() {
         /*
          * UNIV CONS Sequence = 14 bytes {
