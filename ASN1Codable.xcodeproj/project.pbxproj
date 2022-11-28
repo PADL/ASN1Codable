@@ -704,7 +704,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D3565C8C29344D5E002236A5 /* PBXTargetDependency */,
 			);
 			name = ASN1Codable;
 			packageProductDependencies = (
@@ -729,7 +728,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D3565C9029344D68002236A5 /* PBXTargetDependency */,
 				D351DC37290E849200540132 /* PBXTargetDependency */,
 			);
 			name = ASN1CodableTests;
@@ -748,7 +746,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D3565C9A29344D7C002236A5 /* PBXTargetDependency */,
 				D37C1CEB29322C64007264EA /* PBXTargetDependency */,
 			);
 			name = certutil;
@@ -774,7 +771,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D3565C8E29344D64002236A5 /* PBXTargetDependency */,
 				D3F2887E292C69440006CD82 /* PBXTargetDependency */,
 				D3F28878292C56D50006CD82 /* PBXTargetDependency */,
 			);
@@ -794,7 +790,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D3565C9829344D78002236A5 /* PBXTargetDependency */,
 				D3F28858292C44AD0006CD82 /* PBXTargetDependency */,
 			);
 			name = CertificateTests;
@@ -814,7 +809,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D3565C9229344D6D002236A5 /* PBXTargetDependency */,
 			);
 			name = HeimASN1Translator;
 			packageProductDependencies = (
@@ -836,7 +830,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D3565C9429344D70002236A5 /* PBXTargetDependency */,
 				D3FB2DC02919C47C00BC72AF /* PBXTargetDependency */,
 			);
 			name = HeimASN1TranslatorTests;
@@ -856,7 +849,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D3565C9629344D74002236A5 /* PBXTargetDependency */,
 				D3FB2DD92919C4F200BC72AF /* PBXTargetDependency */,
 			);
 			name = asn1json2swift;
@@ -1157,38 +1149,6 @@
 			isa = PBXTargetDependency;
 			target = D351DC29290E849200540132 /* ASN1Codable */;
 			targetProxy = D351DC36290E849200540132 /* PBXContainerItemProxy */;
-		};
-		D3565C8C29344D5E002236A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = D3565C8B29344D5E002236A5 /* SwiftLintPlugin */;
-		};
-		D3565C8E29344D64002236A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = D3565C8D29344D64002236A5 /* SwiftLintPlugin */;
-		};
-		D3565C9029344D68002236A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = D3565C8F29344D68002236A5 /* SwiftLintPlugin */;
-		};
-		D3565C9229344D6D002236A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = D3565C9129344D6D002236A5 /* SwiftLintPlugin */;
-		};
-		D3565C9429344D70002236A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = D3565C9329344D70002236A5 /* SwiftLintPlugin */;
-		};
-		D3565C9629344D74002236A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = D3565C9529344D74002236A5 /* SwiftLintPlugin */;
-		};
-		D3565C9829344D78002236A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = D3565C9729344D78002236A5 /* SwiftLintPlugin */;
-		};
-		D3565C9A29344D7C002236A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = D3565C9929344D7C002236A5 /* SwiftLintPlugin */;
 		};
 		D37C1CEB29322C64007264EA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1879,46 +1839,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D3565C802932BD2D002236A5 /* XCRemoteSwiftPackageReference "DataKit" */;
 			productName = DataKit;
-		};
-		D3565C8B29344D5E002236A5 /* SwiftLintPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
-			productName = "plugin:SwiftLintPlugin";
-		};
-		D3565C8D29344D64002236A5 /* SwiftLintPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
-			productName = "plugin:SwiftLintPlugin";
-		};
-		D3565C8F29344D68002236A5 /* SwiftLintPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
-			productName = "plugin:SwiftLintPlugin";
-		};
-		D3565C9129344D6D002236A5 /* SwiftLintPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
-			productName = "plugin:SwiftLintPlugin";
-		};
-		D3565C9329344D70002236A5 /* SwiftLintPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
-			productName = "plugin:SwiftLintPlugin";
-		};
-		D3565C9529344D74002236A5 /* SwiftLintPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
-			productName = "plugin:SwiftLintPlugin";
-		};
-		D3565C9729344D78002236A5 /* SwiftLintPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
-			productName = "plugin:SwiftLintPlugin";
-		};
-		D3565C9929344D7C002236A5 /* SwiftLintPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
-			productName = "plugin:SwiftLintPlugin";
 		};
 		D37C1CDC29322C0F007264EA /* Commandant */ = {
 			isa = XCSwiftPackageProductDependency;
