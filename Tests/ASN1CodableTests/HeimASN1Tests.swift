@@ -259,4 +259,33 @@ extension ASN1CodableTests {
         c3.b3 = [b3]
         self.test_encodeDecode(c3, encodedAs: test3)
     }
+
+    func test_seqof5() {
+        let test0 = try! Data(hex: "3000")
+        let c0 = TESTSeqOf5()
+        self.test_encodeDecode(c0, encodedAs: test0)
+
+        let test1 = try! Data(hex: "307c307a30780201010406010101010101020900fffffffffffffffe04060202020202" +
+            "020201020406030303030303020900fffffffffffffffd04060404040404040201030406050" +
+            "505050505020900fffffffffffffffc04060606060606060201040406070707070707020900" +
+            "fffffffffffffffb0406080808080808")
+        let b = TESTSeqOf5.B(u0: 1,
+                             s0: Data(repeating: 1, count: 6),
+                             u1: 18_446_744_073_709_551_614,
+                             s1: Data(repeating: 2, count: 6),
+                             u2: 2,
+                             s2: Data(repeating: 3, count: 6),
+                             u3: 18_446_744_073_709_551_613,
+                             s3: Data(repeating: 4, count: 6),
+                             u4: 3,
+                             s4: Data(repeating: 5, count: 6),
+                             u5: 18_446_744_073_709_551_612,
+                             s5: Data(repeating: 6, count: 6),
+                             u6: 4,
+                             s6: Data(repeating: 7, count: 6),
+                             u7: 18_446_744_073_709_551_611,
+                             s7: Data(repeating: 8, count: 6))
+        let c1 = TESTSeqOf5(b: [b])
+        self.test_encodeDecode(c1, encodedAs: test1)
+    }
 }

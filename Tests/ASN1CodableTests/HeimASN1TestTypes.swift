@@ -325,6 +325,30 @@ struct TESTSeqOf4: Codable, Equatable {
     var b3: [B3]?
 }
 
+// swiftlint:disable discouraged_optional_collection
+struct TESTSeqOf5: Codable, Equatable {
+    struct B: Codable, Equatable {
+        var u0: TESTuint64
+        var s0: Data
+        var u1: TESTuint64
+        var s1: Data
+        var u2: TESTuint64
+        var s2: Data
+        var u3: TESTuint64
+        var s3: Data
+        var u4: TESTuint64
+        var s4: Data
+        var u5: TESTuint64
+        var s5: Data
+        var u6: TESTuint64
+        var s6: Data
+        var u7: TESTuint64
+        var s7: Data
+    }
+
+    var b: [B]?
+}
+
 struct TESTPreserve: Codable, Equatable {
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
         case zero = 0
