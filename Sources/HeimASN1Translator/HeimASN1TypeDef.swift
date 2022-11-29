@@ -435,6 +435,10 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
             }
         }
 
+        if let preserve = self.preserve, preserve || self._typeReferencesSelf {
+            isClass = true
+        }
+
         if self.isTypeDef ?? false, self.cType != nil, let tType = self.tType {
             if case .universal(let type) = tType {
                 switch type {
@@ -442,7 +446,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                     fallthrough
                 case .set:
                     // main struct implementation
-                    let swiftMetaType = self.preserve ?? isClass ? "class" : "struct"
+                    let swiftMetaType = isClass ? "class" : "struct"
                     let objcPrefix = isObjC ? "@objc " : ""
 
                     outputStream.write("\(visibility)\(objcPrefix)\(swiftMetaType) \(self.generatedName): \(self.swiftConformances(nil)) {\n")
@@ -556,7 +560,14 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
 
     private lazy var _needsDirectHashableConformance: Bool = self._typeNeedsDirectHashableConformance(self)
 
-    private lazy var _needsTransitiveHashableConformance: Bool = self.membersOf.contains { $0.needsHashableConformance }
+    private lazy var _needsTransitiveHashableConformance: Bool =
+        !self._typeReferencesSelf && self.membersOf.contains { $0.needsHashableConformance }
+
+    private var _typeReferencesSelf: Bool {
+        self.members?.contains {
+            $0.typeDefValue?.type?.typeDefValue?.tType?.typeRefValue == self.name
+        } ?? false
+    }
 
     private func _typeNeedsDirectHashableConformance(_ typeDef: HeimASN1TypeDef) -> Bool {
         var needsHashableConformance = false

@@ -8,7 +8,6 @@ Medium priority
 - @runtimeMetadata instead of property wrappers?
 - support for REAL in ASN1Kit for Decimal, Float and Double
 - AnyCodable does not round trip Data
-- fix recursion issue in translator with self-referential types
 
 Low priority
 ------------
