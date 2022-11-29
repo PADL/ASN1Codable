@@ -22,7 +22,7 @@ protocol ASN1DecodingContainer {
     var userInfo: [CodingUserInfoKey: Any] { get }
     var object: ASN1Object { get }
     var context: ASN1DecodingContext { get set }
-    var currentIndex: Int { get }
+    var currentIndex: Int { get set }
 }
 
 /// helpers shared between keyed and unkeyed decoding containers

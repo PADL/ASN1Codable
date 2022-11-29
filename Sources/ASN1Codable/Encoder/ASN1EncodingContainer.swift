@@ -18,6 +18,7 @@ import Foundation
 import ASN1Kit
 
 protocol ASN1EncodingContainer {
+    var containers: [ASN1EncodingContainer] { get set }
     var codingPath: [CodingKey] { get }
     var userInfo: [CodingUserInfoKey: Any] { get }
     var object: ASN1Object? { get }

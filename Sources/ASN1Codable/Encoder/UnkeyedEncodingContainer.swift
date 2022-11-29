@@ -19,8 +19,7 @@ import ASN1Kit
 
 extension ASN1EncoderImpl {
     final class UnkeyedContainer: ASN1EncodingContainer {
-        private var containers: [ASN1EncodingContainer] = []
-
+        var containers: [ASN1EncodingContainer] = []
         let codingPath: [CodingKey]
         let userInfo: [CodingUserInfoKey: Any]
         var context: ASN1EncodingContext
@@ -39,25 +38,8 @@ extension ASN1EncoderImpl {
             self.containers.count
         }
 
-        // swiftlint:disable nesting
-        struct Index: CodingKey {
-            var stringValue: String {
-                "\(self.intValue!)"
-            }
-
-            var intValue: Int?
-
-            init?(stringValue _: String) {
-                nil
-            }
-
-            init?(intValue: Int) {
-                self.intValue = intValue
-            }
-        }
-
         var nestedCodingPath: [CodingKey] {
-            self.codingPath + [Index(intValue: self.count)!]
+            self.codingPath + [ASN1Key(index: self.count)]
         }
     }
 }
@@ -170,7 +152,7 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
     }
 
     func superEncoder() -> Encoder {
-        fatalError("not implemented")
+        ASN1EncoderImpl.ReferencingEncoder(self, at: self.count)
     }
 }
 

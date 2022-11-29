@@ -490,6 +490,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
 // meaningless but allows us to conform to the rest of the protocol
 extension ASN1DecoderImpl.SingleValueContainer {
     var currentIndex: Int {
-        0
+        get {
+            0
+        }
+        set {}
     }
 }

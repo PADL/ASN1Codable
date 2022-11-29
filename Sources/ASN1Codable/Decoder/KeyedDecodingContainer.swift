@@ -306,17 +306,11 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     func superDecoder() throws -> Decoder {
-        let context = DecodingError.Context(codingPath: self.codingPath,
-                                            debugDescription: "ASN1DecoderImpl.KeyedContainer does " +
-                                                "not yet support super decoders")
-        throw DecodingError.dataCorrupted(context)
+        ASN1DecoderImpl.ReferencingDecoder(self, key: ASN1Key.super)
     }
 
     func superDecoder(forKey key: Key) throws -> Decoder {
-        throw DecodingError.dataCorruptedError(forKey: key,
-                                               in: self,
-                                               debugDescription: "ASN1DecoderImpl.KeyedContainer does " +
-                                                   "not yet support super decoders")
+        ASN1DecoderImpl.ReferencingDecoder(self, key: key)
     }
 }
 

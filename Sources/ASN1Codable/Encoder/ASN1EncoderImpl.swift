@@ -17,10 +17,9 @@
 import Foundation
 import ASN1Kit
 
-final class ASN1EncoderImpl {
-    private var container: ASN1EncodingContainer?
-
-    let codingPath: [CodingKey]
+class ASN1EncoderImpl {
+    var container: ASN1EncodingContainer?
+    var codingPath: [CodingKey]
     let userInfo: [CodingUserInfoKey: Any]
     let context: ASN1EncodingContext
 

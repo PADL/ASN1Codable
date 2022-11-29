@@ -3,7 +3,6 @@
 - make ASN1Kit OID representation [UInt] or Data
 - support for nested SEQUENCE (structs)
 - compiler needs to support nested wrapped initializers
-- super decoders
 - propagate originalEncoding (\_save) in all cases
 - ASN1RawRepresentableBitString<BInt>
 - AnyCodable does not round trip Data

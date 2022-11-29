@@ -38,6 +38,13 @@ extension ASN1EncoderImpl {
             }
         }
 
+        var containers: [ASN1EncodingContainer] {
+            get {
+                [self]
+            }
+            set {}
+        }
+
         init(
             codingPath: [CodingKey],
             userInfo: [CodingUserInfoKey: Any],

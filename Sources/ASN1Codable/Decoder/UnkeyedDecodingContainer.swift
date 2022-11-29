@@ -42,25 +42,8 @@ extension ASN1DecoderImpl {
             self.context = context
         }
 
-        // swiftlint:disable nesting
-        struct Index: CodingKey {
-            var stringValue: String {
-                "\(self.intValue!)"
-            }
-
-            var intValue: Int?
-
-            init?(stringValue _: String) {
-                nil
-            }
-
-            init?(intValue: Int) {
-                self.intValue = intValue
-            }
-        }
-
         var nestedCodingPath: [CodingKey] {
-            self.codingPath + [Index(intValue: self.currentIndex)!]
+            self.codingPath + [ASN1Key(index: self.currentIndex)]
         }
     }
 }
@@ -224,10 +207,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     func superDecoder() throws -> Decoder {
-        let context = DecodingError.Context(codingPath: self.codingPath,
-                                            debugDescription: "ASN1DecoderImpl.UnkeyedContainer does " +
-                                                "not yet support super decoders")
-        throw DecodingError.dataCorrupted(context)
+        ASN1DecoderImpl.ReferencingDecoder(self, at: self.currentIndex)
     }
 }
 

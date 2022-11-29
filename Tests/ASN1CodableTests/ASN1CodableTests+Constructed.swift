@@ -32,6 +32,59 @@ enum Division: Codable, Equatable {
     case r_and_d(RAndD)
 }
 
+class PersonnelRecord: Codable, Equatable {
+    var name: String
+    var location: Int
+    var age: Int?
+
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case name = 0
+        case location = 1
+        case age = 2
+    }
+
+    required init(name: String, location: Int, age: Int?) {
+        self.name = name
+        self.location = location
+        self.age = age
+    }
+
+    static func == (lhs: PersonnelRecord, rhs: PersonnelRecord) -> Bool {
+        lhs.name == rhs.name && lhs.location == rhs.location && lhs.age == rhs.age
+    }
+}
+
+final class ContractorPersonnelRecord: PersonnelRecord {
+    var company: String?
+
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case `super` = 100
+        case company = 101
+    }
+
+    required init(name: String, location: Int, age: Int?) {
+        super.init(name: name, location: location, age: age)
+        self.company = nil
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.company = try container.decodeIfPresent(String.self, forKey: .company)
+        try super.init(from: container.superDecoder(forKey: .super))
+    }
+
+    override func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try super.encode(to: container.superEncoder(forKey: .super))
+        try container.encodeIfPresent(self.company, forKey: .company)
+    }
+
+    static func == (lhs: ContractorPersonnelRecord, rhs: ContractorPersonnelRecord) -> Bool {
+        guard lhs as PersonnelRecord == rhs as PersonnelRecord else { return false }
+        return lhs.company == rhs.company
+    }
+}
+
 class TestClass: Codable, Equatable, ASN1PrivateTaggedType, ASN1PreserveBinary {
     static var tagNumber: UInt = 100
 
@@ -158,6 +211,14 @@ extension ASN1CodableTests {
                                encodedAs: Data([0x30, 0x10, 0x04, 0x08, 0x62, 0x69, 0x67, 0x20,
                                                 0x68, 0x65, 0x61, 0x64, 0x02, 0x01, 0x02, 0x02,
                                                 0x01, 0x1A]))
+    }
+
+    func test_encode_SEQUENCE_PersonnelRecordSuper() {
+        let cpr = ContractorPersonnelRecord(name: "Luke", location: 1, age: nil)
+        cpr.company = "PADL"
+
+        self.test_encodeDecode(cpr,
+                               encodedAs: try! Data(hex: "3016A0060C044C756B65A103020101BF65060C045041444C"))
     }
 
     func test_encode_SEQUENCE_OF_INTEGER() {

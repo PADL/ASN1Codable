@@ -18,8 +18,7 @@ import Foundation
 
 extension ASN1EncoderImpl {
     final class KeyedContainer<Key>: ASN1EncodingContainer where Key: CodingKey {
-        private var containers: [ASN1EncodingContainer] = []
-
+        var containers: [ASN1EncodingContainer] = []
         let codingPath: [CodingKey]
         let userInfo: [CodingUserInfoKey: Any]
         var context: ASN1EncodingContext
@@ -165,11 +164,11 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
     }
 
     func superEncoder() -> Encoder {
-        fatalError("Not yet implemented")
+        ASN1EncoderImpl.ReferencingEncoder(self, key: ASN1Key.super)
     }
 
-    func superEncoder(forKey _: Key) -> Encoder {
-        fatalError("Not yet implemented")
+    func superEncoder(forKey key: Key) -> Encoder {
+        ASN1EncoderImpl.ReferencingEncoder(self, key: key)
     }
 }
 

@@ -17,11 +17,11 @@
 import Foundation
 import ASN1Kit
 
-final class ASN1DecoderImpl {
+class ASN1DecoderImpl {
     var container: ASN1DecodingContainer?
 
     let object: ASN1Object
-    let codingPath: [CodingKey]
+    var codingPath: [CodingKey]
     let userInfo: [CodingUserInfoKey: Any]
     let context: ASN1DecodingContext
 
