@@ -48,6 +48,24 @@ CertificateCopyEmailAddresses(CertificateRef certificate, CFArrayRef * __nonnull
 __nullable
 CFDataRef CertificateCopySerialNumberData(CertificateRef certificate, CFErrorRef *error);
 
+typedef CF_OPTIONS(uint32_t, KeyUsage) {
+    kKeyUsageUnspecified      = 0u,
+    kKeyUsageDigitalSignature = 1u << 0,
+    kKeyUsageNonRepudiation   = 1u << 1,
+    kKeyUsageContentCommitment= 1u << 1,
+    kKeyUsageKeyEncipherment  = 1u << 2,
+    kKeyUsageDataEncipherment = 1u << 3,
+    kKeyUsageKeyAgreement     = 1u << 4,
+    kKeyUsageKeyCertSign      = 1u << 5,
+    kKeyUsageCRLSign          = 1u << 6,
+    kKeyUsageEncipherOnly     = 1u << 7,
+    kKeyUsageDecipherOnly     = 1u << 8,
+    kKeyUsageCritical         = 1u << 31,
+    kKeyUsageAll              = 0x7FFFFFFFu
+};
+
+KeyUsage CertificateGetKeyUsage(__nullable CertificateRef certificate);
+
 CF_IMPLICIT_BRIDGING_DISABLED
 CF_ASSUME_NONNULL_END
 

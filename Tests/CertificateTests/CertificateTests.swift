@@ -135,6 +135,10 @@ final class CertificateTests: XCTestCase {
         let cert = self.test_encodeDecodeCertificate(der)
         guard let cert else { return }
 
+        let ku = CertificateGetKeyUsage(cert)
+        let expectedKu = KeyUsage(rawValue: 7)
+        XCTAssertEqual(ku, expectedKu)
+
         let cns = CertificateCopyCommonNames(cert)
         XCTAssertNotNil(cns)
         guard let cns else { return }
