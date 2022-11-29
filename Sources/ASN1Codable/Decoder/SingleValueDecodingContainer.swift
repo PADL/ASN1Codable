@@ -57,11 +57,15 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     }
 
     func decode(_: Double.Type) throws -> Double {
-        throw ASN1Error.unsupported("Not implemented yet")
+        let context = DecodingError.Context(codingPath: self.codingPath,
+                                            debugDescription: "Decoding of doubles is not yet supported")
+        throw DecodingError.typeMismatch(Double.self, context)
     }
 
     func decode(_: Float.Type) throws -> Float {
-        throw ASN1Error.unsupported("Not implemented yet")
+        let context = DecodingError.Context(codingPath: self.codingPath,
+                                            debugDescription: "Decoding of floats is not yet supported")
+        throw DecodingError.typeMismatch(Float.self, context)
     }
 
     func decode(_ type: Int.Type) throws -> Int {
