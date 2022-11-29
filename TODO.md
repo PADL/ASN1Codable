@@ -9,6 +9,7 @@ Medium priority
 - support for REAL in ASN1Kit for Decimal, Float and Double
 - propagate originalEncoding (\_save) in all cases
 - AnyCodable does not round trip Data
+- fix recursion issue in translator with self-referential types
 
 Low priority
 ------------
