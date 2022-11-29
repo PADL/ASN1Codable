@@ -312,7 +312,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             throw DecodingError.dataCorrupted(context)
         }
 
-        let verifiedUniversalTag = !unwrappedObject.constructed && metadata.tag!.isUniversal
+        let verifiedUniversalTag = !unwrappedObject.constructed && (metadata.tag?.isUniversal ?? false)
 
         let value = try self.decode(type,
                                     from: unwrappedObject,
@@ -334,8 +334,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
         skipTaggedValues: Bool = false
     ) throws -> T where T: Decodable {
         guard let tag = metadata.tag else {
-            // FIXME: should this happen? precondition check? (perhaps if only size constraints?)
-            return try self.decode(type, from: object, skipTaggedValues: skipTaggedValues)
+            return try self.validateAndDecodeUnwrappedTagged(type,
+                                                             from: object,
+                                                             with: metadata,
+                                                             skipTaggedValues: skipTaggedValues)
         }
 
         guard object.tag == tag else {
