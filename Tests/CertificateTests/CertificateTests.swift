@@ -8,29 +8,38 @@
 import XCTest
 
 final class CertificateTests: XCTestCase {
-    func base64ToCertificate(_ base64: String) -> CertificateRef? {
-        guard let data = Data(base64Encoded: base64,
-                              options: .ignoreUnknownCharacters) else {
-            return nil
-        }
+    func test_encodeDecodeCertificate(_ base64EncodedCertificate: String) -> CertificateRef? {
+        let data = Data(base64Encoded: base64EncodedCertificate,
+                        options: .ignoreUnknownCharacters)
+        XCTAssertNotNil(data)
+        guard let data else { return nil }
 
-        return CertificateCreateWithData(kCFAllocatorDefault, data as CFData)
+        let cert = CertificateCreateWithData(kCFAllocatorDefault, data as CFData)
+
+        XCTAssertNotNil(cert)
+        guard let cert else { return nil }
+
+        let reencoded = CertificateCopyDataReencoded(cert)
+        XCTAssertNotNil(reencoded)
+        guard let reencoded else { return nil }
+
+        XCTAssertEqual(data, reencoded as Data)
+
+        return cert
     }
 
     func test_certificate_j() {
-        let cert = self.base64ToCertificate(certificate_j)
-
-        XCTAssertNotNil(cert)
+        let cert = self.test_encodeDecodeCertificate(certificate_j)
         guard let cert else { return }
 
         let cns = CertificateCopyCommonNames(cert)
         XCTAssertNil(cns)
 
-        let data = CertificateCopySerialNumberData(cert, nil)
-        XCTAssertNotNil(data)
-        guard let data else { return }
-
-        XCTAssertEqual(data as Data, Data([0x02, 0x01, 0x01]))
+        let serial = CertificateCopySerialNumberData(cert, nil)
+        XCTAssertNotNil(serial)
+        if let serial {
+            XCTAssertEqual(serial as Data, Data([0x02, 0x01, 0x01]))
+        }
     }
 }
 
