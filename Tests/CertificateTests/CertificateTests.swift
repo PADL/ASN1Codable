@@ -16,6 +16,7 @@
 
 import XCTest
 import Algorithms
+import DataKit
 
 final class CertificateTests: XCTestCase {
     func test_encodeDecodeCertificate(_ base64EncodedCertificate: String) -> CertificateRef? {
@@ -144,5 +145,43 @@ final class CertificateTests: XCTestCase {
         guard let cns else { return }
 
         XCTAssertEqual(cns, ["Test cert", "proxy10", "child", "child"] as CFArray)
+    }
+
+    func test_certificate_component_attributes() {
+        let der = """
+        MIICKDCCAc+gAwIBAgIPAIBKhGmXPWDtVkLuNurIMAoGCCqGSM49BAMCMFkx
+        FjAUBgNVBAMMDUJhdHRlcnkgQ0EgTTExFTATBgNVBAsMDENvbXBvbmVudCBD
+        QTETMBEGA1UECgwKQXBwbGUgSW5jLjETMBEGA1UECAwKQ2FsaWZvcm5pYTAe
+        Fw0yMTA3MTMwNzAwNTBaFw0zMTA3MTEwOTAwNTBaMFwxCzAJBgNVBAYTAlVT
+        MRMwEQYDVQQKDApBcHBsZSBJbmMuMRMwEQYDVQQLDApDb21wb25lbnRzMSMw
+        IQYDVQQDDBpGUTExMjU2MDA4ODFDQ0YxUC1FMUQxNzkxOTBZMBMGByqGSM49
+        AgEGCCqGSM49AwEHA0IABPQHboMdkrGmf0GXmGTalsptTZMsZ3FZhKeErzdh
+        Nifuw37TtdZX+AOxBpmvHID0XfMPJUHRwXq6zshHDuGwBJmjdzB1MC0GCSqG
+        SIb3Y2QGEQQgDB4xNDo5ZDo5OTo4MToxZDpkZi8xOTIuMTY4LjAuMjMwFgYJ
+        KoZIhvdjZAsDBAkwB7+HaQMBAQAwFwYJKoZIhvdjZAsBAQH/BAdCYXR0ZXJ5
+        MBMGCSqGSIb3Y2QLAgQGMjc4ZDQ2MAoGCCqGSM49BAMCA0cAMEQCIFZAYFnQ
+        MsLd+8Jjg7mdccd2gl+y+pwWtycFOv2ZFPO7AiA+3/vRdTJBNTdYB6aOCdZe
+        VybGXfesalKvuTn4l8VKsg==
+        """
+
+        let cert = self.test_encodeDecodeCertificate(der)
+        guard let cert else { return }
+
+        let cns = CertificateCopyCommonNames(cert)
+        XCTAssertNotNil(cns)
+        guard let cns else { return }
+
+        XCTAssertEqual(cns, ["FQ1125600881CCF1P-E1D17919"] as CFArray)
+
+        let serial = CertificateCopySerialNumberData(cert, nil)
+        let expectedSerial = try! Data(hex: "020F00804A8469973D60ED5642EE36EAC8")
+
+        XCTAssertNotNil(serial)
+        if let serial {
+            XCTAssertEqual(serial as Data, expectedSerial)
+        }
+
+        let components = CertificateCopyComponentAttributes(cert)
+        XCTAssertEqual(components, [1001: 0] as CFDictionary)
     }
 }
