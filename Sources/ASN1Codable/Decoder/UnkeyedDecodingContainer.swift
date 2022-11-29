@@ -20,8 +20,6 @@ import AnyCodable
 
 extension ASN1DecoderImpl {
     final class UnkeyedContainer: ASN1DecodingContainer {
-        private var containers: [ASN1DecodingContainer] = []
-
         let object: ASN1Object
         let codingPath: [CodingKey]
         let userInfo: [CodingUserInfoKey: Any]
@@ -54,7 +52,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         let isNil = container.decodeNil()
 
         if isNil {
-            self.addContainer(container)
+            self.currentIndex += 1
         }
 
         return isNil
@@ -189,7 +187,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
                                                                       userInfo: self.userInfo,
                                                                       context: self.context.decodingNestedContainer())
 
-        self.addContainer(container)
+        self.currentIndex += 1
 
         return KeyedDecodingContainer(container)
     }
@@ -201,7 +199,7 @@ extension ASN1DecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
                                                              userInfo: self.userInfo,
                                                              context: self.context.decodingNestedContainer())
 
-        self.addContainer(container)
+        self.currentIndex += 1
 
         return container
     }
@@ -224,11 +222,6 @@ extension ASN1DecoderImpl.UnkeyedContainer {
         return container
     }
 
-    private func addContainer(_ container: ASN1DecodingContainer) {
-        self.containers.append(container)
-        self.currentIndex += 1
-    }
-
     private func decodeUnkeyedSingleValue<T>(_ type: T.Type) throws -> T where T: Decodable {
         let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
                                                         context: self.context.decodingSingleValue(type))
@@ -236,7 +229,7 @@ extension ASN1DecoderImpl.UnkeyedContainer {
         let value = try container.decode(type)
 
         if !ASN1DecoderImpl.isNilOrWrappedNil(value) {
-            self.addContainer(container)
+            self.currentIndex += 1
         }
 
         return value
@@ -263,7 +256,7 @@ extension ASN1DecoderImpl.UnkeyedContainer {
         }
 
         // value was explicit NULL or was successfully decoded
-        self.addContainer(container)
+        self.currentIndex += 1
 
         return value
     }

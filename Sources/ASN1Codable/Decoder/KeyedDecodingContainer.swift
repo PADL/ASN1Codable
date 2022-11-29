@@ -19,8 +19,6 @@ import ASN1Kit
 
 extension ASN1DecoderImpl {
     final class KeyedContainer<Key>: ASN1DecodingContainer where Key: CodingKey {
-        private var containers: [String: ASN1DecodingContainer] = [:]
-
         let object: ASN1Object
         let codingPath: [CodingKey]
         let userInfo: [CodingUserInfoKey: Any]
@@ -106,9 +104,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                 /// in this case, we know the enum coding key from reading the metadata
                 keys = [enumCodingKey]
             } else {
-                /// this is kind of pointless, as it only returns the keys we have already
-                /// decoded, but maybe it is better than returning nothing?
-                keys = self.containers.keys.map { Key(stringValue: $0)! }
+                /// otherwise, we can't really return anything interesting
+                keys = []
             }
         }
 
@@ -152,7 +149,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         let isNil = container.decodeNil()
 
         if isNil {
-            self.addContainer(container, forKey: key)
+            self.currentIndex += 1
         }
 
         return isNil
@@ -288,7 +285,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                                                       userInfo: self.userInfo,
                                                                       context: self.context.decodingNestedContainer())
 
-        self.addContainer(container, forKey: key)
+        self.currentIndex += 1
 
         return KeyedDecodingContainer(container)
     }
@@ -300,7 +297,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                                              userInfo: self.userInfo,
                                                              context: self.context.decodingNestedContainer())
 
-        self.addContainer(container, forKey: key)
+        self.currentIndex += 1
 
         return container
     }
@@ -328,11 +325,6 @@ extension ASN1DecoderImpl.KeyedContainer {
         return container
     }
 
-    private func addContainer(_ container: ASN1DecodingContainer, forKey key: Key) {
-        self.containers[key.stringValue] = container
-        self.currentIndex += 1
-    }
-
     private func decodeKeyedSingleValue<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
         let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
                                                         forKey: key,
@@ -340,7 +332,7 @@ extension ASN1DecoderImpl.KeyedContainer {
         let value = try container.decode(type)
 
         if !ASN1DecoderImpl.isNilOrWrappedNil(value) {
-            self.addContainer(container, forKey: key)
+            self.currentIndex += 1
         }
 
         return value
@@ -368,7 +360,7 @@ extension ASN1DecoderImpl.KeyedContainer {
         }
 
         // value was explicit NULL or was successfully decoded
-        self.addContainer(container, forKey: key)
+        self.currentIndex += 1
 
         return value
     }
