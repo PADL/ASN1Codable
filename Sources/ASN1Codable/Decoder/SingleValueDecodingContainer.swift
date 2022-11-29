@@ -22,7 +22,7 @@ extension ASN1DecoderImpl {
         private(set) var object: ASN1Object
 
         var codingPath: [CodingKey]
-        var userInfo: [CodingUserInfoKey: Any]
+        let userInfo: [CodingUserInfoKey: Any]
         var context: ASN1DecodingContext
 
         init(

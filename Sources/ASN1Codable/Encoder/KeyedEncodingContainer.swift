@@ -20,8 +20,8 @@ extension ASN1EncoderImpl {
     final class KeyedContainer<Key>: ASN1EncodingContainer where Key: CodingKey {
         private var containers: [ASN1EncodingContainer] = []
 
-        var codingPath: [CodingKey]
-        var userInfo: [CodingUserInfoKey: Any]
+        let codingPath: [CodingKey]
+        let userInfo: [CodingUserInfoKey: Any]
         var context: ASN1EncodingContext
 
         init(

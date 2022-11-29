@@ -22,9 +22,9 @@ extension ASN1DecoderImpl {
     final class UnkeyedContainer: ASN1DecodingContainer {
         private var containers: [ASN1DecodingContainer] = []
 
-        var object: ASN1Object
-        var codingPath: [CodingKey]
-        var userInfo: [CodingUserInfoKey: Any]
+        let object: ASN1Object
+        let codingPath: [CodingKey]
+        let userInfo: [CodingUserInfoKey: Any]
         var context: ASN1DecodingContext
 
         var currentIndex: Int = 0

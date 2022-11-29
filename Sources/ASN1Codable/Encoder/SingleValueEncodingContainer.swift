@@ -22,8 +22,7 @@ extension ASN1EncoderImpl {
         private var _object: ASN1Object?
 
         var codingPath: [CodingKey]
-        var userInfo: [CodingUserInfoKey: Any]
-
+        let userInfo: [CodingUserInfoKey: Any]
         var context: ASN1EncodingContext
         var didEncode = false
 
