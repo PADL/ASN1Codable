@@ -20,15 +20,16 @@ import ASN1Kit
 struct ASN1ImplicitlyWrappedObject: ASN1Object {
     let data: ASN1Data
     let tag: ASN1DecodedTag
-    var originalEncoding: Data?
+    let originalEncoding: Data?
 
-    init(object: ASN1Object, tag: ASN1DecodedTag) {
-        if object.constructed {
+    init(object: ASN1Object, tag: ASN1DecodedTag, constructed: Bool? = nil) {
+        if constructed ?? object.constructed {
             self.data = ASN1Data.constructed([object])
         } else {
             self.data = object.data
         }
         self.tag = tag
+        self.originalEncoding = object.originalEncoding
     }
 
     var length: Int {

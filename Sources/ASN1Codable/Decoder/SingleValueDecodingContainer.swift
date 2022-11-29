@@ -360,8 +360,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
         if object.constructed {
             if tagging == .implicit {
-                // FIXME: propagate originalEncoding
-                unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
+                unwrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: innerTag, constructed: false)
             } else {
                 guard let items = object.data.items,
                       items.count == 1,
@@ -375,8 +374,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             }
         } else if innerTag.isUniversal {
             if tagging == .implicit {
-                // FIXME: propagate originalEncoding
-                unwrappedObject = ASN1Kit.create(tag: innerTag, data: object.data)
+                unwrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: innerTag, constructed: false)
             } else {
                 unwrappedObject = object
             }
