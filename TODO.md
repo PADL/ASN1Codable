@@ -1,10 +1,9 @@
-- make BitString support non-byte multiples
 - @runtimeMetadata instead of property wrappers?
 - support for REAL in ASN1Kit for Decimal, Float and Double
-- make ASN1Kit OID representation [UInt]
+- make ASN1Kit OID representation [UInt] or Data
 - support for nested SEQUENCE (structs)
+- compiler needs to support nested wrapped initializers
 - super decoders
 - propagate originalEncoding (\_save) in all cases
 - ASN1RawRepresentableBitString<BInt>
-- AnyCodable, make it ASN.1 compile to eliminate special cases
-- compiler needs to support nested wrapped initializers
+- AnyCodable does not round trip Data
