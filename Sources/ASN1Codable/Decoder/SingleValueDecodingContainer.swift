@@ -180,6 +180,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
             value = try self.decodeAutomaticallyTaggedValue(type, from: object)
         } else if let type = type as? any(Decodable & ASN1TaggedValue).Type {
             value = try self.decodeTaggedWrappedValue(type, from: object) as! T
+        } else if let type = type as? any FixedWidthInteger.Type {
+            value = try self.decodeFixedWidthIntegerValue(type, from: object, verifiedTag: skipTaggedValues) as! T
         } else if let type = type as? ASN1DecodableType.Type {
             value = try self.decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
         } else if let type = type as? OptionalProtocol.Type,
@@ -223,13 +225,14 @@ extension ASN1DecoderImpl.SingleValueContainer {
         return value
     }
 
+    /// decode a fixed width integer value. Ideally, FixedWidthInteger could conform to ASN1DecodableType
+    /// and this would be taken care of by decodePrimitiveValue(), but it's not possible to conform protocols
+    /// (such as FixedWidthInteger) to other protocols.
     private func decodeFixedWidthIntegerValue<T>(
         _ type: T.Type,
         from object: ASN1Object,
         verifiedTag: Bool = false
     ) throws -> T where T: FixedWidthInteger {
-        // NB withASN1Throwing is not needed here because decodeFixedWidthIntegerValue()
-        // does not call into any exception-throwing ASNKit APIs
         let expectedTag: ASN1DecodedTag
 
         expectedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
@@ -294,11 +297,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             throw DecodingError.typeMismatch(type, context)
         }
 
-        if let type = type as? any FixedWidthInteger.Type {
-            return try self.decodeFixedWidthIntegerValue(type, from: object, verifiedTag: true) as! T
-        } else {
-            return try T(from: object)
-        }
+        return try T(from: object)
     }
 
     private func validateAndDecodeUnwrappedTagged<T>(

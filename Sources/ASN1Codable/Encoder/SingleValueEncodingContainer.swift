@@ -198,6 +198,8 @@ extension ASN1EncoderImpl.SingleValueContainer {
             object = try self.encodeAutomaticallyTaggedValue(value)
         } else if let value = value as? any(Encodable & ASN1TaggedValue) {
             object = try self.encodeTaggedWrappedValue(value)
+        } else if let value = value as? any FixedWidthInteger {
+            object = try self.encodeFixedWidthIntegerValue(value)
         } else if let value = value as? ASN1EncodableType {
             object = try self.encodePrimitiveValue(value)
         } else {
@@ -273,17 +275,16 @@ extension ASN1EncoderImpl.SingleValueContainer {
         return try self.encodeTagged(value, with: taggingContext.metadataForNextTag(), skipTaggedValues: true)
     }
 
+    /// encode a fixed width integer value. Ideally, FixedWidthInteger could conform to ASN1EncodableType
+    /// and this would be taken care of by decodePrimitiveValue(), but it's not possible to conform protocols
+    /// (such as FixedWidthInteger) to other protocols.
     private func encodeFixedWidthIntegerValue<T>(_ value: T) throws -> ASN1Object? where T: FixedWidthInteger {
         let tag: ASN1DecodedTag = self.context.enumCodingState == .enum ? .universal(.enumerated) : .universal(.integer)
         return try value.asn1encode(tag: tag)
     }
 
     private func encodePrimitiveValue<T: ASN1EncodableType>(_ value: T) throws -> ASN1Object? {
-        if let value = value as? any FixedWidthInteger {
-            return try self.encodeFixedWidthIntegerValue(value)
-        } else {
-            return try value.asn1encode(tag: nil)
-        }
+        try value.asn1encode(tag: nil)
     }
 
     private func encodeConstructedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
