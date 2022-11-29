@@ -275,7 +275,19 @@ sa-rsaWithSHA512 _ALGORITHM-TYPE ::= {
 }
 sa-ecdsaWithSHA1 _ALGORITHM-TYPE ::= {
     &id id-ecdsa-with-SHA1,
-    &Type NULL
+    &Type HEIM_ANY
+}
+sa-ecdsaWithSHA256 _ALGORITHM-TYPE ::= {
+    &id id-ecdsa-with-SHA256,
+    &Type HEIM_ANY
+}
+sa-ecdsaWithSHA384 _ALGORITHM-TYPE ::= {
+    &id id-ecdsa-with-SHA384,
+    &Type HEIM_ANY
+}
+sa-ecdsaWithSHA512 _ALGORITHM-TYPE ::= {
+    &id id-ecdsa-with-SHA512,
+    &Type HEIM_ANY
 }
 
 SignatureAlgs _ALGORITHM-TYPE ::= {
@@ -286,6 +298,9 @@ SignatureAlgs _ALGORITHM-TYPE ::= {
   | sa-rsaWithSHA384
   | sa-rsaWithSHA512
   | sa-ecdsaWithSHA1
+  | sa-ecdsaWithSHA256
+  | sa-ecdsaWithSHA384
+  | sa-ecdsaWithSHA512
 }
 
 SignatureAlgorithmIdentifier ::= SignatureAlgorithmIdentifier{SignatureAlgs}

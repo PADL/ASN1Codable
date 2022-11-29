@@ -56,6 +56,7 @@
 		D3565CAE293464D4002236A5 /* X690SampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565CAD293464D4002236A5 /* X690SampleTests.swift */; };
 		D3565CB129346A48002236A5 /* ASN1UserInfoKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565CAF29346A0A002236A5 /* ASN1UserInfoKeys.swift */; };
 		D3565CB329348743002236A5 /* ASN1RawRepresentableBitString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3565CB229348743002236A5 /* ASN1RawRepresentableBitString.swift */; };
+		D3565CB72935980C002236A5 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = D3565CB62935980C002236A5 /* Algorithms */; };
 		D363A44A292AF21C007476B4 /* ASN1TagCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D363A449292AF21C007476B4 /* ASN1TagCodingKey.swift */; };
 		D37C1CDB29322C09007264EA /* Certificate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3F2884E292C44AD0006CD82 /* Certificate.framework */; };
 		D37C1CDD29322C0F007264EA /* Commandant in Frameworks */ = {isa = PBXBuildFile; productRef = D37C1CDC29322C0F007264EA /* Commandant */; };
@@ -355,6 +356,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3565CB72935980C002236A5 /* Algorithms in Frameworks */,
 				D3F28856292C44AD0006CD82 /* Certificate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -805,6 +807,9 @@
 				D3F28858292C44AD0006CD82 /* PBXTargetDependency */,
 			);
 			name = CertificateTests;
+			packageProductDependencies = (
+				D3565CB62935980C002236A5 /* Algorithms */,
+			);
 			productName = CertificateTests;
 			productReference = D3F28855292C44AD0006CD82 /* CertificateTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -1855,6 +1860,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D3565C802932BD2D002236A5 /* XCRemoteSwiftPackageReference "DataKit" */;
 			productName = DataKit;
+		};
+		D3565CB62935980C002236A5 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3FB2DA52918641900BC72AF /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
 		};
 		D37C1CDC29322C0F007264EA /* Commandant */ = {
 			isa = XCSwiftPackageProductDependency;
