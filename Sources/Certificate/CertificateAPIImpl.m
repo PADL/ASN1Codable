@@ -23,10 +23,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <Certificate/Certificate.h>
-#import <Certificate/CertificateInternal.h>
-#import <Certificate/CertificatePriv.h>
-
 #import "CertificateAPIImpl.h"
 #import "CFRelease.h"
 

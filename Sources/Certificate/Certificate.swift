@@ -26,14 +26,14 @@ extension CertificateRef {
 
 extension Certificate {
     var _cfObject: CertificateRef {
-        unsafeBitCast(Unmanaged<Certificate>.passRetained(self), to: CertificateRef.self)
+        unsafeBitCast(Unmanaged<Certificate>.passUnretained(self), to: CertificateRef.self)
     }
 
     static func create(with der_certificate: Data) -> CertificateRef? {
         do {
             let decoder = ASN1Decoder()
             let certificate = try decoder.decode(Certificate.self, from: der_certificate as Data)
-            return certificate._cfObject
+            return unsafeBitCast(Unmanaged<Certificate>.passRetained(certificate), to: CertificateRef.self)
         } catch {
             debugPrint("Failed to decode certificate: \(error)")
             return nil
@@ -44,17 +44,17 @@ extension Certificate {
 @_cdecl("CertificateCreateWithData")
 public func CertificateCreateWithData(
     _: CFAllocator!,
-    _ der_certificate: CFData?
+    _ der_certificate: Unmanaged<CFData>?
 ) -> CertificateRef? {
     guard let der_certificate else { return nil }
-    return Certificate.create(with: der_certificate as Data)
+    return Certificate.create(with: der_certificate.takeUnretainedValue() as Data)
 }
 
 @_cdecl("CertificateCopyData")
-public func CertificateCopyData(_ certificate: CertificateRef?) -> CFData? {
+public func CertificateCopyData(_ certificate: CertificateRef?) -> Unmanaged<CFData>? {
     guard let certificate = certificate?._swiftObject else { return nil }
     guard let data = certificate._save else { return nil }
-    return data as CFData
+    return Unmanaged.passRetained(data as CFData)
 }
 
 extension Certificate {
@@ -81,7 +81,7 @@ extension Certificate {
 }
 
 @_cdecl("CertificateCopySubjectSummary")
-public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFString? {
+public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> Unmanaged<CFString>? {
     let certificate = certificate._swiftObject
     let summary: String
 
@@ -91,20 +91,14 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> CFSt
     } else if certificate.rdnCount != 0 {
         summary = certificate.tbsCertificate.subject.description
     } else if let emails = CertificateCopyRFC822Names(certificate._cfObject),
-              let email = (emails as NSArray).firstObject as? String {
+              let email = (emails.takeRetainedValue() as NSArray).firstObject as? String {
         summary = email
     } else if let dns = CertificateCopyDNSNamesFromSAN(certificate._cfObject),
-              let dns = (dns as NSArray).firstObject as? String {
+              let dns = (dns.takeRetainedValue() as NSArray).firstObject as? String {
         summary = dns
     } else {
         return nil
     }
 
-    return summary as CFString
-}
-
-@_cdecl("_CertificateCopySerialNumberData")
-public func _CertificateCopySerialNumberData(_ certificate: CertificateRef) -> CFData? {
-    let certificate = certificate._swiftObject
-    return certificate.serialNumberData
+    return Unmanaged.passRetained(summary as CFString)
 }

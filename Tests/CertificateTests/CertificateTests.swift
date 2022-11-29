@@ -18,21 +18,19 @@ final class CertificateTests: XCTestCase {
     }
 
     func test_certificate_j() {
-        autoreleasepool {
-            let cert = self.base64ToCertificate(certificate_j)
+        let cert = self.base64ToCertificate(certificate_j)
 
-            XCTAssertNotNil(cert)
-            guard let cert else { return }
+        XCTAssertNotNil(cert)
+        guard let cert else { return }
 
-            let cns = CertificateCopyCommonNames(cert)
-            XCTAssertNil(cns)
+        let cns = CertificateCopyCommonNames(cert)
+        XCTAssertNil(cns)
 
-            let data = CertificateCopySerialNumberData(cert, nil)
-            XCTAssertNotNil(data)
-            guard let data else { return }
+        let data = CertificateCopySerialNumberData(cert, nil)
+        XCTAssertNotNil(data)
+        guard let data else { return }
 
-            XCTAssertEqual(data as Data, Data([0x02, 0x01, 0x01]))
-        }
+        XCTAssertEqual(data as Data, Data([0x02, 0x01, 0x01]))
     }
 }
 

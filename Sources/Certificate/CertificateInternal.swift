@@ -18,7 +18,7 @@ import Foundation
 import ASN1Codable
 
 @_cdecl("CertificateCopyIPAddressDatas")
-public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> CFArray? {
+public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
 
     guard let datas = certificate.subjectAltName?.compactMap({
@@ -30,11 +30,12 @@ public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> CFAr
     }), !datas.isEmpty else {
         return nil
     }
-    return datas as CFArray
+
+    return Unmanaged.passRetained(datas as CFArray)
 }
 
 @_cdecl("CertificateCopyDNSNamesFromSAN")
-public func CertificateCopyDNSNamesFromSAN(_ certificate: CertificateRef) -> CFArray? {
+public func CertificateCopyDNSNamesFromSAN(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
 
     guard let datas = certificate.subjectAltName?.compactMap({
@@ -46,11 +47,12 @@ public func CertificateCopyDNSNamesFromSAN(_ certificate: CertificateRef) -> CFA
     }), !datas.isEmpty else {
         return nil
     }
-    return datas as CFArray
+
+    return Unmanaged.passRetained(datas as CFArray)
 }
 
 @_cdecl("CertificateCopyRFC822NamesFromSAN")
-public func CertificateCopyRFC822NamesFromSAN(_ certificate: CertificateRef) -> CFArray? {
+public func CertificateCopyRFC822NamesFromSAN(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
 
     guard let names = certificate.subjectAltName?.compactMap({
@@ -63,5 +65,11 @@ public func CertificateCopyRFC822NamesFromSAN(_ certificate: CertificateRef) -> 
         return nil
     }
 
-    return names as CFArray
+    return Unmanaged.passRetained(names as CFArray)
+}
+
+@_cdecl("_CertificateCopySerialNumberData")
+public func _CertificateCopySerialNumberData(_ certificate: CertificateRef) -> Unmanaged<CFData>? {
+    guard let serial = certificate._swiftObject.serialNumberData else { return nil }
+    return Unmanaged.passRetained(serial)
 }

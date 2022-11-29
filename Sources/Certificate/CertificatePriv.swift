@@ -32,33 +32,37 @@ public func CertificateCreateWithBytes(
 public func CertificateCreateWithKeychainItem(
     _: CFAllocator!,
     _ der_certificate: CFData,
-    _ keychain_item: CFTypeRef
+    _ keychain_item: Unmanaged<CFTypeRef>
 ) -> CertificateRef? {
     guard let certificate: CertificateRef = Certificate.create(with: der_certificate as Data) else {
         return nil
     }
-    certificate._swiftObject._keychain_item = keychain_item
+    certificate._swiftObject._keychain_item = keychain_item.takeRetainedValue()
     return certificate
 }
 
 @_cdecl("CertificateCopyComponentAttributes")
-public func CertificateCopyComponentAttributes(_ certificate: CertificateRef?) -> CFDictionary? {
+public func CertificateCopyComponentAttributes(_ certificate: CertificateRef?) -> Unmanaged<CFDictionary>? {
     guard let certificate = certificate?._swiftObject else { return nil }
-    return certificate.componentAttributes
+    guard let componentAttributes = certificate.componentAttributes else { return nil }
+    return Unmanaged.passRetained(componentAttributes)
 }
 
 @_cdecl("CertificateGetSubjectKeyID")
-public func CertificateGetSubjectKeyID(_ certificate: CertificateRef?) -> CFData? {
+public func CertificateGetSubjectKeyID(_ certificate: CertificateRef?) -> Unmanaged<CFData>? {
     guard let certificate = certificate?._swiftObject else { return nil }
     guard let subjectKeyID: Data = certificate.extension(id_x509_ce_subjectKeyIdentifier) else { return nil }
 
-    return subjectKeyID as CFData
+    return Unmanaged.passUnretained(subjectKeyID as CFData)
 }
 
 @_cdecl("CertificateSetKeychainItem")
-public func CertificateSetKeychainItem(_ certificate: CertificateRef?, _ keychain_item: CFTypeRef) -> OSStatus {
+public func CertificateSetKeychainItem(
+    _ certificate: CertificateRef?,
+    _ keychain_item: Unmanaged<CFTypeRef>
+) -> OSStatus {
     guard let certificate = certificate?._swiftObject else { return errSecParam }
-    certificate._keychain_item = keychain_item
+    certificate._keychain_item = keychain_item.takeRetainedValue()
     return errSecSuccess
 }
 
@@ -69,7 +73,7 @@ public func CertificateGetLength(_ certificate: CertificateRef) -> CFIndex {
 }
 
 @_cdecl("CertificateCopyIPAddresses")
-public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> CFArray? {
+public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
     guard let datas = certificate.subjectAltName?.compactMap({
         if case .iPAddress(let ipAddress) = $0 {
@@ -86,11 +90,12 @@ public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> CFArray
     }), !datas.isEmpty else {
         return nil
     }
-    return datas as CFArray
+
+    return Unmanaged.passRetained(datas as CFArray)
 }
 
 @_cdecl("CertificateCopyRFC822Names")
-public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray? {
+public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
 
     var names = [String]()
@@ -107,38 +112,50 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> CFArray
         names.append(contentsOf: rdns)
     }
 
-    return names.isEmpty ? nil : names as CFArray
+    guard !names.isEmpty else {
+        return nil
+    }
+
+    return Unmanaged.passRetained(names as CFArray)
 }
 
 @_cdecl("CertificateCopyCommonNames")
-public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> CFArray? {
+public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
-    return certificate.rdns(identifiedBy: id_at_commonName) as CFArray?
+    guard let rdns = certificate.rdns(identifiedBy: id_at_commonName),
+          !rdns.isEmpty else {
+        return nil
+    }
+
+    return Unmanaged.passRetained(rdns as CFArray)
 }
 
 @_cdecl("CertificateCopyDescriptionsFromSAN")
-public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> CFArray? {
+public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
-    guard let names = certificate.subjectAltName?.map({ String(describing: $0) }), !names.isEmpty else {
+    guard let names = certificate.subjectAltName?.map({ String(describing: $0) }),
+          !names.isEmpty else {
         return nil
     }
-    return names as CFArray
+
+    return Unmanaged.passRetained(names as CFArray)
 }
 
 @_cdecl("CertificateCopyDataReencoded")
-public func CertificateCopyDataReencoded(_ certificate: CertificateRef) -> CFData? {
+public func CertificateCopyDataReencoded(_ certificate: CertificateRef) -> Unmanaged<CFData>? {
     let certificate = certificate._swiftObject
     let asn1Encoder = ASN1Encoder()
 
     do {
-        return try asn1Encoder.encode(certificate) as CFData
+        let data = try asn1Encoder.encode(certificate)
+        return Unmanaged.passRetained(data as CFData)
     } catch {
         return nil
     }
 }
 
 @_cdecl("CertificateCopyJSONDescription")
-public func CertificateCopyJSONDescription(_ certificate: CertificateRef) -> CFString? {
+public func CertificateCopyJSONDescription(_ certificate: CertificateRef) -> Unmanaged<CFString>? {
     let certificate = certificate._swiftObject
 
     let jsonEncoder = JSONEncoder()
@@ -147,7 +164,7 @@ public func CertificateCopyJSONDescription(_ certificate: CertificateRef) -> CFS
     do {
         let data = try jsonEncoder.encode(certificate)
         guard let string = String(data: data, encoding: .utf8) else { return nil }
-        return string as CFString
+        return Unmanaged.passRetained(string as CFString)
     } catch {}
 
     return nil
