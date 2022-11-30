@@ -1822,9 +1822,9 @@
 		};
 		D3D13E6529133AB600218279 /* XCRemoteSwiftPackageReference "Echo" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Azoy/Echo";
+			repositoryURL = "https://github.com/ole/Echo";
 			requirement = {
-				branch = main;
+				branch = fix-release-build;
 				kind = branch;
 			};
 		};

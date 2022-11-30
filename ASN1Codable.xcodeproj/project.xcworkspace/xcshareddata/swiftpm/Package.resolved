@@ -66,10 +66,10 @@
     {
       "identity" : "echo",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Azoy/Echo",
+      "location" : "https://github.com/ole/Echo",
       "state" : {
-        "branch" : "main",
-        "revision" : "c93e53d8c26830928283e8bf8c2158501841357d"
+        "branch" : "fix-release-build",
+        "revision" : "67dee07edd6aa1f21a81ad261950d41beef20080"
       }
     },
     {
