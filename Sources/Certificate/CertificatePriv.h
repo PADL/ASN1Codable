@@ -50,6 +50,12 @@ CertificateCopyCommonNames(CertificateRef certificate);
 __nullable CFArrayRef
 CertificateCopyNTPrincipalNames(CertificateRef certificate);
 
+__nullable CFArrayRef
+CertificateCopyLegacyProperties(CertificateRef certificate);
+
+__nullable CFArrayRef
+CertificateCopyProperties(CertificateRef certificate);
+
 // extras that are not in SecCertificatePriv.h
 
 __nullable CFArrayRef

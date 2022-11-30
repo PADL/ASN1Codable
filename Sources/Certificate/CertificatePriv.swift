@@ -155,6 +155,181 @@ public func CertificateCopyNTPrincipalNames(_ certificate: CertificateRef) -> Un
     return Unmanaged.passRetained(names as CFArray)
 }
 
+extension Dictionary {
+    var nsKeyValueArray: NSArray {
+        self.map {
+            ["key": $0.0, "value": $0.1]
+        } as NSArray
+    }
+}
+
+extension Certificate {
+    func rdnProperty(_ name: Name) -> NSDictionary? {
+        guard case .rdnSequence(let rdns) = name, !rdns.isEmpty else {
+            return nil
+        }
+
+        return rdns.reduce([String: NSObject]()) { result, rdn in
+            var result = result as [String: NSObject]
+
+            rdn.forEach { ava in
+                let oid = String(describing: ava.type)
+                let value = String(describing: ava.value) as NSString
+
+                if let existing = result[oid] {
+                    if let existing = existing as? NSMutableArray {
+                        existing.add(value)
+                    } else {
+                        result[oid] = NSMutableArray(objects: [existing, value])
+                    }
+                } else {
+                    result[oid] = value
+                }
+            }
+
+            return result
+        } as NSDictionary
+    }
+
+    var versionProperty: NSString {
+        "\(self.tbsCertificate.version ?? rfc3280_version_2 + 1)" as NSString
+    }
+
+    var serialNumberProperty: NSArray {
+        // FIXME: why is there this inner wrapping? looks wrong to me
+        ["Serial Number": String(describing: self.tbsCertificate.serialNumber)].nsKeyValueArray
+    }
+
+    var validityPeriodProperty: NSArray {
+        ["Not Valid Before": self.tbsCertificate.validity.notBefore.nsDate,
+         "Not Valid After": self.tbsCertificate.validity.notAfter.nsDate].nsKeyValueArray
+    }
+
+    var publicKeyAlgorithmProperty: NSArray {
+        var properties = [String: NSObject]()
+        let spki = self.tbsCertificate.subjectPublicKeyInfo
+
+        properties["Algorithm"] = String(describing: spki.algorithm.algorithm) as NSObject
+
+        if let parameters = spki.algorithm.parameters, !(parameters is Null) {
+            properties["Parameters"] = String(describing: parameters) as NSObject
+        }
+        return properties.nsKeyValueArray
+    }
+
+    var publicKeyDataProperty: NSData {
+        self.tbsCertificate.subjectPublicKeyInfo.subjectPublicKey.wrappedValue as NSData
+    }
+
+    var publicKeyInfoProperty: NSArray {
+        var properties = [String: NSObject]()
+        properties["Public Key Algorithm"] = self.publicKeyAlgorithmProperty
+        properties["Public Key Data"] = self.publicKeyDataProperty
+        return properties.nsKeyValueArray
+    }
+
+    var signatureAlgorithmProperty: NSArray {
+        var properties = [String: NSObject]()
+
+        properties["Algorithm"] = String(describing: signatureAlgorithm.algorithm) as NSObject
+
+        if let parameters = signatureAlgorithm.parameters, !(parameters is Null) {
+            properties["Parameters"] = String(describing: parameters) as NSObject
+        }
+        return properties.nsKeyValueArray
+    }
+
+    var signatureDataProperty: NSData {
+        self.signatureValue.wrappedValue as NSData
+    }
+
+    var signatureProperty: NSArray {
+        var properties = [String: NSObject]()
+        properties["Signature Algorithm"] = self.signatureAlgorithmProperty
+        properties["Signature Data"] = self.signatureDataProperty
+        return properties.nsKeyValueArray
+    }
+}
+
+extension Time {
+    var nsDate: NSDate {
+        switch self {
+        case .utcTime(let utcTime):
+            return utcTime.wrappedValue as NSDate
+        case .generalTime(let generalizedTime):
+            return generalizedTime.wrappedValue as NSDate
+        }
+    }
+}
+
+@_cdecl("CertificateCopyLegacyProperties")
+public func CertificateCopyLegacyProperties(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
+    let certificate = certificate._swiftObject
+
+    var properties = [String: NSObject]()
+
+    if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.subject) {
+        properties["Subject Name"] = subjectName
+    }
+
+    if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.issuer) {
+        properties["Issuer Name"] = subjectName
+    }
+
+    properties["Version"] = certificate.versionProperty
+    properties["Serial Number"] = certificate.serialNumberProperty
+
+    properties["Not Valid Before"] = certificate.tbsCertificate.validity.notBefore.nsDate
+    properties["Not Valid After"] = certificate.tbsCertificate.validity.notAfter.nsDate
+
+    properties["Subject Unique ID"] = certificate.tbsCertificate.subjectUniqueID?.wrappedValue as? NSData
+    properties["Issuer Unique ID"] = certificate.tbsCertificate.issuerUniqueID?.wrappedValue as? NSData
+
+    properties["Public Key Algorithm"] = certificate.publicKeyAlgorithmProperty
+    properties["Public Key Data"] = certificate.publicKeyDataProperty
+
+    // appendExtension
+    properties["Signature"] = certificate.signatureDataProperty
+    // SEC_FINGERPRINTS_KEY appendFingerprintsProperty
+
+    return Unmanaged.passRetained(properties.nsKeyValueArray)
+}
+
+@_cdecl("CertificateCopyProperties")
+public func CertificateCopyProperties(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
+    let certificate = certificate._swiftObject
+
+    if let properties = certificate._properties {
+        return Unmanaged.passRetained(properties)
+    }
+
+    var properties = [String: NSObject]()
+
+    if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.subject) {
+        properties["Subject Name"] = subjectName
+    }
+
+    if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.issuer) {
+        properties["Issuer Name"] = subjectName
+    }
+
+    properties["Version"] = certificate.versionProperty
+    properties["Serial Number"] = certificate.serialNumberProperty
+    properties["Validity Period"] = certificate.validityPeriodProperty
+
+    properties["Subject Unique ID"] = certificate.tbsCertificate.subjectUniqueID?.wrappedValue as? NSData
+    properties["Issuer Unique ID"] = certificate.tbsCertificate.issuerUniqueID?.wrappedValue as? NSData
+    properties["Public Key Info"] = certificate.publicKeyInfoProperty
+
+    // appendExtension
+    properties["Signature"] = certificate.signatureProperty
+    // SEC_FINGERPRINTS_KEY appendFingerprintsProperty
+
+    certificate._properties = properties.nsKeyValueArray
+
+    return Unmanaged.passRetained(certificate._properties!)
+}
+
 @_cdecl("CertificateCopyDescriptionsFromSAN")
 public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject

@@ -1168,7 +1168,7 @@
 "ttype":
 {"name":"Certificate","gen_name":"signatureValue","is_type":true,"exported":false,"typedef":false,"ttype":"BIT STRING","ctype":"heim_bit_string"}
 }
-}],"decorate":[{"type":"CFTypeRef","name":"_keychain_item","optional":true,"external":true,"pointer":false,"void_star":false,"struct_star":false,"copy_function":"","free_function":"","header_name":"Foundation"}]}
+}],"decorate":[{"type":"CFTypeRef","name":"_keychain_item","optional":true,"external":true,"pointer":false,"void_star":false,"struct_star":false,"copy_function":"","free_function":"","header_name":"CoreFoundation"},{"type":"CFArray","name":"_properties","optional":true,"external":true,"pointer":false,"void_star":false,"struct_star":false,"copy_function":"","free_function":"","header_name":"CoreFoundation"}]}
 }
 {"name":"Certificates","gen_name":"Certificates","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":

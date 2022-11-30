@@ -1,4 +1,5 @@
 --preserve-binary=Certificate
 --preserve-binary=TBSCertificate
 --preserve-binary=TBSCRLCertList
---decorate=Certificate:CFTypeRef:_keychain_item?:::Foundation
+--decorate=Certificate:CFTypeRef:_keychain_item?:::CoreFoundation
+--decorate=Certificate:CFArray:_properties?:::CoreFoundation
