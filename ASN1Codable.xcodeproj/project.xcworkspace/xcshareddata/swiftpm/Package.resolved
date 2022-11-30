@@ -15,7 +15,7 @@
       "location" : "https://github.com/PADL/ASN1Kit",
       "state" : {
         "branch" : "lhoward/pr",
-        "revision" : "c4beafec751f022a256573f68d6f7061efc87d08"
+        "revision" : "1757fbfd31c3725a7039f9717a30a0c82640b617"
       }
     },
     {
@@ -149,7 +149,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-syntax.git",
       "state" : {
-        "revision" : "a82041008d2c678a97407fbd0ce420d3ab047538"
+        "revision" : "e8da93046936e02ef3d700527ecdcd808c3c6bcd"
       }
     },
     {
@@ -158,7 +158,7 @@
       "location" : "https://github.com/realm/SwiftLint",
       "state" : {
         "branch" : "main",
-        "revision" : "97ba82d740018e829f6cace8a34c1ca36844a2fd"
+        "revision" : "92304cdd9879d058c1278c195ae9ee4aea5438d6"
       }
     },
     {
