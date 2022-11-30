@@ -68,7 +68,7 @@ class TBSCertificate: Codable {
 
 ### CHOICE
 
-In cases where property cannot be used (such as enumerated types), it is more ergonomic to use a protocol conforming to `ASN1TagCodingKey`. This is possible asl ong as all fields in the type are tagged and share a tagging environment.
+In cases where property cannot be used (such as enumerated types), it is more ergonomic to use a protocol conforming to `ASN1TagCodingKey`. This is possible as long as all fields in the type are tagged and share a tagging environment.
 
 ```asn1
 GeneralName ::= CHOICE {
@@ -113,8 +113,8 @@ enum GeneralName: Codable {
 You can use the encoder and decoder as follows:
 
 ```
-let berData = try ASN1Encoder().encode(someValue)
-let decodedValue = try ASN1Decoder().decode(AType.self, from: berData)
+let encodedValue = try ASN1Encoder().encode(1234)
+let decodedValue = try ASN1Decoder().decode(Int.self, from: encodedValue)
 ```
 
 ## Translator
@@ -131,5 +131,7 @@ Features include:
 
 ## certutil
 
-The source distribution includes a `certutil` tool which reads a PEM-encoded certificate and outputs a JSON representation, using the native Swift JSON encoder. It also can re-encode the certificate to ASN.1, useful for verifying round-tripping. The API `certutil` uses is provided by `Certificate.framework`, which is a C API modeled on the macOS Security framework. This tool and framework are incomplete and should be treated as a proof of concept only.
+The source distribution includes a `certutil` tool which reads a PEM-encoded certificate and outputs a JSON representation, using the native Swift JSON encoder. It also can re-encode the certificate to ASN.1, useful for verifying round-tripping.
+
+The API `certutil` uses is provided by `Certificate.framework`, which is a C API modeled on the macOS Security framework. This tool and framework are incomplete and should be treated as a proof of concept only.
 
