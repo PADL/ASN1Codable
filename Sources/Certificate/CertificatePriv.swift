@@ -130,6 +130,31 @@ public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> Unmanag
     return Unmanaged.passRetained(rdns as CFArray)
 }
 
+@_cdecl("CertificateCopyNTPrincipalNames")
+public func CertificateCopyNTPrincipalNames(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
+    let certificate = certificate._swiftObject
+
+    var names = [String]()
+
+    if let san = certificate.subjectAltName {
+        names.append(contentsOf: san.compactMap {
+            if case .otherName(let otherName) = $0,
+               otherName.type_id == id_pkix_on_pkinit_ms_san ||
+               otherName.type_id == id_pkix_on_pkinit_san {
+                return String(describing: otherName.value)
+            } else {
+                return nil
+            }
+        })
+    }
+
+    guard !names.isEmpty else {
+        return nil
+    }
+
+    return Unmanaged.passRetained(names as CFArray)
+}
+
 @_cdecl("CertificateCopyDescriptionsFromSAN")
 public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject

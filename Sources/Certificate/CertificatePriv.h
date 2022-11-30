@@ -47,6 +47,9 @@ CertificateCopyRFC822Names(CertificateRef certificate);
 __nullable CFArrayRef
 CertificateCopyCommonNames(CertificateRef certificate);
 
+__nullable CFArrayRef
+CertificateCopyNTPrincipalNames(CertificateRef certificate);
+
 // extras that are not in SecCertificatePriv.h
 
 __nullable CFArrayRef
