@@ -107,7 +107,7 @@ class TestClass: Codable, Equatable, ASN1PrivateTaggedType, ASN1PreserveBinary {
 }
 
 extension ASN1CodableTests {
-    func test_encode_CHOICE_Division() {
+    func test_CHOICE_Division() {
         let r_and_d = Division.RAndD(labID: 48, currentProject: Data([0x44, 0x58, 0x2D, 0x37]))
         let currentAssignment = Division.r_and_d(r_and_d)
 
@@ -117,7 +117,7 @@ extension ASN1CodableTests {
                                taggingEnvironment: .automatic)
     }
 
-    func test_encode_SEQUENCE_ApplicationTaggedTestStruct_PropertyWrapper() {
+    func test_SEQUENCE_ApplicationTaggedTestStruct_PropertyWrapper() {
         struct TestStruct: Codable, Equatable, ASN1ApplicationTaggedType {
             static var tagNumber: UInt = 100
 
@@ -156,7 +156,7 @@ extension ASN1CodableTests {
         self.test_encodeDecode(TestStruct(), encodedAs: data)
     }
 
-    func test_encode_SEQUENCE_PrivateTaggedTestStruct_PropertyWrapper() {
+    func test_SEQUENCE_PrivateTaggedTestStruct_PropertyWrapper() {
         struct TestStruct: Codable, Equatable, ASN1PrivateTaggedType {
             static var tagNumber: UInt = 100
 
@@ -174,12 +174,12 @@ extension ASN1CodableTests {
         self.test_encodeDecode(TestStruct(), encodedAs: data)
     }
 
-    func test_encode_SEQUENCE_PrivateTaggedTestStruct_CodingKey() {
+    func test_SEQUENCE_PrivateTaggedTestStruct_CodingKey() {
         let data = Data(base64Encoded: "/2QWMBSgAwIBAaEFBAMCA/+iBgMEAAIDzA==")!
         self.test_encodeDecode(TestClass(), encodedAs: data)
     }
 
-    func test_encode_SEQUENCE_AutoType() {
+    func test_SEQUENCE_AutoType() {
         enum AutoEnum: Codable, Equatable {
             case C1(String)
             case C2(Int)
@@ -198,7 +198,7 @@ extension ASN1CodableTests {
         self.test_encodeDecode(AutoType(), encodedAs: automatic, taggingEnvironment: .automatic)
     }
 
-    func test_encode_SEQUENCE_PersonnelRecord() {
+    func test_SEQUENCE_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable {
             var name: Data
             var location: Int
@@ -213,7 +213,7 @@ extension ASN1CodableTests {
                                                 0x01, 0x1A]))
     }
 
-    func test_encode_SEQUENCE_PersonnelRecordSuper() {
+    func test_SEQUENCE_PersonnelRecordSuper() {
         let cpr = ContractorPersonnelRecord(name: "Luke", location: 1, age: nil)
         cpr.company = "PADL"
 
@@ -221,7 +221,7 @@ extension ASN1CodableTests {
                                encodedAs: try! Data(hex: "3016A0060C044C756B65A103020101BF65060C045041444C"))
     }
 
-    func test_encode_SEQUENCE_OF_INTEGER() {
+    func test_SEQUENCE_OF_INTEGER() {
         let weeklyHighs = [10, 12, -2, 8]
 
         self.test_encodeDecode(weeklyHighs,
@@ -229,7 +229,7 @@ extension ASN1CodableTests {
                                                 0x02, 0x01, 0xFE, 0x02, 0x01, 0x08]))
     }
 
-    func test_encode_SET_PersonnelRecord() {
+    func test_SET_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable, ASN1SetCodable {
             var name: Data
             var location: Int
@@ -246,7 +246,7 @@ extension ASN1CodableTests {
                                taggingEnvironment: .automatic)
     }
 
-    func test_encode_AUTOMATIC_SEQUENCE_PersonnelRecord() {
+    func test_AUTOMATIC_SEQUENCE_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable {
             @UTF8String var name: String = "John"
             var age: Int = 25
@@ -258,7 +258,7 @@ extension ASN1CodableTests {
                                taggingEnvironment: .automatic)
     }
 
-    func test_encode_IMPLICIT_SEQUENCE_PersonnelRecord() {
+    func test_IMPLICIT_SEQUENCE_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable, ASN1ContextTaggedType {
             static var tagNumber: UInt = 0
 
@@ -272,7 +272,7 @@ extension ASN1CodableTests {
                                taggingEnvironment: .implicit)
     }
 
-    func test_encode_EXPLICIT_SEQUENCE_PersonnelRecord() {
+    func test_EXPLICIT_SEQUENCE_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable, ASN1ContextTaggedType {
             static var tagNumber: UInt = 0
 
@@ -286,7 +286,7 @@ extension ASN1CodableTests {
                                taggingEnvironment: .explicit)
     }
 
-    func test_encode_SET_OF_INTEGER() {
+    func test_SET_OF_INTEGER() {
         let weeklyHighs = Set([10, 12, -2, 8])
 
         self.test_encodeDecode(weeklyHighs,

@@ -23,7 +23,7 @@ let ot_Int = ObjectIdentifier(rawValue: "1.1")!
 
 // swiftlint:disable force_try nesting
 extension ASN1CodableTests {
-    func test_encode_ObjectSetAny() {
+    func test_ObjectSetAny() {
         struct OpenType: Codable, Equatable, ASN1ObjectSetCodable {
             static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
@@ -49,7 +49,7 @@ extension ASN1CodableTests {
                                encodedAs: try! Data(hex: "300BA003060129A104020204D2"))
     }
 
-    func test_encode_ObjectSetAnyOctetString() {
+    func test_ObjectSetAnyOctetString() {
         struct OpenType: Codable, Equatable, ASN1ObjectSetOctetStringCodable {
             static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
@@ -75,7 +75,7 @@ extension ASN1CodableTests {
                                encodedAs: try! Data(hex: "300DA003060129A1060404020204D2"))
     }
 
-    func test_encode_ObjectSet() {
+    func test_ObjectSet() {
         struct OpenType: Codable, ASN1ObjectSetCodable {
             static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
@@ -100,7 +100,7 @@ extension ASN1CodableTests {
                          encodedAs: try! Data(hex: "300BA003060129A104020204D2"))
     }
 
-    func test_encode_ObjectSetOctetString() {
+    func test_ObjectSetOctetString() {
         struct OpenType: Codable, ASN1ObjectSetOctetStringCodable {
             static let knownTypes: [AnyHashable: Codable.Type] = [
                 ot_String: String.self,
