@@ -420,6 +420,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         self.tType?.typeDefValue?.parent = self
 
         var isClass = false
+        var isFinalClass = false
         var isObjC = false
 
         if let map = self.translator?.typeMaps[self.generatedName] {
@@ -435,7 +436,11 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
             }
         }
 
-        if let preserve = self.preserve, preserve || self._typeReferencesSelf {
+        if self.preserve ?? self._typeReferencesSelf {
+            if !isClass {
+                // don't set user-specified classes to final
+                isFinalClass = true
+            }
             isClass = true
         }
 
@@ -445,9 +450,19 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                 case .sequence, .set:
                     // main struct implementation
                     let swiftMetaType = isClass ? "class" : "struct"
-                    let objcPrefix = isObjC ? "@objc " : ""
+                    var finalOrObjCPrefix: String = ""
 
-                    outputStream.write("\(visibility)\(objcPrefix)\(swiftMetaType) \(self.generatedName): \(self.swiftConformances(nil)) {\n")
+                    if isObjC {
+                        finalOrObjCPrefix = "@objc"
+                    } else if isFinalClass {
+                        finalOrObjCPrefix = "final"
+                    }
+
+                    if !finalOrObjCPrefix.isEmpty {
+                        finalOrObjCPrefix.append(" ")
+                    }
+
+                    outputStream.write("\(visibility)\(finalOrObjCPrefix)\(swiftMetaType) \(self.generatedName): \(self.swiftConformances(nil)) {\n")
 
                     if let tag = parent?.tag, !tag.isUniversal {
                         outputStream.write("\t\(visibility)static let tagNumber: UInt = \(parent!.tagValue!)\n\n")
