@@ -333,37 +333,32 @@ extension ASN1DecoderImpl.SingleValueContainer {
         with metadata: ASN1Metadata,
         skipTaggedValues: Bool = false
     ) throws -> T where T: Decodable {
-        guard let tag = metadata.tag else {
-            return try self.validateAndDecodeUnwrappedTagged(type,
-                                                             from: object,
-                                                             with: metadata,
-                                                             skipTaggedValues: skipTaggedValues)
-        }
-
-        guard object.tag == tag else {
-            if self.isOptionalOrWrappedOptional(type) {
-                return self.possiblyWrappedNilLiteral(type)
-            } else {
-                let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Expected tag \(tag) but received \(object.tag)")
-                throw DecodingError.typeMismatch(type, context)
-            }
-        }
-
         let unwrappedObject: ASN1Object
-        var tagging = metadata.tagging ?? self.context.taggingEnvironment
 
-        if tagging == .implicit, self.context.enumCodingState == .enum {
-            /// IMPLICIT tagging of types that are CHOICE types have the tag converted to EXPLICIT
-            tagging = .explicit
-        }
+        if let tag = metadata.tag {
+            guard object.tag == tag else {
+                if self.isOptionalOrWrappedOptional(type) {
+                    return self.possiblyWrappedNilLiteral(type)
+                } else {
+                    let context = DecodingError.Context(codingPath: self.codingPath,
+                                                        debugDescription: "Expected tag \(tag) but received \(object.tag)")
+                    throw DecodingError.typeMismatch(type, context)
+                }
+            }
 
-        let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : tag
+            var tagging = metadata.tagging ?? self.context.taggingEnvironment
 
-        if object.constructed {
+            if tagging == .implicit, self.context.enumCodingState == .enum {
+                /// IMPLICIT tagging of types that are CHOICE types have the tag converted to EXPLICIT
+                tagging = .explicit
+            }
+
+            let innerTag = tagging == .implicit ? ASN1DecodingContext.tag(for: type) : tag
+
             if tagging == .implicit {
-                unwrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: innerTag, constructed: false)
-            } else {
+                let constructed = object.constructed || innerTag.isUniversal ? false : nil
+                unwrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: innerTag, constructed: constructed)
+            } else if object.constructed {
                 guard let items = object.data.items,
                       items.count == 1,
                       let firstObject = object.data.items!.first else {
@@ -373,21 +368,16 @@ extension ASN1DecoderImpl.SingleValueContainer {
                     throw DecodingError.typeMismatch(type, context)
                 }
                 unwrappedObject = firstObject
-            }
-        } else if innerTag.isUniversal {
-            if tagging == .implicit {
-                unwrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: innerTag, constructed: false)
-            } else {
+            } else if innerTag.isUniversal {
                 unwrappedObject = object
+            } else {
+                let context = DecodingError.Context(codingPath: self.codingPath,
+                                                    debugDescription: "Expected universal tag \(innerTag) " +
+                                                        "for primitive object \(object)")
+                throw DecodingError.typeMismatch(type, context)
             }
-        } else if tagging == .implicit {
-            // may have multiple layers of erased IMPLICIT tags
-            unwrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: innerTag)
         } else {
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Expected universal tag \(innerTag) " +
-                                                    "for primitive object \(object)")
-            throw DecodingError.typeMismatch(type, context)
+            unwrappedObject = object // may have size or value constraints, but no tag
         }
 
         return try self.validateAndDecodeUnwrappedTagged(type,
