@@ -223,14 +223,21 @@ final class CertificateTests: XCTestCase {
 
         let cns = CertificateCopyCommonNames(cert)
         XCTAssertNotNil(cns)
-        guard let cns else { return }
-
-        XCTAssertEqual(cns, ["kdc"] as CFArray)
+        XCTAssertEqual(cns!, ["kdc"] as CFArray)
 
         let princs = CertificateCopyNTPrincipalNames(cert)
         XCTAssertNotNil(princs)
-        guard let princs else { return }
+        XCTAssertEqual(princs!, ["krbtgt/TEST.H5L.SE@TEST.H5L.SE"] as CFArray)
 
-        XCTAssertEqual(princs, ["krbtgt/TEST.H5L.SE@TEST.H5L.SE"] as CFArray)
+        let props = CertificateCopyLegacyProperties(cert)
+        XCTAssertNotNil(props)
+        XCTAssertEqual(props!.valueForKey("Version"), "2" as NSString)
+    }
+}
+
+extension CFArray {
+    func valueForKey(_ key: String) -> NSObject? {
+        guard let array = self as? [[String: NSObject]] else { return nil }
+        return array.first { $0["key"] == key as NSString }?["value"]
     }
 }
