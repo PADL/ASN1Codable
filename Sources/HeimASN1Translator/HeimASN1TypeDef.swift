@@ -442,9 +442,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         if self.isTypeDef ?? false, self.cType != nil, let tType = self.tType {
             if case .universal(let type) = tType {
                 switch type {
-                case .sequence:
-                    fallthrough
-                case .set:
+                case .sequence, .set:
                     // main struct implementation
                     let swiftMetaType = isClass ? "class" : "struct"
                     let objcPrefix = isObjC ? "@objc " : ""

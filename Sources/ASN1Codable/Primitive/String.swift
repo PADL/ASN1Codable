@@ -177,23 +177,15 @@ extension ASN1DecodedTag {
 extension ASN1Tag {
     var isString: Bool {
         switch self {
-        case .numericString:
-            fallthrough
-        case .ia5String:
-            fallthrough
-        case .printableString:
-            fallthrough
-        case .graphicString:
-            fallthrough
-        case .visibleString:
-            fallthrough
-        case .generalString:
-            fallthrough
-        case .universalString:
-            fallthrough
-        case .bmpString:
-            fallthrough
-        case .utf8String:
+        case .numericString,
+             .ia5String,
+             .printableString,
+             .graphicString,
+             .visibleString,
+             .generalString,
+             .universalString,
+             .bmpString,
+             .utf8String:
             return true
         default:
             return false

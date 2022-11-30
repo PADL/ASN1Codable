@@ -36,25 +36,16 @@ extension ASN1Tag: HeimASN1SwiftTypeRepresentable {
             return "Array"
         case .set:
             return "Set"
-        case .generalizedTime:
-            fallthrough
-        case .utcTime:
-            fallthrough
-        case .printableString:
-            fallthrough
-        case .graphicString:
-            fallthrough
-        case .visibleString:
-            fallthrough
-        case .generalString:
-            fallthrough
-        case .universalString:
-            fallthrough
-        case .bmpString:
-            fallthrough
-        case .ia5String:
-            fallthrough
-        case .utf8String:
+        case .generalizedTime,
+             .utcTime,
+             .printableString,
+             .graphicString,
+             .visibleString,
+             .generalString,
+             .universalString,
+             .bmpString,
+             .ia5String,
+             .utf8String:
             let wrapped = self.wrappedSwiftType!
             return "\(wrapped.0)<\(wrapped.1)>"
         default:

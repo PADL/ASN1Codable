@@ -76,13 +76,9 @@ enum HeimASN1UniversalType: String, Codable, HeimASN1SwiftTypeRepresentable, Hei
             tag = .external
         case .enumerated:
             tag = .enumerated
-        case .sequence:
-            fallthrough
-        case .sequenceOf:
+        case .sequence, .sequenceOf:
             tag = .sequence
-        case .set:
-            fallthrough
-        case .setOf:
+        case .set, .setOf:
             tag = .set
         case .numericString:
             tag = .numericString
