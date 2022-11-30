@@ -184,4 +184,53 @@ final class CertificateTests: XCTestCase {
         let components = CertificateCopyComponentAttributes(cert)
         XCTAssertEqual(components, [1001: 0] as CFDictionary)
     }
+
+    func test_certificate_kdc() {
+        let der = """
+        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
+        """
+
+        let cert = self.test_encodeDecodeCertificate(der)
+        guard let cert else { return }
+
+        let cns = CertificateCopyCommonNames(cert)
+        XCTAssertNotNil(cns)
+        guard let cns else { return }
+
+        XCTAssertEqual(cns, ["kdc"] as CFArray)
+
+        let princs = CertificateCopyNTPrincipalNames(cert)
+        XCTAssertNotNil(princs)
+        guard let princs else { return }
+
+        XCTAssertEqual(princs, ["krbtgt/TEST.H5L.SE@TEST.H5L.SE"] as CFArray)
+    }
 }
