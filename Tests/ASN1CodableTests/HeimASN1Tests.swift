@@ -452,4 +452,10 @@ extension ASN1CodableTests {
         let t1 = GeneralizedTime(wrappedValue: Date(timeIntervalSince1970: 1_243_130_560))
         self.test_encodeDecode(t1, encodedAs: test1)
     }
+
+    func test_preserve() {
+        let test0 = try! Data(hex: "300AA003020100A103020101")
+        let t0 = TESTPreserve()
+        self.test_encodeDecode(t0, encodedAs: test0)
+    }
 }

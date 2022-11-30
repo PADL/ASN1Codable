@@ -349,14 +349,19 @@ struct TESTSeqOf5: Codable, Equatable {
     var b: [B]?
 }
 
-struct TESTPreserve: Codable, Equatable {
+class TESTPreserve: Codable, Equatable, ASN1PreserveBinary {
+    static func == (lhs: TESTPreserve, rhs: TESTPreserve) -> Bool {
+        lhs.zero == rhs.zero && lhs.one == rhs.one
+    }
+
     enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
         case zero = 0
         case one = 1
     }
 
-    var zero: TESTInteger
-    var one: TESTInteger
+    var _save: Data? = nil
+    var zero: TESTInteger = 0
+    var one: TESTInteger = 1
 }
 
 typealias TESTMechTypeList = [TESTMechType]
