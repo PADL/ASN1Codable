@@ -163,6 +163,12 @@ extension Dictionary {
     }
 }
 
+extension BitString {
+    var nsData: NSData {
+        self.wrappedValue as NSData
+    }
+}
+
 extension Certificate {
     func rdnProperty(_ name: Name) -> NSDictionary? {
         guard case .rdnSequence(let rdns) = name, !rdns.isEmpty else {
@@ -282,8 +288,8 @@ public func CertificateCopyLegacyProperties(_ certificate: CertificateRef) -> Un
     properties["Not Valid Before"] = certificate.tbsCertificate.validity.notBefore.nsDate
     properties["Not Valid After"] = certificate.tbsCertificate.validity.notAfter.nsDate
 
-    properties["Subject Unique ID"] = certificate.tbsCertificate.subjectUniqueID?.wrappedValue as? NSData
-    properties["Issuer Unique ID"] = certificate.tbsCertificate.issuerUniqueID?.wrappedValue as? NSData
+    properties["Subject Unique ID"] = certificate.tbsCertificate.subjectUniqueID?.nsData
+    properties["Issuer Unique ID"] = certificate.tbsCertificate.issuerUniqueID?.nsData
 
     properties["Public Key Algorithm"] = certificate.publicKeyAlgorithmProperty
     properties["Public Key Data"] = certificate.publicKeyDataProperty
@@ -317,8 +323,8 @@ public func CertificateCopyProperties(_ certificate: CertificateRef) -> Unmanage
     properties["Serial Number"] = certificate.serialNumberProperty
     properties["Validity Period"] = certificate.validityPeriodProperty
 
-    properties["Subject Unique ID"] = certificate.tbsCertificate.subjectUniqueID?.wrappedValue as? NSData
-    properties["Issuer Unique ID"] = certificate.tbsCertificate.issuerUniqueID?.wrappedValue as? NSData
+    properties["Subject Unique ID"] = certificate.tbsCertificate.subjectUniqueID?.nsData
+    properties["Issuer Unique ID"] = certificate.tbsCertificate.issuerUniqueID?.nsData
     properties["Public Key Info"] = certificate.publicKeyInfoProperty
 
     // appendExtension
