@@ -34,9 +34,7 @@ public func CertificateCreateWithKeychainItem(
     _ der_certificate: CFData,
     _ keychain_item: Unmanaged<CFTypeRef>
 ) -> CertificateRef? {
-    guard let certificate: CertificateRef = Certificate.create(with: der_certificate as Data) else {
-        return nil
-    }
+    guard let certificate = Certificate.create(with: der_certificate as Data) else { return nil }
     certificate._swiftObject._keychain_item = keychain_item.takeRetainedValue()
     return certificate
 }
@@ -52,7 +50,6 @@ public func CertificateCopyComponentAttributes(_ certificate: CertificateRef?) -
 public func CertificateGetSubjectKeyID(_ certificate: CertificateRef?) -> Unmanaged<CFData>? {
     guard let certificate = certificate?._swiftObject else { return nil }
     guard let subjectKeyID: Data = certificate.extension(id_x509_ce_subjectKeyIdentifier) else { return nil }
-
     return Unmanaged.passUnretained(subjectKeyID as CFData)
 }
 
@@ -75,6 +72,7 @@ public func CertificateGetLength(_ certificate: CertificateRef) -> CFIndex {
 @_cdecl("CertificateCopyIPAddresses")
 public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
+
     guard let datas = certificate.subjectAltName?.compactMap({
         if case .iPAddress(let ipAddress) = $0 {
             if let ipv4Address = IPv4Address(ipAddress) {
@@ -122,6 +120,7 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> Unmanag
 @_cdecl("CertificateCopyCommonNames")
 public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
+
     guard let rdns = certificate.rdns(identifiedBy: id_at_commonName),
           !rdns.isEmpty else {
         return nil
@@ -134,21 +133,15 @@ public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> Unmanag
 public func CertificateCopyNTPrincipalNames(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
 
-    var names = [String]()
-
-    if let san = certificate.subjectAltName {
-        names.append(contentsOf: san.compactMap {
-            if case .otherName(let otherName) = $0,
-               otherName.type_id == id_pkix_on_pkinit_ms_san ||
-               otherName.type_id == id_pkix_on_pkinit_san {
-                return String(describing: otherName.value)
-            } else {
-                return nil
-            }
-        })
-    }
-
-    guard !names.isEmpty else {
+    guard let names = certificate.subjectAltName?.compactMap({
+        if case .otherName(let otherName) = $0,
+           otherName.type_id == id_pkix_on_pkinit_ms_san ||
+           otherName.type_id == id_pkix_on_pkinit_san {
+            return String(describing: otherName.value)
+        } else {
+            return nil
+        }
+    }), !names.isEmpty else {
         return nil
     }
 
