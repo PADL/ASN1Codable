@@ -15,6 +15,7 @@
 //
 
 import Foundation
+import Echo
 
 // represents a tag number used to specialize a tag generic
 public protocol ASN1TagNumberRepresentable {}
@@ -22,8 +23,11 @@ public protocol ASN1TagNumberRepresentable {}
 // extracts the tag number from the ASN1TagNumber placeholder type
 extension ASN1TagNumberRepresentable {
     static var tagNo: UInt {
-        let name = String(describing: self)
+        // this appears more performant than String(describing:)
+        let enumMetadata = reflect(self) as! EnumMetadata
+        let name = enumMetadata.descriptor.name
         let nameComponents = name.components(separatedBy: "$")
+
         precondition(nameComponents.count == 2)
         return UInt(nameComponents[1])!
     }
