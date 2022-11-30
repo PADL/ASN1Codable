@@ -206,10 +206,6 @@ extension ASN1EncoderImpl.SingleValueContainer {
             object = try self.encodeConstructedValue(value)
         }
 
-        if let object, let value = value as? ASN1PreserveBinary {
-            value._save = try object.serialize()
-        }
-
         return object
     }
 

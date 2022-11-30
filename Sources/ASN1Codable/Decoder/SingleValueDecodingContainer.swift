@@ -191,7 +191,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             value = try self.decodeConstructedValue(type, from: object)
         }
 
-        if let value = value as? ASN1PreserveBinary {
+        if var value = value as? ASN1PreserveBinary {
             value._save = object.originalEncoding
         }
 

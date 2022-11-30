@@ -436,7 +436,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
             }
         }
 
-        if self.preserve ?? self._typeReferencesSelf {
+        if self._typeReferencesSelf {
             if !isClass {
                 // don't set user-specified classes to final
                 isFinalClass = true
