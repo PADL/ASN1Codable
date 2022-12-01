@@ -90,16 +90,16 @@ struct ASN1DecodingContext: ASN1CodingContext {
     ///
     /// only works with custom coding keys that conform to ASN1TagCodingKey and contain
     /// the tag number
-    func codingKey<Key>(_ keyType: Key.Type, object: ASN1Object) -> Key? where Key: CodingKey {
+    func codingKey<Key>(_: Key.Type, object: ASN1Object) -> Key? where Key: CodingKey {
         if let currentEnum = self.currentEnumType,
-                  let enumMetadata = reflect(Self.lookThroughOptional(currentEnum)) as? EnumMetadata,
-                  let enumCase = enumMetadata.descriptor.fields.records.first(where: {
-                      guard let fieldType = enumMetadata.type(of: $0.mangledTypeName) else {
-                          return false
-                      }
+           let enumMetadata = reflect(Self.lookThroughOptional(currentEnum)) as? EnumMetadata,
+           let enumCase = enumMetadata.descriptor.fields.records.first(where: {
+               guard let fieldType = enumMetadata.type(of: $0.mangledTypeName) else {
+                   return false
+               }
 
-                      return Self.tag(for: fieldType) == object.tag
-                  }) {
+               return Self.tag(for: fieldType) == object.tag
+           }) {
             // FIXME: does not work with custom coding keys
             return Key(stringValue: enumCase.name)
         } else if let taggingContext = self.automaticTaggingContext {
