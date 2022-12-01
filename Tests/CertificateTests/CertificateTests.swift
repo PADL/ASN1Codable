@@ -231,7 +231,9 @@ final class CertificateTests: XCTestCase {
 
         let props = CertificateCopyLegacyProperties(cert)
         XCTAssertNotNil(props)
-        XCTAssertEqual(props!.valueForKey("Version"), "2" as NSString)
+        if let props = props as NSArray? {
+            XCTAssertEqual(props.unwrappedValue(forKey: "Version"), "2" as NSString)
+        }
     }
 
     func test_certificate_pkinit() {
@@ -270,13 +272,37 @@ final class CertificateTests: XCTestCase {
 
         let props = CertificateCopyLegacyProperties(cert)
         XCTAssertNotNil(props)
-        XCTAssertEqual(props!.valueForKey("Version"), "2" as NSString)
+        if let props = props as NSArray? {
+            XCTAssertEqual(props.unwrappedValue(forKey: "Version"), "2" as NSString)
+
+            let alg = props.unwrappedValue(forKey: "Public Key Algorithm") as? NSArray
+            XCTAssertNotNil(alg)
+
+            if let alg {
+                let params = alg.unwrappedValue(forKey: "Parameters") as? NSString
+                XCTAssertNotNil(params)
+                if let params { XCTAssertEqual(params, "namedCurve(1.2.840.10045.3.1.7)") }
+
+                let algalg = alg.unwrappedValue(forKey: "Algorithm") as? NSString
+                XCTAssertNotNil(algalg)
+                if let algalg { XCTAssertEqual(algalg, "1.2.840.10045.2.1") }
+            }
+
+            let issuer = props.unwrappedValue(forKey: "Issuer Name") as? NSArray
+            XCTAssertNotNil(issuer)
+
+            if let issuer {
+                let country = issuer.unwrappedValue(forKey: "2.5.4.6") as? NSString
+                XCTAssertNotNil(country)
+                if let country { XCTAssertEqual(country, "SE" as NSString) }
+            }
+        }
     }
 }
 
-extension CFArray {
-    func valueForKey(_ key: String) -> NSObject? {
+extension NSArray {
+    func unwrappedValue(forKey key: NSString) -> NSObject? {
         guard let array = self as? [[String: NSObject]] else { return nil }
-        return array.first { $0["key"] == key as NSString }?["value"]
+        return array.first { $0["label"] == key as NSString }?["value"]
     }
 }
