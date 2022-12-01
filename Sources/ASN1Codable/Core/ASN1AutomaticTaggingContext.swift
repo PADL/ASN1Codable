@@ -27,35 +27,22 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
     private var enumMetadata: EnumMetadata?
 
     init?<T>(_ type: T.Type) {
+        let hasTaggedFields: Bool
+
         // this is expensive, so use automatic tags sparingly, or have the compiler do the job
         if let metadata = reflect(type) as? StructMetadata {
-            let hasTaggedFields = metadata.descriptor.fields.records.contains {
-                guard let fieldType = metadata.type(of: $0.mangledTypeName),
-                      let wrappedFieldType = fieldType as? any ASN1TaggedValue.Type,
-                      !(wrappedFieldType is any ASN1UniversalTaggedValue.Type) else {
-                    return false
-                }
-                return wrappedFieldType.metadata.tag != nil
-            }
-
-            guard !hasTaggedFields else {
-                return nil
-            }
+            hasTaggedFields = metadata.descriptor.fields.hasTaggedFields(metadata)
+        } else if let metadata = reflect(type) as? ClassMetadata {
+            hasTaggedFields = metadata.descriptor.fields.hasTaggedFields(metadata)
         } else if let metadata = reflect(type) as? EnumMetadata {
-            let hasTaggedFields = metadata.descriptor.fields.records.contains {
-                guard let fieldType = metadata.type(of: $0.mangledTypeName),
-                      let wrappedFieldType = fieldType as? any ASN1TaggedValue.Type,
-                      !(wrappedFieldType is any ASN1UniversalTaggedValue.Type) else {
-                    return false
-                }
-                return wrappedFieldType.metadata.tag != nil
-            }
-
-            guard !hasTaggedFields else {
-                return nil
-            }
-
+            hasTaggedFields = metadata.descriptor.fields.hasTaggedFields(metadata)
             self.enumMetadata = metadata
+        } else {
+            hasTaggedFields = false
+        }
+
+        guard !hasTaggedFields else {
+            return nil
         }
 
         self.tagNo = 0
@@ -105,5 +92,18 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
 
     var description: String {
         "ASN1AutomaticTaggingContext(tagNo: \(self.tagNo))"
+    }
+}
+
+extension FieldDescriptor {
+    fileprivate func hasTaggedFields(_ metadata: TypeMetadata) -> Bool {
+        self.records.contains {
+            guard let fieldType = metadata.type(of: $0.mangledTypeName),
+                  let wrappedFieldType = fieldType as? any ASN1TaggedValue.Type,
+                  !(wrappedFieldType is any ASN1UniversalTaggedValue.Type) else {
+                return false
+            }
+            return wrappedFieldType.metadata.tag != nil
+        }
     }
 }
