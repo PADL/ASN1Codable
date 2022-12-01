@@ -285,7 +285,7 @@ extension Certificate {
     }
 
     var publicKeyDataProperty: NSData {
-        self.tbsCertificate.subjectPublicKeyInfo.subjectPublicKey.wrappedValue as NSData
+        self.tbsCertificate.subjectPublicKeyInfo.subjectPublicKey.nsData
     }
 
     var publicKeyInfoProperty: NSDictionary {
@@ -307,7 +307,7 @@ extension Certificate {
     }
 
     var signatureDataProperty: NSData {
-        self.signatureValue.wrappedValue as NSData
+        self.signatureValue.nsData
     }
 
     var signatureProperty: NSDictionary {
