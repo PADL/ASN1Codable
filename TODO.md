@@ -17,4 +17,5 @@ Low priority
 - compiler needs to support nested wrapped initializers
 - ASN1RawRepresentableBitString<BInt>
 - replace ASN1Kit with in-place encoding
+- migrate translator to use swift-syntax for generating Swift
 
