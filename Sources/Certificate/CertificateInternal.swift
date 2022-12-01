@@ -68,8 +68,20 @@ public func CertificateCopyRFC822NamesFromSAN(_ certificate: CertificateRef) -> 
     return Unmanaged.passRetained(names as CFArray)
 }
 
-@_cdecl("_CertificateCopySerialNumberData")
-public func _CertificateCopySerialNumberData(_ certificate: CertificateRef) -> Unmanaged<CFData>? {
-    guard let serial = certificate._swiftObject.serialNumberData else { return nil }
+@_cdecl("CertificateCopySerialNumberData")
+public func CertificateCopySerialNumberData(
+    _ certificate: CertificateRef?,
+    _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?
+) -> Unmanaged<CFData>? {
+    guard let certificate = certificate?._swiftObject else {
+        error?.pointee = Unmanaged.passRetained(CFErrorCreate(kCFAllocatorDefault,
+                                                              kCFErrorDomainOSStatus,
+                                                              CFIndex(errSecDecode),
+                                                              nil))
+        return nil
+    }
+    guard let serial = certificate.serialNumberData else {
+        return nil
+    }
     return Unmanaged.passRetained(serial)
 }

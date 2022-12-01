@@ -93,7 +93,6 @@
 		D3D6E7B1292C7AF600198A86 /* CertificateInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7B0292C7AF600198A86 /* CertificateInternal.swift */; };
 		D3D6E7B3292C80CE00198A86 /* CertificatePriv.h in Headers */ = {isa = PBXBuildFile; fileRef = D3D6E7B2292C80CE00198A86 /* CertificatePriv.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D3D6E7B5292C824700198A86 /* CertificatePriv.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7B4292C824700198A86 /* CertificatePriv.swift */; };
-		D3D6E7B9292C8FF400198A86 /* CertificateAPIImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7B8292C8FF400198A86 /* CertificateAPIImpl.m */; };
 		D3D6E7BE292DB04200198A86 /* rfc2459.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7BD292DB04200198A86 /* rfc2459.swift */; };
 		D3D6E7C3292DBA5D00198A86 /* ASN1SetCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7C2292DBA5D00198A86 /* ASN1SetCodable.swift */; };
 		D3D6E7C9292DC83C00198A86 /* ASN1ObjectSetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6E7C8292DC83C00198A86 /* ASN1ObjectSetType.swift */; };
@@ -290,9 +289,6 @@
 		D3D6E7B0292C7AF600198A86 /* CertificateInternal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateInternal.swift; sourceTree = "<group>"; };
 		D3D6E7B2292C80CE00198A86 /* CertificatePriv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CertificatePriv.h; sourceTree = "<group>"; };
 		D3D6E7B4292C824700198A86 /* CertificatePriv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificatePriv.swift; sourceTree = "<group>"; };
-		D3D6E7B8292C8FF400198A86 /* CertificateAPIImpl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CertificateAPIImpl.m; sourceTree = "<group>"; };
-		D3D6E7BA292C907A00198A86 /* CertificateAPIImpl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CertificateAPIImpl.h; sourceTree = "<group>"; };
-		D3D6E7BB292C909A00198A86 /* CFRelease.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CFRelease.h; sourceTree = "<group>"; };
 		D3D6E7BD292DB04200198A86 /* rfc2459.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = rfc2459.swift; path = "$(DERIVED_FILE_DIR)/rfc2459.swift"; sourceTree = "<group>"; };
 		D3D6E7C2292DBA5D00198A86 /* ASN1SetCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1SetCodable.swift; sourceTree = "<group>"; };
 		D3D6E7C8292DC83C00198A86 /* ASN1ObjectSetType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1ObjectSetType.swift; sourceTree = "<group>"; };
@@ -620,9 +616,6 @@
 				D351DC5C290E8AAF00540132 /* CertificateHelpers.swift */,
 				D30F2DF229220152009299A3 /* rfc2459.asn1 */,
 				D30F2DF129220148009299A3 /* rfc2459.json */,
-				D3D6E7BA292C907A00198A86 /* CertificateAPIImpl.h */,
-				D3D6E7B8292C8FF400198A86 /* CertificateAPIImpl.m */,
-				D3D6E7BB292C909A00198A86 /* CFRelease.h */,
 			);
 			name = Certificate;
 			path = Sources/Certificate;
@@ -1131,7 +1124,6 @@
 				D3F2886B292C54440006CD82 /* Certificate.swift in Sources */,
 				D3F2886C292C54440006CD82 /* CertificateHelpers.swift in Sources */,
 				D3D6E7B5292C824700198A86 /* CertificatePriv.swift in Sources */,
-				D3D6E7B9292C8FF400198A86 /* CertificateAPIImpl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

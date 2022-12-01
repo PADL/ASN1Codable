@@ -117,6 +117,24 @@ public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> Unmanag
     return Unmanaged.passRetained(names as CFArray)
 }
 
+@_cdecl("CertificateCopyEmailAddresses")
+public func CertificateCopyEmailAddresses(
+    _ certificate: CertificateRef?,
+    _ emailAddresses: UnsafeMutablePointer<Unmanaged<CFArray>?>?
+) -> OSStatus {
+    guard let certificate = certificate?._swiftObject else { return errSecParam }
+    guard let emailAddresses else { return errSecParam }
+
+    var rfc822Names = CertificateCopyRFC822Names(certificate._cfObject)
+    if rfc822Names == nil {
+        rfc822Names = Unmanaged.passRetained([CFString]() as CFArray)
+    }
+
+    emailAddresses.pointee = rfc822Names
+
+    return errSecSuccess
+}
+
 @_cdecl("CertificateCopyCommonNames")
 public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
     let certificate = certificate._swiftObject
@@ -127,6 +145,25 @@ public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> Unmanag
     }
 
     return Unmanaged.passRetained(rdns as CFArray)
+}
+
+let errSecInternal: OSStatus = -26276
+
+@_cdecl("CertificateCopyCommonName")
+public func CertificateCopyCommonName(
+    _ certificate: CertificateRef?,
+    _ commonName: UnsafeMutablePointer<Unmanaged<CFString>?>?
+) -> OSStatus {
+    guard let certificate = certificate?._swiftObject else { return errSecParam }
+    guard let commonName else { return errSecParam }
+
+    guard let commonNames = CertificateCopyRFC822Names(certificate._cfObject)?.takeRetainedValue() as? [String] else { return errSecInternal }
+
+    guard let firstCommonName = commonNames.first else { return errSecInternal }
+
+    commonName.pointee = Unmanaged.passRetained(firstCommonName as CFString)
+
+    return errSecSuccess
 }
 
 @_cdecl("CertificateCopyNTPrincipalNames")
