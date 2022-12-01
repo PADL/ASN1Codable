@@ -82,20 +82,20 @@ becomes:
 
 ```swift
 class TBSCertificate: Codable {
-        @ASN1ContextTagged<ASN1TagNumber$0, ASN1ExplicitTagging, Version?>
-        var version: Version? = nil
-        var serialNumber: CertificateSerialNumber
-        var signature: AlgorithmIdentifier
-        var issuer: Name
-        var validity: Validity
-        var subject: Name
-        var subjectPublicKeyInfo: SubjectPublicKeyInfo
-        @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, BitString?>
-        var issuerUniqueID: BitString? = nil
-        @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString?>
-        var subjectUniqueID: BitString? = nil
-        @ASN1ContextTagged<ASN1TagNumber$3, ASN1ExplicitTagging, Extensions?>
-        var extensions: Extensions? = nil
+    @ASN1ContextTagged<ASN1TagNumber$0, ASN1ExplicitTagging, Version?>
+    var version: Version? = nil
+    var serialNumber: CertificateSerialNumber
+    var signature: AlgorithmIdentifier
+    var issuer: Name
+    var validity: Validity
+    var subject: Name
+    var subjectPublicKeyInfo: SubjectPublicKeyInfo
+    @ASN1ContextTagged<ASN1TagNumber$1, ASN1ImplicitTagging, BitString?>
+    var issuerUniqueID: BitString? = nil
+    @ASN1ContextTagged<ASN1TagNumber$2, ASN1ImplicitTagging, BitString?>
+    var subjectUniqueID: BitString? = nil
+    @ASN1ContextTagged<ASN1TagNumber$3, ASN1ExplicitTagging, Extensions?>
+    var extensions: Extensions? = nil
 }
 ```
 
@@ -103,50 +103,50 @@ However, when using the compiler, ergonomics are slightly improved by avoiding t
 
 ```swift
 struct TBSCertificate: Codable, ASN1Codable.ASN1PreserveBinary {
-        var _save: Data? = nil
+    var _save: Data? = nil
 
-        enum CodingKeys: String, ASN1MetadataCodingKey {
-                case version
-                case serialNumber
-                case signature
-                case issuer
-                case validity
-                case subject
-                case subjectPublicKeyInfo
-                case issuerUniqueID
-                case subjectUniqueID
-                case extensions
+    enum CodingKeys: String, ASN1MetadataCodingKey {
+        case version
+        case serialNumber
+        case signature
+        case issuer
+        case validity
+        case subject
+        case subjectPublicKeyInfo
+        case issuerUniqueID
+        case subjectUniqueID
+        case extensions
 
-                static func metadata(forKey key: Self) -> ASN1Metadata? {
-                        let metadata: ASN1Metadata?
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
 
-                        switch key {
-                        case version:
-                                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-                        case issuerUniqueID:
-                                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .implicit)
-                        case subjectUniqueID:
-                                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .implicit)
-                        case extensions:
-                                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-                        default:
-                                metadata = nil
-                        }
+            switch key {
+            case version:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
+            case issuerUniqueID:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .implicit)
+            case subjectUniqueID:
+                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .implicit)
+            case extensions:
+                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
+            default:
+                metadata = nil
+            }
 
-                        return metadata
-                }
+            return metadata
         }
+    }
 
-        var version: Version?
-        var serialNumber: CertificateSerialNumber
-        var signature: SignatureAlgorithmIdentifier
-        var issuer: Name
-        var validity: Validity
-        var subject: Name
-        var subjectPublicKeyInfo: SubjectPublicKeyInfo
-        var issuerUniqueID: BitString?
-        var subjectUniqueID: BitString?
-        var extensions: Extensions?
+    var version: Version?
+    var serialNumber: CertificateSerialNumber
+    var signature: SignatureAlgorithmIdentifier
+    var issuer: Name
+    var validity: Validity
+    var subject: Name
+    var subjectPublicKeyInfo: SubjectPublicKeyInfo
+    var issuerUniqueID: BitString?
+    var subjectUniqueID: BitString?
+    var extensions: Extensions?
 }
 ```
 
@@ -172,23 +172,23 @@ becomes:
 
 ```swift
 enum GeneralName: Codable {
-        enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
-                case otherName = 0
-                case rfc822Name = 1
-                case dNSName = 2
-                case directoryName = 4
-                case uniformResourceIdentifier = 6
-                case iPAddress = 7
-                case registeredID = 8
-        }
+    enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
+            case otherName = 0
+            case rfc822Name = 1
+            case dNSName = 2
+            case directoryName = 4
+            case uniformResourceIdentifier = 6
+            case iPAddress = 7
+            case registeredID = 8
+    }
 
-        case otherName(OtherName)
-        case rfc822Name(IA5String<String>)
-        case dNSName(IA5String<String>)
-        case directoryName(Name)
-        case uniformResourceIdentifier(IA5String<String>)
-        case iPAddress(Data)
-        case registeredID(ObjectIdentifier)
+    case otherName(OtherName)
+    case rfc822Name(IA5String<String>)
+    case dNSName(IA5String<String>)
+    case directoryName(Name)
+    case uniformResourceIdentifier(IA5String<String>)
+    case iPAddress(Data)
+    case registeredID(ObjectIdentifier)
 }
 ```
 
