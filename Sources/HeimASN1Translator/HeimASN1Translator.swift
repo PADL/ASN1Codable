@@ -63,6 +63,7 @@ public final class HeimASN1Translator {
     private var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
     private var typeDefs = [HeimASN1TypeDef]()
     private(set) var url: URL?
+    private var maxTagValue: UInt?
 
     public init(
         options: Options = Options(),
@@ -133,34 +134,11 @@ public final class HeimASN1Translator {
         self.swiftImports.forEach { outputStream.write("import \($0)\n") }
     }
 
-    lazy var maxTagValue: UInt? = {
-        var maxTagValue: UInt?
-        var foundNonUniversalMember = false
-
-        self.apply { typeDef, _ in
-            var _maxTagValue: UInt = maxTagValue ?? 0
-
-            if let tagValue = typeDef.nonUniversalTagValue, tagValue > _maxTagValue {
-                foundNonUniversalMember = true
-                _maxTagValue = tagValue
-            }
-
-            if let members = typeDef.members {
-                _maxTagValue = members.map { $0.typeDefValue?.nonUniversalTagValue ?? 0 }.reduce(maxTagValue ?? 0) {
-                    foundNonUniversalMember = true
-                    return max($0, $1)
-                }
-            }
-
-            // don't set maxTagValue if we didn't find a non-universal member, because we don't
-            // want to emit an unecessary ASN1TagNumber if there are no tagged types in this module
-            if foundNonUniversalMember, _maxTagValue >= maxTagValue ?? 0 {
-                maxTagValue = _maxTagValue
-            }
+    func didEmitWrapperWithTagNumber(_ tagValue: UInt) {
+        if self.maxTagValue == nil || tagValue > self.maxTagValue! {
+            self.maxTagValue = tagValue
         }
-
-        return maxTagValue
-    }()
+    }
 
     private func emitTagNumberTypes(_ outputStream: inout OutputStream) {
         guard let maxTagValue = self.maxTagValue else {

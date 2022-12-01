@@ -140,6 +140,8 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             modulePrefix = ""
         }
 
+        self.translator?.didEmitWrapperWithTagNumber(wrapperType.1)
+
         return "\(wrapperType.0)<\(modulePrefix)ASN1TagNumber$\(wrapperType.1), \(tagging.swiftType!), \(self._swiftType)>"
     }
 
