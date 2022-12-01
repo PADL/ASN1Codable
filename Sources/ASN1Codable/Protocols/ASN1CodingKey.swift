@@ -17,10 +17,12 @@
 import Foundation
 import ASN1Kit
 
+/// A coding key which is expressable as ASN.1 metadata
 public protocol ASN1CodingKey: CodingKey {
     var metadata: ASN1Metadata { get }
 }
 
+/// A coding key which can be constructed from an intValue representing a tag number
 public protocol ASN1ContextTagCodingKey: ASN1CodingKey {}
 
 /// A coding key representing an explicit CONTEXT tag
@@ -52,9 +54,7 @@ extension ASN1MetadataCodingKey {
     }
 }
 
-/// The placeholder coding key is used to avoid recursing when encoding/decoding
-/// tagged values.
-
+/// A placeholder key used to mark already processed keys when coding tagged values
 struct ASN1PlaceholderCodingKey: CodingKey {
     private let wrappedValue: ASN1CodingKey
 
