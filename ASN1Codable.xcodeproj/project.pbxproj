@@ -501,12 +501,12 @@
 			isa = PBXGroup;
 			children = (
 				D3565C852932C68A002236A5 /* AnyCodable.swift */,
-				D3348E742938AFDD000CCB89 /* OptionSet.swift */,
 				D3D13E8829146B7400218279 /* Base.swift */,
 				D3D13E8329134A4B00218279 /* BInt.swift */,
 				D351DC7A290E8AF700540132 /* BitString.swift */,
 				D3565C8929343802002236A5 /* FixedWidthInteger.swift */,
 				D3FB2D9C29183E2000BC72AF /* Null.swift */,
+				D3348E742938AFDD000CCB89 /* OptionSet.swift */,
 				D351DC7B290E8AF700540132 /* String.swift */,
 				D351DC79290E8AF700540132 /* Time.swift */,
 			);
