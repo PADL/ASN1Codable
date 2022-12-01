@@ -187,6 +187,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
         } else if let type = type as? OptionalProtocol.Type,
                   let wrappedType = type.wrappedType as? Decodable.Type {
             value = try self.decodeIfPresent(wrappedType, from: object, skipTaggedValues: skipTaggedValues) as! T
+        } else if let type = type as? any BitStringOptionSet.Type {
+            value = try self.decodeBitStringOptionSetValue(type, from: object) as! T
         } else {
             value = try self.decodeConstructedValue(type, from: object)
         }
@@ -289,6 +291,23 @@ extension ASN1DecoderImpl.SingleValueContainer {
         verifiedTag: Bool = false
     ) throws -> T where T: ASN1DecodableType {
         let expectedTag = ASN1DecodingContext.tag(for: type)
+
+        guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Expected \(expectedTag) when " +
+                                                    "decoding \(self.object)")
+            throw DecodingError.typeMismatch(type, context)
+        }
+
+        return try T(from: object)
+    }
+
+    private func decodeBitStringOptionSetValue<T>(
+        _ type: T.Type,
+        from object: ASN1Object,
+        verifiedTag: Bool = false
+    ) throws -> T where T: BitStringOptionSet {
+        let expectedTag = ASN1DecodedTag.universal(.bitString)
 
         guard verifiedTag || (object.tag.isUniversal && object.tag == expectedTag) else {
             let context = DecodingError.Context(codingPath: self.codingPath,

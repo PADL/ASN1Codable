@@ -80,17 +80,11 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
         self.tag != nil
     }
 
-    private var isBitStringEnumeration: Bool {
-        self.type.tag == .universal(.bitString) && !(self.type.typeDefValue?.tType?.typeDefValue?.members?.isEmpty ?? true)
-    }
-
     private var _swiftType: String {
         let swiftType: String
 
         if let objectSetWrapperType = self.objectSetWrapperType {
             swiftType = "\(objectSetWrapperType)\(self._optionalSuffix)"
-        } else if self.isBitStringEnumeration {
-            swiftType = "ASN1RawRepresentableBitString<_\(self.type.typeDefValue!.generatedName)>"
         } else if let wrappedPrimitiveType = self.wrappedPrimitiveType {
             /// this is here for debugging, it can be removed for production
             swiftType = "\(wrappedPrimitiveType.0)<\(wrappedPrimitiveType.1)\(self._optionalSuffix)>"

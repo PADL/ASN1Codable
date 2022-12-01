@@ -202,6 +202,8 @@ extension ASN1EncoderImpl.SingleValueContainer {
             object = try self.encodeFixedWidthIntegerValue(value)
         } else if let value = value as? ASN1EncodableType {
             object = try self.encodePrimitiveValue(value)
+        } else if let value = value as? any BitStringOptionSet {
+            object = try self.encodeBitStringOptionSet(value)
         } else {
             object = try self.encodeConstructedValue(value)
         }
@@ -280,6 +282,10 @@ extension ASN1EncoderImpl.SingleValueContainer {
     }
 
     private func encodePrimitiveValue<T: ASN1EncodableType>(_ value: T) throws -> ASN1Object? {
+        try value.asn1encode(tag: nil)
+    }
+
+    private func encodeBitStringOptionSet<T>(_ value: T) throws -> ASN1Object? where T: BitStringOptionSet {
         try value.asn1encode(tag: nil)
     }
 

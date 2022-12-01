@@ -31,32 +31,30 @@ typealias testUserConstrained = Data
 
 typealias TESTOSSize1 = Data
 
-typealias TESTBitString = ASN1RawRepresentableBitString<_TESTBitString>
-struct _TESTBitString: OptionSet, Codable {
+struct TESTBitString: BitStringOptionSet, Codable {
     var rawValue: UInt32
 
     init(rawValue: UInt32) {
         self.rawValue = rawValue
     }
 
-    static let zero = _TESTBitString(rawValue: 1 << 0)
-    static let eight = _TESTBitString(rawValue: 1 << 8)
-    static let thirtyone = _TESTBitString(rawValue: 1 << 31)
+    static let zero = TESTBitString(rawValue: 1 << 0)
+    static let eight = TESTBitString(rawValue: 1 << 8)
+    static let thirtyone = TESTBitString(rawValue: 1 << 31)
 }
 
-typealias TESTBitString64 = ASN1RawRepresentableBitString<_TESTBitString64>
-struct _TESTBitString64: OptionSet, Codable {
+struct TESTBitString64: BitStringOptionSet, Codable {
     var rawValue: UInt64
 
     init(rawValue: UInt64) {
         self.rawValue = rawValue
     }
 
-    static let zero = _TESTBitString64(rawValue: 1 << 0)
-    static let eight = _TESTBitString64(rawValue: 1 << 8)
-    static let thirtyone = _TESTBitString64(rawValue: 1 << 31)
-    static let thirtytwo = _TESTBitString64(rawValue: 1 << 32)
-    static let sixtythree = _TESTBitString64(rawValue: 1 << 63)
+    static let zero = TESTBitString64(rawValue: 1 << 0)
+    static let eight = TESTBitString64(rawValue: 1 << 8)
+    static let thirtyone = TESTBitString64(rawValue: 1 << 31)
+    static let thirtytwo = TESTBitString64(rawValue: 1 << 32)
+    static let sixtythree = TESTBitString64(rawValue: 1 << 63)
 }
 
 typealias TESTMechType = ObjectIdentifier

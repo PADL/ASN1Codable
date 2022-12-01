@@ -450,7 +450,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         }
 
         guard case .universal(let type) = tType,
-              type == .sequence || type == .set || type == .choice else {
+              type == .sequence || type == .set || type == .choice || type == .bitString else {
             return false
         }
 
@@ -557,7 +557,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                         // highestUsedMember = members.last { }
                         let rawType = try (closestIntTypeForOptionSet(highestUsedMember))
 
-                        outputStream.write("\(visibility)struct _\(self.generatedName): \(self.swiftConformances("OptionSet")) {\n")
+                        outputStream.write("\(visibility)struct \(self.generatedName): \(self.swiftConformances("BitStringOptionSet")) {\n")
                         outputStream.write("\t\(visibility)var rawValue: \(rawType)\n\n")
                         outputStream.write("\t\(visibility)init(rawValue: \(rawType)) {\n")
                         outputStream.write("\t\tself.rawValue = rawValue\n")
@@ -570,7 +570,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                             guard let tag = member.bitStringTag else {
                                 return
                             }
-                            outputStream.write("\tstatic let \(tag) = _\(self.generatedName)(rawValue: 1 << \(index))\n")
+                            outputStream.write("\tstatic let \(tag) = \(self.generatedName)(rawValue: 1 << \(index))\n")
                         }
                         outputStream.write("}\n\n")
                     }

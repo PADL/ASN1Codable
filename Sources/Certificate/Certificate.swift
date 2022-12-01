@@ -106,10 +106,7 @@ public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> Unma
 @_cdecl("CertificateGetKeyUsage")
 public func CertificateGetKeyUsage(_ certificate: CertificateRef?) -> UInt32 {
     guard let certificate = certificate?._swiftObject else { return 0 }
-    guard let keyUsageExt: KeyUsage = certificate.extension(id_x509_ce_keyUsage) else { return 0 }
+    guard let keyUsage: KeyUsage = certificate.extension(id_x509_ce_keyUsage) else { return 0 }
 
-    // FIXME: a bit of a workaround to avoid needing to unwrap
-    @KeyUsage var keyUsage = _KeyUsage()
-    _keyUsage = keyUsageExt
     return UInt32(keyUsage.rawValue)
 }
