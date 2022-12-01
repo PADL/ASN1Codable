@@ -15,7 +15,7 @@
       "location" : "https://github.com/PADL/ASN1Kit",
       "state" : {
         "branch" : "lhoward/pr",
-        "revision" : "1757fbfd31c3725a7039f9717a30a0c82640b617"
+        "revision" : "1ddf11354735d8262bbda3ec2a9bf0fa1d9aedef"
       }
     },
     {
@@ -158,7 +158,7 @@
       "location" : "https://github.com/realm/SwiftLint",
       "state" : {
         "branch" : "main",
-        "revision" : "92304cdd9879d058c1278c195ae9ee4aea5438d6"
+        "revision" : "7a8b2d1daba4ac966c2ffc4cb8c473b9e31e1a8f"
       }
     },
     {
