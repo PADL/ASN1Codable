@@ -16,6 +16,7 @@
 
 import Foundation
 import ASN1Kit
+import Echo
 
 struct ASN1EncodingContext: ASN1CodingContext {
     /// default tagging environment
@@ -34,8 +35,7 @@ struct ASN1EncodingContext: ASN1CodingContext {
     var automaticTaggingContext: ASN1AutomaticTaggingContext?
 
     private static func isEnum<T>(_ value: T) -> Bool {
-        let reflection = Mirror(reflecting: value)
-        return reflection.displayStyle == .enum
+        reflect(type(of: value)) is EnumMetadata
     }
 
     func encodingSingleValue<T>(_ value: T) -> Self {
