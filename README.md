@@ -102,9 +102,7 @@ class TBSCertificate: Codable {
 However, when using the compiler, ergonomics are slightly improved by avoiding the property wrapper and instead using a specialised CodingKeys:
 
 ```swift
-struct TBSCertificate: Codable, ASN1Codable.ASN1PreserveBinary {
-    var _save: Data? = nil
-
+struct TBSCertificate: Codable {
     enum CodingKeys: String, ASN1MetadataCodingKey {
         case version
         case serialNumber
