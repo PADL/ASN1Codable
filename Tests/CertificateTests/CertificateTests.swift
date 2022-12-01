@@ -223,11 +223,15 @@ final class CertificateTests: XCTestCase {
 
         let cns = CertificateCopyCommonNames(cert)
         XCTAssertNotNil(cns)
-        XCTAssertEqual(cns!, ["kdc"] as CFArray)
+        if let cns {
+            XCTAssertEqual(cns, ["kdc"] as CFArray)
+        }
 
         let princs = CertificateCopyNTPrincipalNames(cert)
         XCTAssertNotNil(princs)
-        XCTAssertEqual(princs!, ["krbtgt/TEST.H5L.SE@TEST.H5L.SE"] as CFArray)
+        if let princs {
+            XCTAssertEqual(princs, ["krbtgt/TEST.H5L.SE@TEST.H5L.SE"] as CFArray)
+        }
 
         let props = CertificateCopyLegacyProperties(cert)
         XCTAssertNotNil(props)
@@ -264,11 +268,15 @@ final class CertificateTests: XCTestCase {
 
         let cns = CertificateCopyCommonNames(cert)
         XCTAssertNotNil(cns)
-        XCTAssertEqual(cns!, ["pkinit-ec"] as CFArray)
+        if let cns {
+            XCTAssertEqual(cns, ["pkinit-ec"] as CFArray)
+        }
 
         let princs = CertificateCopyNTPrincipalNames(cert)
         XCTAssertNotNil(princs)
-        XCTAssertEqual(princs!, ["bar@TEST.H5L.SE"] as CFArray)
+        if let princs {
+            XCTAssertEqual(princs, ["bar@TEST.H5L.SE"] as CFArray)
+        }
 
         let props = CertificateCopyLegacyProperties(cert)
         XCTAssertNotNil(props)
