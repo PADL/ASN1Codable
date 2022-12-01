@@ -156,6 +156,66 @@ extension ASN1CodableTests {
         self.test_encodeDecode(TestStruct(), encodedAs: data)
     }
 
+    func test_SEQUENCE_ApplicationTaggedTestStruct_MetadataCodingKey() {
+        struct TestStruct: Codable, Equatable, ASN1ApplicationTaggedType {
+            static var tagNumber: UInt = 100
+
+            enum CodingKeys: String, ASN1MetadataCodingKey {
+                case version
+                case data
+                case bitString
+                case whatever
+                case foobar
+                case anArray
+                case aSet
+                case barbar
+
+                static func metadata(forKey key: Self) -> ASN1Metadata? {
+                    let metadata: ASN1Metadata?
+
+                    switch key {
+                    case version:
+                        metadata = ASN1Metadata(tag: .taggedTag(0), tagging: nil)
+                    case data:
+                        metadata = ASN1Metadata(tag: .taggedTag(1), tagging: nil)
+                    case bitString:
+                        metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .implicit)
+                    case whatever:
+                        metadata = ASN1Metadata(tag: .taggedTag(3), tagging: nil)
+                    case foobar:
+                        metadata = ASN1Metadata(tag: .taggedTag(4), tagging: nil)
+                    case anArray:
+                        metadata = ASN1Metadata(tag: .taggedTag(5), tagging: nil)
+                    case aSet:
+                        metadata = ASN1Metadata(tag: .taggedTag(6), tagging: nil)
+                    case barbar:
+                        metadata = ASN1Metadata(tag: .taggedTag(7), tagging: nil)
+                    }
+
+                    return metadata
+                }
+            }
+
+            var _save: Data?
+
+            var version: Int = 1
+            var data = Data()
+            var bitString = BitString([0x02, 0x03, 0xCC])
+            var whatever: UInt? = 1234
+            @PrintableString
+            var foobar = "hello world"
+            var anArray = ["Hello", "ASN.1", "Coding", "Kit"]
+            var aSet = Set(["A", "Set"])
+            @GeneralString
+            var barbar: String? = "hello"
+        }
+
+        let data = Data(base64Encoded: "f2RaMFigAwIBAaECBACCBAACA8yjBAICBNKkDRMLaGVsbG8gd29ybGSlHTAb" +
+            "DAVIZWxsbwwFQVNOLjEMBkNvZGluZwwDS2l0pgoxCAwBQQwDU2V0pwcbBWhlbGxv")!
+
+        self.test_encodeDecode(TestStruct(), encodedAs: data)
+    }
+
     func test_SEQUENCE_PrivateTaggedTestStruct_PropertyWrapper() {
         struct TestStruct: Codable, Equatable, ASN1PrivateTaggedType {
             static var tagNumber: UInt = 100
@@ -167,6 +227,40 @@ extension ASN1CodableTests {
             var data = Data([0x02, 0x03, 0xFF])
 
             @ASN1ContextTagged<ASN1TagNumber$2, ASN1DefaultTagging, BitString>
+            var bitString = BitString([0x02, 0x03, 0xCC])
+        }
+
+        let data = Data(base64Encoded: "/2QWMBSgAwIBAaEFBAMCA/+iBgMEAAIDzA==")!
+        self.test_encodeDecode(TestStruct(), encodedAs: data)
+    }
+
+    func test_SEQUENCE_PrivateTaggedTestStruct_MetadataCodingKey() {
+        struct TestStruct: Codable, Equatable, ASN1PrivateTaggedType {
+            static var tagNumber: UInt = 100
+
+            enum CodingKeys: String, ASN1MetadataCodingKey {
+                case version
+                case data
+                case bitString
+
+                static func metadata(forKey key: Self) -> ASN1Metadata? {
+                    let metadata: ASN1Metadata?
+
+                    switch key {
+                    case version:
+                        metadata = ASN1Metadata(tag: .taggedTag(0), tagging: nil)
+                    case data:
+                        metadata = ASN1Metadata(tag: .taggedTag(1), tagging: nil)
+                    case bitString:
+                        metadata = ASN1Metadata(tag: .taggedTag(2), tagging: nil)
+                    }
+
+                    return metadata
+                }
+            }
+
+            var version: Int = 1
+            var data = Data([0x02, 0x03, 0xFF])
             var bitString = BitString([0x02, 0x03, 0xCC])
         }
 

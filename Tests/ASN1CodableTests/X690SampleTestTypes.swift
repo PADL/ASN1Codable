@@ -25,46 +25,65 @@ struct X690SampleName: Codable, Equatable, ASN1Codable.ASN1ApplicationTaggedType
 }
 
 struct X690SampleChildInformation: Codable, Equatable, ASN1Codable.ASN1SetCodable {
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, ASN1MetadataCodingKey {
         case name
         case dateOfBirth
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case dateOfBirth:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
+            default:
+                return nil
+            }
+
+            return metadata
+        }
     }
 
     var name: X690SampleName
-    @ASN1ContextTagged<x690sample.ASN1TagNumber$0, ASN1Codable.ASN1ExplicitTagging, X690SampleDate>
-
-    // FIXME: compiler needs to support nested wrapped initializers
     var dateOfBirth: X690SampleDate = .init(wrappedValue: VisibleString<String>(wrappedValue: ""))
 }
 
 struct X690SamplePersonnelRecord: Codable, Equatable, ASN1Codable.ASN1ApplicationTaggedType, ASN1Codable.ASN1ImplicitlyTaggedType {
     static let tagNumber: UInt = 0
 
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, ASN1MetadataCodingKey {
         case name
         case title
         case number
         case dateOfHire
         case nameOfSpouse
         case children
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case title:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
+            case dateOfHire:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
+            case nameOfSpouse:
+                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
+            case children:
+                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .implicit)
+            default:
+                metadata = nil
+            }
+
+            return metadata
+        }
     }
 
     var name: X690SampleName
-    @ASN1ContextTagged<x690sample.ASN1TagNumber$0, ASN1Codable.ASN1ExplicitTagging, VisibleString<String>>
-
     @VisibleString
     var title: String = ""
-
     var number: X690SampleEmployeeNumber
-    @ASN1ContextTagged<x690sample.ASN1TagNumber$1, ASN1Codable.ASN1ExplicitTagging, X690SampleDate>
-
-    // FIXME: compiler needs to support nested wrapped initializers
     var dateOfHire: X690SampleDate = .init(wrappedValue: VisibleString<String>(wrappedValue: ""))
-
-    @ASN1ContextTagged<x690sample.ASN1TagNumber$2, ASN1Codable.ASN1ExplicitTagging, X690SampleName>
     var nameOfSpouse: X690SampleName = .init()
-
-    @ASN1ContextTagged<x690sample.ASN1TagNumber$3, ASN1Codable.ASN1ImplicitTagging, [X690SampleChildInformation]>
     var children: [X690SampleChildInformation] = .init()
 }
 

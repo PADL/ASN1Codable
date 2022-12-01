@@ -73,7 +73,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     var allKeys: [Key] {
         let keys: [Key]
 
-        if Key.self is ASN1TagCodingKey.Type {
+        if Key.self is any ASN1ContextTagCodingKey.Type {
             /// this serves both as an escape hatch to support Apple's component attributes
             /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and
             /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
@@ -91,6 +91,10 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             } else {
                 keys = []
             }
+            /*
+             } else if Key.self is any ASN1MetadataCodingKey.Type {
+                 keys = self.object.data.items?.compactMap { ASN1MetadataPlaceholderCodingKey(tag: $0.tag) as? Key } ?? []
+                  */
         } else {
             let currentObject: ASN1Object
 
@@ -100,7 +104,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                 return []
             }
 
-            if let enumCodingKey = self.context.enumCodingKey(Key.self, object: currentObject) {
+            if let enumCodingKey = self.context.codingKey(Key.self, object: currentObject) {
                 /// in this case, we know the enum coding key from reading the metadata
                 keys = [enumCodingKey]
             } else {
@@ -113,7 +117,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     func contains(_ key: Key) -> Bool {
-        if let key = key as? ASN1TagCodingKey {
+        if let key = key as? any ASN1ContextTagCodingKey {
             if self.context.enumCodingState == .enum,
                case .taggedTag(let tagNo) = self.object.tag,
                let keyTagNo = key.intValue {
@@ -125,6 +129,12 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             } else {
                 return false
             }
+        } else if let key = key as? any ASN1MetadataCodingKey {
+            if self.context.enumCodingState == .enum {
+                return self.object.tag == key.metadata.tag
+            } else {
+                return self.object.data.items?.contains(where: { $0.tag == key.metadata.tag }) ?? false
+            }
         } else {
             let currentObject: ASN1Object
 
@@ -135,7 +145,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             }
 
             if self.context.enumCodingState == .enum {
-                return self.context.enumCodingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
+                return self.context.codingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
             } else {
                 return true /// at this point, we have to optimistically assume the key exists
             }

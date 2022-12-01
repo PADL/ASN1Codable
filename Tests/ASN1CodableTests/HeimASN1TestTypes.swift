@@ -89,11 +89,28 @@ class TESTCircular: Codable, Equatable {
 }
 
 struct TESTDefault: Codable, Equatable {
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, ASN1MetadataCodingKey {
         case _name = "name"
         case _version = "version"
         case _maxint = "maxint"
         case _works = "works"
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case _name:
+                metadata = nil
+            case _version:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
+            case _maxint:
+                metadata = nil
+            case _works:
+                metadata = nil
+            }
+
+            return metadata
+        }
     }
 
     @UTF8String
@@ -103,7 +120,6 @@ struct TESTDefault: Codable, Equatable {
         set { self._name = newValue }
     }
 
-    @ASN1ContextTagged<TEST.ASN1TagNumber$0, ASN1Codable.ASN1ExplicitTagging, TESTuint32?>
     var _version: TESTuint32?
     var version: TESTuint32 {
         get { self._version ?? 8 }
@@ -134,19 +150,33 @@ struct TESTLargeTag: Codable, Equatable {
 }
 
 struct TESTSeq: Codable {
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, ASN1MetadataCodingKey {
         case tag0
         case tag1
         case tagless
         case tag3
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case tag0:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
+            case tag1:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
+            case tagless:
+                metadata = nil
+            case tag3:
+                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
+            }
+
+            return metadata
+        }
     }
 
-    @ASN1ContextTagged<TEST.ASN1TagNumber$0, ASN1Codable.ASN1ExplicitTagging, Swift.Int32>
     var tag0: Swift.Int32 = .init()
-    @ASN1ContextTagged<TEST.ASN1TagNumber$1, ASN1Codable.ASN1ExplicitTagging, TESTLargeTag>
     var tag1: TESTLargeTag = .init(foo: 0, bar: 0)
     var tagless: Swift.Int32
-    @ASN1ContextTagged<TEST.ASN1TagNumber$2, ASN1Codable.ASN1ExplicitTagging, Swift.Int32>
     var tag3: Swift.Int32 = .init()
 }
 
@@ -237,15 +267,29 @@ struct TESTAllocInner: Codable, Equatable {
 }
 
 struct TESTAlloc: Codable, Equatable {
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, ASN1MetadataCodingKey {
         case tagless
         case three
         case tagless2
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case tagless:
+                metadata = nil
+            case three:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
+            case tagless2:
+                metadata = nil
+            }
+
+            return metadata
+        }
     }
 
     var tagless: TESTAllocInner?
-    @ASN1ContextTagged<TEST.ASN1TagNumber$1, ASN1Codable.ASN1ExplicitTagging, Swift.Int32>
-    var three: Swift.Int32 = .init()
+    var three: Swift.Int32
     var tagless2: AnyCodable?
 }
 
@@ -288,6 +332,27 @@ struct TESTSeqOf3: Codable, Equatable {
 
 // swiftlint:disable discouraged_optional_collection
 struct TESTSeqOf4: Codable, Equatable {
+    enum CodingKeys: String, ASN1MetadataCodingKey {
+        case b1
+        case b2
+        case b3
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case b1:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
+            case b2:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .implicit)
+            case b3:
+                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .implicit)
+            }
+
+            return metadata
+        }
+    }
+
     struct B1: Codable, Equatable {
         var s1: Data
         var s2: Data
@@ -295,7 +360,6 @@ struct TESTSeqOf4: Codable, Equatable {
         var u2: TESTuint64
     }
 
-    @ASN1ContextTagged<TEST.ASN1TagNumber$0, ASN1Codable.ASN1ExplicitTagging, [B1]?>
     var b1: [B1]?
 
     struct B2: Codable, Equatable {
@@ -307,7 +371,6 @@ struct TESTSeqOf4: Codable, Equatable {
         var s3: Data
     }
 
-    @ASN1ContextTagged<TEST.ASN1TagNumber$1, ASN1Codable.ASN1ImplicitTagging, [B2]?>
     var b2: [B2]?
 
     struct B3: Codable, Equatable {
@@ -321,7 +384,6 @@ struct TESTSeqOf4: Codable, Equatable {
         var u4: TESTuint64
     }
 
-    @ASN1ContextTagged<TEST.ASN1TagNumber$2, ASN1Codable.ASN1ImplicitTagging, [B3]?>
     var b3: [B3]?
 }
 

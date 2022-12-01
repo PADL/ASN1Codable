@@ -66,7 +66,10 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
     }
 
     private var isUsingTagCodingKey: Bool {
-        self.type.typeDefValue?.grandParent?.isUniformlyContextTagged ?? false
+        let isUniformlyContextTagged = self.type.typeDefValue?.grandParent?.isUniformlyContextTagged ?? false
+        let isChoice = self.type.typeDefValue?.parent?.isChoice ?? false
+
+        return !isChoice || isUniformlyContextTagged
     }
 
     private var translator: HeimASN1Translator? {

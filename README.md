@@ -58,7 +58,7 @@ This repository includes `Certificate.framework`, a C API modeled on the macOS `
 
 ### SEQUENCE
 
-The `SEQUENCE` below represents tags using the `ASN1ContextTagged` property wrapper.
+The `SEQUENCE` below can be represented using the `ASN1ContextTagged` property wrapper.
 
 ```asn1
 TBSCertificate  ::=  SEQUENCE  {
@@ -99,9 +99,60 @@ class TBSCertificate: Codable {
 }
 ```
 
+However, when using the compiler, ergonomics are slightly improved by avoiding the property wrapper and instead using a specialised CodingKeys:
+
+```swift
+struct TBSCertificate: Codable, ASN1Codable.ASN1PreserveBinary {
+        var _save: Data? = nil
+
+        enum CodingKeys: String, ASN1MetadataCodingKey {
+                case version
+                case serialNumber
+                case signature
+                case issuer
+                case validity
+                case subject
+                case subjectPublicKeyInfo
+                case issuerUniqueID
+                case subjectUniqueID
+                case extensions
+
+                static func metadata(forKey key: Self) -> ASN1Metadata? {
+                        let metadata: ASN1Metadata?
+
+                        switch key {
+                        case version:
+                                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
+                        case issuerUniqueID:
+                                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .implicit)
+                        case subjectUniqueID:
+                                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .implicit)
+                        case extensions:
+                                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
+                        default:
+                                metadata = nil
+                        }
+
+                        return metadata
+                }
+        }
+
+        var version: Version?
+        var serialNumber: CertificateSerialNumber
+        var signature: SignatureAlgorithmIdentifier
+        var issuer: Name
+        var validity: Validity
+        var subject: Name
+        var subjectPublicKeyInfo: SubjectPublicKeyInfo
+        var issuerUniqueID: BitString?
+        var subjectUniqueID: BitString?
+        var extensions: Extensions?
+}
+```
+
 ### CHOICE
 
-In cases where property cannot be used (such as enumerated types), it is more ergonomic to use a protocol conforming to `ASN1TagCodingKey`. This is possible as long as all fields in the type are tagged and share a tagging environment.
+In cases where property cannot be used (such as enumerated types), it is more ergonomic to use a protocol conforming to `ASN1ContextTagCodingKey`. This is possible as long as all fields in the type are tagged and share a tagging environment. Note we can't use `ASN1MetadataTagCodingKey` here because we need to be able to initialise it from a raw representable value such as an integer.
 
 ```asn1
 GeneralName ::= CHOICE {

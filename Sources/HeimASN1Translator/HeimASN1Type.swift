@@ -161,24 +161,13 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             }
         } else {
             let fieldDescriptor = HeimASN1FieldDescriptor(typeDef)
-            let disablePropertyWrappers = containingTypeDef.translator?.options.contains(.disablePropertyWrappers) ?? false
             let isDefault = containingTypeDef.defaultValue != nil
             let visibility = containingTypeDef.visibility
             let generatedName = isDefault ? "_\(containingTypeDef.generatedName)" : containingTypeDef.generatedName
-            if disablePropertyWrappers {
-                outputStream.write("\t\(visibility)var \(generatedName): \(fieldDescriptor.swiftType!)")
-            } else if containingTypeDef.parent?.isUniformlyContextTagged ?? false {
-                try fieldDescriptor.emit(&outputStream)
-                outputStream.write("\t\(visibility)var \(generatedName): \(fieldDescriptor.bareSwiftType)")
-                if fieldDescriptor.needsInitialValue, !isDefault {
-                    outputStream.write(" = \(fieldDescriptor.initialValue)")
-                }
-            } else {
-                try fieldDescriptor.emit(&outputStream)
-                outputStream.write("\t\(visibility)var \(generatedName): \(fieldDescriptor.bareSwiftType)")
-                if fieldDescriptor.needsInitialValue, !isDefault {
-                    outputStream.write(" = \(fieldDescriptor.initialValue)")
-                }
+            try fieldDescriptor.emit(&outputStream)
+            outputStream.write("\t\(visibility)var \(generatedName): \(fieldDescriptor.bareSwiftType)")
+            if fieldDescriptor.needsInitialValue, !isDefault {
+                outputStream.write(" = \(fieldDescriptor.initialValue)")
             }
             outputStream.write("\n")
             if let defaultValue = containingTypeDef.defaultValue {

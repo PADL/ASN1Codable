@@ -195,7 +195,7 @@ extension ASN1EncoderImpl.KeyedContainer {
             return
         }
 
-        if codingKey is any ASN1TagCodingKey {
+        if codingKey is any ASN1CodingKey {
             // predefined keys are incompatible with automatic tagging
             self.context.automaticTaggingContext = nil
         }

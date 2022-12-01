@@ -147,17 +147,17 @@ extension ASN1DecoderImpl.SingleValueContainer {
         }
     }
 
-    private var tagCodingKey: ASN1TagCodingKey? {
-        self.codingPath.last as? ASN1TagCodingKey
+    private var codingKey: ASN1CodingKey? {
+        self.codingPath.last as? ASN1CodingKey
     }
 
     /// avoids re-encoding tag on constructed values, by removing ASN1TagCodingKey
     /// conformance on already processed tag coding key
     /// FIXME: could this be done more elegantly?
-    private func demoteTagCodingKey() {
+    private func demoteCodingKey() {
         precondition(!self.codingPath.isEmpty)
         let index = self.codingPath.count - 1
-        self.codingPath[index] = ASN1PlaceholderCodingKey(self.tagCodingKey!)
+        self.codingPath[index] = ASN1PlaceholderCodingKey(self.codingKey!)
     }
 
     // swiftlint:disable force_cast
@@ -171,8 +171,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
         // FIXME: required for top-level decoders
         self.context = self.context.decodingSingleValue(type)
 
-        if let key = self.tagCodingKey {
-            self.demoteTagCodingKey()
+        if let key = self.codingKey {
+            self.demoteCodingKey()
             value = try self.decodeTaggedKeyedValue(type, from: object, forKey: key)
         } else if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
             value = try self.decodeTaggedValue(type, from: object) as! T
@@ -250,7 +250,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
     private func decodeTaggedKeyedValue<T>(
         _ type: T.Type,
         from object: ASN1Object,
-        forKey key: ASN1TagCodingKey
+        forKey key: ASN1CodingKey
     ) throws -> T where T: Decodable {
         try self.decodeTagged(type, from: object, with: key.metadata, skipTaggedValues: false)
     }

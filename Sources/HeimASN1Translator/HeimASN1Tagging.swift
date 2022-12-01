@@ -32,6 +32,19 @@ enum HeimASN1TaggingEnvironment: String, Codable, HeimASN1SwiftTypeRepresentable
             return "ASN1Codable.ASN1DefaultTagging"
         }
     }
+
+    var initializer: String? {
+        switch self {
+        case .explicit:
+            return ".explicit"
+        case .implicit:
+            return ".implicit"
+        case .automatic:
+            return ".automatic"
+        default:
+            return nil
+        }
+    }
 }
 
 protocol HeimASN1TagRepresentable {
