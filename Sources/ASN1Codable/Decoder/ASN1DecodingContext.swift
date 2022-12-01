@@ -45,6 +45,9 @@ struct ASN1DecodingContext: ASN1CodingContext {
             tag = typeTag
         } else if let type = type as? ASN1UniversalTagRepresentable.Type {
             tag = .universal(type.tagNo)
+        } else if type is any BitStringOptionSet.Type {
+            // FIXME: would be better to be able to make this ASN1UniversalTagRepresentable
+            tag = .universal(.bitString)
         } else if type is ASN1SetCodable.Type {
             tag = .universal(.set)
         } else {

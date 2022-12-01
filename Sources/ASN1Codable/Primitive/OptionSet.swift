@@ -16,11 +16,11 @@
 
 import Foundation
 
-public protocol BitStringOptionSet: OptionSet where RawValue: FixedWidthInteger {}
+public protocol BitStringOptionSet: OptionSet, ASN1CodableType where RawValue: FixedWidthInteger {}
 public protocol RFC1510BitStringOptionSet {}
 
 extension BitStringOptionSet {
-    init(from asn1: ASN1Object) throws {
+    public init(from asn1: ASN1Object) throws {
         let bitString = try BitString(from: asn1)
         let rawValueSize = RawValue.bitWidth / 8
 
@@ -39,7 +39,7 @@ extension BitStringOptionSet {
         self = value
     }
 
-    func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Object {
+    public func asn1encode(tag: ASN1Kit.ASN1DecodedTag?) throws -> ASN1Object {
         let rfc1510BitString = self is any RFC1510BitStringOptionSet
         var data = Swift.withUnsafeBytes(of: self.rawValue.littleEndian) { Data($0) }
 
