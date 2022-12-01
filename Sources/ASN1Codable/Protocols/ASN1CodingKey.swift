@@ -65,30 +65,3 @@ struct ASN1PlaceholderCodingKey: CodingKey {
     var stringValue: String { self.wrappedValue.stringValue }
     var intValue: Int? { self.wrappedValue.intValue }
 }
-
-struct ASN1MetadataPlaceholderCodingKey: ASN1CodingKey {
-    let metadata: ASN1Metadata
-    var intValue: Int?
-
-    init(metadata: ASN1Metadata) {
-        self.metadata = metadata
-    }
-
-    init(tag: ASN1DecodedTag) {
-        self.metadata = ASN1Metadata(tag: tag)
-    }
-
-    init?(intValue: Int) {
-        self.intValue = intValue
-        self.metadata = ASN1Metadata(tag: .taggedTag(UInt(intValue)))
-    }
-
-    init?(stringValue: String) {
-        let tag = ASN1DecodedTag(tagString: stringValue)
-        self.metadata = ASN1Metadata(tag: tag)
-    }
-
-    var stringValue: String {
-        self.metadata.tag!.tagString
-    }
-}

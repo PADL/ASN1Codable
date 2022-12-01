@@ -91,10 +91,6 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             } else {
                 keys = []
             }
-            /*
-             } else if Key.self is any ASN1MetadataCodingKey.Type {
-                 keys = self.object.data.items?.compactMap { ASN1MetadataPlaceholderCodingKey(tag: $0.tag) as? Key } ?? []
-                  */
         } else {
             let currentObject: ASN1Object
 
