@@ -91,9 +91,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     /// only works with custom coding keys that conform to ASN1TagCodingKey and contain
     /// the tag number
     func codingKey<Key>(_ keyType: Key.Type, object: ASN1Object) -> Key? where Key: CodingKey {
-        if case .taggedTag(let tagNo) = object.tag, keyType is ASN1ContextTagCodingKey.Type {
-            return Key(intValue: Int(tagNo))
-        } else if let currentEnum = self.currentEnumType,
+        if let currentEnum = self.currentEnumType,
                   let enumMetadata = reflect(Self.lookThroughOptional(currentEnum)) as? EnumMetadata,
                   let enumCase = enumMetadata.descriptor.fields.records.first(where: {
                       guard let fieldType = enumMetadata.type(of: $0.mangledTypeName) else {
