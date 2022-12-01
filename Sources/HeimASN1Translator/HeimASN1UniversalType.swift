@@ -33,7 +33,7 @@ enum HeimASN1UniversalType: String, Codable, HeimASN1SwiftTypeRepresentable, Hei
     case setOf = "SET OF"
     case numericString = "NumericString"
     case printableString = "PrintableString"
-    case t61String = "T61String"
+    case teletexString = "TeletexString"
     case videotexString = "VideotexString"
     case ia5String = "IA5String"
     case utcTime = "UTCTime"
@@ -84,6 +84,8 @@ enum HeimASN1UniversalType: String, Codable, HeimASN1SwiftTypeRepresentable, Hei
             tag = .numericString
         case .printableString:
             tag = .printableString
+        case .teletexString:
+            tag = .t61String
         case .generalString:
             tag = .generalString
         case .utcTime:

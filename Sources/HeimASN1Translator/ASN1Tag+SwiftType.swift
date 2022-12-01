@@ -39,6 +39,7 @@ extension ASN1Tag: HeimASN1SwiftTypeRepresentable {
         case .generalizedTime,
              .utcTime,
              .printableString,
+             .t61String,
              .graphicString,
              .visibleString,
              .generalString,
@@ -65,6 +66,8 @@ extension ASN1Tag: HeimASN1SwiftTypeRepresentable {
             return ("VisibleString", "String")
         case .printableString:
             return ("PrintableString", "String")
+        case .t61String:
+            return ("TeletexString", "String")
         case .generalString:
             return ("GeneralString", "String")
         case .universalString:
