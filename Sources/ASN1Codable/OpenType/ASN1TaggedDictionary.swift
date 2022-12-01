@@ -32,12 +32,16 @@ public struct ASN1TaggedDictionary {
         } as NSDictionary
     }
 
-    public subscript(key: UInt) -> AnyCodable? {
-        self.wrappedValue[key]
+    public subscript(key: UInt) -> Any? {
+        self.wrappedValue[key]?.value
     }
 
-    public mutating func setValue(value: AnyCodable?, forKey key: UInt) {
-        self.wrappedValue[key] = value
+    public mutating func setValue(value: Any?, forKey key: UInt) {
+        if let value {
+            self.wrappedValue[key] = AnyCodable(value)
+        } else {
+            self.wrappedValue[key] = nil
+        }
     }
 }
 
