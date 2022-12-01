@@ -4,7 +4,7 @@ ASN1Codable is an idiomatic, ergonomic, and somewhat opinionated framework for A
 
 For the most part, the ASN.1 type system is isomorphic to Swift’s: for example, a `SEQUENCE` or `SET` is mapped to a Swift `struct`, a `CHOICE` or `ENUMERATED` type to an `enum`, `SEQUENCE OF` to `Array`, `SET OF` to `SET`, `OPTIONAL` to `Optional`, etc.
 
-Types can be defined directly in Swift, or generated from the ASN.1 using a translator that reads the output of [Heimdal's](https://github.com/heimdal/heimdal) `asn1_compile` tool.
+Types can be defined directly in Swift, or generated from the ASN.1 using a translator that reads the output of [Heimdal’s](https://github.com/heimdal/heimdal) `asn1_compile` tool.
 
 Source code is available [here](https://github.com/PADL/ASN1Codable).
 
@@ -12,7 +12,9 @@ Source code is available [here](https://github.com/PADL/ASN1Codable).
 
 ASN.1 encoding and decoding is presently provided by the [ASN1Kit](https://github.com/gematik/ASN1Kit) library, although this should be treated as an implementation detail.
 
-ASN.1 types have additional metadata, most prominently tag numbers and tagging environments (such as `IMPLICIT` or `EXPLICIT`), which are not naturally represented directly in Swift. ASN1Codable's representation of these should also be treated as implementation details: presently it uses generic property wrappers and protocols to annotate Swift types with ASN.1 metadata, but this may change in the future (for example, when the `@runtimeMetadata` attribute is finished). Generally we find it more ergonomic to do this at the definition site, rather than out-of-band (using `CodingKeys` or a separate schema or template argument passed to the decoder). Using the ASN.1 compiler and translator (`asn1json2swift`) ideally renders metadata representation changes transparent to the user, although there are some rough edges where property wrapper initialization is concerned.
+ASN.1 types have additional metadata, most prominently tag numbers and tagging environments (such as `IMPLICIT` or `EXPLICIT`), which have no natural representation in Swift. ASN1Codable’s representation of these should also be treated as implementation details: presently ASN1Codable uses generic property wrappers and protocols to annotate Swift types with ASN.1 metadata, but this may change in the future (for example, when the `@runtimeMetadata` attribute is finished).
+
+Generally we find it more ergonomic to attach ASN.1 metadata at the definition site, rather than out-of-band with a custom `CodingKey` or a separate schema. This allows existing Swift types to be encoded as ASN.1 without change. Having said that, using the ASN.1 translator will ideally render any metadata representation changes transparent to the user.
 
 Features supported by ASN1Codable include:
 
@@ -138,6 +140,4 @@ The `asn1json2swift` tool is a driver for the framework.
 ## Certificate.framework and certutil
 
 This repository includes `Certificate.framework`, a C API modeled on the macOS `Security.framework`, as a proof of concept. Included also is a `certutil` tool for reading a PEM-encoded certificate and outputting a JSON representation, along with the SAN and re-encoded DER. The Swift types are generated from `rfc2459.json` at build time, which in turn (if `/usr/local/heimdal/bin/asn1\_compile` is present) is generated from `rfc2459.asn1`.
-
-The API `certutil` uses is provided by `Certificate.framework`, which is a C API modeled on the macOS Security framework. This tool and framework are incomplete and should be treated as a proof of concept only.
 
