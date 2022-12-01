@@ -31,6 +31,14 @@ public struct ASN1TaggedDictionary {
             $0.value as? NSObject
         } as NSDictionary
     }
+
+    public subscript(key: UInt) -> AnyCodable? {
+        self.wrappedValue[key]
+    }
+
+    public mutating func setValue(value: AnyCodable?, forKey key: UInt) {
+        self.wrappedValue[key] = value
+    }
 }
 
 extension ASN1TaggedDictionary: Decodable {
