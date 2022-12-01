@@ -233,6 +233,45 @@ final class CertificateTests: XCTestCase {
         XCTAssertNotNil(props)
         XCTAssertEqual(props!.valueForKey("Version"), "2" as NSString)
     }
+
+    func test_certificate_pkinit() {
+        let der = """
+        MIIDcDCCAVigAwIBAgIBBzANBgkqhkiG9w0BAQUFADAqMRswGQYDVQQDDBJoeDUw
+        OSBUZXN0IFJvb3QgQ0ExCzAJBgNVBAYTAlNFMCAXDTE5MDMyMjIyMjUwNloYDzI1
+        MTgxMTIxMjIyNTA2WjAhMQswCQYDVQQGEwJTRTESMBAGA1UEAwwJcGtpbml0LWVj
+        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEwCuO8wzDG4iU605qEvL7Y5l3ohN6
+        Fs5I3Eiag5FeqbirF3eUrlUJjWlKpKhrdxIB+zxvzbHjAr5jsUONj9+MdaNzMHEw
+        CQYDVR0TBAIwADALBgNVHQ8EBAMCBeAwHQYDVR0OBBYEFHebdEt1kFDOIMMAm6Uj
+        92mox8w0MDgGA1UdEQQxMC+gLQYGKwYBBQICoCMwIaANGwtURVNULkg1TC5TRaEQ
+        MA6gAwIBAaEHMAUbA2JhcjANBgkqhkiG9w0BAQUFAAOCAgEAcAK4Ew/ZK3rpQlyC
+        ap3q+FHcqS5n7MPLZ0j+ar1YhmfCH9Sg3H0XQZON4GdgAWDMNB8OsPybX/bPkSuj
+        7ChbgP8xIRRbPKJcazsylN6rA9lBcMFPTklNY4+ai74Uh7DfvGSD4ZnO5ncSWkPj
+        O9fpEF5oNjjeiMJ4r5ejok6/qS3hmPSaNey0KnAYCZn/gPtzSXVHVDF64UMoS1Nx
+        gZJMQtubUjitkEfbTtp1bzcUzlZuBtBAjt/xcSOY7rRDt3c6HKWjbz7TX4YLbdS4
+        Si6K4NfSdV/KvJzi2LkEv+yKHngo9RNznN0sEHNVz0CWjYq0HHm9qgHest7EMAQR
+        r9X7yyhEJQKrs2giAhuZsZbr9/OtbjJ2Z767eLxGmhyzjmY568vYdsgG5Xke8PpU
+        P6Hq/2Do+1XZHEc652ffyGkd0ZpWlisBea0i8no75r4yhJrjUNuJacE+GQnVszws
+        CJCLk6o5rkiQ7M95PRWRhj44DgqZsdl4FFkXRMB2cKB6kmQqYASqzmux1cE76BtY
+        b33d3JBJVeE3Wnt1idoIwaUzyfkNSh0I4Ki+Pw6i4BBxklD4dTOYfL7JL8h8shmU
+        FFkLHMq8NP8DpDzwvazI9mOPWdPrZemWmyGplKd9/t1izXdialg43mNMDMPqCU9q
+        gHYHWboV0rTBRh4RUFu+jY4hTng=
+        """
+
+        let cert = self.test_encodeDecodeCertificate(der)
+        guard let cert else { return }
+
+        let cns = CertificateCopyCommonNames(cert)
+        XCTAssertNotNil(cns)
+        XCTAssertEqual(cns!, ["pkinit-ec"] as CFArray)
+
+        let princs = CertificateCopyNTPrincipalNames(cert)
+        XCTAssertNotNil(princs)
+        XCTAssertEqual(princs!, ["bar@TEST.H5L.SE"] as CFArray)
+
+        let props = CertificateCopyLegacyProperties(cert)
+        XCTAssertNotNil(props)
+        XCTAssertEqual(props!.valueForKey("Version"), "2" as NSString)
+    }
 }
 
 extension CFArray {
