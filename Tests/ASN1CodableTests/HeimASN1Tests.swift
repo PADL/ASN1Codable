@@ -390,6 +390,10 @@ extension ASN1CodableTests {
         let c1 = _KeyUsage([.digitalSignature, .keyEncipherment])
         self.test_encodeDecode(KeyUsage(wrappedValue: c1), encodedAs: test1)
 
+        let test1a = try! Data(hex: "030205a0")
+        let c1a = _KeyUsage([.digitalSignature, .keyEncipherment])
+        self.test_encodeDecode(c1a, encodedAs: test1a)
+
         let test2 = try! Data(hex: "0303070080")
         let c2 = _KeyUsage.decipherOnly
         self.test_encodeDecode(KeyUsage(wrappedValue: c2), encodedAs: test2)
