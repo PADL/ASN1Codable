@@ -148,11 +148,79 @@ public func CertificateCopyNTPrincipalNames(_ certificate: CertificateRef) -> Un
     return Unmanaged.passRetained(names as CFArray)
 }
 
-extension Dictionary {
+@objc protocol PropertyType {
+    var propertyType: String? { get }
+}
+
+extension NSObject {
+    @objc var propertyType: String? {
+        nil
+    }
+}
+
+extension NSDictionary {
+    override var propertyType: String? {
+        "section"
+    }
+}
+
+extension NSData {
+    override var propertyType: String? {
+        "data"
+    }
+}
+
+extension NSString {
+    override var propertyType: String? {
+        "string"
+    }
+}
+
+extension NSURL {
+    override var propertyType: String? {
+        "url"
+    }
+}
+
+extension NSDate {
+    override var propertyType: String? {
+        "date"
+    }
+}
+
+extension NSArray {
+    override var propertyType: String? {
+        "array"
+    }
+}
+
+extension NSNumber {
+    override var propertyType: String? {
+        "number"
+    }
+}
+
+extension NSDictionary {
     var nsKeyValueArray: NSArray {
         self.map {
-            ["key": $0.0, "value": $0.1]
+            let label = $0.0
+            var value = $0.1
+            let propertyType = (value as? NSObject)?.propertyType
+
+            if let dictionary = value as? NSDictionary { value = dictionary.nsKeyValueArray }
+
+            if let propertyType {
+                return ["type": propertyType, "label": label, "value": value] as NSDictionary
+            } else {
+                return ["label": label, "value": value] as NSDictionary
+            }
         } as NSArray
+    }
+}
+
+extension Dictionary where Value: NSObject {
+    var nsKeyValueArray: NSArray {
+        (self as NSDictionary).nsKeyValueArray
     }
 }
 
@@ -194,17 +262,17 @@ extension Certificate {
         "\(self.tbsCertificate.version ?? rfc3280_version_2 + 1)" as NSString
     }
 
-    var serialNumberProperty: NSArray {
+    var serialNumberProperty: NSDictionary {
         // FIXME: why is there this inner wrapping? looks wrong to me
-        ["Serial Number": String(describing: self.tbsCertificate.serialNumber)].nsKeyValueArray
+        ["Serial Number": String(describing: self.tbsCertificate.serialNumber) as NSString] as NSDictionary
     }
 
-    var validityPeriodProperty: NSArray {
+    var validityPeriodProperty: NSDictionary {
         ["Not Valid Before": self.tbsCertificate.validity.notBefore.nsDate,
-         "Not Valid After": self.tbsCertificate.validity.notAfter.nsDate].nsKeyValueArray
+         "Not Valid After": self.tbsCertificate.validity.notAfter.nsDate] as NSDictionary
     }
 
-    var publicKeyAlgorithmProperty: NSArray {
+    var publicKeyAlgorithmProperty: NSDictionary {
         var properties = [String: NSObject]()
         let spki = self.tbsCertificate.subjectPublicKeyInfo
 
@@ -213,21 +281,21 @@ extension Certificate {
         if let parameters = spki.algorithm.parameters, !(parameters is Null) {
             properties["Parameters"] = String(describing: parameters) as NSObject
         }
-        return properties.nsKeyValueArray
+        return properties as NSDictionary
     }
 
     var publicKeyDataProperty: NSData {
         self.tbsCertificate.subjectPublicKeyInfo.subjectPublicKey.wrappedValue as NSData
     }
 
-    var publicKeyInfoProperty: NSArray {
+    var publicKeyInfoProperty: NSDictionary {
         var properties = [String: NSObject]()
         properties["Public Key Algorithm"] = self.publicKeyAlgorithmProperty
         properties["Public Key Data"] = self.publicKeyDataProperty
-        return properties.nsKeyValueArray
+        return properties as NSDictionary
     }
 
-    var signatureAlgorithmProperty: NSArray {
+    var signatureAlgorithmProperty: NSDictionary {
         var properties = [String: NSObject]()
 
         properties["Algorithm"] = String(describing: signatureAlgorithm.algorithm) as NSObject
@@ -235,18 +303,18 @@ extension Certificate {
         if let parameters = signatureAlgorithm.parameters, !(parameters is Null) {
             properties["Parameters"] = String(describing: parameters) as NSObject
         }
-        return properties.nsKeyValueArray
+        return properties as NSDictionary
     }
 
     var signatureDataProperty: NSData {
         self.signatureValue.wrappedValue as NSData
     }
 
-    var signatureProperty: NSArray {
+    var signatureProperty: NSDictionary {
         var properties = [String: NSObject]()
         properties["Signature Algorithm"] = self.signatureAlgorithmProperty
         properties["Signature Data"] = self.signatureDataProperty
-        return properties.nsKeyValueArray
+        return properties as NSDictionary
     }
 }
 
