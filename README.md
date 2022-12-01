@@ -171,13 +171,13 @@ becomes:
 ```swift
 enum GeneralName: Codable {
     enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
-            case otherName = 0
-            case rfc822Name = 1
-            case dNSName = 2
-            case directoryName = 4
-            case uniformResourceIdentifier = 6
-            case iPAddress = 7
-            case registeredID = 8
+        case otherName = 0
+        case rfc822Name = 1
+        case dNSName = 2
+        case directoryName = 4
+        case uniformResourceIdentifier = 6
+        case iPAddress = 7
+        case registeredID = 8
     }
 
     case otherName(OtherName)
