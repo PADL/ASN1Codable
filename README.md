@@ -12,9 +12,9 @@ Source code is available [here](https://github.com/PADL/ASN1Codable).
 
 ASN.1 encoding and decoding is presently provided by the [ASN1Kit](https://github.com/gematik/ASN1Kit) library, although this should be treated as an implementation detail.
 
-ASN.1 types have additional metadata, most prominently tag numbers and tagging environments (such as `IMPLICIT` or `EXPLICIT`), which have no natural representation in Swift. ASN1Codable’s representation of these should also be treated as implementation details: presently ASN1Codable uses generic property wrappers and protocols to annotate Swift types with ASN.1 metadata, but this may change in the future (for example, when the `@runtimeMetadata` attribute is finished).
+ASN.1 types have additional metadata, most prominently tag numbers and tagging environments (such as `IMPLICIT` or `EXPLICIT`), which have no natural representation in Swift. Presently ASN1Codable uses generic property wrappers and protocols to annotate Swift types with ASN.1 metadata, but this may change in the future (for example, when the `@runtimeMetadata` attribute is finished).
 
-Generally we find it more ergonomic to attach ASN.1 metadata at the definition site, rather than out-of-band with a custom `CodingKey` or a separate schema. This allows existing Swift types to be encoded as ASN.1 without change. Having said that, using the ASN.1 translator will ideally render any metadata representation changes transparent to the user.
+Generally we find it more ergonomic to attach ASN.1 metadata at the definition site, rather than out-of-band with a custom `CodingKey` or a separate schema. This allows existing Swift types to be encoded as ASN.1 without change. Having said that, using the ASN.1 translator will ideally render the metadata representation an implementation detail.
 
 Features supported by ASN1Codable include:
 
@@ -25,7 +25,36 @@ Features supported by ASN1Codable include:
 * Large integers using BigNumber
 * Preservation of encoded value on decode in `_save` (for verifying signatures)
 
-## Example
+## Usage
+
+You can use the encoder and decoder as follows:
+
+```
+let encodedValue = try ASN1Encoder().encode(1234)
+let decodedValue = try ASN1Decoder().decode(Int.self, from: encodedValue)
+```
+
+## asn1json2swift
+
+The HeimASN1Translator framework reads the JSON AST representation emitted by `asn1_compile` and emits Swift source code. (Note: you will need to use the master branch of Heimdal if you wish to recompile the ASN.1 as the translator depends on some new features of the ASN.1 compiler.)
+
+Features include:
+
+* Emitting types as `struct`, `class`, or `@objc class` (the default is `struct`, unless the type is preserved or self-referencing)
+* Mapping of ASN.1 types to user defined types
+* Propagation of preservation (`_save`) and decoration options
+* `DEFAULT` values through getter synthesis
+* User-specified additional conformances
+
+There are some limitations, for example anonymous nested types are not supported, and there are some cases where property wrapper initializers are not correctly emitted. These are easily worked around.
+
+The `asn1json2swift` tool is a driver for the framework.
+
+## certutil
+
+This repository includes `Certificate.framework`, a C API modeled on the macOS `Security.framework`, as a proof of concept. Included also is a `certutil` tool for reading a PEM-encoded certificate and outputting a JSON representation, along with the SAN and re-encoded DER. The Swift types are generated from `rfc2459.json` at build time, which in turn (if `/usr/local/heimdal/bin/asn1_compile` is present) is generated from `rfc2459.asn1`.
+
+## Examples
 
 ### SEQUENCE
 
@@ -111,33 +140,4 @@ enum GeneralName: Codable {
         case registeredID(ObjectIdentifier)
 }
 ```
-
-## Usage
-
-You can use the encoder and decoder as follows:
-
-```
-let encodedValue = try ASN1Encoder().encode(1234)
-let decodedValue = try ASN1Decoder().decode(Int.self, from: encodedValue)
-```
-
-## Translator
-
-The HeimASN1Translator framework reads the JSON AST representation emitted by `asn1_compile` and emits Swift source code. (Note: you will need to use the master branch of Heimdal if you wish to recompile the ASN.1 as the translator depends on some new features of the ASN.1 compiler.)
-
-Features include:
-
-* Type maps, so a `SEQUENCE` can be mapped to a Swift or Objective-C class
-* Type preservation (original DER saved in `_save` on decode)
-* Type decoration (additional fields that are not encoded or decoded)
-* `DEFAULT` values through getter synthesis
-* User-specified additional conformances
-
-There are some limitations, for example anonymous nested types are not supported, and there are some cases where property wrapper initializers are not correctly emitted.
-
-The `asn1json2swift` tool is a driver for the framework.
-
-## Certificate.framework and certutil
-
-This repository includes `Certificate.framework`, a C API modeled on the macOS `Security.framework`, as a proof of concept. Included also is a `certutil` tool for reading a PEM-encoded certificate and outputting a JSON representation, along with the SAN and re-encoded DER. The Swift types are generated from `rfc2459.json` at build time, which in turn (if `/usr/local/heimdal/bin/asn1\_compile` is present) is generated from `rfc2459.asn1`.
 
