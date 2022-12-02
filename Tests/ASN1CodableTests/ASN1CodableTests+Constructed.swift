@@ -387,6 +387,16 @@ extension ASN1CodableTests {
                                encodedAs: Data([0x31, 0x0C, 0x02, 0x01, 0x08, 0x02, 0x01, 0x0A,
                                                 0x02, 0x01, 0x0C, 0x02, 0x01, 0xFE]))
     }
+
+    func test_TaggedDictionary() {
+        var taggedDictionary = ASN1TaggedDictionary()
+
+        taggedDictionary[0] = "Testing"
+        taggedDictionary[100] = 1234
+
+        self.test_encodeDecode(taggedDictionary,
+                               encodedAs: try! Data(hex: "3012A0090C0754657374696E67BF6404020204D2"))
+    }
 }
 
 enum ASN1TagNumber$0: ASN1TagNumberRepresentable {}
