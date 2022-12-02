@@ -409,14 +409,28 @@ extension ASN1CodableTests {
         let dictionary = [1234: "Europe", 5555: "Sweden"]
 
         self.test_encodeDecode(dictionary,
-                               encodedAs: try! Data(hex: "301C0C04313233340C064575726F70650C04353535350C0653776564656E"))
+                               encodedAs: try! Data(hex: "3018020204D20C064575726F7065020215B30C0653776564656E"))
     }
 
     func test_UIntKeyedDictionary() {
         let dictionary = [1234: "Europe", 5555: "Sweden"]
 
         self.test_encodeDecode(dictionary,
-                               encodedAs: try! Data(hex: "301C0C04313233340C064575726F70650C04353535350C0653776564656E"))
+                               encodedAs: try! Data(hex: "3018020204D20C064575726F7065020215B30C0653776564656E"))
+    }
+
+    func test_CustomKeyedDictionary() {
+        struct Key: Codable, Equatable, Hashable {
+            var value: UInt
+
+            init(_ value: UInt) {
+                self.value = value
+            }
+        }
+        let dictionary = [Key(1234): "Europe", Key(5555): "Sweden"]
+
+        self.test_encodeDecode(dictionary,
+                               encodedAs: try! Data(hex: "301C3004020215B30C0653776564656E3004020204D20C064575726F7065"))
     }
 }
 
