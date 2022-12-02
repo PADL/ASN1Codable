@@ -1,11 +1,11 @@
 import ASN1Codable
 import Foundation
 
-typealias X690SampleEmployeeNumber = ASN1ApplicationTagged<x690sample.ASN1TagNumber$2, ASN1Codable.ASN1ImplicitTagging, Int>
+typealias X690SampleEmployeeNumber = ASN1ApplicationTagged<x690sample.ASN1TagNumber$2, ASN1ImplicitTagging, Int>
 
-typealias X690SampleDate = ASN1ApplicationTagged<x690sample.ASN1TagNumber$3, ASN1Codable.ASN1ImplicitTagging, VisibleString<String>>
+typealias X690SampleDate = ASN1ApplicationTagged<x690sample.ASN1TagNumber$3, ASN1ImplicitTagging, VisibleString<String>>
 
-struct X690SampleName: Codable, Equatable, ASN1Codable.ASN1ApplicationTaggedType, ASN1Codable.ASN1ImplicitlyTaggedType {
+struct X690SampleName: Codable, Equatable, ASN1ApplicationTaggedType, ASN1ImplicitlyTaggedType {
     static let tagNumber: UInt = 1
 
     enum CodingKeys: String, CodingKey {
@@ -24,7 +24,7 @@ struct X690SampleName: Codable, Equatable, ASN1Codable.ASN1ApplicationTaggedType
     var familyName: String = ""
 }
 
-struct X690SampleChildInformation: Codable, Equatable, ASN1Codable.ASN1SetCodable {
+struct X690SampleChildInformation: Codable, Equatable, ASN1SetCodable {
     enum CodingKeys: String, CodingKey, ASN1MetadataCodingKey {
         case name
         case dateOfBirth
@@ -47,7 +47,7 @@ struct X690SampleChildInformation: Codable, Equatable, ASN1Codable.ASN1SetCodabl
     var dateOfBirth: X690SampleDate = .init(wrappedValue: VisibleString<String>(wrappedValue: ""))
 }
 
-struct X690SamplePersonnelRecord: Codable, Equatable, ASN1Codable.ASN1ApplicationTaggedType, ASN1Codable.ASN1ImplicitlyTaggedType {
+struct X690SamplePersonnelRecord: Codable, Equatable, ASN1ApplicationTaggedType, ASN1ImplicitlyTaggedType {
     static let tagNumber: UInt = 0
 
     enum CodingKeys: String, CodingKey, ASN1MetadataCodingKey {

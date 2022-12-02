@@ -18,6 +18,7 @@ import XCTest
 import Algorithms
 import DataKit
 
+// swiftlint:disable force_try type_body_length
 final class CertificateTests: XCTestCase {
     func test_encodeDecodeCertificate(_ base64EncodedCertificate: String) -> CertificateRef? {
         let data = Data(base64Encoded: base64EncodedCertificate,

@@ -38,7 +38,7 @@ import ASN1Codable
 import BigNumber
 import AnyCodable
 
-// swiftlint:disable force_try nesting
+// swiftlint:disable force_try
 extension ASN1CodableTests {
     func test_large_tag() {
         let lt1 = TESTLargeTag(foo: 1, bar: 2)

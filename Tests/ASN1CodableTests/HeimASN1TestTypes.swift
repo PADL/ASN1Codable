@@ -419,7 +419,7 @@ class TESTPreserve: Codable, Equatable, ASN1PreserveBinary {
         case one = 1
     }
 
-    var _save: Data? = nil
+    var _save: Data?
     var zero: TESTInteger = 0
     var one: TESTInteger = 1
 }

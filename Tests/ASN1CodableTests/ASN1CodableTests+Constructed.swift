@@ -107,6 +107,7 @@ class TestClass: Codable, Equatable, ASN1PrivateTaggedType, ASN1PreserveBinary {
     }
 }
 
+// swiftlint:disable force_try nesting
 extension ASN1CodableTests {
     func test_CHOICE_Division() {
         let r_and_d = Division.RAndD(labID: 48, currentProject: Data([0x44, 0x58, 0x2D, 0x37]))
