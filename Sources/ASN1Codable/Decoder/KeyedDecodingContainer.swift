@@ -203,11 +203,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             return false
         }
 
-        if self.context.enumCodingState == .enum {
-            return self.context.codingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
-        } else {
-            return true /// at this point, we have to optimistically assume the key exists
-        }
+        return self.context.codingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
     }
 
     func contains(_ key: Key) -> Bool {
@@ -217,8 +213,10 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             return self.containsMetadataCodingKey(key)
         } else if self.context.isCodingKeyRepresentableDictionary {
             return self.containsCodingKeyRepresentableDictionaryKey(key)
-        } else {
+        } else if self.context.enumCodingState == .enum {
             return self.containsCurrentObjectEnumKey(key)
+        } else {
+            return false
         }
     }
 
