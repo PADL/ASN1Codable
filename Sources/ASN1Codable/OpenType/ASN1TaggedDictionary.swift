@@ -21,7 +21,11 @@ import AnyCodable
 public struct ASN1TaggedDictionary {
     private var wrappedValue: [UInt: AnyCodable]
 
-    init(wrappedValue: [UInt: AnyCodable]) {
+    public init() {
+        self.wrappedValue = [:]
+    }
+
+    public init(wrappedValue: [UInt: AnyCodable]) {
         self.wrappedValue = wrappedValue
     }
 
@@ -33,10 +37,15 @@ public struct ASN1TaggedDictionary {
     }
 
     public subscript(key: UInt) -> Any? {
-        self.wrappedValue[key]?.value
+        get {
+            self.wrappedValue[key]?.value
+        }
+        set {
+            self.setValue(value: newValue, forKey: key)
+        }
     }
 
-    public mutating func setValue(value: Any?, forKey key: UInt) {
+    mutating func setValue(value: Any?, forKey key: UInt) {
         if let value {
             self.wrappedValue[key] = AnyCodable(value)
         } else {
@@ -44,6 +53,8 @@ public struct ASN1TaggedDictionary {
         }
     }
 }
+
+extension ASN1TaggedDictionary: Equatable {}
 
 extension ASN1TaggedDictionary: Decodable {
     public init(from decoder: Decoder) throws {
