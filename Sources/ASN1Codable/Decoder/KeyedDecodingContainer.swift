@@ -63,6 +63,32 @@ extension ASN1Object {
             }
         }
     }
+
+    func dictionaryTuples<Key: CodingKey>(_: Key.Type) -> [(Key, ASN1Object)]? {
+        guard let items = self.data.items, items.count % 2 == 0 else { return nil }
+
+        var tuples = [(Key, ASN1Object)]()
+        for i in 0 ..< items.count / 2 {
+            let key = items[i * 2]
+            let object = items[i * 2 + 1]
+
+            do {
+                let string = try String(from: key)
+                guard let key = Key(stringValue: string) else { return nil }
+                tuples.append((key, object))
+            } catch {
+                do {
+                    let integer = try Int(from: key)
+                    guard let key = Key(intValue: integer) else { return nil }
+                    tuples.append((key, object))
+                } catch {
+                    return nil
+                }
+            }
+        }
+
+        return tuples
+    }
 }
 
 extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
@@ -70,81 +96,119 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         self.object.data.items!
     }
 
-    var allKeys: [Key] {
-        let keys: [Key]
+    private var contextTagCodingKeys: [Key]? {
+        let keys: [Key]?
 
-        if Key.self is any ASN1ContextTagCodingKey.Type {
-            /// this serves both as an escape hatch to support Apple's component attributes
-            /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and
-            /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
-            /// used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
-            /// uniform tagging to Swift types
-            if self.context.enumCodingState == .enum,
-               case .taggedTag(let tagNo) = self.object.tag,
-               let key = Key(intValue: Int(tagNo)) {
-                keys = [key]
-            } else if self.object.containsOnlyTaggedItems {
-                keys = self.unsafelyUnwrappedItems.compactMap {
-                    guard case .taggedTag(let tagNo) = $0.tag else { return nil }
-                    return Key(intValue: Int(tagNo))
-                }
-            } else {
-                keys = []
+        /// this serves both as an escape hatch to support Apple's component attributes
+        /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and
+        /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
+        /// used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
+        /// uniform tagging to Swift types
+        if self.context.enumCodingState == .enum,
+           case .taggedTag(let tagNo) = self.object.tag,
+           let key = Key(intValue: Int(tagNo)) {
+            keys = [key]
+        } else if self.object.containsOnlyTaggedItems {
+            keys = self.unsafelyUnwrappedItems.compactMap {
+                guard case .taggedTag(let tagNo) = $0.tag else { return nil }
+                return Key(intValue: Int(tagNo))
             }
         } else {
-            let currentObject: ASN1Object
-
-            do {
-                currentObject = try self.currentObject()
-            } catch {
-                return []
-            }
-
-            if let enumCodingKey = self.context.codingKey(Key.self, object: currentObject) {
-                /// in this case, we know the enum coding key from reading the metadata
-                keys = [enumCodingKey]
-            } else {
-                /// otherwise, we can't really return anything interesting
-                keys = []
-            }
+            keys = []
         }
 
         return keys
     }
 
+    private var codingKeyRepresentableDictionaryKeys: [Key]? {
+        self.object.dictionaryTuples(Key.self)?.map(\.0)
+    }
+
+    private var currentObjectEnumKey: [Key]? {
+        let currentObject: ASN1Object
+
+        do {
+            currentObject = try self.currentObject()
+        } catch {
+            return nil
+        }
+
+        if let enumCodingKey = self.context.codingKey(Key.self, object: currentObject) {
+            /// in this case, we know the enum coding key from reading the metadata
+            return [enumCodingKey]
+        }
+
+        return nil
+    }
+
+    var allKeys: [Key] {
+        let keys: [Key]?
+
+        if Key.self is any ASN1ContextTagCodingKey.Type {
+            keys = self.contextTagCodingKeys
+        } else if self.context.isCodingKeyRepresentableDictionary {
+            keys = self.codingKeyRepresentableDictionaryKeys
+        } else {
+            keys = self.currentObjectEnumKey
+        }
+
+        return keys ?? []
+    }
+
+    private func containsContextTagCodingKey(_ key: any ASN1ContextTagCodingKey) -> Bool {
+        if self.context.enumCodingState == .enum,
+           case .taggedTag(let tagNo) = self.object.tag,
+           let keyTagNo = key.intValue {
+            return keyTagNo == tagNo
+        } else if self.object.containsOnlyTaggedItems {
+            /// per the similar code path in allKeys, this returns true if we have a uniformly
+            /// tagged structure and the tag represented by `key` is present
+            return self.unsafelyUnwrappedItems.contains { $0.tag == .taggedTag(UInt(key.intValue!)) }
+        } else {
+            return false
+        }
+    }
+
+    private func containsMetadataCodingKey(_ key: any ASN1MetadataCodingKey) -> Bool {
+        if self.context.enumCodingState == .enum {
+            return self.object.tag == key.metadata.tag
+        } else {
+            return self.object.data.items?.contains(where: { $0.tag == key.metadata.tag }) ?? false
+        }
+    }
+
+    private func containsCodingKeyRepresentableDictionaryKey(_ key: Key) -> Bool {
+        self.object.dictionaryTuples(Key.self)?.contains {
+            $0.0.stringValue == key.stringValue ||
+                (key.intValue != nil && $0.0.intValue == key.intValue)
+        } ?? false
+    }
+
+    private func containsCurrentObjectEnumKey(_ key: Key) -> Bool {
+        let currentObject: ASN1Object
+
+        do {
+            currentObject = try self.currentObject()
+        } catch {
+            return false
+        }
+
+        if self.context.enumCodingState == .enum {
+            return self.context.codingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
+        } else {
+            return true /// at this point, we have to optimistically assume the key exists
+        }
+    }
+
     func contains(_ key: Key) -> Bool {
         if let key = key as? any ASN1ContextTagCodingKey {
-            if self.context.enumCodingState == .enum,
-               case .taggedTag(let tagNo) = self.object.tag,
-               let keyTagNo = key.intValue {
-                return keyTagNo == tagNo
-            } else if self.object.containsOnlyTaggedItems {
-                /// per the similar code path in allKeys, this returns true if we have a uniformly
-                /// tagged structure and the tag represented by `key` is present
-                return self.unsafelyUnwrappedItems.contains { $0.tag == .taggedTag(UInt(key.intValue!)) }
-            } else {
-                return false
-            }
+            return self.containsContextTagCodingKey(key)
         } else if let key = key as? any ASN1MetadataCodingKey {
-            if self.context.enumCodingState == .enum {
-                return self.object.tag == key.metadata.tag
-            } else {
-                return self.object.data.items?.contains(where: { $0.tag == key.metadata.tag }) ?? false
-            }
+            return self.containsMetadataCodingKey(key)
+        } else if self.context.isCodingKeyRepresentableDictionary {
+            return self.containsCodingKeyRepresentableDictionaryKey(key)
         } else {
-            let currentObject: ASN1Object
-
-            do {
-                currentObject = try self.currentObject()
-            } catch {
-                return false
-            }
-
-            if self.context.enumCodingState == .enum {
-                return self.context.codingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
-            } else {
-                return true /// at this point, we have to optimistically assume the key exists
-            }
+            return self.containsCurrentObjectEnumKey(key)
         }
     }
 
@@ -332,7 +396,7 @@ extension ASN1DecoderImpl.KeyedContainer {
     }
 
     private func decodeKeyedSingleValue<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
-        let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
+        let container = self.nestedSingleValueContainer(try self.currentObject(for: type, key: key),
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
         let value = try container.decode(type)
@@ -345,7 +409,7 @@ extension ASN1DecoderImpl.KeyedContainer {
     }
 
     private func decodeKeyedSingleValueIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T: Decodable {
-        let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
+        let container = self.nestedSingleValueContainer(try self.currentObject(for: type, key: key),
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
         let value: T?

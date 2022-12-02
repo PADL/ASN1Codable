@@ -286,6 +286,8 @@ extension ASN1EncoderImpl.SingleValueContainer {
     private func encodeConstructedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
         self.context.encodeAsSet = value is Set<AnyHashable> || value is ASN1SetCodable
         self.context.automaticTagging(type(of: value))
+        self.context.isCodingKeyRepresentableDictionary = value is StringCodingKeyRepresentableDictionary ||
+            value is IntCodingKeyRepresentableDictionary || value is AnyCodingKeyRepresentableDictionary
 
         if let value = value as? ASN1ObjectSetCodable {
             let type = type(of: value)
@@ -301,6 +303,8 @@ extension ASN1EncoderImpl.SingleValueContainer {
 
         if self.context.encodeAsSet, !self.disableSetSorting {
             return encoder.object?.sortedByTag
+        } else if self.context.isCodingKeyRepresentableDictionary {
+            return encoder.object?.sortedByEncodedDictionaryValue
         } else {
             return encoder.object
         }

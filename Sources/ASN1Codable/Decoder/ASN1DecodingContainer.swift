@@ -88,7 +88,7 @@ extension ASN1DecodingContainer {
 
     /// returns the current object in a keyed or unkeyed decoding container,
     /// subject to some validation checks
-    private func currentObject(nestedContainer: Bool) throws -> ASN1Object {
+    private func currentObject(nestedContainer: Bool, key: CodingKey?) throws -> ASN1Object {
         let object: ASN1Object
 
         if self.context.enumCodingState != .none || self.object.isNull {
@@ -98,6 +98,17 @@ extension ASN1DecodingContainer {
             // if we've reached the end of the SEQUENCE or SET, we still need to initialise
             // the remaining wrapped objects; pad the object set with null instances.
             object = ASN1Null
+        } else if self.context.isCodingKeyRepresentableDictionary, let key {
+            guard let _object = self.object.dictionaryTuples(ASN1Key.self)?.first(where: {
+                $0.0.stringValue == key.stringValue ||
+                    (key.intValue != nil && $0.0.intValue == key.intValue)
+            })?.1 else {
+                let context = DecodingError.Context(codingPath: self.codingPath,
+                                                    debugDescription: "Object \(self.object) cannot " +
+                                                        "be parsed as a dictionary")
+                throw DecodingError.dataCorrupted(context)
+            }
+            object = _object
         } else if self.object.constructed, let items = self.object.data.items, self.currentIndex < items.count {
             // return the object at the current index
             object = items[self.currentIndex]
@@ -120,9 +131,13 @@ extension ASN1DecodingContainer {
 
     /// wrapped for _currentObject() that can coax decoding errors such that
     /// they will hint to the caller to skip the field if OPTIONAL (see below)
-    func currentObject(for type: Decodable.Type? = nil, nestedContainer: Bool = false) throws -> ASN1Object {
+    func currentObject(
+        for type: Decodable.Type? = nil,
+        nestedContainer: Bool = false,
+        key: CodingKey? = nil
+    ) throws -> ASN1Object {
         do {
-            return try self.currentObject(nestedContainer: nestedContainer)
+            return try self.currentObject(nestedContainer: nestedContainer, key: key)
         } catch {
             if let type, case DecodingError.dataCorrupted(let context) = error {
                 // retype the error as a typeMismatch, which the field is OPTIONAL

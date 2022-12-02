@@ -38,23 +38,30 @@ extension ASN1Object {
         return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
     }
 
+    var sortedByEncodedDictionaryValue: ASN1Object {
+        guard self.constructed,
+              self.tag == .universal(.sequence),
+              let items = self.data.items,
+              items.count % 2 == 0 else {
+            return self
+        }
+
+        var tuples = [(ASN1Object, ASN1Object)]()
+        for i in 0 ..< items.count / 2 {
+            tuples.append((items[i * 2], items[i * 2 + 1]))
+        }
+
+        tuples = tuples.sorted { Self.sort($0.0, $1.0) }
+
+        return ASN1Kit.create(tag: self.tag, data: .constructed(tuples.flatMap { [$0.0, $0.1] }))
+    }
+
     private static func sort(_ lhs: ASN1Object, _ rhs: ASN1Object) -> Bool {
         do {
             let lhsSerialized = try lhs.serialize()
             let rhsSerialized = try rhs.serialize()
 
-            if lhsSerialized.count == rhsSerialized.count {
-                let cmp = lhsSerialized.withUnsafeBytes { lhsBytes in
-                    rhsSerialized.withUnsafeBytes { rhsBytes in
-                        memcmp(lhsBytes.bindMemory(to: UInt8.self).baseAddress,
-                               rhsBytes.bindMemory(to: UInt8.self).baseAddress,
-                               lhsSerialized.count)
-                    }
-                }
-                return cmp < 0
-            } else {
-                return lhsSerialized.count < rhsSerialized.count
-            }
+            return lhsSerialized.lexicographicallyPrecedes(rhsSerialized)
         } catch {
             return false
         }
