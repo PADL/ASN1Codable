@@ -136,7 +136,7 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
       */
 
     func encode(key: Key) throws {
-        let value = key.stringValue
+        let value: any Encodable = key.intValue ?? key.stringValue
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
     }
