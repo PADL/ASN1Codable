@@ -107,8 +107,8 @@ public struct ASN1ObjectSetValue: Codable {
                 if let type {
                     self.wrappedValue = try container.decode(type)
                 } else {
-                    self.wrappedValue = try container.withASN1Throwing {
-                        try container.object.serialize()
+                    self.wrappedValue = try container.withDecoder(Data.self) { _, object in
+                        try object.serialize()
                     }
                 }
             }
