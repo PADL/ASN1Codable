@@ -16,6 +16,7 @@
 
 import XCTest
 import ASN1Codable
+import AnyCodable
 
 enum Division: Codable, Equatable {
     struct Manufacturing: Codable, Equatable {
@@ -389,10 +390,10 @@ extension ASN1CodableTests {
     }
 
     func test_TaggedDictionary() {
-        var taggedDictionary = ASN1TaggedDictionary()
+        var taggedDictionary = [Int: AnyCodable]()
 
-        taggedDictionary[0] = "Testing"
-        taggedDictionary[100] = 1234
+        taggedDictionary[0] = AnyCodable("Testing")
+        taggedDictionary[100] = AnyCodable(1234)
 
         self.test_encodeDecode(taggedDictionary,
                                encodedAs: try! Data(hex: "3012A0090C0754657374696E67BF6404020204D2"))
@@ -409,14 +410,14 @@ extension ASN1CodableTests {
         let dictionary = [1234: "Europe", 5555: "Sweden"]
 
         self.test_encodeDecode(dictionary,
-                               encodedAs: try! Data(hex: "3018020204D20C064575726F7065020215B30C0653776564656E"))
+                               encodedAs: try! Data(hex: "3018BF8952080C064575726F7065BFAB33080C0653776564656E"))
     }
 
     func test_UIntKeyedDictionary() {
         let dictionary = [1234: "Europe", 5555: "Sweden"]
 
         self.test_encodeDecode(dictionary,
-                               encodedAs: try! Data(hex: "3018020204D20C064575726F7065020215B30C0653776564656E"))
+                               encodedAs: try! Data(hex: "3018BF8952080C064575726F7065BFAB33080C0653776564656E"))
     }
 
     func test_CustomKeyedDictionary() {
@@ -430,7 +431,7 @@ extension ASN1CodableTests {
         let dictionary = [Key(1234): "Europe", Key(5555): "Sweden"]
 
         self.test_encodeDecode(dictionary,
-                               encodedAs: try! Data(hex: "301C3004020215B30C0653776564656E3004020204D20C064575726F7065"))
+                               encodedAs: try! Data(hex: "301C3004020204D20C064575726F70653004020215B30C0653776564656E"))
     }
 }
 
