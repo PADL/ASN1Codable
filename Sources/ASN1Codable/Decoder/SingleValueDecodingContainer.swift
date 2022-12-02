@@ -141,8 +141,11 @@ extension ASN1DecoderImpl.SingleValueContainer {
         _ block: (_ type: T.Type, _ object: ASN1Object) throws -> T
     ) throws -> T {
         do {
-            if self.codingKey != nil || self.context.automaticTaggingContext != nil {
-                return try self.decode(type, from: self.object)
+            if let key = self.codingKey {
+                self.demoteCodingKey()
+                return try self.decodeTaggedKeyedValue(type, from: self.object, forKey: key)
+            } else if self.context.automaticTaggingContext != nil {
+                return try self.decodeAutomaticallyTaggedValue(type, from: self.object)
             } else {
                 return try block(type, self.object)
             }
@@ -178,13 +181,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
         // FIXME: required for top-level decoders
         self.context = self.context.decodingSingleValue(type)
 
-        if let key = self.codingKey {
-            self.demoteCodingKey()
-            value = try self.decodeTaggedKeyedValue(type, from: object, forKey: key)
-        } else if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
+        if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
             value = try self.decodeTaggedValue(type, from: object) as! T
-        } else if !skipTaggedValues, self.context.automaticTaggingContext != nil {
-            value = try self.decodeAutomaticallyTaggedValue(type, from: object)
         } else if let type = type as? any(Decodable & ASN1TaggedValue).Type {
             value = try self.decodeTaggedWrappedValue(type, from: object) as! T
         } else if let type = type as? any FixedWidthInteger.Type {
