@@ -214,7 +214,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             do {
                 value = try self.decode(T.self, from: object, skipTaggedValues: skipTaggedValues)
             } catch {
-                if let error = error as? DecodingError, case .typeMismatch = error {
+                if let error = error as? DecodingError, case .valueNotFound = error {
                     value = nil
                 } else {
                     throw error
@@ -241,7 +241,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected \(expectedTag) when " +
                                                     "decoding \(self.object)")
-            throw DecodingError.typeMismatch(type, context)
+            throw DecodingError.valueNotFound(type, context)
         }
 
         return try T(from: object)
@@ -294,7 +294,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected \(expectedTag) when " +
                                                     "decoding \(self.object)")
-            throw DecodingError.typeMismatch(type, context)
+            throw DecodingError.valueNotFound(type, context)
         }
 
         return try T(from: object)
@@ -342,7 +342,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
                 } else {
                     let context = DecodingError.Context(codingPath: self.codingPath,
                                                         debugDescription: "Expected tag \(tag) but received \(object.tag)")
-                    throw DecodingError.typeMismatch(type, context)
+                    throw DecodingError.valueNotFound(type, context)
                 }
             }
 
@@ -361,11 +361,11 @@ extension ASN1DecoderImpl.SingleValueContainer {
             } else if object.constructed {
                 guard let items = object.data.items,
                       items.count == 1,
-                      let firstObject = object.data.items!.first else {
+                      let firstObject = items.first else {
                     let context = DecodingError.Context(codingPath: self.codingPath,
                                                         debugDescription: "Tag \(tag) for single value container " +
                                                             "must wrap a single value only")
-                    throw DecodingError.typeMismatch(type, context)
+                    throw DecodingError.dataCorrupted(context)
                 }
                 unwrappedObject = firstObject
             } else if innerTag.isUniversal {
@@ -374,7 +374,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
                 let context = DecodingError.Context(codingPath: self.codingPath,
                                                     debugDescription: "Expected universal tag \(innerTag) " +
                                                         "for primitive object \(object)")
-                throw DecodingError.typeMismatch(type, context)
+                throw DecodingError.valueNotFound(type, context)
             }
         } else {
             unwrappedObject = object // may have size or value constraints, but no tag
@@ -429,7 +429,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             let context = DecodingError.Context(codingPath: self.codingPath,
                                                 debugDescription: "Expected no more than \(container.currentIndex) " +
                                                     "items when decoding \(type); received \(items.count)")
-            throw DecodingError.typeMismatch(type, context)
+            throw DecodingError.dataCorrupted(context)
         }
     }
 

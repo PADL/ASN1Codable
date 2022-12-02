@@ -162,9 +162,9 @@ extension ASN1DecodingContainer {
             return try self.currentObject(nestedContainer: nestedContainer, key: key)
         } catch {
             if let type, case DecodingError.dataCorrupted(let context) = error {
-                // retype the error as a typeMismatch, which the field is OPTIONAL
+                // retype the error as a valueNotFound, which the field is OPTIONAL
                 // will tell the caller it is safe to skip this field
-                throw DecodingError.typeMismatch(type, context)
+                throw DecodingError.valueNotFound(type, context)
             } else {
                 throw error
             }
