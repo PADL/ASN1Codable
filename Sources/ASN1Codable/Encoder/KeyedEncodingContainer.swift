@@ -54,102 +54,72 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
     }
 
     func encode(_ value: Bool, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: Int, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: Int8, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: Int16, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: Int32, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: Int64, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: UInt, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: UInt8, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: UInt16, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: UInt32, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: UInt64, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: String, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: Float, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func encode(_ value: Double, forKey key: Key) throws {
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
-
-    /*
-     func encodeIfPresent<T>(_ value: T?, forKey key: Key) throws where T : Encodable {
-         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-
-         if let value = value {
-             try container.encode(value)
-         } else {
-             try container.encodeNil()
-         }
-     }
-      */
 
     func encode<T>(_ value: T, forKey key: Key) throws where T: Encodable {
         if self.context.isCodingKeyRepresentableDictionary {
             if let keyValue = key.intValue, let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
-                var container = self.nestedSingleValueContainer(forKey: key,
-                                                                context: self.context.encodingSingleValue(value))
-                try container.encode(value)
+                try self.encodeKeyedSingleValue(value, forKey: key)
                 return
             } else {
                 let value = key.stringValue
-                var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-                try container.encode(value)
+                try self.encodeKeyedSingleValue(value, forKey: key)
             }
         }
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
+        try self.encodeKeyedSingleValue(value, forKey: key)
     }
 
     func nestedUnkeyedContainer(forKey key: Key) -> UnkeyedEncodingContainer {
@@ -215,6 +185,12 @@ extension ASN1EncoderImpl.KeyedContainer {
         if let taggingContext = self.context.automaticTaggingContext {
             taggingContext.selectTag(codingKey)
         }
+    }
+
+    private func encodeKeyedSingleValue<T>(_ value: T, forKey key: CodingKey) throws where T: Encodable {
+        let context = self.context.encodingSingleValue(value)
+        var container = self.nestedSingleValueContainer(forKey: key, context: context)
+        try container.encode(value)
     }
 
     private func nestedSingleValueContainer(

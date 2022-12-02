@@ -392,19 +392,6 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 }
 
 extension ASN1DecoderImpl.KeyedContainer {
-    private func nestedSingleValueContainer(
-        _ object: ASN1Object,
-        forKey key: Key,
-        context: ASN1DecodingContext
-    ) -> ASN1DecoderImpl.SingleValueContainer {
-        let container = ASN1DecoderImpl.SingleValueContainer(object: object,
-                                                             codingPath: self.nestedCodingPath(forKey: key),
-                                                             userInfo: self.userInfo,
-                                                             context: context)
-
-        return container
-    }
-
     private func decodeKeyedSingleValue<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
         let container = self.nestedSingleValueContainer(try self.currentObject(for: type, key: key),
                                                         forKey: key,
@@ -443,6 +430,19 @@ extension ASN1DecoderImpl.KeyedContainer {
         self.currentIndex += 1
 
         return value
+    }
+
+    private func nestedSingleValueContainer(
+        _ object: ASN1Object,
+        forKey key: Key,
+        context: ASN1DecodingContext
+    ) -> ASN1DecoderImpl.SingleValueContainer {
+        let container = ASN1DecoderImpl.SingleValueContainer(object: object,
+                                                             codingPath: self.nestedCodingPath(forKey: key),
+                                                             userInfo: self.userInfo,
+                                                             context: context)
+
+        return container
     }
 }
 
