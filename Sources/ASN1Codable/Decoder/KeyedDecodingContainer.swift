@@ -41,9 +41,15 @@ extension ASN1DecoderImpl {
         func nestedCodingPath(forKey key: CodingKey) -> [CodingKey] {
             // a special case to allow for the single value decoder to deal with
             // enums with ASN1TagCoding key discriminants
-            if self.context.enumCodingState == .enumCase { return self.codingPath }
-
-            return self.codingPath + [key]
+            if self.context.enumCodingState == .enumCase {
+                return self.codingPath
+            } else if self.context.isCodingKeyRepresentableDictionary,
+                      let keyValue = key.intValue,
+                      let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
+                return self.codingPath + [key]
+            } else {
+                return self.codingPath + [key]
+            }
         }
     }
 }
@@ -123,7 +129,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// returns even indexed objects representing keys for Int or String
     /// keyed dictionaries
     private var codingKeyRepresentableDictionaryKeys: [Key]? {
-        self.object.dictionaryTuples(Key.self)?.map(\.0)
+        self.object.dictionaryTuples(Key.self)?.map(\.0) ?? self.contextTagCodingKeys
     }
 
     private var currentObjectEnumKey: [Key]? {
@@ -180,10 +186,13 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     private func containsCodingKeyRepresentableDictionaryKey(_ key: Key) -> Bool {
-        self.object.dictionaryTuples(Key.self)?.contains {
-            $0.0.stringValue == key.stringValue ||
-                (key.intValue != nil && $0.0.intValue == key.intValue)
-        } ?? false
+        if let keyValue = key.intValue, let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
+            return self.containsContextTagCodingKey(key)
+        } else {
+            return self.object.dictionaryTuples(Key.self)?.contains {
+                $0.0.stringValue == key.stringValue
+            } ?? false
+        }
     }
 
     private func containsCurrentObjectEnumKey(_ key: Key) -> Bool {

@@ -17,6 +17,9 @@
 import Foundation
 import Network
 import ASN1Codable
+import AnyCodable
+
+typealias AppleComponentAttributes = [Int: AnyCodable]
 
 extension Certificate {
     func `extension`<T>(_ extnID: ObjectIdentifier) -> T? where T: Codable {
@@ -24,11 +27,11 @@ extension Certificate {
     }
 
     var componentAttributes: NSDictionary? {
-        guard let attributes: ASN1TaggedDictionary = self.extension(id_apple_ce_appleComponentAttributes) else {
+        guard let attributes: AppleComponentAttributes = self.extension(id_apple_ce_appleComponentAttributes) else {
             return nil
         }
 
-        return attributes._bridgeToObjectiveC()
+        return attributes.mapValues { $0.value } as NSDictionary
     }
 
     // swiftlint:disable discouraged_optional_collection

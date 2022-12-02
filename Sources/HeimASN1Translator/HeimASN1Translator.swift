@@ -48,6 +48,7 @@ public final class HeimASN1Translator {
     enum TypeMap: Equatable {
         case `class`
         case objc
+        case external
         case alias(String)
     }
 
@@ -78,6 +79,8 @@ public final class HeimASN1Translator {
                 return TypeMap.class
             case "@objc":
                 return TypeMap.objc
+            case "@external":
+                return TypeMap.external
             default:
                 return TypeMap.alias($0)
             }

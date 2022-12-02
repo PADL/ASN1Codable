@@ -135,15 +135,18 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
      }
       */
 
-    func encode(key: Key) throws {
-        let value: any Encodable = key.intValue ?? key.stringValue
-        var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
-        try container.encode(value)
-    }
-
     func encode<T>(_ value: T, forKey key: Key) throws where T: Encodable {
         if self.context.isCodingKeyRepresentableDictionary {
-            try self.encode(key: key)
+            if let keyValue = key.intValue, let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
+                var container = self.nestedSingleValueContainer(forKey: key,
+                                                                context: self.context.encodingSingleValue(value))
+                try container.encode(value)
+                return
+            } else {
+                let value = key.stringValue
+                var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
+                try container.encode(value)
+            }
         }
         var container = self.nestedSingleValueContainer(forKey: key, context: self.context.encodingSingleValue(value))
         try container.encode(value)
@@ -215,7 +218,7 @@ extension ASN1EncoderImpl.KeyedContainer {
     }
 
     private func nestedSingleValueContainer(
-        forKey key: Key,
+        forKey key: CodingKey,
         context: ASN1EncodingContext
     ) -> SingleValueEncodingContainer {
         let container = ASN1EncoderImpl.SingleValueContainer(codingPath: self.nestedCodingPath(forKey: key),

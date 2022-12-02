@@ -475,6 +475,8 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                 fallthrough
             case .class:
                 isClass = true
+            case .external:
+                return
             }
         }
 

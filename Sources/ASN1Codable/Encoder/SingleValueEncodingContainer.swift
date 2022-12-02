@@ -301,9 +301,10 @@ extension ASN1EncoderImpl.SingleValueContainer {
                                       context: self.context)
         try value.encode(to: encoder)
 
-        if self.context.encodeAsSet, !self.disableSetSorting {
+        if (self.context.encodeAsSet && !self.disableSetSorting) ||
+            value is IntCodingKeyRepresentableDictionary {
             return encoder.object?.sortedByTag
-        } else if self.context.isCodingKeyRepresentableDictionary {
+        } else if value is [AnyHashable: Any] {
             return encoder.object?.sortedByEncodedDictionaryValue
         } else {
             return encoder.object

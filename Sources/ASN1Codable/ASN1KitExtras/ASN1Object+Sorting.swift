@@ -19,7 +19,7 @@ import ASN1Kit
 
 extension ASN1Object {
     var sortedByTag: ASN1Object {
-        guard self.constructed, self.tag == .universal(.set), let items = self.data.items else {
+        guard self.constructed, let items = self.data.items else {
             return self
         }
 

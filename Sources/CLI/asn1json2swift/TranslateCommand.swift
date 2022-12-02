@@ -42,8 +42,9 @@ struct TranslateCommand: CommandProtocol {
         var typeMapDictionary = [String: String]()
 
         if let typeMaps = options.typeMaps {
-            let pairs: [(String, String)] = typeMaps.map {
+            let pairs: [(String, String)] = typeMaps.compactMap {
                 let values = $0.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: true)
+                if values.count != 2 { return nil }
                 return (String(values[0]), String(values[1]))
             }
             typeMapDictionary = Dictionary(pairs) { $1 }

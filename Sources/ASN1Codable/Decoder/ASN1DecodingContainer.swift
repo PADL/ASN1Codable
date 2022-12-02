@@ -99,12 +99,18 @@ extension ASN1DecodingContainer {
             // the remaining wrapped objects; pad the object set with null instances.
             object = ASN1Null
         } else if self.context.isCodingKeyRepresentableDictionary, let key {
-            // dictionaries with String or Int coding keys are encoded as a SEQUENCE
-            // of alternating keys and values
-            guard let _object = self.object.dictionaryTuples(ASN1Key.self)?.first(where: {
-                $0.0.stringValue == key.stringValue ||
-                    (key.intValue != nil && $0.0.intValue == key.intValue)
-            })?.1 else {
+            let _object: ASN1Object?
+            if let keyValue = key.intValue, self.object.containsOnlyTaggedItems {
+                _object = self.object.data.items!.first {
+                    guard case .taggedTag(let tagNo) = $0.tag else { return false }
+                    return tagNo == keyValue
+                }
+            } else {
+                _object = self.object.dictionaryTuples(ASN1Key.self)?.first {
+                    $0.0.stringValue == key.stringValue
+                }?.1
+            }
+            guard let _object else {
                 let context = DecodingError.Context(codingPath: self.codingPath,
                                                     debugDescription: "Object \(self.object) cannot " +
                                                         "be parsed as a dictionary")
