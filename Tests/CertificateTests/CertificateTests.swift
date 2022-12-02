@@ -97,6 +97,12 @@ final class CertificateTests: XCTestCase {
 
         let cert = self.test_encodeDecodeCertificate(der)
         guard let cert else { return }
+
+        let cns = CertificateCopyCommonNames(cert)
+        XCTAssertNotNil(cns)
+        if let cns {
+            XCTAssertEqual(cns, ["CA secp256r1"] as CFArray)
+        }
     }
 
     func test_certificate_proxy10_child_child_test() {
@@ -137,14 +143,13 @@ final class CertificateTests: XCTestCase {
         guard let cert else { return }
 
         let ku = CertificateGetKeyUsage(cert)
-        let expectedKu = KeyUsage(rawValue: 7)
-        XCTAssertEqual(ku, expectedKu)
+        XCTAssertEqual(ku, KeyUsage(rawValue: 7))
 
         let cns = CertificateCopyCommonNames(cert)
         XCTAssertNotNil(cns)
-        guard let cns else { return }
-
-        XCTAssertEqual(cns, ["Test cert", "proxy10", "child", "child"] as CFArray)
+        if let cns {
+            XCTAssertEqual(cns, ["Test cert", "proxy10", "child", "child"] as CFArray)
+        }
     }
 
     func test_certificate_component_attributes() {
@@ -169,9 +174,9 @@ final class CertificateTests: XCTestCase {
 
         let cns = CertificateCopyCommonNames(cert)
         XCTAssertNotNil(cns)
-        guard let cns else { return }
-
-        XCTAssertEqual(cns, ["FQ1125600881CCF1P-E1D17919"] as CFArray)
+        if let cns {
+            XCTAssertEqual(cns, ["FQ1125600881CCF1P-E1D17919"] as CFArray)
+        }
 
         let serial = CertificateCopySerialNumberData(cert, nil)
         let expectedSerial = try! Data(hex: "020F00804A8469973D60ED5642EE36EAC8")
