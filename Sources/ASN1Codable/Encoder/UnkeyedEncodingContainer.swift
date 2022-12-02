@@ -167,7 +167,7 @@ extension ASN1EncoderImpl.UnkeyedContainer {
     }
 
     var object: ASN1Object? {
-        let object: ASN1Object?
+        var object: ASN1Object?
 
         if self.context.enumCodingState != .none {
             precondition(self.containers.count <= 1)
@@ -175,8 +175,11 @@ extension ASN1EncoderImpl.UnkeyedContainer {
         } else {
             let values = self.containers.compactMap(\.object)
 
-            if self.context.encodeAsSet, !self.disableSetSorting {
-                object = ASN1Kit.create(tag: .universal(.set), data: .constructed(values)).sortedByEncodedValue
+            if self.context.encodeAsSet {
+                object = ASN1Kit.create(tag: .universal(.set), data: .constructed(values))
+                if !self.disableSetSorting {
+                    object = object?.sortedByEncodedValue
+                }
             } else {
                 object = ASN1Kit.create(tag: .universal(.sequence), data: .constructed(values))
             }
