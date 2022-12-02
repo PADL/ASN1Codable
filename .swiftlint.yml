@@ -15,7 +15,6 @@ opt_in_rules:
   - unneeded_parentheses_in_closure_argument
   - unavailable_function
   - trailing_closure
-  - strict_fileprivate
   - sorted_first_last
   - single_test_class
   - required_enum_case

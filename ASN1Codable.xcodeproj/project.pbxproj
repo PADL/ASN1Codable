@@ -803,6 +803,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D3565CD02939C21A002236A5 /* PBXTargetDependency */,
 				D3F2887E292C69440006CD82 /* PBXTargetDependency */,
 				D3F28878292C56D50006CD82 /* PBXTargetDependency */,
 			);
@@ -1195,6 +1196,10 @@
 			isa = PBXTargetDependency;
 			target = D351DC29290E849200540132 /* ASN1Codable */;
 			targetProxy = D351DC36290E849200540132 /* PBXContainerItemProxy */;
+		};
+		D3565CD02939C21A002236A5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = D3565CCF2939C21A002236A5 /* SwiftLintPlugin */;
 		};
 		D37C1CEB29322C64007264EA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1895,6 +1900,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D3565C802932BD2D002236A5 /* XCRemoteSwiftPackageReference "DataKit" */;
 			productName = DataKit;
+		};
+		D3565CCF2939C21A002236A5 /* SwiftLintPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D3D6E7D8292F4EE600198A86 /* XCRemoteSwiftPackageReference "SwiftLint" */;
+			productName = "plugin:SwiftLintPlugin";
 		};
 		D37C1CDC29322C0F007264EA /* Commandant */ = {
 			isa = XCSwiftPackageProductDependency;
