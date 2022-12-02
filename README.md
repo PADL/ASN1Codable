@@ -1,20 +1,16 @@
 # ASN1Codable
 
-ASN1Codable is an idiomatic, ergonomic, and somewhat opinionated framework for ASN.1 encoding and decoding Swift Codable types.
+ASN1Codable is a Swift framework for ASN.1 encoding and decoding Swift Codable types.
 
-For the most part, the ASN.1 type system is isomorphic to Swift’s: for example, a `SEQUENCE` or `SET` is mapped to a Swift `struct`, a `CHOICE` or `ENUMERATED` type to an `enum`, `SEQUENCE OF` to `Array`, `SET OF` to `SET`, `OPTIONAL` to `Optional`, etc.
+For the most part, the ASN.1 type system is isomorphic to Swift’s, for example:
+
+* `SEQUENCE` or `SET` is mapped to a `struct`
+* `CHOICE` or `ENUMERATED` type to an `enum`
+* `SEQUENCE OF` to `Array`
+* `SET OF` to `SET`
+* `OPTIONAL` to `Optional`
 
 Types can be defined directly in Swift, or generated from the ASN.1 using a translator that reads the output of [Heimdal’s](https://github.com/heimdal/heimdal) `asn1_compile` tool.
-
-Source code is available [here](https://github.com/PADL/ASN1Codable).
-
-## Architecture
-
-ASN.1 encoding and decoding is presently provided by the [ASN1Kit](https://github.com/gematik/ASN1Kit) library, although this should be treated as an implementation detail.
-
-ASN.1 types have additional metadata, most prominently tag numbers and tagging environments (such as `IMPLICIT` or `EXPLICIT`), which have no natural representation in Swift. Presently ASN1Codable uses a variety of language features to associate ASN.1 metadata with Swift types.
-
-Generally this involves using a custom `CodingKey` type that either directly encodes the tag number (for types with uniform tagging) or provides a function mapping a key to metadata. There are some cases, such as type aliases and enumerated types with non-uniform tagging, where generic wrappers are used instead.
 
 Features supported by ASN1Codable include:
 
@@ -24,6 +20,14 @@ Features supported by ASN1Codable include:
 * `AUTOMATIC` tagging
 * Large integers using BigNumber
 * Preservation of encoded value on decode in `_save` (for verifying signatures)
+
+## Architecture
+
+ASN.1 encoding and decoding is presently provided by the [ASN1Kit](https://github.com/gematik/ASN1Kit) library, although this should be treated as an implementation detail.
+
+ASN.1 types have additional metadata, most prominently tag numbers and tagging environments (such as `IMPLICIT` or `EXPLICIT`), which have no natural representation in Swift. Presently ASN1Codable uses a variety of language features to associate ASN.1 metadata with Swift types.
+
+Generally this involves using a custom `CodingKey` type that either directly encodes the tag number (for types with uniform tagging) or provides a function mapping a key to metadata. There are some cases, such as type aliases and enumerated types with non-uniform tagging, where generic wrappers are used instead.
 
 ## Usage
 
