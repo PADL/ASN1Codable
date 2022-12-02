@@ -42,6 +42,7 @@ extension ASN1EncoderImpl {
             get {
                 [self]
             }
+            // swiftlint:disable unused_setter_value
             set {}
         }
 

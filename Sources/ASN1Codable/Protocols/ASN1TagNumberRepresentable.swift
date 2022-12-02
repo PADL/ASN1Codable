@@ -24,6 +24,7 @@ public protocol ASN1TagNumberRepresentable {}
 extension ASN1TagNumberRepresentable {
     static var tagNo: UInt {
         // this appears more performant than String(describing:)
+        // swiftlint:disable force_cast
         let enumMetadata = reflect(self) as! EnumMetadata
         let name = enumMetadata.descriptor.name
         let nameComponents = name.components(separatedBy: "$")

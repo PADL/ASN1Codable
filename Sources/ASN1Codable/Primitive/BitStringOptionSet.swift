@@ -44,7 +44,7 @@ extension BitStringOptionSet {
         var data = Swift.withUnsafeBytes(of: self.rawValue.littleEndian) { Data($0) }
 
         if !rfc1510BitString {
-            let index = data.reversed().firstIndex(where: { $0 != 0 })
+            let index = data.reversed().firstIndex { $0 != 0 }
             data.count = index?.base ?? 0
         }
 

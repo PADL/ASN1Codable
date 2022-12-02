@@ -341,7 +341,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
                     return self.possiblyWrappedNilLiteral(type)
                 } else {
                     let context = DecodingError.Context(codingPath: self.codingPath,
-                                                        debugDescription: "Expected tag \(tag) but received \(object.tag)")
+                                                        debugDescription: "Expected tag \(tag) " +
+                                                            "but received \(object.tag)")
                     throw DecodingError.valueNotFound(type, context)
                 }
             }
@@ -487,6 +488,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         get {
             0
         }
+        // swiftlint:disable unused_setter_value
         set {}
     }
 }

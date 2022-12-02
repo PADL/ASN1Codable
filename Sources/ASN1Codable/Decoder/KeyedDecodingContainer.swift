@@ -70,6 +70,7 @@ extension ASN1Object {
         }
     }
 
+    // swiftlint:disable discouraged_optional_collection
     func stringKeyedDictionaryTuples<Key: CodingKey>(_: Key.Type) -> [(Key, ASN1Object)]? {
         guard let items = self.data.items, items.count % 2 == 0 else { return nil }
 
@@ -91,6 +92,7 @@ extension ASN1Object {
     }
 }
 
+// swiftlint:disable discouraged_optional_collection
 extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     private var unsafelyUnwrappedItems: [ASN1Object] {
         self.object.data.items!
@@ -180,7 +182,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         if self.context.enumCodingState == .enum {
             return self.object.tag == key.metadata.tag
         } else {
-            return self.object.data.items?.contains(where: { $0.tag == key.metadata.tag }) ?? false
+            return self.object.data.items?.contains { $0.tag == key.metadata.tag } ?? false
         }
     }
 

@@ -185,7 +185,8 @@ public func CertificateCopyNTPrincipalNames(_ certificate: CertificateRef) -> Un
     return Unmanaged.passRetained(names as CFArray)
 }
 
-@objc protocol PropertyType {
+@objc
+protocol PropertyType {
     var propertyType: String? { get }
 }
 
@@ -196,42 +197,49 @@ extension NSObject {
 }
 
 extension NSDictionary {
+    // swiftlint:disable override_in_extension
     override var propertyType: String? {
         "section"
     }
 }
 
 extension NSData {
+    // swiftlint:disable override_in_extension
     override var propertyType: String? {
         "data"
     }
 }
 
 extension NSString {
+    // swiftlint:disable override_in_extension
     override var propertyType: String? {
         "string"
     }
 }
 
 extension NSURL {
+    // swiftlint:disable override_in_extension
     override var propertyType: String? {
         "url"
     }
 }
 
 extension NSDate {
+    // swiftlint:disable override_in_extension
     override var propertyType: String? {
         "date"
     }
 }
 
 extension NSArray {
+    // swiftlint:disable override_in_extension
     override var propertyType: String? {
         "array"
     }
 }
 
 extension NSNumber {
+    // swiftlint:disable override_in_extension
     override var propertyType: String? {
         "number"
     }
