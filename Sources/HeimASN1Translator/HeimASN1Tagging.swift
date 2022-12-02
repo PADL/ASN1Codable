@@ -33,7 +33,7 @@ enum HeimASN1TaggingEnvironment: String, Codable, HeimASN1SwiftTypeRepresentable
         }
     }
 
-    var initializer: String? {
+    var initializer: String {
         switch self {
         case .explicit:
             return ".explicit"
@@ -41,8 +41,6 @@ enum HeimASN1TaggingEnvironment: String, Codable, HeimASN1SwiftTypeRepresentable
             return ".implicit"
         case .automatic:
             return ".automatic"
-        default:
-            return nil
         }
     }
 }
