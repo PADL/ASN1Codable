@@ -160,12 +160,16 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     private func containsContextTagCodingKey(_ key: any ASN1ContextTagCodingKey) -> Bool {
         if self.context.enumCodingState == .enum,
            case .taggedTag(let tagNo) = self.object.tag,
-           let keyTagNo = key.intValue {
-            return keyTagNo == tagNo
-        } else if self.object.containsOnlyTaggedItems {
+           let keyValue = key.intValue {
+            return keyValue == tagNo
+        } else if self.object.containsOnlyTaggedItems,
+            let keyValue = key.intValue,
+            let keyValue = UInt(exactly: keyValue) {
             /// per the similar code path in allKeys, this returns true if we have a uniformly
             /// tagged structure and the tag represented by `key` is present
-            return self.unsafelyUnwrappedItems.contains { $0.tag == .taggedTag(UInt(key.intValue!)) }
+            return self.unsafelyUnwrappedItems.contains {
+                $0.tag == .taggedTag(keyValue)
+            }
         } else {
             return false
         }
