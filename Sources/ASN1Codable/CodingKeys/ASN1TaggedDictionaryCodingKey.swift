@@ -17,7 +17,11 @@
 import Foundation
 import ASN1Kit
 
-struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
+struct ASN1TaggedDictionaryCodingKey: ASN1ContextTagCodingKey {
+    var metadata: ASN1Metadata {
+        ASN1Metadata(tag: .taggedTag(self.tagNo), tagging: .explicit)
+    }
+
     var tagNo: UInt
 
     init(tagNo: UInt) {
