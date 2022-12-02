@@ -138,7 +138,7 @@ extension ASN1DecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
 extension ASN1DecoderImpl.SingleValueContainer {
     func withDecoder<T: Decodable>(
         _ type: T.Type,
-        _ block: (_ type: T.Type, _ object: ASN1Object) throws -> T
+        block: (_ type: T.Type, _ object: ASN1Object) throws -> T
     ) throws -> T {
         do {
             if let key = self.codingKey {
@@ -147,7 +147,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
             } else if self.context.automaticTaggingContext != nil {
                 return try self.decodeAutomaticallyTaggedValue(type, from: self.object)
             } else {
-                return try block(type, self.object)
+                return try self.decode(type, from: self.object, block: block)
             }
         } catch let error as ASN1Error {
             let context = DecodingError.Context(codingPath: self.codingPath,
@@ -174,26 +174,17 @@ extension ASN1DecoderImpl.SingleValueContainer {
     private func decode<T>(
         _ type: T.Type,
         from object: ASN1Object,
-        skipTaggedValues: Bool = false
+        skipTaggedValues: Bool = false,
+        block: (_ type: T.Type, _ object: ASN1Object) throws -> T
     ) throws -> T where T: Decodable {
         let value: T
-
-        // FIXME: required for top-level decoders
-        self.context = self.context.decodingSingleValue(type)
 
         if !skipTaggedValues, let type = type as? ASN1TaggedType.Type {
             value = try self.decodeTaggedValue(type, from: object) as! T
         } else if let type = type as? any(Decodable & ASN1TaggedValue).Type {
             value = try self.decodeTaggedWrappedValue(type, from: object) as! T
-        } else if let type = type as? any FixedWidthInteger.Type {
-            value = try self.decodeFixedWidthIntegerValue(type, from: object, verifiedTag: skipTaggedValues) as! T
-        } else if let type = type as? ASN1DecodableType.Type {
-            value = try self.decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
-        } else if let type = type as? OptionalProtocol.Type,
-                  let wrappedType = type.wrappedType as? Decodable.Type {
-            value = try self.decodeIfPresent(wrappedType, from: object, skipTaggedValues: skipTaggedValues) as! T
         } else {
-            value = try self.decodeConstructedValue(type, from: object)
+            value = try block(type, object)
         }
 
         if var value = value as? ASN1PreserveBinary {
@@ -201,6 +192,31 @@ extension ASN1DecoderImpl.SingleValueContainer {
         }
 
         return value
+    }
+
+    // swiftlint:disable force_cast
+    private func decode<T>(
+        _ type: T.Type,
+        from object: ASN1Object,
+        skipTaggedValues: Bool = false
+    ) throws -> T where T: Decodable {
+        // FIXME: required for top-level decoders
+        self.context = self.context.decodingSingleValue(type)
+
+        return try self.decode(type, from: object, skipTaggedValues: skipTaggedValues) { type, object in
+            let value: T
+            if let type = type as? any FixedWidthInteger.Type {
+                value = try self.decodeFixedWidthIntegerValue(type, from: object, verifiedTag: skipTaggedValues) as! T
+            } else if let type = type as? ASN1DecodableType.Type {
+                value = try self.decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
+            } else if let type = type as? OptionalProtocol.Type,
+                      let wrappedType = type.wrappedType as? Decodable.Type {
+                value = try self.decodeIfPresent(wrappedType, from: object, skipTaggedValues: skipTaggedValues) as! T
+            } else {
+                value = try self.decodeConstructedValue(type, from: object)
+            }
+            return value
+        }
     }
 
     /// this function is required because the Swift runtime decodeIfPresent()

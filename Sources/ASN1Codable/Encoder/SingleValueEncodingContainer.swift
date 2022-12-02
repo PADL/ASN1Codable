@@ -173,7 +173,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
 
     private func withEncoder<T: Encodable>(
         _ value: T,
-        _ block: (_ value: T) throws -> ASN1Object?
+        block: (_ value: T) throws -> ASN1Object?
     ) throws {
         do {
             if let key = self.codingKey {
@@ -182,7 +182,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
             } else if self.context.automaticTaggingContext != nil {
                 self.object = try self.encodeAutomaticallyTaggedValue(value)
             } else {
-                self.object = try block(value)
+                self.object = try self.encode(value, block: block)
             }
         } catch let error as ASN1Error {
             let context = EncodingError.Context(codingPath: self.codingPath,
@@ -194,7 +194,8 @@ extension ASN1EncoderImpl.SingleValueContainer {
 
     private func encode<T: Encodable>(
         _ value: T,
-        skipTaggedValues: Bool = false
+        skipTaggedValues: Bool = false,
+        block: (_ value: T) throws -> ASN1Object?
     ) throws -> ASN1Object? {
         let object: ASN1Object?
 
@@ -202,15 +203,30 @@ extension ASN1EncoderImpl.SingleValueContainer {
             object = try self.encodeTaggedValue(value)
         } else if let value = value as? any(Encodable & ASN1TaggedValue) {
             object = try self.encodeTaggedWrappedValue(value)
-        } else if let value = value as? any FixedWidthInteger {
-            object = try self.encodeFixedWidthIntegerValue(value)
-        } else if let value = value as? ASN1EncodableType {
-            object = try self.encodePrimitiveValue(value)
         } else {
-            object = try self.encodeConstructedValue(value)
+            object = try block(value)
         }
 
         return object
+    }
+
+    private func encode<T: Encodable>(
+        _ value: T,
+        skipTaggedValues: Bool = false
+    ) throws -> ASN1Object? {
+        try self.encode(value, skipTaggedValues: skipTaggedValues) { value in
+            let object: ASN1Object?
+
+            if let value = value as? any FixedWidthInteger {
+                object = try self.encodeFixedWidthIntegerValue(value)
+            } else if let value = value as? ASN1EncodableType {
+                object = try self.encodePrimitiveValue(value)
+            } else {
+                object = try self.encodeConstructedValue(value)
+            }
+
+            return object
+        }
     }
 
     private func encodeTagged<T: Encodable>(
