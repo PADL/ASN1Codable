@@ -86,6 +86,37 @@ extension ASN1DecodingContainer {
         }
     }
 
+    /// parse the current object for a dictionary key. There are two encoding strategies for dictionaries:
+    /// if the key is an integer, then EXPLICIT context tags are used wrap each item. If the key is a
+    /// string, then we store alternating keys and values.
+    private func currentObject(forCodingKeyRepresentableDictionaryKey key: CodingKey) throws -> ASN1Object {
+        let object: ASN1Object?
+
+        if let keyValue = key.intValue {
+            if self.object.containsOnlyTaggedItems {
+                object = self.object.data.items!.first {
+                    guard case .taggedTag(let tagNo) = $0.tag else { return false }
+                    return tagNo == keyValue
+                }
+            } else {
+                object = nil
+            }
+        } else {
+            object = self.object.dictionaryTuples(ASN1Key.self)?.first {
+                $0.0.stringValue == key.stringValue
+            }?.1
+        }
+
+        guard let object else {
+            let context = DecodingError.Context(codingPath: self.codingPath,
+                                                debugDescription: "Object \(self.object) cannot " +
+                                                    "be parsed as a dictionary")
+            throw DecodingError.dataCorrupted(context)
+        }
+
+        return object
+    }
+
     /// returns the current object in a keyed or unkeyed decoding container,
     /// subject to some validation checks
     private func currentObject(nestedContainer: Bool, key: CodingKey?) throws -> ASN1Object {
@@ -94,29 +125,12 @@ extension ASN1DecodingContainer {
         if self.context.enumCodingState != .none || self.object.isNull {
             // enums have a single value, which is the enum value itself
             object = self.object
+        } else if self.context.isCodingKeyRepresentableDictionary, let key {
+            object = try self.currentObject(forCodingKeyRepresentableDictionaryKey: key)
         } else if self.isAtEnd {
             // if we've reached the end of the SEQUENCE or SET, we still need to initialise
             // the remaining wrapped objects; pad the object set with null instances.
             object = ASN1Null
-        } else if self.context.isCodingKeyRepresentableDictionary, let key {
-            let _object: ASN1Object?
-            if let keyValue = key.intValue, self.object.containsOnlyTaggedItems {
-                _object = self.object.data.items!.first {
-                    guard case .taggedTag(let tagNo) = $0.tag else { return false }
-                    return tagNo == keyValue
-                }
-            } else {
-                _object = self.object.dictionaryTuples(ASN1Key.self)?.first {
-                    $0.0.stringValue == key.stringValue
-                }?.1
-            }
-            guard let _object else {
-                let context = DecodingError.Context(codingPath: self.codingPath,
-                                                    debugDescription: "Object \(self.object) cannot " +
-                                                        "be parsed as a dictionary")
-                throw DecodingError.dataCorrupted(context)
-            }
-            object = _object
         } else if self.object.constructed, let items = self.object.data.items, self.currentIndex < items.count {
             // return the object at the current index
             object = items[self.currentIndex]

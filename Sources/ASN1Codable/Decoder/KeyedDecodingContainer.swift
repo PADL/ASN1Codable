@@ -83,13 +83,7 @@ extension ASN1Object {
                 guard let key = Key(stringValue: string) else { return nil }
                 tuples.append((key, object))
             } catch {
-                do {
-                    let integer = try Int(from: key)
-                    guard let key = Key(intValue: integer) else { return nil }
-                    tuples.append((key, object))
-                } catch {
-                    return nil
-                }
+                return nil
             }
         }
 
@@ -129,7 +123,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// returns even indexed objects representing keys for Int or String
     /// keyed dictionaries
     private var codingKeyRepresentableDictionaryKeys: [Key]? {
-        self.object.dictionaryTuples(Key.self)?.map(\.0) ?? self.contextTagCodingKeys
+        self.object.containsOnlyTaggedItems ? self.contextTagCodingKeys : self.object.dictionaryTuples(Key.self)?.map(\.0)
     }
 
     private var currentObjectEnumKey: [Key]? {
