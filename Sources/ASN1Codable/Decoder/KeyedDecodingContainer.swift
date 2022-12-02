@@ -138,7 +138,9 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             }) {
                 keys = [key as! Key]
             } else {
-                return nil
+                /// Handle the possibiltiy of a value without a context (or application/private) tag
+                /// where the key is determined from examining the field's type metadata
+                return self.currentObjectEnumKey as? [Key]
             }
         } else {
             guard self.object.data.items?.allSatisfy({ !$0.tag.isUniversal }) ?? false else {
