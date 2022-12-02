@@ -96,14 +96,14 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         self.object.data.items!
     }
 
+    /// this serves both as an escape hatch to support Apple's component attributes
+    /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and
+    /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
+    /// used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
+    /// uniform tagging to Swift types
     private var contextTagCodingKeys: [Key]? {
         let keys: [Key]?
 
-        /// this serves both as an escape hatch to support Apple's component attributes
-        /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and
-        /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
-        /// used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
-        /// uniform tagging to Swift types
         if self.context.enumCodingState == .enum,
            case .taggedTag(let tagNo) = self.object.tag,
            let key = Key(intValue: Int(tagNo)) {
@@ -120,6 +120,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return keys
     }
 
+    /// returns even indexed objects representing keys for Int or String
+    /// keyed dictionaries
     private var codingKeyRepresentableDictionaryKeys: [Key]? {
         self.object.dictionaryTuples(Key.self)?.map(\.0)
     }

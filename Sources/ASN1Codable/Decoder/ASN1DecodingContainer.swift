@@ -99,6 +99,8 @@ extension ASN1DecodingContainer {
             // the remaining wrapped objects; pad the object set with null instances.
             object = ASN1Null
         } else if self.context.isCodingKeyRepresentableDictionary, let key {
+            // dictionaries with String or Int coding keys are encoded as a SEQUENCE
+            // of alternating keys and values
             guard let _object = self.object.dictionaryTuples(ASN1Key.self)?.first(where: {
                 $0.0.stringValue == key.stringValue ||
                     (key.intValue != nil && $0.0.intValue == key.intValue)
