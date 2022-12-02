@@ -122,6 +122,37 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return keys
     }
 
+    private func metadataCodingKeys<Key: ASN1MetadataCodingKey & CaseIterable>(_: Key.Type) -> [Key]? {
+        let allCases = Key.allCases as any Collection
+
+        let keys: [Key]?
+
+        if self.context.enumCodingState == .enum {
+            guard !self.object.tag.isUniversal else {
+                return nil
+            }
+
+            if let key = allCases.first(where: { key in
+                let metadata = Key.metadata(forKey: key as! Key)
+                return self.object.tag == metadata?.tag
+            }) {
+                keys = [key as! Key]
+            } else {
+                return nil
+            }
+        } else {
+            guard self.object.data.items?.allSatisfy({ !$0.tag.isUniversal }) ?? false else {
+                return nil
+            }
+
+            keys = allCases.filter { key in
+                let metadata = Key.metadata(forKey: key as! Key)
+                return self.object.data.items?.contains { $0.tag == metadata?.tag } ?? false
+            } as? [Key]
+        }
+        return keys
+    }
+
     /// returns even indexed objects representing keys for Int or String
     /// keyed dictionaries
     private var codingKeyRepresentableDictionaryKeys: [Key]? {
@@ -151,6 +182,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
         if Key.self is any ASN1ContextTagCodingKey.Type {
             keys = self.contextTagCodingKeys
+        } else if let type = Key.self as? any(ASN1MetadataCodingKey & CaseIterable).Type {
+            keys = self.metadataCodingKeys(type) as! [Key]?
         } else if self.context.isCodingKeyRepresentableDictionary {
             keys = self.codingKeyRepresentableDictionaryKeys
         } else {
