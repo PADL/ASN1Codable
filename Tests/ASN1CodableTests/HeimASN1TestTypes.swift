@@ -138,16 +138,29 @@ struct TESTDefault: Codable, Equatable {
 }
 
 struct TESTLargeTag: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case foo = 127
-        case bar = 128
+    enum CodingKeys: String, ASN1MetadataCodingKey {
+        case foo
+        case bar
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case foo:
+                metadata = ASN1Metadata(tag: .taggedTag(127), tagging: .explicit)
+            case bar:
+                metadata = ASN1Metadata(tag: .taggedTag(128), tagging: .explicit)
+            }
+
+            return metadata
+        }
     }
 
     var foo: Swift.Int32
     var bar: Swift.Int32
 }
 
-struct TESTSeq: Codable {
+struct TESTSeq: Codable, Equatable {
     enum CodingKeys: String, ASN1MetadataCodingKey {
         case tag0
         case tag1
@@ -179,9 +192,22 @@ struct TESTSeq: Codable {
 }
 
 enum TESTChoice1: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case i1 = 1
-        case i2 = 2
+    enum CodingKeys: String, CaseIterable, ASN1MetadataCodingKey {
+        case i1
+        case i2
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case i1:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
+            case i2:
+                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
+            }
+
+            return metadata
+        }
     }
 
     case i1(Swift.Int32)
@@ -189,15 +215,37 @@ enum TESTChoice1: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
 }
 
 enum TESTChoice2: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case i1 = 1
+    enum CodingKeys: String, CaseIterable, ASN1MetadataCodingKey {
+        case i1
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case i1:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
+            }
+
+            return metadata
+        }
     }
 
     case i1(Swift.Int32)
 }
 
 struct TESTImplicitInner: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    enum CodingKeys: Int, ASN1MetadataCodingKey {
+        static func metadata(forKey key: Self) -> ASN1Codable.ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case foo:
+                metadata = ASN1Metadata(tag: .taggedTag(127), tagging: .explicit)
+            }
+
+            return metadata
+        }
+
         case foo = 127
     }
 
@@ -205,10 +253,25 @@ struct TESTImplicitInner: Codable, Equatable {
 }
 
 struct TESTImplicit: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
-        case ti1 = 0
-        case ti2 = 1
-        case ti3 = 2
+    enum CodingKeys: String, ASN1MetadataCodingKey {
+        case ti1
+        case ti2
+        case ti3
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case ti1:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .implicit)
+            case ti2:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .implicit)
+            case ti3:
+                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .implicit)
+            }
+
+            return metadata
+        }
     }
 
     var ti1: Int
@@ -217,10 +280,25 @@ struct TESTImplicit: Codable, Equatable {
 }
 
 struct TESTImplicit2: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
-        case ti1 = 0
-        case ti3 = 2
-        case ti4 = 51
+    enum CodingKeys: String, ASN1MetadataCodingKey {
+        case ti1
+        case ti3
+        case ti4
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case ti1:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .implicit)
+            case ti3:
+                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .implicit)
+            case ti4:
+                metadata = ASN1Metadata(tag: .taggedTag(51), tagging: .implicit)
+            }
+
+            return metadata
+        }
     }
 
     var ti1: TESTInteger
@@ -229,17 +307,41 @@ struct TESTImplicit2: Codable, Equatable {
 }
 
 enum TESTImplicit3Inner: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case i1 = 1
+    enum CodingKeys: String, CaseIterable, ASN1MetadataCodingKey {
+        case i1
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case i1:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
+            }
+
+            return metadata
+        }
     }
 
     case i1(Swift.Int32)
 }
 
 enum TESTImplicit3: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
-        case ti1 = 0
-        case ti2 = 5
+    enum CodingKeys: String, CaseIterable, ASN1MetadataCodingKey {
+        case ti1
+        case ti2
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case ti1:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .implicit)
+            case ti2:
+                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .implicit)
+            }
+
+            return metadata
+        }
     }
 
     case ti1(Int)
@@ -247,9 +349,22 @@ enum TESTImplicit3: Codable, Equatable {
 }
 
 enum TESTImplicit4: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
-        case ti1 = 0
-        case ti2 = 5
+    enum CodingKeys: String, CaseIterable, ASN1MetadataCodingKey {
+        case ti1
+        case ti2
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case ti1:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .implicit)
+            case ti2:
+                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
+            }
+
+            return metadata
+        }
     }
 
     case ti1(Int)
@@ -257,8 +372,19 @@ enum TESTImplicit4: Codable, Equatable {
 }
 
 struct TESTAllocInner: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case ai = 0
+    enum CodingKeys: String, ASN1MetadataCodingKey {
+        case ai
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case ai:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
+            }
+
+            return metadata
+        }
     }
 
     var ai: TESTInteger
@@ -292,9 +418,22 @@ struct TESTAlloc: Codable, Equatable {
 }
 
 struct TESTOptional: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case zero = 0
-        case one = 1
+    enum CodingKeys: String, ASN1MetadataCodingKey {
+        case zero
+        case one
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case zero:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
+            case one:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
+            }
+
+            return metadata
+        }
     }
 
     var zero: Swift.Int32?
@@ -414,9 +553,22 @@ class TESTPreserve: Codable, Equatable, ASN1PreserveBinary {
         lhs.zero == rhs.zero && lhs.one == rhs.one
     }
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case zero = 0
-        case one = 1
+    enum CodingKeys: String, ASN1MetadataCodingKey {
+        case zero
+        case one
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case zero:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
+            case one:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
+            }
+
+            return metadata
+        }
     }
 
     var _save: Data?
