@@ -89,7 +89,9 @@ extension ASN1DecodingContainer {
     /// parse the current object for a dictionary key. There are two encoding strategies for dictionaries:
     /// if the key is an integer, then EXPLICIT context tags are used wrap each item. If the key is a
     /// string, then we store alternating keys and values.
-    private func currentObject(forCodingKeyRepresentableDictionaryKey key: CodingKey) throws -> ASN1Object {
+    private func currentObject(
+        forCodingKeyRepresentableDictionaryKey key: CodingKey
+    ) throws -> ASN1Object {
         let object: ASN1Object?
 
         if let keyValue = key.intValue {
@@ -119,7 +121,10 @@ extension ASN1DecodingContainer {
 
     /// returns the current object in a keyed or unkeyed decoding container,
     /// subject to some validation checks
-    private func currentObject(nestedContainer: Bool, key: CodingKey?) throws -> ASN1Object {
+    private func currentObject(
+        nestedContainer: Bool,
+        key: CodingKey?
+    ) throws -> ASN1Object {
         let object: ASN1Object
 
         if self.context.enumCodingState != .none || self.object.isNull {

@@ -386,7 +386,10 @@ extension ASN1DecoderImpl.SingleValueContainer {
                                                          skipTaggedValues: skipTaggedValues)
     }
 
-    private func decodeConstructedValue<T>(_ type: T.Type, from object: ASN1Object) throws -> T where T: Decodable {
+    private func decodeConstructedValue<T>(
+        _ type: T.Type,
+        from object: ASN1Object
+    ) throws -> T where T: Decodable {
         self.context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1SetCodable.Type
         self.context.automaticTagging(type)
         self.context.isCodingKeyRepresentableDictionary = type is StringCodingKeyRepresentableDictionary.Type ||
