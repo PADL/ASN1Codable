@@ -397,6 +397,27 @@ extension ASN1CodableTests {
         self.test_encodeDecode(taggedDictionary,
                                encodedAs: try! Data(hex: "3012A0090C0754657374696E67BF6404020204D2"))
     }
+
+    func test_StringKeyedDictionary() {
+        let dictionary = ["continent": "Europe", "country": "Sweden"]
+
+        self.test_encodeDecode(dictionary,
+                               encodedAs: try! Data(hex: "30240C07636F756E7472790C0653776564656E0C09636F6E74696E656E740C064575726F7065"))
+    }
+
+    func test_IntKeyedDictionary() {
+        let dictionary = [1234: "Europe", 5555: "Sweden"]
+
+        self.test_encodeDecode(dictionary,
+                               encodedAs: try! Data(hex: "301C0C04313233340C064575726F70650C04353535350C0653776564656E"))
+    }
+
+    func test_UIntKeyedDictionary() {
+        let dictionary = [1234: "Europe", 5555: "Sweden"]
+
+        self.test_encodeDecode(dictionary,
+                               encodedAs: try! Data(hex: "301C0C04313233340C064575726F70650C04353535350C0653776564656E"))
+    }
 }
 
 enum ASN1TagNumber$0: ASN1TagNumberRepresentable {}
@@ -409,4 +430,3 @@ enum ASN1TagNumber$6: ASN1TagNumberRepresentable {}
 enum ASN1TagNumber$7: ASN1TagNumberRepresentable {}
 enum ASN1TagNumber$8: ASN1TagNumberRepresentable {}
 enum ASN1TagNumber$9: ASN1TagNumberRepresentable {}
-enum ASN1TagNumber$10: ASN1TagNumberRepresentable {}
