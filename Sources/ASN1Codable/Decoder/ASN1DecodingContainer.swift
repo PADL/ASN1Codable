@@ -102,7 +102,7 @@ extension ASN1DecodingContainer {
                 object = nil
             }
         } else {
-            object = self.object.dictionaryTuples(ASN1Key.self)?.first {
+            object = self.object.stringKeyedDictionaryTuples(ASN1Key.self)?.first {
                 $0.0.stringValue == key.stringValue
             }?.1
         }

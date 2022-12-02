@@ -70,7 +70,7 @@ extension ASN1Object {
         }
     }
 
-    func dictionaryTuples<Key: CodingKey>(_: Key.Type) -> [(Key, ASN1Object)]? {
+    func stringKeyedDictionaryTuples<Key: CodingKey>(_: Key.Type) -> [(Key, ASN1Object)]? {
         guard let items = self.data.items, items.count % 2 == 0 else { return nil }
 
         var tuples = [(Key, ASN1Object)]()
@@ -123,7 +123,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// returns even indexed objects representing keys for Int or String
     /// keyed dictionaries
     private var codingKeyRepresentableDictionaryKeys: [Key]? {
-        self.object.containsOnlyTaggedItems ? self.contextTagCodingKeys : self.object.dictionaryTuples(Key.self)?.map(\.0)
+        self.object.containsOnlyTaggedItems ?
+            self.contextTagCodingKeys : self.object.stringKeyedDictionaryTuples(Key.self)?.map(\.0)
     }
 
     private var currentObjectEnumKey: [Key]? {
@@ -163,8 +164,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
            let keyValue = key.intValue {
             return keyValue == tagNo
         } else if self.object.containsOnlyTaggedItems,
-            let keyValue = key.intValue,
-            let keyValue = UInt(exactly: keyValue) {
+                  let keyValue = key.intValue,
+                  let keyValue = UInt(exactly: keyValue) {
             /// per the similar code path in allKeys, this returns true if we have a uniformly
             /// tagged structure and the tag represented by `key` is present
             return self.unsafelyUnwrappedItems.contains {
@@ -187,7 +188,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         if let keyValue = key.intValue, let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
             return self.containsContextTagCodingKey(key)
         } else {
-            return self.object.dictionaryTuples(Key.self)?.contains {
+            return self.object.stringKeyedDictionaryTuples(Key.self)?.contains {
                 $0.0.stringValue == key.stringValue
             } ?? false
         }
