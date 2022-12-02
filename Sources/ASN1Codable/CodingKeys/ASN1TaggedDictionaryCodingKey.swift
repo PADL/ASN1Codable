@@ -32,11 +32,10 @@ struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
     }
 
     init?(intValue: Int) {
-        if intValue < 0 {
+        guard let tagNo = UInt(exactly: intValue) else {
             return nil
         }
-
-        self.tagNo = UInt(intValue)
+        self.tagNo = tagNo
     }
 
     var stringValue: String {
@@ -44,6 +43,9 @@ struct ASN1TaggedDictionaryCodingKey: ASN1ExplicitTagCodingKey {
     }
 
     var intValue: Int? {
-        self.tagNo < Int.max ? Int(self.tagNo) : nil
+        guard let intValue = Int(exactly: self.tagNo) else {
+            return nil
+        }
+        return intValue
     }
 }
