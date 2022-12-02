@@ -405,16 +405,23 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         outputStream.write("\t}\n\n")
     }
 
-    private var needsMetadataCodingKeys: Bool {
-        self.members?.contains {
-            guard let tag = $0.typeDefValue?.type?.typeDefValue?.tag else { return false }
+    var needsMetadataCodingKeys: Bool {
+        let f = self.isChoice ? self.members?.allSatisfy : self.members?.contains
+        return try! f? {
+            var typeDefValue = $0.typeDefValue
+            if !self.isChoice { typeDefValue = typeDefValue?.type?.typeDefValue }
+            guard let tag = typeDefValue?.tag else { return false }
             return !tag.isUniversal
         } ?? false
     }
 
-    private func emitStringCodingKeys(_ outputStream: inout OutputStream) {
+    private func emitStringCodingKeys(_ outputStream: inout OutputStream, needsCaseIterable: Bool = false) {
         let codingKeyProtocol = self.needsMetadataCodingKeys ? "ASN1MetadataCodingKey" : "CodingKey"
-        outputStream.write("\tenum CodingKeys: String, \(codingKeyProtocol) {\n")
+        outputStream.write("\tenum CodingKeys: String, ")
+        if needsCaseIterable {
+            outputStream.write("CaseIterable, ")
+        }
+        outputStream.write("\(codingKeyProtocol) {\n")
         self.members?.forEach {
             if $0.typeDefValue!.defaultValue != nil {
                 outputStream.write("\t\tcase _\($0.typeDefValue!.generatedName) = \"\($0.typeDefValue!.generatedName)\"\n")
@@ -430,8 +437,10 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
             self.members?.forEach {
                 let prefix = $0.typeDefValue!.defaultValue != nil ? "_" : ""
                 outputStream.write("\t\t\tcase \(prefix)\($0.typeDefValue!.generatedName):\n")
-                if let type = $0.typeDefValue?.type?.typeDefValue, let tag = type.tag, !tag.isUniversal {
-                    let taggingEnvironment = type.taggingEnvironment
+                var typeDefValue = $0.typeDefValue
+                if !self.isChoice { typeDefValue = typeDefValue?.type?.typeDefValue }
+                if let type = typeDefValue, let tag = type.tag, !tag.isUniversal {
+                    let taggingEnvironment = type.desiredTaggingEnvironment
                     outputStream.write("\t\t\t\tmetadata = ASN1Metadata(tag: \(tag.initializer), tagging: \(taggingEnvironment?.initializer ?? "nil"))\n")
                 } else {
                     outputStream.write("\t\t\t\tmetadata = nil\n")
@@ -544,9 +553,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                     outputStream.write("}\n")
                 case .choice:
                     outputStream.write("\(visibility)enum \(self.generatedName): \(self.swiftConformances(nil)) {\n")
-                    if self.isUniformlyContextTagged {
-                        self.emitTagCodingKeys(&outputStream)
-                    }
+                    self.emitStringCodingKeys(&outputStream, needsCaseIterable: true)
                     try self.members?.forEach {
                         $0.typeDefValue?.parent = self
                         try $0.emit(&outputStream)

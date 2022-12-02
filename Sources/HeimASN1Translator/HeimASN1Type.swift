@@ -154,7 +154,8 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         if isChoice {
             let fieldDescriptor = HeimASN1FieldDescriptor(containingTypeDef)
 
-            if containingTypeDef.parent?.isUniformlyContextTagged ?? false {
+            if (containingTypeDef.parent?.isUniformlyContextTagged ?? false) ||
+                (containingTypeDef.parent?.needsMetadataCodingKeys ?? false) {
                 outputStream.write("\tcase \(containingTypeDef.generatedName)(\(fieldDescriptor.bareSwiftType))\n")
             } else {
                 outputStream.write("\tcase \(containingTypeDef.generatedName)(\(fieldDescriptor.swiftType!))\n")
@@ -173,7 +174,6 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             if let defaultValue = containingTypeDef.defaultValue {
                 // emit an accessor with the public type name
                 outputStream.write("\t\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(fieldDescriptor.bareSwiftTypeSansOptional) {\n")
-                // FIXME: handle disablePropertyWrappers here
                 let defaultValueString: String
                 if defaultValue.value is String {
                     defaultValueString = "\"\(defaultValue.value)\""
