@@ -95,12 +95,12 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
             return nil
         }
 
-        guard tagNo < Key.allCases.count else {
+        guard tagNo < Key.allCases.count, let index = Int(exactly: tagNo) else {
             return nil
         }
 
         self.tagNo = tagNo
-        return Key.allCases[Int(tagNo) as! Key.AllCases.Index]
+        return Key.allCases[index as! Key.AllCases.Index]
     }
 
     private func codingKey<Key: CodingKey>(fromTag tag: ASN1DecodedTag) -> Key? {
@@ -112,12 +112,13 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
             return nil
         }
 
-        guard tagNo < metadata.descriptor.fields.records.count else {
+        guard tagNo < metadata.descriptor.fields.records.count,
+	    let index = Int(exactly: tagNo) else {
             return nil
         }
 
         self.tagNo = tagNo
-        return Key(stringValue: metadata.descriptor.fields.records[Int(tagNo)].name)
+        return Key(stringValue: metadata.descriptor.fields.records[index].name)
     }
 
     func selectTag<Key>(_ tag: ASN1DecodedTag) -> Key? where Key: CodingKey {
