@@ -48,7 +48,7 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         self.tagNo = 0
     }
 
-    private func tagNumber<Key: CaseIterable & CodingKey>(fromCaseIterableCodingKey key: Key) -> UInt? {
+    private func tagNumber<Key: CaseIterable & CodingKey>(_ key: Key) -> UInt? {
         let allCases = Key.allCases
 
         guard let firstIndex = allCases.firstIndex(where: {
@@ -61,7 +61,7 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         return UInt(exactly: distance)
     }
 
-    private func tagNumber<Key: CodingKey>(fromCodingKey key: Key) -> UInt? {
+    private func tagNumber<Key: CodingKey>(_ key: Key) -> UInt? {
         guard let metadata = self.enumMetadata else {
             return nil
         }
@@ -78,9 +78,9 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
 
         let tagNo: UInt?
         if let key = key as? any(CaseIterable & CodingKey) {
-            tagNo = self.tagNumber(fromCaseIterableCodingKey: key)
+            tagNo = self.tagNumber(key)
         } else {
-            tagNo = self.tagNumber(fromCodingKey: key)
+            tagNo = self.tagNumber(key)
         }
 
         guard let tagNo else {
