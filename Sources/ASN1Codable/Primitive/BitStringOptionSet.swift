@@ -17,7 +17,7 @@
 import Foundation
 
 public protocol BitStringOptionSet: OptionSet, ASN1CodableType where RawValue: FixedWidthInteger {}
-public protocol RFC1510BitStringOptionSet {}
+public protocol RFC1510BitStringOptionSet: BitStringOptionSet {}
 
 extension BitStringOptionSet {
     public init(from asn1: ASN1Object) throws {
