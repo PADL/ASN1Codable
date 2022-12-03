@@ -426,4 +426,12 @@ extension ASN1CodableTests {
         let t0 = TESTPreserve()
         self.test_encodeDecode(t0, encodedAs: test0)
     }
+
+    func test_principal() {
+        let test0 = try! Data(hex: "301ba010300ea003020101a10730051b" +
+            "036c6861a1071b0553552e5345")
+        let n0 = PrincipalName(name_type: KRB5_NT_PRINCIPAL, name_string: [GeneralString(wrappedValue: "lha")])
+        let t0 = Principal(name: n0, realm: GeneralString(wrappedValue: "SU.SE"))
+        self.test_encodeDecode(t0, encodedAs: test0)
+    }
 }
