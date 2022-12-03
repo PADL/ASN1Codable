@@ -221,11 +221,9 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     private func containsCurrentObjectEnumKey(_ key: Key) -> Bool {
-        let currentObject: ASN1Object
+        let currentObject = try? self.currentObject()
 
-        do {
-            currentObject = try self.currentObject()
-        } catch {
+        guard let currentObject else {
             return false
         }
 
