@@ -94,10 +94,6 @@ extension ASN1Object {
 
 // swiftlint:disable discouraged_optional_collection
 extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
-    private var unsafelyUnwrappedItems: [ASN1Object] {
-        self.object.data.items!
-    }
-
     /// this serves both as an escape hatch to support Apple's component attributes
     /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and
     /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
@@ -111,8 +107,9 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
            let tagNo = Int(exactly: tagNo),
            let key = Key(intValue: tagNo) {
             keys = [key]
-        } else if self.object.containsOnlyTaggedItems {
-            keys = self.unsafelyUnwrappedItems.compactMap {
+        } else if self.object.containsOnlyTaggedItems,
+                  let items = self.object.data.items {
+            keys = items.compactMap {
                 guard case .taggedTag(let tagNo) = $0.tag else { return nil }
                 guard let tagNo = Int(exactly: tagNo) else { return nil }
                 return Key(intValue: tagNo)
@@ -203,11 +200,12 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
            let keyValue = key.intValue {
             return keyValue == tagNo
         } else if self.object.containsOnlyTaggedItems,
+                  let items = self.object.data.items,
                   let keyValue = key.intValue,
                   let keyValue = UInt(exactly: keyValue) {
             /// per the similar code path in allKeys, this returns true if we have a uniformly
             /// tagged structure and the tag represented by `key` is present
-            return self.unsafelyUnwrappedItems.contains {
+            return items.contains {
                 $0.tag == .taggedTag(keyValue)
             }
         } else {
