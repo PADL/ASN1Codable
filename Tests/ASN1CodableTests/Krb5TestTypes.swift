@@ -198,7 +198,7 @@ typealias Realm = GeneralString<String>
 
 typealias KerberosTime = GeneralizedTime<Date>
 
-struct APOptions: BitStringOptionSet, Codable {
+struct APOptions: RFC1510BitStringOptionSet, Codable {
     var rawValue: UInt8
 
     init(rawValue: UInt8) {
@@ -210,7 +210,7 @@ struct APOptions: BitStringOptionSet, Codable {
     static let mutual_required = APOptions(rawValue: 1 << 2)
 }
 
-struct TicketFlags: BitStringOptionSet, Codable {
+struct TicketFlags: RFC1510BitStringOptionSet, Codable {
     var rawValue: UInt32
 
     init(rawValue: UInt32) {
@@ -235,7 +235,7 @@ struct TicketFlags: BitStringOptionSet, Codable {
     static let anonymous = TicketFlags(rawValue: 1 << 16)
 }
 
-struct KDCOptions: BitStringOptionSet, Codable {
+struct KDCOptions: RFC1510BitStringOptionSet, Codable {
     var rawValue: UInt32
 
     init(rawValue: UInt32) {
@@ -274,7 +274,7 @@ typealias AS_REQ = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$10, ASN1Codable
 
 typealias TGS_REQ = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$12, ASN1Codable.ASN1ExplicitTagging, KDC_REQ>
 
-struct PAC_OPTIONS_FLAGS: BitStringOptionSet, Codable {
+struct PAC_OPTIONS_FLAGS: RFC1510BitStringOptionSet, Codable {
     var rawValue: UInt8
 
     init(rawValue: UInt8) {
@@ -315,7 +315,7 @@ let PA_SAM_TYPE_CRYPTOCARD: PA_SAM_TYPE = 6
 
 typealias PA_SAM_REDIRECT = HostAddresses
 
-struct SAMFlags: BitStringOptionSet, Codable {
+struct SAMFlags: RFC1510BitStringOptionSet, Codable {
     var rawValue: UInt8
 
     init(rawValue: UInt8) {
@@ -329,7 +329,7 @@ struct SAMFlags: BitStringOptionSet, Codable {
 
 typealias PA_SERVER_REFERRAL_DATA = EncryptedData
 
-struct FastOptions: BitStringOptionSet, Codable {
+struct FastOptions: RFC1510BitStringOptionSet, Codable {
     var rawValue: UInt32
 
     init(rawValue: UInt32) {
@@ -355,7 +355,7 @@ struct FastOptions: BitStringOptionSet, Codable {
     static let kdc_follow_referrals = FastOptions(rawValue: 1 << 16)
 }
 
-struct KDCFastFlags: BitStringOptionSet, Codable {
+struct KDCFastFlags: RFC1510BitStringOptionSet, Codable {
     var rawValue: UInt8
 
     init(rawValue: UInt8) {
