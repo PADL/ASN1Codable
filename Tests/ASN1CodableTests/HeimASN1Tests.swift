@@ -398,31 +398,6 @@ extension ASN1CodableTests {
     }
 
     func test_bit_string_rfc1510() {
-        struct TicketFlags: OptionSet, Codable, BitStringOptionSet, RFC1510BitStringOptionSet {
-            var rawValue: UInt32
-
-            init(rawValue: UInt32) {
-                self.rawValue = rawValue
-            }
-
-            static let reserved = TicketFlags(rawValue: 1 << 0)
-            static let forwardable = TicketFlags(rawValue: 1 << 1)
-            static let forwarded = TicketFlags(rawValue: 1 << 2)
-            static let proxiable = TicketFlags(rawValue: 1 << 3)
-            static let proxy = TicketFlags(rawValue: 1 << 4)
-            static let may_postdate = TicketFlags(rawValue: 1 << 5)
-            static let postdated = TicketFlags(rawValue: 1 << 6)
-            static let invalid = TicketFlags(rawValue: 1 << 7)
-            static let renewable = TicketFlags(rawValue: 1 << 8)
-            static let initial = TicketFlags(rawValue: 1 << 9)
-            static let pre_authent = TicketFlags(rawValue: 1 << 10)
-            static let hw_authent = TicketFlags(rawValue: 1 << 11)
-            static let transited_policy_checked = TicketFlags(rawValue: 1 << 12)
-            static let ok_as_delegate = TicketFlags(rawValue: 1 << 13)
-            static let enc_pa_rep = TicketFlags(rawValue: 1 << 15)
-            static let anonymous = TicketFlags(rawValue: 1 << 16)
-        }
-
         let test0 = try! Data(hex: "03050080000000")
         self.test_encodeDecode(TicketFlags.reserved, encodedAs: test0)
 
