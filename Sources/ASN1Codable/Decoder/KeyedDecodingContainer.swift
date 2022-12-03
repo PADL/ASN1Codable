@@ -125,9 +125,9 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         if self.context.enumCodingState == .enum {
             if !self.object.tag.isUniversal,
                let key = allCases.first(where: { key in
-                let metadata = Key.metadata(forKey: key as! Key)
-                return self.object.tag == metadata?.tag
-            }) {
+                   let metadata = Key.metadata(forKey: key as! Key)
+                   return self.object.tag == metadata?.tag
+               }) {
                 keys = [key as! Key]
             } else {
                 /// Handle the possibiltiy of a value without a context (or application/private) tag
@@ -135,6 +135,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                 return self.currentObjectEnumKey as? [Key]
             }
         } else {
+            // FIXME: is this code ever executed?
             guard self.object.data.items?.allSatisfy({ !$0.tag.isUniversal }) ?? false else {
                 return nil
             }
@@ -155,20 +156,15 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     private var currentObjectEnumKey: [Key]? {
-        let currentObject: ASN1Object
+        let currentObject = try? self.currentObject()
 
-        do {
-            currentObject = try self.currentObject()
-        } catch {
+        guard let currentObject,
+              let enumCodingKey = self.context.codingKey(Key.self, object: currentObject) else {
             return nil
         }
 
-        if let enumCodingKey = self.context.codingKey(Key.self, object: currentObject) {
-            /// in this case, we know the enum coding key from reading the metadata
-            return [enumCodingKey]
-        }
-
-        return nil
+        /// in this case, we know the enum coding key from reading the metadata
+        return [enumCodingKey]
     }
 
     var allKeys: [Key] {
