@@ -123,11 +123,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         let keys: [Key]?
 
         if self.context.enumCodingState == .enum {
-            guard !self.object.tag.isUniversal else {
-                return nil
-            }
-
-            if let key = allCases.first(where: { key in
+            if !self.object.tag.isUniversal,
+               let key = allCases.first(where: { key in
                 let metadata = Key.metadata(forKey: key as! Key)
                 return self.object.tag == metadata?.tag
             }) {
