@@ -415,9 +415,14 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         } ?? false
     }
 
-    private func emitStringCodingKeys(_ outputStream: inout OutputStream, needsCaseIterable: Bool = false) {
+    private func emitCodingKeys(_ outputStream: inout OutputStream, needsCaseIterable: Bool = false) {
         let codingKeyProtocol = self.needsMetadataCodingKeys ? "ASN1MetadataCodingKey" : "CodingKey"
-        outputStream.write("\tenum CodingKeys: String, ")
+        let hasDefaultValue = self.members?.contains { $0.typeDefValue!.defaultValue != nil } ?? false
+
+        outputStream.write("\tenum CodingKeys: ")
+        if hasDefaultValue {
+            outputStream.write("String, ")
+        }
         if needsCaseIterable {
             outputStream.write("CaseIterable, ")
         }
@@ -545,7 +550,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                         outputStream.write("\n")
                     }
 
-                    self.emitStringCodingKeys(&outputStream)
+                    self.emitCodingKeys(&outputStream)
 
                     try self.members?.forEach {
                         $0.typeDefValue?.parent = self
@@ -554,7 +559,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                     outputStream.write("}\n")
                 case .choice:
                     outputStream.write("\(visibility)enum \(self.generatedName): \(self.swiftConformances(nil)) {\n")
-                    self.emitStringCodingKeys(&outputStream, needsCaseIterable: true)
+                    self.emitCodingKeys(&outputStream, needsCaseIterable: true)
                     try self.members?.forEach {
                         $0.typeDefValue?.parent = self
                         try $0.emit(&outputStream)
