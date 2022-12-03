@@ -440,7 +440,8 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                 var typeDefValue = $0.typeDefValue
                 if !self.isChoice { typeDefValue = typeDefValue?.type?.typeDefValue }
                 if let type = typeDefValue, let tag = type.tag, !tag.isUniversal {
-                    let taggingEnvironment = type.desiredTaggingEnvironment
+                    // FIXME: do we use desiredTaggingEnvironment and have the runtime promote to EXPLICIT?
+                    let taggingEnvironment = type.taggingEnvironment
                     outputStream.write("\t\t\t\tmetadata = ASN1Metadata(tag: \(tag.initializer), tagging: \(taggingEnvironment?.initializer ?? "nil"))\n")
                 } else {
                     outputStream.write("\t\t\t\tmetadata = nil\n")
