@@ -108,12 +108,14 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
         if self.context.enumCodingState == .enum,
            case .taggedTag(let tagNo) = self.object.tag,
-           let key = Key(intValue: Int(tagNo)) {
+           let tagNo = Int(exactly: tagNo),
+           let key = Key(intValue: tagNo) {
             keys = [key]
         } else if self.object.containsOnlyTaggedItems {
             keys = self.unsafelyUnwrappedItems.compactMap {
                 guard case .taggedTag(let tagNo) = $0.tag else { return nil }
-                return Key(intValue: Int(tagNo))
+                guard let tagNo = Int(exactly: tagNo) else { return nil }
+                return Key(intValue: tagNo)
             }
         } else {
             keys = []
