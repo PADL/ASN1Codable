@@ -43,11 +43,19 @@ extension ASN1ContextTagged: Equatable where Value: Equatable {}
 
 extension ASN1ContextTagged: Hashable where Value: Hashable {}
 
-public protocol ASN1ContextTaggedType: ASN1TaggedType {}
+public protocol ASN1ContextTaggedType: ASN1TaggedType {
+    static var tagNumber: UInt { get }
+}
 
 extension ASN1ContextTaggedType {
     public static var metadata: ASN1Metadata {
-        ASN1Metadata(tag: .taggedTag(self.tagNumber),
-                     tagging: self.tagging)
+        let tagging: ASN1Tagging?
+        if let self = self as? ASN1TaggedTypeTagging.Type {
+            tagging = self.tagging
+        } else {
+            tagging = nil
+        }
+
+        return ASN1Metadata(tag: .taggedTag(self.tagNumber), tagging: tagging)
     }
 }

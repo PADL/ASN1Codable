@@ -43,11 +43,19 @@ extension ASN1PrivateTagged: Equatable where Value: Equatable {}
 
 extension ASN1PrivateTagged: Hashable where Value: Hashable {}
 
-public protocol ASN1PrivateTaggedType: ASN1TaggedType {}
+public protocol ASN1PrivateTaggedType: ASN1TaggedType {
+    static var tagNumber: UInt { get }
+}
 
 extension ASN1PrivateTaggedType {
     public static var metadata: ASN1Metadata {
-        ASN1Metadata(tag: .privateTag(self.tagNumber),
-                     tagging: self.tagging)
+        let tagging: ASN1Tagging?
+        if let self = self as? ASN1TaggedTypeTagging.Type {
+            tagging = self.tagging
+        } else {
+            tagging = nil
+        }
+
+        return ASN1Metadata(tag: .privateTag(self.tagNumber), tagging: tagging)
     }
 }

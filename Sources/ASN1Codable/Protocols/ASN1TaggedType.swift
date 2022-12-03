@@ -17,25 +17,22 @@
 import Foundation
 import ASN1Kit
 
-// for applying a tag/flag to an entire type rather than a member
+/// type itself is tagged
+public protocol ASN1TaggedType: ASN1TypeMetadataRepresentable, Codable {}
 
-public protocol ASN1TaggedType: ASN1TypeMetadataRepresentable, Codable {
-    static var tagNumber: UInt { get }
-}
+public protocol ASN1TaggedTypeTagging: ASN1TaggedType {}
 
-// for when the entire type is implicitly tagged
-public protocol ASN1ImplicitlyTaggedType {}
-public protocol ASN1ExplicitlyTaggedType {}
-public protocol ASN1AutomaticallyTaggedType {}
+/// type itself is implicitly tagged
+public protocol ASN1ImplicitlyTaggedType: ASN1TaggedTypeTagging {}
+/// type itself is explicitly tagged
+public protocol ASN1ExplicitlyTaggedType: ASN1TaggedTypeTagging {}
 
-extension ASN1TaggedType {
+extension ASN1TaggedTypeTagging {
     static var tagging: ASN1Tagging? {
         if self is ASN1ImplicitlyTaggedType.Type {
             return .implicit
-        } else if self is ASN1ExplicitlyTaggedType {
+        } else if self is ASN1ExplicitlyTaggedType.Type {
             return .explicit
-        } else if self is ASN1AutomaticallyTaggedType {
-            return .automatic
         } else {
             return nil
         }
