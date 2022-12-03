@@ -234,6 +234,9 @@ extension ASN1CodableTests {
 
         let data = Data(base64Encoded: "/2QWMBSgAwIBAaEFBAMCA/+iBgMEAAIDzA==")!
         self.test_encodeDecode(TestStruct(), encodedAs: data)
+
+        // check automatic tagging is disabled
+        self.test_encodeDecode(TestStruct(), encodedAs: data, taggingEnvironment: .automatic)
     }
 
     func test_SEQUENCE_PrivateTaggedTestStruct_MetadataCodingKey() {
@@ -268,6 +271,9 @@ extension ASN1CodableTests {
 
         let data = Data(base64Encoded: "/2QWMBSgAwIBAaEFBAMCA/+iBgMEAAIDzA==")!
         self.test_encodeDecode(TestStruct(), encodedAs: data)
+
+        // check automatic tagging is disabled
+        self.test_encodeDecode(TestStruct(), encodedAs: data, taggingEnvironment: .automatic)
     }
 
     func test_SEQUENCE_TestClass_CodingKey() {
