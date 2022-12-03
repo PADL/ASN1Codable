@@ -215,8 +215,7 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             }
             outputStream.write("}\n")
         } else {
-            if containingTypeDef.tag?.isUniversal ?? false,
-               typeDef.hasSwiftTypeDefinition == false {
+            if containingTypeDef.isSwiftTypeAlias {
                 self.emitSwiftTypeAlias(containingTypeDef: containingTypeDef, &outputStream)
             }
 

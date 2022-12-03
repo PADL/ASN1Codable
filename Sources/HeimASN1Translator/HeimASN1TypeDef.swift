@@ -450,17 +450,19 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         outputStream.write("\t}\n\n")
     }
 
-    var hasSwiftTypeDefinition: Bool {
-        guard self.isTypeDef ?? false, self.cType != nil, let tType = self.tType else {
+    var isSwiftTypeAlias: Bool {
+        guard self.isTypeDef ?? false, let tType = self.tType else {
             return false
         }
 
-        guard case .universal(let type) = tType,
-              type == .sequence || type == .set || type == .choice || type == .bitString else {
+        if let tag = tType.typeDefValue?.tType?.tag, tag.isUniversal, tag != .universal(.bitString) {
+            // an alias for a builtin primitive type
+            return true
+        } else if let typeDefValue = tType.typeDefValue, case .typeRef = typeDefValue.tType {
+            return true
+        } else {
             return false
         }
-
-        return true
     }
 
     func emit(_ outputStream: inout OutputStream) throws {

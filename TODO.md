@@ -1,6 +1,7 @@
 High priority
 -------------
 
+- check typealias of BIT STRING works
 
 Medium priority
 ---------------
