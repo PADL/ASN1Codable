@@ -43,10 +43,6 @@ extension ASN1DecoderImpl {
             // enums with ASN1TagCoding key discriminants
             if self.context.enumCodingState == .enumCase {
                 return self.codingPath
-            } else if self.context.codingKeyRepresentableDictionary == .integer,
-                      let keyValue = key.intValue,
-                      let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
-                return self.codingPath + [key]
             } else {
                 return self.codingPath + [key]
             }
@@ -67,7 +63,7 @@ extension ASN1Object {
     }
 
     // swiftlint:disable discouraged_optional_collection
-    func stringKeyedDictionaryTuples<Key: CodingKey>(_: Key.Type) -> [(Key, ASN1Object)]? {
+    func keyedDictionaryTuples<Key: CodingKey>(_: Key.Type) -> [(Key, ASN1Object)]? {
         guard let items = self.data.items, items.count % 2 == 0 else { return nil }
 
         var tuples = [(Key, ASN1Object)]()
@@ -80,7 +76,13 @@ extension ASN1Object {
                 guard let key = Key(stringValue: string) else { return nil }
                 tuples.append((key, object))
             } catch {
-                return nil
+                do {
+                    let integer = try Int(from: key)
+                    guard let key = Key(intValue: integer) else { return nil }
+                    tuples.append((key, object))
+                } catch {
+                    return nil
+                }
             }
         }
 
@@ -151,8 +153,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// returns even indexed objects representing keys for Int or String
     /// keyed dictionaries
     private var codingKeyRepresentableDictionaryKeys: [Key]? {
-        self.context.codingKeyRepresentableDictionary == .integer ?
-            self.contextTagCodingKeys : self.object.stringKeyedDictionaryTuples(Key.self)?.map(\.0)
+        // self.contextTagCodingKeys
+        self.object.keyedDictionaryTuples(Key.self)?.map(\.0)
     }
 
     private var currentObjectEnumKey: [Key]? {
@@ -174,7 +176,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             keys = self.contextTagCodingKeys
         } else if let type = Key.self as? any(ASN1MetadataCodingKey & CaseIterable).Type {
             keys = self.metadataCodingKeys(type) as! [Key]?
-        } else if self.context.codingKeyRepresentableDictionary != .none {
+        } else if self.context.isCodingKeyRepresentableDictionary {
             keys = self.codingKeyRepresentableDictionaryKeys
         } else {
             keys = self.currentObjectEnumKey
@@ -211,15 +213,9 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     private func containsCodingKeyRepresentableDictionaryKey(_ key: Key) -> Bool {
-        if self.context.codingKeyRepresentableDictionary == .integer,
-           let keyValue = key.intValue,
-           let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
-            return self.containsContextTagCodingKey(key)
-        } else {
-            return self.object.stringKeyedDictionaryTuples(Key.self)?.contains {
-                $0.0.stringValue == key.stringValue
-            } ?? false
-        }
+        self.object.keyedDictionaryTuples(Key.self)?.contains {
+            $0.0.stringValue == key.stringValue
+        } ?? false
     }
 
     private func containsCurrentObjectEnumKey(_ key: Key) -> Bool {
@@ -237,7 +233,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             return self.containsContextTagCodingKey(key)
         } else if let key = key as? any ASN1MetadataCodingKey {
             return self.containsMetadataCodingKey(key)
-        } else if self.context.codingKeyRepresentableDictionary != .none {
+        } else if self.context.isCodingKeyRepresentableDictionary {
             return self.containsCodingKeyRepresentableDictionaryKey(key)
         } else if self.context.enumCodingState == .enum {
             return self.containsCurrentObjectEnumKey(key)

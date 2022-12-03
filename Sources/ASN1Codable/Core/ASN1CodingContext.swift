@@ -24,9 +24,8 @@ enum ASN1EnumCodingState {
 
 enum ASN1CodingKeyRepresentableDictionaryType {
     case none
-    case integer
-    case string
-    case any
+    case tag
+    case tuple
 }
 
 /// A protocol containing context for encoding or decoding a type, that is shared between
@@ -39,7 +38,7 @@ protocol ASN1CodingContext {
     var encodeAsSet: Bool { get set }
     var objectSetCodingContext: ASN1ObjectSetCodingContext? { get set }
     var automaticTaggingContext: ASN1AutomaticTaggingContext? { get set }
-    var codingKeyRepresentableDictionary: ASN1CodingKeyRepresentableDictionaryType { get set }
+    var isCodingKeyRepresentableDictionary: Bool { get set }
 }
 
 extension ASN1CodingContext {

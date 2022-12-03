@@ -307,14 +307,12 @@ extension ASN1EncoderImpl.SingleValueContainer {
         self.context.encodeAsSet = value is Set<AnyHashable> || value is ASN1SetCodable
         self.context.automaticTagging(type(of: value))
 
-        if value is IntCodingKeyRepresentableDictionary {
-            self.context.codingKeyRepresentableDictionary = .integer
-        } else if value is StringCodingKeyRepresentableDictionary {
-            self.context.codingKeyRepresentableDictionary = .string
-        } else if value is AnyCodingKeyRepresentableDictionary {
-            self.context.codingKeyRepresentableDictionary = .any
+        if value is IntCodingKeyRepresentableDictionary ||
+            value is StringCodingKeyRepresentableDictionary ||
+            value is AnyCodingKeyRepresentableDictionary {
+            self.context.isCodingKeyRepresentableDictionary = true
         } else {
-            self.context.codingKeyRepresentableDictionary = .none
+            self.context.isCodingKeyRepresentableDictionary = false
         }
 
         if let value = value as? ASN1ObjectSetCodable {
@@ -329,8 +327,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
                                       context: self.context)
         try value.encode(to: encoder)
 
-        if (self.context.encodeAsSet && !self.disableSetSorting) ||
-            self.context.codingKeyRepresentableDictionary == .integer {
+        if self.context.encodeAsSet, !self.disableSetSorting {
             return encoder.object?.sortedByTag
         } else if value is [AnyHashable: Any] {
             return encoder.object?.sortedByEncodedDictionaryValue

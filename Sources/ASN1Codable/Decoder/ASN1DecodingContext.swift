@@ -33,7 +33,7 @@ struct ASN1DecodingContext: ASN1CodingContext {
     /// state for AUTOMATIC tagging
     var automaticTaggingContext: ASN1AutomaticTaggingContext?
     /// whether we are encoding a string-keyed Dictionary, for which keys should be written
-    var codingKeyRepresentableDictionary: ASN1CodingKeyRepresentableDictionaryType = .none
+    var isCodingKeyRepresentableDictionary = false
 
     /// returns the expected tag for a given type. Property wrappers can return their own type,
     /// UNIVERSAL types are represented by the tagNo property on ASN1UniversalTagRepresentable,

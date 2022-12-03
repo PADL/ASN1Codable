@@ -34,7 +34,7 @@ struct ASN1EncodingContext: ASN1CodingContext {
     /// state for AUTOMATIC tagging
     var automaticTaggingContext: ASN1AutomaticTaggingContext?
     /// whether we are encoding a string-keyed Dictionary, for which keys should be written
-    var codingKeyRepresentableDictionary: ASN1CodingKeyRepresentableDictionaryType = .none
+    var isCodingKeyRepresentableDictionary = false
 
     private static func isEnum<T>(_ value: T) -> Bool {
         reflect(type(of: value)) is EnumMetadata
