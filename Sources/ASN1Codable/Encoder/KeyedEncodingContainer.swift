@@ -171,9 +171,8 @@ extension ASN1EncoderImpl.KeyedContainer {
         return object
     }
 
-    private func selectAutomaticTagForEnumCase() {
-        guard self.context.enumCodingState == .enumCase,
-              let codingKey = self.codingPath.last else {
+    private func selectAutomaticTag() {
+        guard let codingKey = self.codingPath.last else {
             return
         }
 
@@ -182,7 +181,8 @@ extension ASN1EncoderImpl.KeyedContainer {
             self.context.automaticTaggingContext = nil
         }
 
-        if let taggingContext = self.context.automaticTaggingContext {
+        if self.context.enumCodingState == .enumCase,
+           let taggingContext = self.context.automaticTaggingContext {
             taggingContext.selectTag(codingKey)
         }
     }
@@ -201,7 +201,7 @@ extension ASN1EncoderImpl.KeyedContainer {
                                                              userInfo: self.userInfo,
                                                              context: context)
 
-        self.selectAutomaticTagForEnumCase() // FIXME: does this belong here?
+        self.selectAutomaticTag()
 
         self.addContainer(container)
         return container

@@ -431,6 +431,12 @@ extension ASN1DecoderImpl.KeyedContainer {
         let container = self.nestedSingleValueContainer(try self.currentObject(for: type, key: key),
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
+
+        if let codingKey = self.codingPath.last, codingKey is any ASN1CodingKey {
+            // predefined keys are incompatible with automatic tagging
+            self.context.automaticTaggingContext = nil
+        }
+
         let value = try container.decode(type)
 
         if !ASN1DecoderImpl.isNilOrWrappedNil(value) {
