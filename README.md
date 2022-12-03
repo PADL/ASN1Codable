@@ -107,7 +107,7 @@ However, when using the compiler, ergonomics are slightly improved by avoiding t
 
 ```swift
 struct TBSCertificate: Codable {
-    enum CodingKeys: String, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case version
         case serialNumber
         case signature
@@ -154,8 +154,6 @@ struct TBSCertificate: Codable {
 
 ### CHOICE
 
-In cases where property cannot be used (such as enumerated types), it is more ergonomic to use a protocol conforming to `ASN1ContextTagCodingKey`. This is possible as long as all fields in the type are tagged and share a tagging environment. Note we can't use `ASN1MetadataTagCodingKey` here because we need to be able to initialise it from a raw representable value such as an integer.
-
 ```asn1
 GeneralName ::= CHOICE {
         otherName                       [0]     IMPLICIT OtherName,
@@ -174,14 +172,37 @@ becomes:
 
 ```swift
 enum GeneralName: Codable {
-    enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
-        case otherName = 0
-        case rfc822Name = 1
-        case dNSName = 2
-        case directoryName = 4
-        case uniformResourceIdentifier = 6
-        case iPAddress = 7
-        case registeredID = 8
+    enum CodingKeys: CaseIterable, ASN1MetadataCodingKey {
+        case otherName
+        case rfc822Name
+        case dNSName
+        case directoryName
+        case uniformResourceIdentifier
+        case iPAddress
+        case registeredID
+
+        static func metadata(forKey key: Self) -> ASN1Metadata? {
+            let metadata: ASN1Metadata?
+
+            switch key {
+            case otherName:
+                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .implicit)
+            case rfc822Name:
+                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .implicit)
+            case dNSName:
+                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .implicit)
+            case directoryName:
+                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
+            case uniformResourceIdentifier:
+                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .implicit)
+            case iPAddress:
+                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .implicit)
+            case registeredID:
+                metadata = ASN1Metadata(tag: .taggedTag(8), tagging: .implicit)
+            }
+
+            return metadata
+        }
     }
 
     case otherName(OtherName)
