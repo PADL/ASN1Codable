@@ -38,7 +38,6 @@ protocol ASN1CodingContext {
     var encodeAsSet: Bool { get set }
     var objectSetCodingContext: ASN1ObjectSetCodingContext? { get set }
     var automaticTaggingContext: ASN1AutomaticTaggingContext? { get set }
-    var isCodingKeyRepresentableDictionary: Bool { get set }
 }
 
 extension ASN1CodingContext {

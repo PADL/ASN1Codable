@@ -16,13 +16,36 @@
 
 import Foundation
 
-/// a dictionary that uses \_DictionaryCodingKey to encode itself
-protocol StringCodingKeyRepresentableDictionary {}
-extension Dictionary: StringCodingKeyRepresentableDictionary where Key == String {}
+struct KeyValue<Key: Hashable & Codable, Value: Codable>: Codable, Hashable {
+    static func == (lhs: KeyValue<Key, Value>, rhs: KeyValue<Key, Value>) -> Bool {
+        guard lhs.key == rhs.key else {
+            return false
+        }
+    }
 
-protocol IntCodingKeyRepresentableDictionary {}
-extension Dictionary: IntCodingKeyRepresentableDictionary where Key == Int {}
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.key)
+    }
 
-protocol AnyCodingKeyRepresentableDictionary {}
-@available(macOS 12.3, *)
-extension Dictionary: AnyCodingKeyRepresentableDictionary where Key: CodingKeyRepresentable {}
+    var key: Key
+    var value: Value
+}
+
+protocol KeyValueSetDictionaryCodable<Key, Value> {
+    associatedtype Key: Codable & Hashable
+    associatedtype Value: Codable
+    init(keyValueSet: Set<KeyValue<Key, Value>>)
+    var keyValueSet: Set<KeyValue<Key, Value>> { get }
+}
+
+extension Dictionary: KeyValueSetDictionaryCodable where Key: Codable, Value: Codable {
+    init(keyValueSet: Set<KeyValue<Key, Value>>) {
+        self = Dictionary(uniqueKeysWithValues: keyValueSet.map {
+            ($0.key, $0.value)
+        })
+    }
+
+    var keyValueSet: Set<KeyValue<Key, Value>> {
+        Set(self.map { KeyValue(key: $0, value: $1) })
+    }
+}

@@ -61,33 +61,6 @@ extension ASN1Object {
             }
         } ?? false
     }
-
-    // swiftlint:disable discouraged_optional_collection
-    func keyedDictionaryTuples<Key: CodingKey>(_: Key.Type) -> [(Key, ASN1Object)]? {
-        guard let items = self.data.items, items.count % 2 == 0 else { return nil }
-
-        var tuples = [(Key, ASN1Object)]()
-        for i in 0 ..< items.count / 2 {
-            let key = items[i * 2]
-            let object = items[i * 2 + 1]
-
-            do {
-                let string = try String(from: key)
-                guard let key = Key(stringValue: string) else { return nil }
-                tuples.append((key, object))
-            } catch {
-                do {
-                    let integer = try Int(from: key)
-                    guard let key = Key(intValue: integer) else { return nil }
-                    tuples.append((key, object))
-                } catch {
-                    return nil
-                }
-            }
-        }
-
-        return tuples
-    }
 }
 
 // swiftlint:disable discouraged_optional_collection
@@ -150,13 +123,6 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return keys
     }
 
-    /// returns even indexed objects representing keys for Int or String
-    /// keyed dictionaries
-    private var codingKeyRepresentableDictionaryKeys: [Key]? {
-        // self.contextTagCodingKeys
-        self.object.keyedDictionaryTuples(Key.self)?.map(\.0)
-    }
-
     private var currentObjectEnumKey: [Key]? {
         let currentObject = try? self.currentObject()
 
@@ -176,8 +142,6 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             keys = self.contextTagCodingKeys
         } else if let type = Key.self as? any(ASN1MetadataCodingKey & CaseIterable).Type {
             keys = self.metadataCodingKeys(type) as! [Key]?
-        } else if self.context.isCodingKeyRepresentableDictionary {
-            keys = self.codingKeyRepresentableDictionaryKeys
         } else {
             keys = self.currentObjectEnumKey
         }
@@ -212,12 +176,6 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         }
     }
 
-    private func containsCodingKeyRepresentableDictionaryKey(_ key: Key) -> Bool {
-        self.object.keyedDictionaryTuples(Key.self)?.contains {
-            $0.0.stringValue == key.stringValue
-        } ?? false
-    }
-
     private func containsCurrentObjectEnumKey(_ key: Key) -> Bool {
         let currentObject = try? self.currentObject()
 
@@ -233,8 +191,6 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             return self.containsContextTagCodingKey(key)
         } else if let key = key as? any ASN1MetadataCodingKey {
             return self.containsMetadataCodingKey(key)
-        } else if self.context.isCodingKeyRepresentableDictionary {
-            return self.containsCodingKeyRepresentableDictionaryKey(key)
         } else if self.context.enumCodingState == .enum {
             return self.containsCurrentObjectEnumKey(key)
         } else {
@@ -413,7 +369,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
 extension ASN1DecoderImpl.KeyedContainer {
     private func decodeKeyedSingleValue<T>(_ type: T.Type, forKey key: Key) throws -> T where T: Decodable {
-        let container = self.nestedSingleValueContainer(try self.currentObject(for: type, key: key),
+        let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
 
@@ -432,7 +388,7 @@ extension ASN1DecoderImpl.KeyedContainer {
     }
 
     private func decodeKeyedSingleValueIfPresent<T>(_ type: T.Type, forKey key: Key) throws -> T? where T: Decodable {
-        let container = self.nestedSingleValueContainer(try self.currentObject(for: type, key: key),
+        let container = self.nestedSingleValueContainer(try self.currentObject(for: type),
                                                         forKey: key,
                                                         context: self.context.decodingSingleValue(type))
         let value: T?

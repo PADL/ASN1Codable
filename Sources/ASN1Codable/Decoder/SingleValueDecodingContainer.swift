@@ -209,6 +209,8 @@ extension ASN1DecoderImpl.SingleValueContainer {
                 value = try self.decodeFixedWidthIntegerValue(type, from: object, verifiedTag: skipTaggedValues) as! T
             } else if let type = type as? ASN1DecodableType.Type {
                 value = try self.decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
+            } else if let type = type as? any KeyValueSetDictionaryCodable.Type {
+                value = try self.decodeDictionaryValue(type, from: object) as! T
             } else if let type = type as? OptionalProtocol.Type,
                       let wrappedType = type.wrappedType as? Decodable.Type {
                 value = try self.decodeIfPresent(wrappedType, from: object, skipTaggedValues: skipTaggedValues) as! T
@@ -408,20 +410,20 @@ extension ASN1DecoderImpl.SingleValueContainer {
                                                          skipTaggedValues: skipTaggedValues)
     }
 
+    private func decodeDictionaryValue<T>(
+        _: T.Type,
+        from _: ASN1Object
+    ) throws -> T where T: KeyValueSetDictionaryCodable {
+        let set = try self.decode(Set<KeyValue<T.Key, T.Value>>.self)
+        return T(keyValueSet: set)
+    }
+
     private func decodeConstructedValue<T>(
         _ type: T.Type,
         from object: ASN1Object
     ) throws -> T where T: Decodable {
         self.context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1SetCodable.Type
         self.context.automaticTagging(type)
-
-        if type is IntCodingKeyRepresentableDictionary.Type ||
-            type is StringCodingKeyRepresentableDictionary.Type ||
-            type is AnyCodingKeyRepresentableDictionary.Type {
-            self.context.isCodingKeyRepresentableDictionary = true
-        } else {
-            self.context.isCodingKeyRepresentableDictionary = false
-        }
 
         if let type = type as? ASN1ObjectSetCodable.Type {
             self.context.objectSetCodingContext =
