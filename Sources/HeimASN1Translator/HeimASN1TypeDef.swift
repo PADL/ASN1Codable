@@ -336,17 +336,8 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         if self.preserve ?? false {
             conformances.append("ASN1Codable.ASN1PreserveBinary")
         }
-        if let tag = parent?.tag {
-            if tag.isApplicationSpecific {
-                conformances.append("ASN1Codable.ASN1ApplicationTaggedType")
-            } else if tag.isContextSpecific {
-                conformances.append("ASN1Codable.ASN1ContextTaggedType")
-            } else if tag.isUniversal == false {
-                conformances.append("ASN1Codable.ASN1PrivateTaggedType")
-            }
-            if self.parent?.taggingEnvironment == .implicit {
-                conformances.append("ASN1Codable.ASN1ImplicitlyTaggedType")
-            }
+        if let tag = self.parent?.tag, !tag.isUniversal {
+            conformances.append("ASN1Codable.ASN1TaggedType")
         }
         if let tType = self.tType, case .universal(let type) = tType, type == .set {
             conformances.append("ASN1Codable.ASN1SetCodable")
@@ -441,7 +432,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
             outputStream.write("\t\t\tswitch key {\n")
             self.members?.forEach {
                 let prefix = $0.typeDefValue!.defaultValue != nil ? "_" : ""
-                outputStream.write("\t\t\tcase \(prefix)\($0.typeDefValue!.generatedName):\n")
+                outputStream.write("\t\t\tcase .\(prefix)\($0.typeDefValue!.generatedName):\n")
                 var typeDefValue = $0.typeDefValue
                 if !self.isChoice { typeDefValue = typeDefValue?.type?.typeDefValue }
                 if let type = typeDefValue, let tag = type.tag, !tag.isUniversal {
@@ -523,8 +514,10 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
 
                     outputStream.write("\(visibility)\(finalOrObjCPrefix)\(swiftMetaType) \(self.generatedName): \(self.swiftConformances(nil)) {\n")
 
-                    if let tag = parent?.tag, !tag.isUniversal {
-                        outputStream.write("\t\(visibility)static let tagNumber: UInt = \(parent!.tagValue!)\n\n")
+                    if let tag = self.grandParent?.tag, !tag.isUniversal {
+                        let taggingEnvironment = self.grandParent?.taggingEnvironment
+                        outputStream.write("\t\(visibility)static let metadata = ASN1Metadata(tag: \(tag.initializer), " +
+                            "tagging: \(taggingEnvironment?.initializer ?? "nil"))\n\n")
                     }
 
                     if let openType = self.openType {
