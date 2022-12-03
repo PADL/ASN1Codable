@@ -62,7 +62,7 @@ typealias TESTMechType = ObjectIdentifier
 var id_test_default: ObjectIdentifier = ASN1Kit.ObjectIdentifier(rawValue: "1.2.3.4")!
 
 struct TESTOutOfOrderBar: Codable {
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: CodingKey {
         case aMember
     }
 
@@ -70,7 +70,7 @@ struct TESTOutOfOrderBar: Codable {
 }
 
 struct TESTOutOfOrderFoo: Codable {
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: CodingKey {
         case bar
     }
 
@@ -138,7 +138,7 @@ struct TESTDefault: Codable, Equatable {
 }
 
 struct TESTLargeTag: Codable, Equatable {
-    enum CodingKeys: String, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case foo
         case bar
 
@@ -161,7 +161,7 @@ struct TESTLargeTag: Codable, Equatable {
 }
 
 struct TESTSeq: Codable, Equatable {
-    enum CodingKeys: String, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case tag0
         case tag1
         case tagless
@@ -192,7 +192,7 @@ struct TESTSeq: Codable, Equatable {
 }
 
 enum TESTChoice1: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: String, CaseIterable, ASN1MetadataCodingKey {
+    enum CodingKeys: CaseIterable, ASN1MetadataCodingKey {
         case i1
         case i2
 
@@ -215,7 +215,7 @@ enum TESTChoice1: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
 }
 
 enum TESTChoice2: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: String, CaseIterable, ASN1MetadataCodingKey {
+    enum CodingKeys: CaseIterable, ASN1MetadataCodingKey {
         case i1
 
         static func metadata(forKey key: Self) -> ASN1Metadata? {
@@ -253,7 +253,7 @@ struct TESTImplicitInner: Codable, Equatable {
 }
 
 struct TESTImplicit: Codable, Equatable {
-    enum CodingKeys: String, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case ti1
         case ti2
         case ti3
@@ -280,7 +280,7 @@ struct TESTImplicit: Codable, Equatable {
 }
 
 struct TESTImplicit2: Codable, Equatable {
-    enum CodingKeys: String, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case ti1
         case ti3
         case ti4
@@ -307,7 +307,7 @@ struct TESTImplicit2: Codable, Equatable {
 }
 
 enum TESTImplicit3Inner: Codable, Equatable {
-    enum CodingKeys: String, CaseIterable, ASN1MetadataCodingKey {
+    enum CodingKeys: CaseIterable, ASN1MetadataCodingKey {
         case i1
 
         static func metadata(forKey key: Self) -> ASN1Metadata? {
@@ -326,7 +326,7 @@ enum TESTImplicit3Inner: Codable, Equatable {
 }
 
 enum TESTImplicit3: Codable, Equatable {
-    enum CodingKeys: String, CaseIterable, ASN1MetadataCodingKey {
+    enum CodingKeys: CaseIterable, ASN1MetadataCodingKey {
         case ti1
         case ti2
 
@@ -349,7 +349,7 @@ enum TESTImplicit3: Codable, Equatable {
 }
 
 enum TESTImplicit4: Codable, Equatable {
-    enum CodingKeys: String, CaseIterable, ASN1MetadataCodingKey {
+    enum CodingKeys: CaseIterable, ASN1MetadataCodingKey {
         case ti1
         case ti2
 
@@ -372,7 +372,7 @@ enum TESTImplicit4: Codable, Equatable {
 }
 
 struct TESTAllocInner: Codable, Equatable {
-    enum CodingKeys: String, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case ai
 
         static func metadata(forKey key: Self) -> ASN1Metadata? {
@@ -391,7 +391,7 @@ struct TESTAllocInner: Codable, Equatable {
 }
 
 struct TESTAlloc: Codable, Equatable {
-    enum CodingKeys: String, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case tagless
         case three
         case tagless2
@@ -418,7 +418,7 @@ struct TESTAlloc: Codable, Equatable {
 }
 
 struct TESTOptional: Codable, Equatable {
-    enum CodingKeys: String, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case zero
         case one
 
@@ -451,7 +451,7 @@ typealias TESTSeqSizeOf3 = [TESTInteger]
 typealias TESTSeqSizeOf4 = [TESTInteger]
 
 struct TESTSeqOf2: Codable, Equatable {
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: CodingKey {
         case strings
     }
 
@@ -460,7 +460,7 @@ struct TESTSeqOf2: Codable, Equatable {
 
 // swiftlint:disable discouraged_optional_collection
 struct TESTSeqOf3: Codable, Equatable {
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: CodingKey {
         case strings
     }
 
@@ -469,7 +469,7 @@ struct TESTSeqOf3: Codable, Equatable {
 
 // swiftlint:disable discouraged_optional_collection
 struct TESTSeqOf4: Codable, Equatable {
-    enum CodingKeys: String, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case b1
         case b2
         case b3
@@ -553,7 +553,7 @@ class TESTPreserve: Codable, Equatable, ASN1PreserveBinary {
         lhs.zero == rhs.zero && lhs.one == rhs.one
     }
 
-    enum CodingKeys: String, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case zero
         case one
 
@@ -602,7 +602,7 @@ public struct TESTExtension: Codable, ASN1Codable.ASN1ObjectSetOctetStringCodabl
 }
 
 struct TESTExtensible: Codable {
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: CodingKey {
         case version
         case extensions
     }
@@ -620,7 +620,7 @@ struct TESTDecorated: Codable {
     var version3 = my_vers(v: 0)
     var privthing: Any?
 
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: CodingKey {
         case version
     }
 
@@ -628,7 +628,7 @@ struct TESTDecorated: Codable {
 }
 
 struct TESTNotDecorated: Codable {
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: CodingKey {
         case version
     }
 

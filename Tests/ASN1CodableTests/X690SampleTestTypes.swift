@@ -8,7 +8,7 @@ typealias X690SampleDate = ASN1ApplicationTagged<x690sample.ASN1TagNumber$3, ASN
 struct X690SampleName: Codable, Equatable, ASN1ApplicationTaggedType, ASN1ImplicitlyTaggedType {
     static let tagNumber: UInt = 1
 
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: CodingKey {
         case givenName
         case initial
         case familyName
@@ -25,7 +25,7 @@ struct X690SampleName: Codable, Equatable, ASN1ApplicationTaggedType, ASN1Implic
 }
 
 struct X690SampleChildInformation: Codable, Equatable, ASN1SetCodable {
-    enum CodingKeys: String, CodingKey, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case name
         case dateOfBirth
 
@@ -50,7 +50,7 @@ struct X690SampleChildInformation: Codable, Equatable, ASN1SetCodable {
 struct X690SamplePersonnelRecord: Codable, Equatable, ASN1ApplicationTaggedType, ASN1ImplicitlyTaggedType {
     static let tagNumber: UInt = 0
 
-    enum CodingKeys: String, CodingKey, ASN1MetadataCodingKey {
+    enum CodingKeys: ASN1MetadataCodingKey {
         case name
         case title
         case number
