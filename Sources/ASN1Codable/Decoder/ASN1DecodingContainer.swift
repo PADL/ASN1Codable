@@ -95,7 +95,7 @@ extension ASN1DecodingContainer {
         let object: ASN1Object?
 
         if let keyValue = key.intValue {
-            if self.object.containsOnlyTaggedItems {
+            if self.object.containsOnlyContextTaggedItems {
                 object = self.object.data.items!.first {
                     guard case .taggedTag(let tagNo) = $0.tag else { return false }
                     return tagNo == keyValue

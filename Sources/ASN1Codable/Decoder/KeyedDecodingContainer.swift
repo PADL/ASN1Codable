@@ -56,18 +56,14 @@ extension ASN1DecoderImpl {
 
 extension ASN1Object {
     // returns true if we have a SEQUENCE/SET of context tagged items
-    var containsOnlyTaggedItems: Bool {
-        guard let items = self.data.items else {
-            return false
-        }
-
-        return items.allSatisfy {
+    var containsOnlyContextTaggedItems: Bool {
+        self.data.items?.allSatisfy {
             if case .taggedTag = $0.tag {
                 return true
             } else {
                 return false
             }
-        }
+        } ?? false
     }
 
     // swiftlint:disable discouraged_optional_collection
@@ -107,7 +103,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
            let tagNo = Int(exactly: tagNo),
            let key = Key(intValue: tagNo) {
             keys = [key]
-        } else if self.object.containsOnlyTaggedItems,
+        } else if self.object.containsOnlyContextTaggedItems,
                   let items = self.object.data.items {
             keys = items.compactMap {
                 guard case .taggedTag(let tagNo) = $0.tag else { return nil }
@@ -157,7 +153,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// returns even indexed objects representing keys for Int or String
     /// keyed dictionaries
     private var codingKeyRepresentableDictionaryKeys: [Key]? {
-        self.object.containsOnlyTaggedItems ?
+        self.object.containsOnlyContextTaggedItems ?
             self.contextTagCodingKeys : self.object.stringKeyedDictionaryTuples(Key.self)?.map(\.0)
     }
 
@@ -199,7 +195,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
            case .taggedTag(let tagNo) = self.object.tag,
            let keyValue = key.intValue {
             return keyValue == tagNo
-        } else if self.object.containsOnlyTaggedItems,
+        } else if self.object.containsOnlyContextTaggedItems,
                   let items = self.object.data.items,
                   let keyValue = key.intValue,
                   let keyValue = UInt(exactly: keyValue) {
