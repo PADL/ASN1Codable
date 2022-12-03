@@ -48,26 +48,65 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         self.tagNo = 0
     }
 
-    func selectTag<Key>(_ key: Key) where Key: CodingKey {
-        guard let metadata = self.enumMetadata else {
-            return
+    private func tagNumber<Key: CaseIterable & CodingKey>(fromCaseIterableCodingKey key: Key) -> UInt? {
+        let allCases = Key.allCases
+
+        guard let firstIndex = allCases.firstIndex(where: {
+            $0.stringValue == key.stringValue
+        }) else {
+            return nil
         }
 
-        precondition(self.tagNo == 0)
-
-        guard let index = metadata.descriptor.fields.records.firstIndex(where: { $0.name == key.stringValue }) else {
-            return
-        }
-
-        self.tagNo = UInt(index)
+        let distance: Int = allCases.distance(from: allCases.startIndex, to: firstIndex)
+        return UInt(exactly: distance)
     }
 
-    func selectTag<Key>(_ tag: ASN1DecodedTag) -> Key? where Key: CodingKey {
+    private func tagNumber<Key: CodingKey>(fromCodingKey key: Key) -> UInt? {
         guard let metadata = self.enumMetadata else {
             return nil
         }
 
+        guard let index = metadata.descriptor.fields.records.firstIndex(where: { $0.name == key.stringValue }) else {
+            return nil
+        }
+
+        return UInt(exactly: index)
+    }
+
+    func selectTag<Key>(_ key: Key) where Key: CodingKey {
         precondition(self.tagNo == 0)
+
+        let tagNo: UInt?
+        if let key = key as? any(CaseIterable & CodingKey) {
+            tagNo = self.tagNumber(fromCaseIterableCodingKey: key)
+        } else {
+            tagNo = self.tagNumber(fromCodingKey: key)
+        }
+
+        guard let tagNo else {
+            return
+        }
+
+        self.tagNo = tagNo
+    }
+
+    private func caseIterableCodingKey<Key: CaseIterable & CodingKey>(_: Key.Type, fromTag tag: ASN1DecodedTag) -> Key? {
+        guard case .taggedTag(let tagNo) = tag else {
+            return nil
+        }
+
+        guard tagNo < Key.allCases.count else {
+            return nil
+        }
+
+        self.tagNo = tagNo
+        return Key.allCases[Int(tagNo) as! Key.AllCases.Index]
+    }
+
+    private func codingKey<Key: CodingKey>(fromTag tag: ASN1DecodedTag) -> Key? {
+        guard let metadata = self.enumMetadata else {
+            return nil
+        }
 
         guard case .taggedTag(let tagNo) = tag else {
             return nil
@@ -79,6 +118,14 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
 
         self.tagNo = tagNo
         return Key(stringValue: metadata.descriptor.fields.records[Int(tagNo)].name)
+    }
+
+    func selectTag<Key>(_ tag: ASN1DecodedTag) -> Key? where Key: CodingKey {
+        if let type = Key.self as? any(CaseIterable & CodingKey).Type {
+            return self.caseIterableCodingKey(type, fromTag: tag) as! Key?
+        } else {
+            return self.codingKey(fromTag: tag)
+        }
     }
 
     private func nextTag() -> ASN1DecodedTag {
