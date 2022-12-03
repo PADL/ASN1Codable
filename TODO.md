@@ -10,6 +10,7 @@ Medium priority
 - support for REAL in ASN1Kit for Decimal, Float and Double
 - AnyCodable does not round trip Data
 - make ASN1Kit OID representation [UInt] or Data
+- add validation logic to string property wrappers
 
 Low priority
 ------------
