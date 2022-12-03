@@ -1,7 +1,7 @@
-import ASN1Codable
-import AnyCodable
 import BigNumber
+import AnyCodable
 import Foundation
+import ASN1Codable
 
 typealias NAME_TYPE = Int
 let KRB5_NT_UNKNOWN: NAME_TYPE = 0
@@ -270,9 +270,9 @@ let LR_REQUEST: LR_TYPE = 5
 let LR_PW_EXPTIME: LR_TYPE = 6
 let LR_ACCT_EXPTIME: LR_TYPE = 7
 
-typealias AS_REQ = KDC_REQ
+typealias AS_REQ = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$10, ASN1Codable.ASN1ExplicitTagging, KDC_REQ>
 
-typealias TGS_REQ = KDC_REQ
+typealias TGS_REQ = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$12, ASN1Codable.ASN1ExplicitTagging, KDC_REQ>
 
 struct PAC_OPTIONS_FLAGS: BitStringOptionSet, Codable {
     var rawValue: UInt8
@@ -289,13 +289,13 @@ struct PAC_OPTIONS_FLAGS: BitStringOptionSet, Codable {
 
 typealias PROV_SRV_LOCATION = GeneralString<String>
 
-typealias AS_REP = KDC_REP
+typealias AS_REP = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$11, ASN1Codable.ASN1ExplicitTagging, KDC_REP>
 
-typealias TGS_REP = KDC_REP
+typealias TGS_REP = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$13, ASN1Codable.ASN1ExplicitTagging, KDC_REP>
 
-typealias EncASRepPart = EncKDCRepPart
+typealias EncASRepPart = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$25, ASN1Codable.ASN1ExplicitTagging, EncKDCRepPart>
 
-typealias EncTGSRepPart = EncKDCRepPart
+typealias EncTGSRepPart = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$26, ASN1Codable.ASN1ExplicitTagging, EncKDCRepPart>
 
 var krb5_pvno: Int = 5
 
