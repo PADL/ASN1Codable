@@ -43,7 +43,7 @@ extension ASN1DecoderImpl {
             // enums with ASN1TagCoding key discriminants
             if self.context.enumCodingState == .enumCase {
                 return self.codingPath
-            } else if self.context.isCodingKeyRepresentableDictionary,
+            } else if self.context.codingKeyRepresentableDictionary == .integer,
                       let keyValue = key.intValue,
                       let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
                 return self.codingPath + [key]
@@ -151,7 +151,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// returns even indexed objects representing keys for Int or String
     /// keyed dictionaries
     private var codingKeyRepresentableDictionaryKeys: [Key]? {
-        self.object.containsOnlyContextTaggedItems ?
+        self.context.codingKeyRepresentableDictionary == .integer ?
             self.contextTagCodingKeys : self.object.stringKeyedDictionaryTuples(Key.self)?.map(\.0)
     }
 
@@ -174,7 +174,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             keys = self.contextTagCodingKeys
         } else if let type = Key.self as? any(ASN1MetadataCodingKey & CaseIterable).Type {
             keys = self.metadataCodingKeys(type) as! [Key]?
-        } else if self.context.isCodingKeyRepresentableDictionary {
+        } else if self.context.codingKeyRepresentableDictionary != .none {
             keys = self.codingKeyRepresentableDictionaryKeys
         } else {
             keys = self.currentObjectEnumKey
@@ -211,7 +211,9 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     private func containsCodingKeyRepresentableDictionaryKey(_ key: Key) -> Bool {
-        if let keyValue = key.intValue, let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
+        if self.context.codingKeyRepresentableDictionary == .integer,
+           let keyValue = key.intValue,
+           let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
             return self.containsContextTagCodingKey(key)
         } else {
             return self.object.stringKeyedDictionaryTuples(Key.self)?.contains {
@@ -235,7 +237,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             return self.containsContextTagCodingKey(key)
         } else if let key = key as? any ASN1MetadataCodingKey {
             return self.containsMetadataCodingKey(key)
-        } else if self.context.isCodingKeyRepresentableDictionary {
+        } else if self.context.codingKeyRepresentableDictionary != .none {
             return self.containsCodingKeyRepresentableDictionaryKey(key)
         } else if self.context.enumCodingState == .enum {
             return self.containsCurrentObjectEnumKey(key)

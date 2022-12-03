@@ -94,7 +94,8 @@ extension ASN1DecodingContainer {
     ) throws -> ASN1Object {
         let object: ASN1Object?
 
-        if let keyValue = key.intValue {
+        if self.context.codingKeyRepresentableDictionary == .integer,
+           let keyValue = key.intValue {
             if self.object.containsOnlyContextTaggedItems {
                 object = self.object.data.items!.first {
                     guard case .taggedTag(let tagNo) = $0.tag else { return false }
@@ -130,7 +131,7 @@ extension ASN1DecodingContainer {
         if self.context.enumCodingState != .none || self.object.isNull {
             // enums have a single value, which is the enum value itself
             object = self.object
-        } else if self.context.isCodingKeyRepresentableDictionary, let key {
+        } else if self.context.codingKeyRepresentableDictionary != .none, let key {
             object = try self.currentObject(forCodingKeyRepresentableDictionaryKey: key)
         } else if self.isAtEnd {
             // if we've reached the end of the SEQUENCE or SET, we still need to initialise

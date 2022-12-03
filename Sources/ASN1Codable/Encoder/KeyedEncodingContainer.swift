@@ -110,14 +110,18 @@ extension ASN1EncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
     }
 
     func encode<T>(_ value: T, forKey key: Key) throws where T: Encodable {
-        if self.context.isCodingKeyRepresentableDictionary {
-            if let keyValue = key.intValue, let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
+        switch self.context.codingKeyRepresentableDictionary {
+        case .integer:
+            if let keyValue = key.intValue,
+               let key = ASN1TaggedDictionaryCodingKey(intValue: keyValue) {
                 try self.encodeKeyedSingleValue(value, forKey: key)
                 return
-            } else {
-                let value = key.stringValue
-                try self.encodeKeyedSingleValue(value, forKey: key)
             }
+        case .none:
+            break
+        default:
+            let value = key.stringValue
+            try self.encodeKeyedSingleValue(value, forKey: key)
         }
         try self.encodeKeyedSingleValue(value, forKey: key)
     }

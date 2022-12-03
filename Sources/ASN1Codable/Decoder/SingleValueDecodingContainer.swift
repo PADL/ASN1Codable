@@ -414,8 +414,16 @@ extension ASN1DecoderImpl.SingleValueContainer {
     ) throws -> T where T: Decodable {
         self.context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1SetCodable.Type
         self.context.automaticTagging(type)
-        self.context.isCodingKeyRepresentableDictionary = type is StringCodingKeyRepresentableDictionary.Type ||
-            type is IntCodingKeyRepresentableDictionary.Type || type is AnyCodingKeyRepresentableDictionary.Type
+
+        if type is IntCodingKeyRepresentableDictionary.Type {
+            self.context.codingKeyRepresentableDictionary = .integer
+        } else if type is StringCodingKeyRepresentableDictionary.Type {
+            self.context.codingKeyRepresentableDictionary = .string
+        } else if type is AnyCodingKeyRepresentableDictionary.Type {
+            self.context.codingKeyRepresentableDictionary = .any
+        } else {
+            self.context.codingKeyRepresentableDictionary = .none
+        }
 
         if let type = type as? ASN1ObjectSetCodable.Type {
             self.context.objectSetCodingContext =
