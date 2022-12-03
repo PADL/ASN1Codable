@@ -5,8 +5,8 @@ typealias X690SampleEmployeeNumber = ASN1ApplicationTagged<x690sample.ASN1TagNum
 
 typealias X690SampleDate = ASN1ApplicationTagged<x690sample.ASN1TagNumber$3, ASN1ImplicitTagging, VisibleString<String>>
 
-struct X690SampleName: Codable, Equatable, ASN1ApplicationTaggedType, ASN1ImplicitlyTaggedType {
-    static let tagNumber: UInt = 1
+struct X690SampleName: Codable, Equatable, ASN1TaggedType {
+    static let metadata = ASN1Metadata(tag: .applicationTag(1), tagging: .implicit)
 
     enum CodingKeys: CodingKey {
         case givenName
@@ -47,8 +47,8 @@ struct X690SampleChildInformation: Codable, Equatable, ASN1SetCodable {
     var dateOfBirth: X690SampleDate = .init(wrappedValue: VisibleString<String>(wrappedValue: ""))
 }
 
-struct X690SamplePersonnelRecord: Codable, Equatable, ASN1ApplicationTaggedType, ASN1ImplicitlyTaggedType {
-    static let tagNumber: UInt = 0
+struct X690SamplePersonnelRecord: Codable, Equatable, ASN1TaggedType {
+    static let metadata = ASN1Metadata(tag: .applicationTag(0), tagging: .implicit)
 
     enum CodingKeys: ASN1MetadataCodingKey {
         case name
@@ -88,8 +88,6 @@ struct X690SamplePersonnelRecord: Codable, Equatable, ASN1ApplicationTaggedType,
 }
 
 public enum x690sample {
-    public enum ASN1TagNumber$0: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$1: ASN1TagNumberRepresentable {}
     public enum ASN1TagNumber$2: ASN1TagNumberRepresentable {}
     public enum ASN1TagNumber$3: ASN1TagNumberRepresentable {}
 }
