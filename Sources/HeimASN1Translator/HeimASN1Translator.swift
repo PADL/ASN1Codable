@@ -64,7 +64,7 @@ public final class HeimASN1Translator {
     private var typeDefsByGeneratedName = [String: HeimASN1TypeDef]()
     private var typeDefs = [HeimASN1TypeDef]()
     private(set) var url: URL?
-    private var maxTagValue: UInt?
+    private var tagValues = Set<UInt>()
 
     public init(
         options: Options = Options(),
@@ -138,13 +138,11 @@ public final class HeimASN1Translator {
     }
 
     func didEmitWrapperWithTagNumber(_ tagValue: UInt) {
-        if self.maxTagValue == nil || tagValue > self.maxTagValue! {
-            self.maxTagValue = tagValue
-        }
+        self.tagValues.insert(tagValue)
     }
 
     private func emitTagNumberTypes(_ outputStream: inout OutputStream) {
-        guard let maxTagValue = self.maxTagValue else {
+        guard !self.tagValues.isEmpty else {
             return
         }
 
@@ -155,8 +153,8 @@ public final class HeimASN1Translator {
             outputStream.write("public enum \(module.module) {\n")
         }
 
-        for i in 0 ... maxTagValue {
-            outputStream.write("\(self.module == nil ? "" : "\t")public enum ASN1TagNumber$\(i): ASN1TagNumberRepresentable {}\n")
+        self.tagValues.sorted().forEach {
+            outputStream.write("\(self.module == nil ? "" : "\t")public enum ASN1TagNumber$\($0): ASN1TagNumberRepresentable {}\n")
         }
 
         if self.module != nil {
