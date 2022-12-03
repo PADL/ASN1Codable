@@ -294,6 +294,40 @@ extension ASN1CodableTests {
         self.test_encodeDecode(AutoType(), encodedAs: automatic, taggingEnvironment: .automatic)
     }
 
+    func test_SEQUENCE_AutoType_CaseIterableKeys() {
+        enum AutoEnum: Codable, Equatable {
+            enum CodingKeys: CodingKey, CaseIterable {
+                case C1
+                case C2
+                case C3
+            }
+
+            case C1(String)
+            case C2(Int)
+            case C3(ObjectIdentifier)
+        }
+
+        struct AutoType: Codable, Equatable {
+            enum CodingKeys: CodingKey, CaseIterable {
+                case age // [0]
+                case name // [1]
+                case oid // [2]
+            }
+
+            var name: String
+            var age: Int
+            var oid: AutoEnum
+        }
+
+        let oid = AutoEnum.C3(ObjectIdentifier(rawValue: "1.2.3.4.5.6")!)
+        let untagged = try! Data(hex: "30100201190C044A6F686E06052A03040506")
+        self.test_encodeDecode(AutoType(name: "John", age: 25, oid: oid),
+                               encodedAs: untagged)
+        let automatic = try! Data(hex: "301280013C81044A6F686EA20782052A03040506")
+        self.test_encodeDecode(AutoType(name: "John", age: 60, oid: oid),
+                               encodedAs: automatic, taggingEnvironment: .automatic)
+    }
+
     func test_SEQUENCE_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable {
             var name: Data
