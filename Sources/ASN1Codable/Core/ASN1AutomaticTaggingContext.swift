@@ -90,43 +90,48 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         self.tagNo = tagNo
     }
 
-    private func caseIterableCodingKey<Key: CaseIterable & CodingKey>(_: Key.Type, fromTag tag: ASN1DecodedTag) -> Key? {
-        guard case .taggedTag(let tagNo) = tag else {
-            return nil
-        }
-
+    private func caseIterableCodingKey<Key: CaseIterable & CodingKey>(
+        _: Key.Type,
+        fromContextTag tagNo: UInt
+    ) -> Key? {
         guard tagNo < Key.allCases.count, let index = Int(exactly: tagNo) else {
             return nil
         }
 
-        self.tagNo = tagNo
         return Key.allCases[index as! Key.AllCases.Index]
     }
 
-    private func codingKey<Key: CodingKey>(fromTag tag: ASN1DecodedTag) -> Key? {
+    private func codingKey<Key: CodingKey>(fromContextTag tagNo: UInt) -> Key? {
         guard let metadata = self.enumMetadata else {
             return nil
         }
 
-        guard case .taggedTag(let tagNo) = tag else {
-            return nil
-        }
-
         guard tagNo < metadata.descriptor.fields.records.count,
-	    let index = Int(exactly: tagNo) else {
+              let index = Int(exactly: tagNo) else {
             return nil
         }
 
-        self.tagNo = tagNo
         return Key(stringValue: metadata.descriptor.fields.records[index].name)
     }
 
     func selectTag<Key>(_ tag: ASN1DecodedTag) -> Key? where Key: CodingKey {
-        if let type = Key.self as? any(CaseIterable & CodingKey).Type {
-            return self.caseIterableCodingKey(type, fromTag: tag) as! Key?
-        } else {
-            return self.codingKey(fromTag: tag)
+        guard case .taggedTag(let tagNo) = tag else {
+            return nil
         }
+
+        let key: Key?
+
+        if let type = Key.self as? any(CaseIterable & CodingKey).Type {
+            key = self.caseIterableCodingKey(type, fromContextTag: tagNo) as! Key?
+        } else {
+            key = self.codingKey(fromContextTag: tagNo)
+        }
+
+        if key != nil {
+            self.tagNo = tagNo
+        }
+
+        return key
     }
 
     private func nextTag() -> ASN1DecodedTag {
