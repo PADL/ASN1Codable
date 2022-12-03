@@ -444,21 +444,21 @@ extension ASN1CodableTests {
         let dictionary = ["continent": "Europe", "country": "Sweden"]
 
         self.test_encodeDecode(dictionary,
-                               encodedAs: try! Data(hex: "30240C07636F756E7472790C0653776564656E0C09636F6E74696E656E740C064575726F7065"))
+                               encodedAs: try! Data(hex: "312830110C07636F756E7472790C0653776564656E30130C09636F6E74696E656E740C064575726F7065"))
     }
 
     func test_IntKeyedDictionary() {
         let dictionary = [1234: "Europe", 5555: "Sweden"]
 
         self.test_encodeDecode(dictionary,
-                               encodedAs: try! Data(hex: "3018020204D20C064575726F7065020215B30C0653776564656E"))
+                               encodedAs: try! Data(hex: "311C300C020204D20C064575726F7065300C020215B30C0653776564656E"))
     }
 
     func test_UIntKeyedDictionary() {
         let dictionary = [1234: "Europe", 5555: "Sweden"]
 
         self.test_encodeDecode(dictionary,
-                               encodedAs: try! Data(hex: "3018020204D20C064575726F7065020215B30C0653776564656E"))
+                               encodedAs: try! Data(hex: "311C300C020204D20C064575726F7065300C020215B30C0653776564656E"))
     }
 
     func test_CustomKeyedDictionary() {
@@ -472,7 +472,7 @@ extension ASN1CodableTests {
         let dictionary = [Key(1234): "Europe", Key(5555): "Sweden"]
 
         self.test_encodeDecode(dictionary,
-                               encodedAs: try! Data(hex: "301C3004020204D20C064575726F70653004020215B30C0653776564656E"))
+                               encodedAs: try! Data(hex: "3120300E3004020204D20C064575726F7065300E3004020215B30C0653776564656E"))
     }
 }
 
