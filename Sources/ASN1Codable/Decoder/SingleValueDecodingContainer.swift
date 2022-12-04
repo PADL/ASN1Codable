@@ -412,9 +412,9 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
     private func decodeDictionaryValue<T>(
         _: T.Type,
-        from _: ASN1Object
+        from object: ASN1Object
     ) throws -> T where T: KeyValueSetDictionaryCodable {
-        let set = try self.decode(Set<KeyValue<T.Key, T.Value>>.self)
+        let set = try self.decodeConstructedValue(Set<KeyValue<T.Key, T.Value>>.self, from: object)
         return T(keyValueSet: set)
     }
 
