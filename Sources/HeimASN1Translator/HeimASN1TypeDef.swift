@@ -393,7 +393,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         self.members?.contains { $0.typeDefValue!.defaultValue != nil } ?? false
     }
 
-    private func emitCodingKeys(_ outputStream: inout OutputStream, needsCaseIterable: Bool = false) {
+    private func emitCodingKeys(_ outputStream: inout OutputStream) {
         let codingKeyConformance: String
 
         if self.isUniformlyContextTagged {
@@ -409,9 +409,6 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
             outputStream.write("String, ")
         } else if self.isUniformlyContextTagged {
             outputStream.write("Int, ")
-        }
-        if needsCaseIterable {
-            outputStream.write("CaseIterable, ")
         }
         outputStream.write("\(codingKeyConformance) {\n")
         self.members?.forEach {
@@ -563,7 +560,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                     outputStream.write("}\n")
                 case .choice:
                     outputStream.write("\(visibility)enum \(self.generatedName): \(self.swiftConformances(nil)) {\n")
-                    self.emitCodingKeys(&outputStream, needsCaseIterable: true)
+                    self.emitCodingKeys(&outputStream)
                     try self.members?.forEach {
                         $0.typeDefValue?.parent = self
                         try $0.emit(&outputStream)

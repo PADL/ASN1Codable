@@ -44,7 +44,7 @@ extension ASN1ImplicitTagCodingKey {
 }
 
 /// A coding key representing any kind of tag or metadata
-public protocol ASN1MetadataCodingKey: ASN1CodingKey {
+public protocol ASN1MetadataCodingKey: ASN1CodingKey, CaseIterable {
     static func metadata(forKey key: Self) -> ASN1Metadata?
 }
 
