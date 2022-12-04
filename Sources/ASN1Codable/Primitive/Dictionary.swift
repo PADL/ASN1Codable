@@ -21,6 +21,8 @@ struct KeyValue<Key: Hashable & Codable, Value: Codable>: Codable, Hashable {
         guard lhs.key == rhs.key else {
             return false
         }
+
+        return true
     }
 
     func hash(into hasher: inout Hasher) {
