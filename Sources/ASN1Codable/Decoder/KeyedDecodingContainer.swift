@@ -61,7 +61,11 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         _: Key.Type,
         _ objects: [ASN1Object]
     ) -> [Key] {
-        let keys = objects.compactMap {
+        guard objects.allSatisfy(\.tag.isContextSpecific) else {
+            return []
+        }
+
+        return objects.compactMap {
             if case .taggedTag(let tagNo) = $0.tag,
                let tagNo = Int(exactly: tagNo) {
                 return Key(intValue: tagNo)
@@ -69,12 +73,6 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                 return nil
             }
         }
-
-        guard keys.count == objects.count else {
-            return []
-        }
-
-        return keys
     }
 
     private func metadataCodingKeys<Key: ASN1MetadataCodingKey>(
