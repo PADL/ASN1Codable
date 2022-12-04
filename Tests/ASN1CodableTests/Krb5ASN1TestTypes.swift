@@ -1014,7 +1014,7 @@ struct TypedData: Codable, Equatable {
 typealias TYPED_DATA = [TypedData]
 
 struct KDC_REQ_BODY: Codable, Equatable, ASN1Codable.ASN1PreserveBinary {
-    var _save: Data? = nil
+    var _save: Data?
 
     enum CodingKeys: ASN1MetadataCodingKey {
         case kdc_options
@@ -1680,7 +1680,7 @@ struct KRB_ERROR: Codable, Equatable {
     var realm: Realm
     var sname: PrincipalName
     @GeneralString
-    var e_text: String? = nil
+    var e_text: String?
     var e_data: Data?
 }
 
@@ -1813,15 +1813,15 @@ struct PA_SAM_CHALLENGE_2_BODY: Codable, Equatable, ASN1Codable.ASN1ExtensibleTy
     var sam_type: Krb5Int32
     var sam_flags: SAMFlags
     @GeneralString
-    var sam_type_name: String? = nil
+    var sam_type_name: String?
     @GeneralString
-    var sam_track_id: String? = nil
+    var sam_track_id: String?
     @GeneralString
-    var sam_challenge_label: String? = nil
+    var sam_challenge_label: String?
     @GeneralString
-    var sam_challenge: String? = nil
+    var sam_challenge: String?
     @GeneralString
-    var sam_response_prompt: String? = nil
+    var sam_response_prompt: String?
     var sam_pk_for_sad: EncryptionKey?
     var sam_nonce: Krb5Int32
     var sam_etype: Krb5Int32
@@ -1881,7 +1881,7 @@ struct PA_SAM_RESPONSE_2: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
     var sam_type: Krb5Int32
     var sam_flags: SAMFlags
     @GeneralString
-    var sam_track_id: String? = nil
+    var sam_track_id: String?
     var sam_enc_nonce_or_sad: EncryptedData
     var sam_nonce: Krb5Int32
 }
@@ -1907,7 +1907,7 @@ struct PA_ENC_SAM_RESPONSE_ENC: Codable, Equatable, ASN1Codable.ASN1ExtensibleTy
 
     var sam_nonce: Krb5Int32
     @GeneralString
-    var sam_sad: String? = nil
+    var sam_sad: String?
 }
 
 struct PA_S4U2Self: Codable, Equatable {
