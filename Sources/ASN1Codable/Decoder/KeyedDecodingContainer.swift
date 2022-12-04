@@ -50,19 +50,6 @@ extension ASN1DecoderImpl {
     }
 }
 
-extension ASN1Object {
-    // returns true if we have a SEQUENCE/SET of context tagged items
-    var containsOnlyContextTaggedItems: Bool {
-        self.data.items?.allSatisfy {
-            if case .taggedTag = $0.tag {
-                return true
-            } else {
-                return false
-            }
-        } ?? false
-    }
-}
-
 // swiftlint:disable discouraged_optional_collection
 extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// this serves both as an escape hatch to support Apple's component attributes
@@ -74,7 +61,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         _: Key.Type,
         _ objects: [ASN1Object]
     ) -> [Key] {
-        objects.compactMap {
+        let keys = objects.compactMap {
             if case .taggedTag(let tagNo) = $0.tag,
                let tagNo = Int(exactly: tagNo) {
                 return Key(intValue: tagNo)
@@ -82,6 +69,12 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                 return nil
             }
         }
+
+        guard keys.count == objects.count else {
+            return []
+        }
+
+        return keys
     }
 
     private func metadataCodingKeys<Key: ASN1MetadataCodingKey & CaseIterable>(
