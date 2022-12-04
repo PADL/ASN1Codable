@@ -87,7 +87,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         }
     }
 
-    /// for regular CodingKeys we use reflection to map the tag to a field name. This does assume that
+    /// for a regular `CodingKey` we use reflection to map the tag to a field name. This does assume that
     /// the key name matches the field name. This is the only strategy that works with universal tags.
     private func codingKeys<Key: CodingKey>(
         _ type: Key.Type,
@@ -98,6 +98,22 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         }
     }
 
+    /// `allKeys` is used principally to determine the discriminant when decoding an `enum` from an ASN.1
+    /// CHOICE. It would also be used when decoding string and integer-keyed `Dictionary` values, were
+    /// it not for the fact that those are promoted to `Set<KeyValue>`. The final use case is to support
+    /// `ASN1TaggedDictionary` which is a is dictionary where the keys are ASN.1 context tags.
+    ///
+    /// There are three strategies to map an ASN.1 object to a `Key`, which are tried in order of expense.
+    /// The first assumes the key conforms to `ASN1ContextTagCodingKey` and, after checking that
+    /// all values in the object are tagged with context tags, attempts to initialise the key with the tag number.
+    ///
+    /// The second assumes the key conforms to `ASN1MetadataCodingKey`, which is `CaseIterable`.
+    /// It enumerates all the cases, calling the `metadata(forKey:)` function for each, until one is found
+    /// that produces metadata with a (non-universal) tag matching the ASN.1 object. For a SEQUENCE or SET
+    /// (as opposed to a CHOICE) this is attempted for all objects.
+    ///
+    /// The final, and most expensive, is used for universal types and uses reflection to find the field where
+    /// the Swift type matches the tag. It assumes that no custom coding keys are used.
     var allKeys: [Key] {
         let keys: [Key]
         let objects: [ASN1Object]?
