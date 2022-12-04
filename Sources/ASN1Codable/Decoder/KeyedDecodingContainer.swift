@@ -93,32 +93,30 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     private func metadataCodingKeys<Key: ASN1MetadataCodingKey & CaseIterable>(_: Key.Type) -> [Key]? {
-        let allCases = Key.allCases as any Collection
-
         let keys: [Key]?
 
         if self.context.enumCodingState == .enum {
-            if !self.object.tag.isUniversal,
-               let key = allCases.first(where: { key in
-                   let metadata = Key.metadata(forKey: key as! Key)
-                   return self.object.tag == metadata?.tag
-               }) {
-                keys = [key as! Key]
-            } else {
-                /// Handle the possibiltiy of a value without a context (or application/private) tag
-                /// where the key is determined from examining the field's type metadata
+            if self.object.tag.isUniversal {
                 keys = self.currentObjectEnumKey as? [Key]
+            } else if let key = Key.allCases.first(where: { key in
+                let metadata = Key.metadata(forKey: key)
+                return self.object.tag == metadata?.tag
+            }) {
+                keys = [key]
+            } else {
+                keys = nil
             }
         } else {
             // FIXME: is this code ever executed?
-            guard self.object.data.items?.allSatisfy({ !$0.tag.isUniversal }) ?? false else {
-                return nil
+            keys = self.object.data.items?.compactMap { object in
+                if object.tag.isUniversal {
+                    return self.context.codingKey(Key.self, object: object)
+                } else {
+                    return Key.allCases.first {
+                        Key.metadata(forKey: $0)?.tag == object.tag
+                    }
+                }
             }
-
-            keys = allCases.filter { key in
-                let metadata = Key.metadata(forKey: key as! Key)
-                return self.object.data.items?.contains { $0.tag == metadata?.tag } ?? false
-            } as? [Key]
         }
 
         return keys
