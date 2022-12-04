@@ -32,7 +32,9 @@ extension Certificate {
             return nil
         }
 
-        return attributes._bridgeToObjectiveC()
+        return attributes.wrappedValue.mapValues {
+            $0.value as? NSObject
+        } as NSDictionary
     }
 
     // swiftlint:disable discouraged_optional_collection

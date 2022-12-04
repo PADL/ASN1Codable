@@ -19,7 +19,7 @@ import ASN1Kit
 import AnyCodable
 
 public struct ASN1TaggedDictionary: Equatable {
-    private var wrappedValue: [UInt: AnyCodable]
+    public var wrappedValue: [UInt: AnyCodable]
 
     public init() {
         self.wrappedValue = [:]
@@ -27,13 +27,6 @@ public struct ASN1TaggedDictionary: Equatable {
 
     public init(wrappedValue: [UInt: AnyCodable]) {
         self.wrappedValue = wrappedValue
-    }
-
-    // swiftlint:disable identifier_name
-    public func _bridgeToObjectiveC() -> NSDictionary {
-        self.wrappedValue.mapValues {
-            $0.value as? NSObject
-        } as NSDictionary
     }
 
     public subscript(key: UInt) -> Any? {
