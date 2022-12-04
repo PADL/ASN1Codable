@@ -125,9 +125,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     private var currentObjectEnumKey: [Key]? {
-        let currentObject = try? self.currentObject()
-
-        guard let currentObject,
+        guard let currentObject = try? self.currentObject(),
               let enumCodingKey = self.context.codingKey(Key.self, object: currentObject) else {
             return nil
         }
