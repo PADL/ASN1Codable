@@ -71,54 +71,49 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
     /// uniform tagging to Swift types
     private var contextTagCodingKeys: [Key]? {
-        let keys: [Key]?
+        let objects: [ASN1Object]?
 
-        if self.context.enumCodingState == .enum,
-           case .taggedTag(let tagNo) = self.object.tag,
-           let tagNo = Int(exactly: tagNo),
-           let key = Key(intValue: tagNo) {
-            keys = [key]
-        } else if self.object.containsOnlyContextTaggedItems,
-                  let items = self.object.data.items {
-            keys = items.compactMap {
-                guard case .taggedTag(let tagNo) = $0.tag else { return nil }
-                guard let tagNo = Int(exactly: tagNo) else { return nil }
-                return Key(intValue: tagNo)
-            }
+        if self.context.enumCodingState == .enum, let currentObject = try? self.currentObject() {
+            objects = [currentObject]
         } else {
-            keys = nil
+            objects = self.object.containsOnlyContextTaggedItems ? self.object.data.items : nil
         }
 
-        return keys
+        guard let objects else {
+            return nil
+        }
+
+        return objects.compactMap {
+            guard case .taggedTag(let tagNo) = $0.tag,
+                  let tagNo = Int(exactly: tagNo) else {
+                return nil
+            }
+            return Key(intValue: tagNo)
+        }
     }
 
     private func metadataCodingKeys<Key: ASN1MetadataCodingKey & CaseIterable>(_: Key.Type) -> [Key]? {
-        let keys: [Key]?
+        let objects: [ASN1Object]?
 
-        if self.context.enumCodingState == .enum {
-            if self.object.tag.isUniversal {
-                keys = self.currentObjectEnumKey as? [Key]
-            } else if let key = Key.allCases.first(where: {
-                Key.metadata(forKey: $0)?.tag == object.tag
-            }) {
-                keys = [key]
-            } else {
-                keys = nil
-            }
+        if self.context.enumCodingState == .enum, let currentObject = try? self.currentObject() {
+            objects = [currentObject]
         } else {
-            // FIXME: is this code ever executed?
-            keys = self.object.data.items?.compactMap { object in
-                if object.tag.isUniversal {
-                    return self.context.codingKey(Key.self, object: object)
-                } else {
-                    return Key.allCases.first {
-                        Key.metadata(forKey: $0)?.tag == object.tag
-                    }
+            objects = self.object.data.items
+        }
+
+        guard let objects else {
+            return nil
+        }
+
+        return objects.compactMap { object in
+            if object.tag.isUniversal {
+                return self.context.codingKey(Key.self, object: object)
+            } else {
+                return Key.allCases.first {
+                    Key.metadata(forKey: $0)?.tag == object.tag
                 }
             }
         }
-
-        return keys
     }
 
     private var currentObjectEnumKey: [Key]? {
