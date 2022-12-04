@@ -150,50 +150,13 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return keys ?? []
     }
 
-    private func containsContextTagCodingKey(_ key: any ASN1ContextTagCodingKey) -> Bool {
-        if self.context.enumCodingState == .enum,
-           case .taggedTag(let tagNo) = self.object.tag,
-           let keyValue = key.intValue {
-            return keyValue == tagNo
-        } else if self.object.containsOnlyContextTaggedItems,
-                  let items = self.object.data.items,
-                  let keyValue = key.intValue,
-                  let keyValue = UInt(exactly: keyValue) {
-            /// per the similar code path in allKeys, this returns true if we have a uniformly
-            /// tagged structure and the tag represented by `key` is present
-            return items.contains {
-                $0.tag == .taggedTag(keyValue)
-            }
-        } else {
-            return false
-        }
-    }
-
-    private func containsMetadataCodingKey(_ key: any ASN1MetadataCodingKey) -> Bool {
-        if self.context.enumCodingState == .enum {
-            return self.object.tag == key.metadata.tag
-        } else {
-            return self.object.data.items?.contains { $0.tag == key.metadata.tag } ?? false
-        }
-    }
-
-    private func containsCurrentObjectEnumKey(_ key: Key) -> Bool {
-        let currentObject = try? self.currentObject()
-
-        guard let currentObject else {
-            return false
-        }
-
-        return self.context.codingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
-    }
-
     func contains(_ key: Key) -> Bool {
-        if let key = key as? any ASN1ContextTagCodingKey {
-            return self.containsContextTagCodingKey(key)
-        } else if let key = key as? any ASN1MetadataCodingKey {
-            return self.containsMetadataCodingKey(key)
-        } else if self.context.enumCodingState == .enum {
-            return self.containsCurrentObjectEnumKey(key)
+        if let key = key as? ASN1CodingKey,
+           let keys = self.allKeys as? [ASN1CodingKey] {
+            return keys.contains { $0.metadata == key.metadata }
+        } else if self.context.enumCodingState == .enum,
+                  let currentObject = try? self.currentObject() {
+            return self.context.codingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
         } else {
             return false
         }
