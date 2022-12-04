@@ -70,29 +70,41 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
     /// used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
     /// uniform tagging to Swift types
-    private var contextTagCodingKeys: [Key]? {
-        let objects: [ASN1Object]?
-
-        if self.context.enumCodingState == .enum, let currentObject = try? self.currentObject() {
-            objects = [currentObject]
-        } else {
-            objects = self.object.containsOnlyContextTaggedItems ? self.object.data.items : nil
-        }
-
-        guard let objects else {
-            return nil
-        }
-
-        return objects.compactMap {
-            guard case .taggedTag(let tagNo) = $0.tag,
-                  let tagNo = Int(exactly: tagNo) else {
+    private func contextTagCodingKeys<Key: ASN1ContextTagCodingKey>(
+        _: Key.Type,
+        _ objects: [ASN1Object]
+    ) -> [Key] {
+        objects.compactMap {
+            if case .taggedTag(let tagNo) = $0.tag,
+               let tagNo = Int(exactly: tagNo) {
+                return Key(intValue: tagNo)
+            } else {
                 return nil
             }
-            return Key(intValue: tagNo)
         }
     }
 
-    private func metadataCodingKeys<Key: ASN1MetadataCodingKey & CaseIterable>(_: Key.Type) -> [Key]? {
+    private func metadataCodingKeys<Key: ASN1MetadataCodingKey & CaseIterable>(
+        _: Key.Type,
+        _ objects: [ASN1Object]
+    ) -> [Key] {
+        objects.compactMap { object in
+            object.tag.isUniversal ? self.context.codingKey(Key.self, object: object)
+                : Key.allCases.first { Key.metadata(forKey: $0)?.tag == object.tag }
+        }
+    }
+
+    private func typeMetadataCodingKeys<Key: CodingKey>(
+        _: Key.Type,
+        _ objects: [ASN1Object]
+    ) -> [Key] {
+        objects.compactMap {
+            self.context.codingKey(Key.self, object: $0)
+        }
+    }
+
+    var allKeys: [Key] {
+        let keys: [Key]
         let objects: [ASN1Object]?
 
         if self.context.enumCodingState == .enum, let currentObject = try? self.currentObject() {
@@ -102,42 +114,18 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         }
 
         guard let objects else {
-            return nil
+            return []
         }
 
-        return objects.compactMap { object in
-            if object.tag.isUniversal {
-                return self.context.codingKey(Key.self, object: object)
-            } else {
-                return Key.allCases.first {
-                    Key.metadata(forKey: $0)?.tag == object.tag
-                }
-            }
-        }
-    }
-
-    private var currentObjectEnumKey: [Key]? {
-        guard let currentObject = try? self.currentObject(),
-              let enumCodingKey = self.context.codingKey(Key.self, object: currentObject) else {
-            return nil
-        }
-
-        /// in this case, we know the enum coding key from reading the metadata
-        return [enumCodingKey]
-    }
-
-    var allKeys: [Key] {
-        let keys: [Key]?
-
-        if Key.self is any ASN1ContextTagCodingKey.Type {
-            keys = self.contextTagCodingKeys
+        if let type = Key.self as? any ASN1ContextTagCodingKey.Type {
+            keys = self.contextTagCodingKeys(type, objects) as! [Key]
         } else if let type = Key.self as? any(ASN1MetadataCodingKey & CaseIterable).Type {
-            keys = self.metadataCodingKeys(type) as! [Key]?
+            keys = self.metadataCodingKeys(type, objects) as! [Key]
         } else {
-            keys = self.currentObjectEnumKey
+            keys = self.typeMetadataCodingKeys(Key.self, objects)
         }
 
-        return keys ?? []
+        return keys
     }
 
     func contains(_ key: Key) -> Bool {
