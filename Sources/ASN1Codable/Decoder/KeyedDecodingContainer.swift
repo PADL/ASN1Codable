@@ -154,11 +154,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         if let key = key as? ASN1CodingKey,
            let keys = self.allKeys as? [ASN1CodingKey] {
             return keys.contains { $0.metadata == key.metadata }
-        } else if self.context.enumCodingState == .enum,
-                  let currentObject = try? self.currentObject() {
-            return self.context.codingKey(Key.self, object: currentObject)?.stringValue == key.stringValue
         } else {
-            return false
+            return self.allKeys.contains { $0.stringValue == key.stringValue }
         }
     }
 
