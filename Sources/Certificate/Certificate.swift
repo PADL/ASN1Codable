@@ -65,7 +65,7 @@ extension Certificate {
         }
 
         let strings: [String] = rdns.compactMap {
-            guard let first = $0.first(where: { $0.type == oid }) else { return nil }
+            guard let first = $0.first(where: { $0.0 == oid }) else { return nil }
             return String(describing: first.value)
         }
 

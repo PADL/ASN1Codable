@@ -284,9 +284,9 @@ extension Certificate {
         return rdns.reduce([String: NSObject]()) { result, rdn in
             var result = result as [String: NSObject]
 
-            rdn.forEach { ava in
-                let oid = String(describing: ava.type)
-                let value = String(describing: ava.value) as NSString
+            rdn.forEach { type, value in
+                let oid = String(describing: type)
+                let value = String(describing: value) as NSString
 
                 if let existing = result[oid] {
                     if let existing = existing as? NSMutableArray {

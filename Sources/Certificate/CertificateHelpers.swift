@@ -20,6 +20,7 @@ import ASN1Codable
 import AnyCodable
 
 typealias AppleComponentAttributes = ASN1TaggedDictionary
+typealias RelativeDistinguishedName = [AttributeType: DirectoryString]
 
 extension Certificate {
     func `extension`<T>(_ extnID: ObjectIdentifier) -> T? where T: Codable {
