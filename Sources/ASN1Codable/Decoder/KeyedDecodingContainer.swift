@@ -98,9 +98,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         if self.context.enumCodingState == .enum {
             if self.object.tag.isUniversal {
                 keys = self.currentObjectEnumKey as? [Key]
-            } else if let key = Key.allCases.first(where: { key in
-                let metadata = Key.metadata(forKey: key)
-                return self.object.tag == metadata?.tag
+            } else if let key = Key.allCases.first(where: {
+                Key.metadata(forKey: $0)?.tag == object.tag
             }) {
                 keys = [key]
             } else {
