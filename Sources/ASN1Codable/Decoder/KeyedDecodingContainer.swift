@@ -87,7 +87,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         }
     }
 
-    private func typeMetadataCodingKeys<Key: CodingKey>(
+    private func codingKeys<Key: CodingKey>(
         _ type: Key.Type,
         _ objects: [ASN1Object]
     ) -> [Key] {
@@ -115,7 +115,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         } else if let type = Key.self as? any(ASN1MetadataCodingKey & CaseIterable).Type {
             keys = self.metadataCodingKeys(type, objects) as! [Key]
         } else {
-            keys = self.typeMetadataCodingKeys(Key.self, objects)
+            keys = self.codingKeys(Key.self, objects)
         }
 
         return keys
