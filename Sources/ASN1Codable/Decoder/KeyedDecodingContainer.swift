@@ -104,7 +104,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             objects = self.object.data.items
         }
 
-        guard let objects else {
+        guard let objects, !objects.isEmpty else {
             return []
         }
 
