@@ -54,9 +54,11 @@ extension ASN1DecoderImpl {
 extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// this serves both as an escape hatch to support Apple's component attributes
     /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and
-    /// also to support ASN1ImplicitTagCodingKey/ASN1ExplicitTagCodingKey which are
-    /// used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs with
-    /// uniform tagging to Swift types
+    /// also to support `ASN1ImplicitTagCodingKey` and `ASN1ExplicitTagCodingKey`
+    /// which are used to improve ergonomics when mapping ASN.1 SEQUENCEs and CHOICEs
+    /// with uniform tagging to Swift types. (The same can be achieved with `ASN1MetadataCodingKey`
+    /// but this approach results in smaller code size as the tag number is encapsulated in the raw
+    /// representable type itself.)
     private func contextTagCodingKeys<Key: ASN1ContextTagCodingKey>(
         _: Key.Type,
         _ objects: [ASN1Object]
@@ -75,7 +77,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         }
     }
 
-    /// types with ASN1MetadataCodingKey conforming CodingKeys provide a metadata(forKey:)
+    /// types with `ASN1MetadataCodingKey` conforming coding keys provide a `metadata(forKey:)`
     /// function that maps a key to a non-universal tag and tagging environment.
     private func metadataCodingKeys<Key: ASN1MetadataCodingKey>(
         _ type: Key.Type,
@@ -139,6 +141,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return keys
     }
 
+    /// enumerate `allKeys` for one matching `key`. Note that `Key` is not `Equatable` so we
+    /// need to compare the ASN.1 metadata directly, or the string value.
     func contains(_ key: Key) -> Bool {
         if let key = key as? ASN1CodingKey,
            let keys = self.allKeys as? [ASN1CodingKey] {
