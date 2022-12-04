@@ -50,6 +50,10 @@ public protocol ASN1MetadataCodingKey: ASN1CodingKey, CaseIterable {
 
 extension ASN1MetadataCodingKey {
     public var metadata: ASN1Metadata {
-        Self.metadata(forKey: self) ?? ASN1Metadata(tag: nil)
+        guard let metadata = Self.metadata(forKey: self) else {
+            return ASN1Metadata()
+        }
+        precondition(!(metadata.tag?.isUniversal ?? false))
+        return metadata
     }
 }

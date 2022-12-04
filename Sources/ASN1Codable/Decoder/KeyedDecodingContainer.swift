@@ -75,6 +75,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         }
     }
 
+    /// types with ASN1MetadataCodingKey conforming CodingKeys provide a metadata(forKey:)
+    /// function that maps a key to a non-universal tag and tagging environment.
     private func metadataCodingKeys<Key: ASN1MetadataCodingKey>(
         _ type: Key.Type,
         _ objects: [ASN1Object]
@@ -85,6 +87,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         }
     }
 
+    /// for regular CodingKeys we use reflection to map the tag to a field name. This does assume that
+    /// the key name matches the field name. This is the only strategy that works with universal tags.
     private func codingKeys<Key: CodingKey>(
         _ type: Key.Type,
         _ objects: [ASN1Object]
