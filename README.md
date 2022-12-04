@@ -168,7 +168,31 @@ GeneralName ::= CHOICE {
 }
 ```
 
-becomes:
+becomes either:
+
+```swift
+enum GeneralName: Codable {
+        enum CodingKeys: Int, ASN1ImplicitTagCodingKey {
+                case otherName = 0
+                case rfc822Name = 1
+                case dNSName = 2
+                case directoryName = 4
+                case uniformResourceIdentifier = 6
+                case iPAddress = 7
+                case registeredID = 8
+        }
+
+        case otherName(OtherName)
+        case rfc822Name(IA5String<String>)
+        case dNSName(IA5String<String>)
+        case directoryName(Name)
+        case uniformResourceIdentifier(IA5String<String>)
+        case iPAddress(Data)
+        case registeredID(ObjectIdentifier)
+}
+```
+
+or:
 
 ```swift
 enum GeneralName: Codable {
@@ -214,4 +238,6 @@ enum GeneralName: Codable {
     case registeredID(ObjectIdentifier)
 }
 ```
+
+The former is a more compact representation that may be used with a uniform tagging environment (note that `directoryName` is defined as `IMPLICIT` in the ASN.1, but is promoted to `EXPLICIT` as it is a `CHOICE`; this is handled at runtime).
 
