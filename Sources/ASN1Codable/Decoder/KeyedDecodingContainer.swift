@@ -78,21 +78,21 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     private func metadataCodingKeys<Key: ASN1MetadataCodingKey & CaseIterable>(
-        _: Key.Type,
+        _ type: Key.Type,
         _ objects: [ASN1Object]
     ) -> [Key] {
         objects.compactMap { object in
-            object.tag.isUniversal ? self.context.codingKey(Key.self, object: object)
+            object.tag.isUniversal ? self.context.codingKey(type, object: object)
                 : Key.allCases.first { Key.metadata(forKey: $0)?.tag == object.tag }
         }
     }
 
     private func typeMetadataCodingKeys<Key: CodingKey>(
-        _: Key.Type,
+        _ type: Key.Type,
         _ objects: [ASN1Object]
     ) -> [Key] {
         objects.compactMap {
-            self.context.codingKey(Key.self, object: $0)
+            self.context.codingKey(type, object: $0)
         }
     }
 
