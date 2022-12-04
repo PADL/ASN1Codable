@@ -375,28 +375,11 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         }
     }
 
-    private func emitTagCodingKeys(_ outputStream: inout OutputStream) {
-        let codingKeyConformance = self.uniformContextTaggingEnvironment == .implicit ? "ASN1ImplicitTagCodingKey" : "ASN1ExplicitTagCodingKey"
-
-        outputStream.write("\tenum CodingKeys: Int, \(codingKeyConformance) {\n")
-        self.members?.forEach {
-            let typeDefValue = $0.typeDefValue!
-            let generatedName = typeDefValue.generatedName
-            let tagValue: UInt
-
-            precondition(!generatedName.hasPrefix("*"))
-
-            if self.isChoice {
-                tagValue = typeDefValue.tagValue!
-            } else {
-                tagValue = typeDefValue.type!.typeDefValue!.tagValue!
-            }
-            outputStream.write("\t\tcase \(generatedName) = \(tagValue)\n")
-        }
-        outputStream.write("\t}\n\n")
-    }
-
     var needsMetadataCodingKeys: Bool {
+        if self.isUniformlyContextTagged {
+            return false
+        }
+
         let f = self.isChoice ? self.members?.allSatisfy : self.members?.contains
         return try! f? {
             var typeDefValue = $0.typeDefValue
@@ -406,21 +389,47 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         } ?? false
     }
 
+    var hasDefaultValue: Bool {
+        self.members?.contains { $0.typeDefValue!.defaultValue != nil } ?? false
+    }
+
     private func emitCodingKeys(_ outputStream: inout OutputStream, needsCaseIterable: Bool = false) {
-        let codingKeyProtocol = self.needsMetadataCodingKeys ? "ASN1MetadataCodingKey" : "CodingKey"
-        let hasDefaultValue = self.members?.contains { $0.typeDefValue!.defaultValue != nil } ?? false
+        let codingKeyConformance: String
+
+        if self.isUniformlyContextTagged {
+            codingKeyConformance = self.uniformContextTaggingEnvironment == .implicit ? "ASN1ImplicitTagCodingKey" : "ASN1ExplicitTagCodingKey"
+        } else if self.needsMetadataCodingKeys {
+            codingKeyConformance = "ASN1MetadataCodingKey"
+        } else {
+            codingKeyConformance = "CodingKey"
+        }
 
         outputStream.write("\tenum CodingKeys: ")
-        if hasDefaultValue {
+        if self.hasDefaultValue {
             outputStream.write("String, ")
+        } else if self.isUniformlyContextTagged {
+            outputStream.write("Int, ")
         }
         if needsCaseIterable {
             outputStream.write("CaseIterable, ")
         }
-        outputStream.write("\(codingKeyProtocol) {\n")
+        outputStream.write("\(codingKeyConformance) {\n")
         self.members?.forEach {
             if $0.typeDefValue!.defaultValue != nil {
                 outputStream.write("\t\tcase _\($0.typeDefValue!.generatedName) = \"\($0.typeDefValue!.generatedName)\"\n")
+            } else if self.isUniformlyContextTagged {
+                let typeDefValue = $0.typeDefValue!
+                let generatedName = typeDefValue.generatedName
+                let tagValue: UInt
+
+                precondition(!generatedName.hasPrefix("*"))
+
+                if self.isChoice {
+                    tagValue = typeDefValue.tagValue!
+                } else {
+                    tagValue = typeDefValue.type!.typeDefValue!.tagValue!
+                }
+                outputStream.write("\t\tcase \(generatedName) = \(tagValue)\n")
             } else {
                 outputStream.write("\t\tcase \($0.typeDefValue!.generatedName)\n")
             }
