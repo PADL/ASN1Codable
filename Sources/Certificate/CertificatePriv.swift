@@ -156,9 +156,8 @@ public func CertificateCopyCommonName(
 ) -> OSStatus {
     guard let certificate = certificate?._swiftObject else { return errSecParam }
     guard let commonName else { return errSecParam }
-
-    guard let commonNames = CertificateCopyRFC822Names(certificate._cfObject)?.takeRetainedValue() as? [String] else { return errSecInternal }
-
+    guard let commonNames = CertificateCopyRFC822Names(certificate._cfObject)?.takeRetainedValue()
+            as? [String] else { return errSecInternal }
     guard let firstCommonName = commonNames.first else { return errSecInternal }
 
     commonName.pointee = Unmanaged.passRetained(firstCommonName as CFString)

@@ -50,7 +50,6 @@ extension ASN1DecoderImpl {
     }
 }
 
-// swiftlint:disable discouraged_optional_collection
 extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// this serves both as an escape hatch to support Apple's component attributes
     /// certificate extension (which is a SEQUENCE of arbitrary tagged values), and

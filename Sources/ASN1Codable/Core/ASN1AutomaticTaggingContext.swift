@@ -98,6 +98,7 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
             return nil
         }
 
+        // swiftlint:disable force_cast
         return Key.allCases[index as! Key.AllCases.Index]
     }
 
@@ -122,6 +123,7 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         let key: Key?
 
         if let type = Key.self as? any(CaseIterable & CodingKey).Type {
+            // swiftlint:disable force_cast
             key = self.caseIterableCodingKey(type, fromContextTag: tagNo) as! Key?
         } else {
             key = self.codingKey(fromContextTag: tagNo)
