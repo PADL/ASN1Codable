@@ -18,6 +18,10 @@ import Foundation
 import Network
 import ASN1Codable
 
+typealias AppleComponentAttributes = ASN1TaggedDictionary
+
+typealias RelativeDistinguishedName = [AttributeType: DirectoryString]
+
 extension CertificateRef {
     var _swiftObject: Certificate {
         unsafeBitCast(self, to: Certificate.self)
