@@ -122,13 +122,11 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     func contains(_ key: Key) -> Bool {
-        let allKeys = self.allKeys
-
         if let key = key as? ASN1CodingKey,
-           let keys = allKeys as? [ASN1CodingKey] {
+           let keys = self.allKeys as? [ASN1CodingKey] {
             return keys.contains { $0.metadata == key.metadata }
         } else {
-            return allKeys.contains { $0.stringValue == key.stringValue }
+            return self.allKeys.contains { $0.stringValue == key.stringValue }
         }
     }
 
