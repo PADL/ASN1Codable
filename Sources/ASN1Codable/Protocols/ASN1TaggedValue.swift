@@ -39,13 +39,23 @@ extension ASN1TaggedValue {
     }
 
     public func encode(to encoder: Encoder) throws {
-        precondition(!(encoder is ASN1Codable.ASN1EncoderImpl))
-        try self.wrappedValue.encode(to: encoder)
+        var singleValueContainer = encoder.singleValueContainer()
+
+        if let singleValueContainer = singleValueContainer as? ASN1EncoderImpl.SingleValueContainer {
+            try singleValueContainer.encodeTagged(self.wrappedValue, with: Self.metadata)
+        } else {
+            try singleValueContainer.encode(self.wrappedValue)
+        }
     }
 
     public init(from decoder: Decoder) throws {
-        precondition(!(decoder is ASN1Codable.ASN1DecoderImpl))
-        try self.init(wrappedValue: Value(from: decoder))
+        let singleValueContainer = try decoder.singleValueContainer()
+
+        if let singleValueContainer = singleValueContainer as? ASN1DecoderImpl.SingleValueContainer {
+            try self.init(wrappedValue: singleValueContainer.decodeTagged(Value.self, with: Self.metadata))
+        } else {
+            try self.init(wrappedValue: singleValueContainer.decode(Value.self))
+        }
     }
 
     public var description: String {
