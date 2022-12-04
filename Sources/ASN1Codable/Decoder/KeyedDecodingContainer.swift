@@ -86,7 +86,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                 return Key(intValue: tagNo)
             }
         } else {
-            keys = []
+            keys = nil
         }
 
         return keys
@@ -107,7 +107,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
             } else {
                 /// Handle the possibiltiy of a value without a context (or application/private) tag
                 /// where the key is determined from examining the field's type metadata
-                return self.currentObjectEnumKey as? [Key]
+                keys = self.currentObjectEnumKey as? [Key]
             }
         } else {
             // FIXME: is this code ever executed?
@@ -120,6 +120,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                 return self.object.data.items?.contains { $0.tag == metadata?.tag } ?? false
             } as? [Key]
         }
+
         return keys
     }
 
