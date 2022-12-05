@@ -425,7 +425,7 @@ extension ASN1DecoderImpl.SingleValueContainer {
         _ type: T.Type,
         from object: ASN1Object
     ) throws -> T where T: Decodable {
-        self.context.encodeAsSet = type is Set<AnyHashable>.Type || type is ASN1SetCodable.Type
+        self.context.encodeAsSet = type is ASN1SetCodable.Type
         self.context.automaticTagging(type)
 
         if let type = type as? ASN1ObjectSetCodable.Type {

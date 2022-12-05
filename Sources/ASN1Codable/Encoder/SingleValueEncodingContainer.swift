@@ -311,7 +311,7 @@ extension ASN1EncoderImpl.SingleValueContainer {
     }
 
     private func encodeConstructedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
-        self.context.encodeAsSet = value is Set<AnyHashable> || value is ASN1SetCodable
+        self.context.encodeAsSet = value is ASN1SetCodable
         self.context.automaticTagging(type(of: value))
 
         if let value = value as? ASN1ObjectSetCodable {
