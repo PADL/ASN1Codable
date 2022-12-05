@@ -496,6 +496,35 @@ extension ASN1CodableTests {
         self.test_encodeDecode(dictionary,
                                encodedAs: try! Data(hex: "3120300E3004020204D20C064575726F7065300E3004020215B30C0653776564656E"))
     }
+
+    func test_SEQUENCE_Automatic() {
+        struct Key: Codable, Equatable, Hashable {
+            var value: UInt
+
+            init(_ value: UInt) {
+                self.value = value
+            }
+        }
+
+        let dictionary = [Key(1234): "Europe", Key(5555): "Sweden"]
+        let r_and_d = Division.RAndD(labID: 48, currentProject: Data([0x44, 0x58, 0x2D, 0x37]))
+        let pr = PersonnelRecord(name: "Luke", location: 2, age: 102)
+
+        struct SomeType: Codable, Equatable {
+            let dictionary: [Key: String]
+            let division: Division
+            let personnelRecord: PersonnelRecord
+        }
+
+        let st = SomeType(dictionary: dictionary,
+                          division: Division.r_and_d(r_and_d),
+                          personnelRecord: pr)
+
+        self.test_encodeDecode(st,
+                               encodedAs: try! Data(hex: "3043A020300E3004020204D20C064575726F7065300E3004020215B30C0653776564" +
+                                   "656EA10BA109800130810444582D37A212A0060C044C756B65A103020102A203020166"),
+                               taggingEnvironment: .automatic)
+    }
 }
 
 enum ASN1TagNumber$0: ASN1TagNumberRepresentable {}
