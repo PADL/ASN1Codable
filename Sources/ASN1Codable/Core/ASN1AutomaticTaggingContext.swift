@@ -30,7 +30,9 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
         let hasTaggedFields: Bool
 
         // this is expensive, so use automatic tags sparingly, or have the compiler do the job
-        if let metadata = reflect(type) as? StructMetadata {
+        if type is any Collection.Type {
+            hasTaggedFields = true
+        } else if let metadata = reflect(type) as? StructMetadata {
             hasTaggedFields = metadata.descriptor.fields.hasTaggedFields(metadata)
         } else if let metadata = reflect(type) as? ClassMetadata {
             hasTaggedFields = metadata.descriptor.fields.hasTaggedFields(metadata)
