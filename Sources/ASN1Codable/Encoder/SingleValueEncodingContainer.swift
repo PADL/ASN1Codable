@@ -307,7 +307,8 @@ extension ASN1EncoderImpl.SingleValueContainer {
     }
 
     private func encodeDictionaryValue<T: KeyValueSetDictionaryCodable>(_ value: T) throws -> ASN1Object? {
-        try self.encodeConstructedValue(value.keyValueSet)
+        self.context.taggingEnvironment = .explicit // make sure we cancel AUTOMATIC TAGS
+        return try self.encodeConstructedValue(value.keyValueSet)
     }
 
     private func encodeConstructedValue<T: Encodable>(_ value: T) throws -> ASN1Object? {
