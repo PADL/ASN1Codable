@@ -25,12 +25,22 @@ public protocol ASN1CodingKey: CodingKey {
 /// A coding key which can be constructed from an intValue representing a tag number
 public protocol ASN1ContextTagCodingKey: ASN1CodingKey {}
 
+extension ASN1ContextTagCodingKey {
+    fileprivate var tagNo: UInt {
+        guard let intValue = self.intValue, let tagNo = UInt(exactly: intValue) else {
+            preconditionFailure("Invalid context tag coding key \(self)")
+        }
+
+        return tagNo
+    }
+}
+
 /// A coding key representing an explicit CONTEXT tag
 public protocol ASN1ExplicitTagCodingKey: ASN1ContextTagCodingKey {}
 
 extension ASN1ExplicitTagCodingKey {
     public var metadata: ASN1Metadata {
-        ASN1Metadata(tag: .taggedTag(UInt(self.intValue!)), tagging: .explicit)
+        ASN1Metadata(tag: .taggedTag(self.tagNo), tagging: .explicit)
     }
 }
 
@@ -39,7 +49,7 @@ public protocol ASN1ImplicitTagCodingKey: ASN1ContextTagCodingKey {}
 
 extension ASN1ImplicitTagCodingKey {
     public var metadata: ASN1Metadata {
-        ASN1Metadata(tag: .taggedTag(UInt(self.intValue!)), tagging: .implicit)
+        ASN1Metadata(tag: .taggedTag(self.tagNo), tagging: .implicit)
     }
 }
 
