@@ -253,11 +253,11 @@ extension ASN1CodableTests {
 
                     switch key {
                     case version:
-                        metadata = ASN1Metadata(tag: .taggedTag(0), tagging: nil)
+                        metadata = ASN1Metadata(tag: .taggedTag(0), valueConstraints: 1 ... 3)
                     case data:
-                        metadata = ASN1Metadata(tag: .taggedTag(1), tagging: nil)
+                        metadata = ASN1Metadata(tag: .taggedTag(1))
                     case bitString:
-                        metadata = ASN1Metadata(tag: .taggedTag(2), tagging: nil)
+                        metadata = ASN1Metadata(tag: .taggedTag(2), sizeConstraints: 1 ... 64)
                     }
 
                     return metadata
