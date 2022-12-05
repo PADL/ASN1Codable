@@ -515,8 +515,8 @@ extension ASN1CodableTests {
                           personnelRecord: pr)
 
         self.test_encodeDecode(st,
-                               encodedAs: try! Data(hex: "3047A0060C01610C0162A11C300C800204D281064575726F7065300C800215B3810653776564656EA20BA10980" +
-                                   "0130810444582D37A312A0060C044C756B65A103020102A203020166"),
+                               encodedAs: try! Data(hex: "3047A0060C01610C0162A11C300C800204D281064575726F7065300C800215B" +
+                                   "3810653776564656EA20BA109800130810444582D37A312A0060C044C756B65A103020102A203020166"),
                                taggingEnvironment: .automatic)
     }
 }
