@@ -24,6 +24,9 @@ extension Data {
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
         while input.hasBytesAvailable {
             let read = input.read(buffer, maxLength: bufferSize)
+            if read < 0 {
+                break
+            }
             self.append(buffer, count: read)
         }
         buffer.deallocate()
