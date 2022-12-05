@@ -27,7 +27,7 @@ ASN.1 encoding and decoding is presently provided by the [ASN1Kit](https://githu
 
 ASN.1 types have additional metadata, most prominently tag numbers and tagging environments (such as `IMPLICIT` or `EXPLICIT`), which have no natural representation in Swift. Presently ASN1Codable uses a variety of language features to associate ASN.1 metadata with Swift types.
 
-Generally this involves using a custom `CodingKey` type that either directly encodes the tag number (for types with uniform tagging) or provides a function mapping a key to metadata. There are some cases, such as type aliases and enumerated types with non-uniform tagging, where generic wrappers are used instead.
+Generally this involves using a custom `CodingKey` type that either directly encodes the tag number (for types with uniform tagging) or provides a function mapping a key to metadata. There are some cases, such as type aliases and enumerated types with non-uniform tagging, where generic wrappers are used instead. For universal types such as integers and strings, ASN1Codable uses Swift type metadata.
 
 ## Usage
 
