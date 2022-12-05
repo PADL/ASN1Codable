@@ -519,6 +519,16 @@ extension ASN1CodableTests {
                                    "3810653776564656EA20BA109800130810444582D37A312A0060C044C756B65A103020102A203020166"),
                                taggingEnvironment: .automatic)
     }
+
+    func test_SEQUENCE_OF_Optional() {
+        enum SomeAny: Codable, Equatable {
+            case some(AnyCodable)
+            case none(Null)
+        }
+        let sequence: [Int?] = [0, nil, 10, 11, nil, 1, 0, nil, nil, 1234]
+        self.test_encodeDecode(sequence,
+                               encodedAs: try! Data(hex: "301B020100050002010A02010B050002010102010005000500020204D2"))
+    }
 }
 
 enum ASN1TagNumber$0: ASN1TagNumberRepresentable {}

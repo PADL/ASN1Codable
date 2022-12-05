@@ -228,9 +228,7 @@ extension ASN1DecoderImpl.UnkeyedContainer {
 
         let value = try container.decode(type)
 
-        if !ASN1DecoderImpl.isNilOrWrappedNil(value) {
-            self.currentIndex += 1
-        }
+        self.currentIndex += 1
 
         return value
     }
