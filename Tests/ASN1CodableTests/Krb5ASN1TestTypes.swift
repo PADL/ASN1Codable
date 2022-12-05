@@ -1,5 +1,5 @@
-import BigNumber
 import AnyCodable
+import BigNumber
 import Foundation
 import ASN1Codable
 
@@ -370,22 +370,9 @@ struct KDCFastFlags: RFC1510BitStringOptionSet, Codable, Equatable {
 }
 
 struct PrincipalName: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case name_type
-        case name_string
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .name_type:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .name_string:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case name_type = 0
+        case name_string = 1
     }
 
     var name_type: NAME_TYPE
@@ -393,22 +380,9 @@ struct PrincipalName: Codable, Equatable {
 }
 
 struct HostAddress: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case addr_type
-        case address
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .addr_type:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .address:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case addr_type = 0
+        case address = 1
     }
 
     var addr_type: Krb5Int32
@@ -418,22 +392,9 @@ struct HostAddress: Codable, Equatable {
 typealias HostAddresses = [HostAddress]
 
 struct AuthorizationDataElement: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case ad_type
-        case ad_data
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .ad_type:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .ad_data:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case ad_type = 0
+        case ad_data = 1
     }
 
     var ad_type: Krb5Int32
@@ -443,22 +404,9 @@ struct AuthorizationDataElement: Codable, Equatable {
 typealias AuthorizationData = [AuthorizationDataElement]
 
 struct LastReqInner: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case lr_type
-        case lr_value
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case lr_type:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case lr_value:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case lr_type = 0
+        case lr_value = 1
     }
 
     var lr_type: LR_TYPE
@@ -468,25 +416,10 @@ struct LastReqInner: Codable, Equatable {
 typealias LastReq = [LastReqInner]
 
 struct EncryptedData: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case etype
-        case kvno
-        case cipher
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .etype:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .kvno:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .cipher:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case etype = 0
+        case kvno = 1
+        case cipher = 2
     }
 
     var etype: ENCTYPE
@@ -495,22 +428,9 @@ struct EncryptedData: Codable, Equatable {
 }
 
 struct EncryptionKey: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case keytype
-        case keyvalue
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .keytype:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .keyvalue:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case keytype = 0
+        case keyvalue = 1
     }
 
     var keytype: Krb5Int32
@@ -518,22 +438,9 @@ struct EncryptionKey: Codable, Equatable {
 }
 
 struct TransitedEncoding: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case tr_type
-        case contents
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .tr_type:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .contents:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case tr_type = 0
+        case contents = 1
     }
 
     var tr_type: Krb5Int32
@@ -543,28 +450,11 @@ struct TransitedEncoding: Codable, Equatable {
 struct Ticket: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(1), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case tkt_vno
-        case realm
-        case sname
-        case enc_part
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .tkt_vno:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .realm:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .sname:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .enc_part:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case tkt_vno = 0
+        case realm = 1
+        case sname = 2
+        case enc_part = 3
     }
 
     var tkt_vno: Krb5Int32
@@ -576,49 +466,18 @@ struct Ticket: Codable, Equatable {
 struct EncTicketPart: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(3), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case flags
-        case key
-        case crealm
-        case cname
-        case transited
-        case authtime
-        case starttime
-        case endtime
-        case renew_till
-        case caddr
-        case authorization_data
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .flags:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .key:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .crealm:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .cname:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .transited:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .authtime:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .starttime:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            case .endtime:
-                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .explicit)
-            case .renew_till:
-                metadata = ASN1Metadata(tag: .taggedTag(8), tagging: .explicit)
-            case .caddr:
-                metadata = ASN1Metadata(tag: .taggedTag(9), tagging: .explicit)
-            case .authorization_data:
-                metadata = ASN1Metadata(tag: .taggedTag(10), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case flags = 0
+        case key = 1
+        case crealm = 2
+        case cname = 3
+        case transited = 4
+        case authtime = 5
+        case starttime = 6
+        case endtime = 7
+        case renew_till = 8
+        case caddr = 9
+        case authorization_data = 10
     }
 
     var flags: TicketFlags
@@ -635,22 +494,9 @@ struct EncTicketPart: Codable, Equatable {
 }
 
 struct Checksum: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case cksumtype
-        case checksum
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .cksumtype:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .checksum:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case cksumtype = 0
+        case checksum = 1
     }
 
     var cksumtype: CKSUMTYPE
@@ -658,55 +504,20 @@ struct Checksum: Codable, Equatable {
 }
 
 struct EncKDCRepPart: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case key
-        case last_req
-        case nonce
-        case key_expiration
-        case flags
-        case authtime
-        case starttime
-        case endtime
-        case renew_till
-        case srealm
-        case sname
-        case caddr
-        case encrypted_pa_data
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .key:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .last_req:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .nonce:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .key_expiration:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .flags:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .authtime:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .starttime:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            case .endtime:
-                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .explicit)
-            case .renew_till:
-                metadata = ASN1Metadata(tag: .taggedTag(8), tagging: .explicit)
-            case .srealm:
-                metadata = ASN1Metadata(tag: .taggedTag(9), tagging: .explicit)
-            case .sname:
-                metadata = ASN1Metadata(tag: .taggedTag(10), tagging: .explicit)
-            case .caddr:
-                metadata = ASN1Metadata(tag: .taggedTag(11), tagging: .explicit)
-            case .encrypted_pa_data:
-                metadata = ASN1Metadata(tag: .taggedTag(12), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case key = 0
+        case last_req = 1
+        case nonce = 2
+        case key_expiration = 3
+        case flags = 4
+        case authtime = 5
+        case starttime = 6
+        case endtime = 7
+        case renew_till = 8
+        case srealm = 9
+        case sname = 10
+        case caddr = 11
+        case encrypted_pa_data = 12
     }
 
     var key: EncryptionKey
@@ -725,22 +536,9 @@ struct EncKDCRepPart: Codable, Equatable {
 }
 
 enum PrincipalNameAttrSrc: Codable, Equatable {
-    enum CodingKeys: CaseIterable, ASN1MetadataCodingKey {
-        case enc_kdc_rep_part
-        case enc_ticket_part
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .enc_kdc_rep_part:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .enc_ticket_part:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case enc_kdc_rep_part = 0
+        case enc_ticket_part = 1
     }
 
     case enc_kdc_rep_part(EncKDCRepPart)
@@ -750,40 +548,15 @@ enum PrincipalNameAttrSrc: Codable, Equatable {
 struct PrincipalNameAttrs: Codable, Equatable {
     var pac: AnyCodable?
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case authenticated
-        case source
-        case authenticator_ad
-        case peer_realm
-        case transited
-        case pac_verified
-        case kdc_issued_verified
-        case want_ad
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .authenticated:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .source:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .authenticator_ad:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .peer_realm:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .transited:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .pac_verified:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .kdc_issued_verified:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            case .want_ad:
-                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case authenticated = 0
+        case source = 1
+        case authenticator_ad = 2
+        case peer_realm = 3
+        case transited = 4
+        case pac_verified = 5
+        case kdc_issued_verified = 6
+        case want_ad = 7
     }
 
     var authenticated: Bool
@@ -799,25 +572,10 @@ struct PrincipalNameAttrs: Codable, Equatable {
 struct CompositePrincipal: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(48), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case name
-        case realm
-        case nameattrs
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .name:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .realm:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .nameattrs:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case name = 0
+        case realm = 1
+        case nameattrs = 2
     }
 
     var name: PrincipalName
@@ -828,22 +586,9 @@ struct CompositePrincipal: Codable, Equatable {
 struct Principal: Codable, Equatable {
     var nameattrs: PrincipalNameAttrs?
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case name
-        case realm
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .name:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .realm:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case name = 0
+        case realm = 1
     }
 
     var name: PrincipalName
@@ -855,43 +600,16 @@ typealias Principals = [Principal]
 struct Authenticator: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(2), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case authenticator_vno
-        case crealm
-        case cname
-        case cksum
-        case cusec
-        case ctime
-        case subkey
-        case seq_number
-        case authorization_data
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .authenticator_vno:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .crealm:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .cname:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .cksum:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .cusec:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .ctime:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .subkey:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            case .seq_number:
-                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .explicit)
-            case .authorization_data:
-                metadata = ASN1Metadata(tag: .taggedTag(8), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case authenticator_vno = 0
+        case crealm = 1
+        case cname = 2
+        case cksum = 3
+        case cusec = 4
+        case ctime = 5
+        case subkey = 6
+        case seq_number = 7
+        case authorization_data = 8
     }
 
     var authenticator_vno: Krb5Int32
@@ -906,22 +624,9 @@ struct Authenticator: Codable, Equatable {
 }
 
 struct PA_DATA: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case padata_type
-        case padata_value
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .padata_type:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .padata_value:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case padata_type = 1
+        case padata_value = 2
     }
 
     var padata_type: PADATA_TYPE
@@ -929,25 +634,10 @@ struct PA_DATA: Codable, Equatable {
 }
 
 struct ETYPE_INFO_ENTRY: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case etype
-        case salt
-        case salttype
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .etype:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .salt:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .salttype:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case etype = 0
+        case salt = 1
+        case salttype = 2
     }
 
     var etype: ENCTYPE
@@ -958,25 +648,10 @@ struct ETYPE_INFO_ENTRY: Codable, Equatable {
 typealias ETYPE_INFO = [ETYPE_INFO_ENTRY]
 
 struct ETYPE_INFO2_ENTRY: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case etype
-        case salt
-        case s2kparams
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .etype:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .salt:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .s2kparams:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case etype = 0
+        case salt = 1
+        case s2kparams = 2
     }
 
     var etype: ENCTYPE
@@ -989,22 +664,9 @@ typealias ETYPE_INFO2 = [ETYPE_INFO2_ENTRY]
 typealias METHOD_DATA = [PA_DATA]
 
 struct TypedData: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case data_type
-        case data_value
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .data_type:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .data_value:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case data_type = 0
+        case data_value = 1
     }
 
     var data_type: Krb5Int32
@@ -1013,55 +675,22 @@ struct TypedData: Codable, Equatable {
 
 typealias TYPED_DATA = [TypedData]
 
-struct KDC_REQ_BODY: Codable, Equatable, ASN1Codable.ASN1PreserveBinary {
-    var _save: Data?
+struct KDC_REQ_BODY: Codable, Equatable, ASN1PreserveBinary {
+    var _save: Data? = nil
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case kdc_options
-        case cname
-        case realm
-        case sname
-        case from
-        case till
-        case rtime
-        case nonce
-        case etype
-        case addresses
-        case enc_authorization_data
-        case additional_tickets
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .kdc_options:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .cname:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .realm:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .sname:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .from:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .till:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .rtime:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            case .nonce:
-                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .explicit)
-            case .etype:
-                metadata = ASN1Metadata(tag: .taggedTag(8), tagging: .explicit)
-            case .addresses:
-                metadata = ASN1Metadata(tag: .taggedTag(9), tagging: .explicit)
-            case .enc_authorization_data:
-                metadata = ASN1Metadata(tag: .taggedTag(10), tagging: .explicit)
-            case .additional_tickets:
-                metadata = ASN1Metadata(tag: .taggedTag(11), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case kdc_options = 0
+        case cname = 1
+        case realm = 2
+        case sname = 3
+        case from = 4
+        case till = 5
+        case rtime = 6
+        case nonce = 7
+        case etype = 8
+        case addresses = 9
+        case enc_authorization_data = 10
+        case additional_tickets = 11
     }
 
     var kdc_options: KDCOptions
@@ -1079,28 +708,11 @@ struct KDC_REQ_BODY: Codable, Equatable, ASN1Codable.ASN1PreserveBinary {
 }
 
 struct KDC_REQ: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case pvno
-        case msg_type
-        case padata
-        case req_body
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .pvno:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .msg_type:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .padata:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .req_body:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case pvno = 1
+        case msg_type = 2
+        case padata = 3
+        case req_body = 4
     }
 
     var pvno: Krb5Int32
@@ -1110,22 +722,9 @@ struct KDC_REQ: Codable, Equatable {
 }
 
 struct PA_ENC_TS_ENC: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case patimestamp
-        case pausec
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .patimestamp:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .pausec:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case patimestamp = 0
+        case pausec = 1
     }
 
     var patimestamp: KerberosTime
@@ -1133,60 +732,25 @@ struct PA_ENC_TS_ENC: Codable, Equatable {
 }
 
 struct PA_PAC_REQUEST: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case include_pac
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .include_pac:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case include_pac = 0
     }
 
     var include_pac: Bool
 }
 
 struct PA_PAC_OPTIONS: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case flags
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .flags:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case flags = 0
     }
 
     var flags: PAC_OPTIONS_FLAGS
 }
 
 struct KERB_AD_RESTRICTION_ENTRY: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case restriction_type
-        case restriction
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .restriction_type:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .restriction:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case restriction_type = 0
+        case restriction = 1
     }
 
     var restriction_type: Krb5Int32
@@ -1198,37 +762,14 @@ typealias PA_KERB_KEY_LIST_REQ = [ENCTYPE]
 typealias PA_KERB_KEY_LIST_REP = [ENCTYPE]
 
 struct KDC_REP: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case pvno
-        case msg_type
-        case padata
-        case crealm
-        case cname
-        case ticket
-        case enc_part
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .pvno:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .msg_type:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .padata:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .crealm:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .cname:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .ticket:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .enc_part:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case pvno = 0
+        case msg_type = 1
+        case padata = 2
+        case crealm = 3
+        case cname = 4
+        case ticket = 5
+        case enc_part = 6
     }
 
     var pvno: Krb5Int32
@@ -1243,31 +784,12 @@ struct KDC_REP: Codable, Equatable {
 struct AP_REQ: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(14), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case pvno
-        case msg_type
-        case ap_options
-        case ticket
-        case authenticator
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .pvno:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .msg_type:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .ap_options:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .ticket:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .authenticator:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case pvno = 0
+        case msg_type = 1
+        case ap_options = 2
+        case ticket = 3
+        case authenticator = 4
     }
 
     var pvno: Krb5Int32
@@ -1280,25 +802,10 @@ struct AP_REQ: Codable, Equatable {
 struct AP_REP: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(15), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case pvno
-        case msg_type
-        case enc_part
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .pvno:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .msg_type:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .enc_part:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case pvno = 0
+        case msg_type = 1
+        case enc_part = 2
     }
 
     var pvno: Krb5Int32
@@ -1309,28 +816,11 @@ struct AP_REP: Codable, Equatable {
 struct EncAPRepPart: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(27), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case ctime
-        case cusec
-        case subkey
-        case seq_number
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .ctime:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .cusec:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .subkey:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .seq_number:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case ctime = 0
+        case cusec = 1
+        case subkey = 2
+        case seq_number = 3
     }
 
     var ctime: KerberosTime
@@ -1340,34 +830,13 @@ struct EncAPRepPart: Codable, Equatable {
 }
 
 struct KRB_SAFE_BODY: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case user_data
-        case timestamp
-        case usec
-        case seq_number
-        case s_address
-        case r_address
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .user_data:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .timestamp:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .usec:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .seq_number:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .s_address:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .r_address:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case user_data = 0
+        case timestamp = 1
+        case usec = 2
+        case seq_number = 3
+        case s_address = 4
+        case r_address = 5
     }
 
     var user_data: Data
@@ -1381,28 +850,11 @@ struct KRB_SAFE_BODY: Codable, Equatable {
 struct KRB_SAFE: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(20), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case pvno
-        case msg_type
-        case safe_body
-        case cksum
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .pvno:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .msg_type:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .safe_body:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .cksum:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case pvno = 0
+        case msg_type = 1
+        case safe_body = 2
+        case cksum = 3
     }
 
     var pvno: Krb5Int32
@@ -1414,25 +866,10 @@ struct KRB_SAFE: Codable, Equatable {
 struct KRB_PRIV: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(21), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case pvno
-        case msg_type
-        case enc_part
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .pvno:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .msg_type:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .enc_part:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case pvno = 0
+        case msg_type = 1
+        case enc_part = 3
     }
 
     var pvno: Krb5Int32
@@ -1443,34 +880,13 @@ struct KRB_PRIV: Codable, Equatable {
 struct EncKrbPrivPart: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(28), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case user_data
-        case timestamp
-        case usec
-        case seq_number
-        case s_address
-        case r_address
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .user_data:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .timestamp:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .usec:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .seq_number:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .s_address:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .r_address:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case user_data = 0
+        case timestamp = 1
+        case usec = 2
+        case seq_number = 3
+        case s_address = 4
+        case r_address = 5
     }
 
     var user_data: Data
@@ -1484,28 +900,11 @@ struct EncKrbPrivPart: Codable, Equatable {
 struct KRB_CRED: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(22), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case pvno
-        case msg_type
-        case tickets
-        case enc_part
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .pvno:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .msg_type:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .tickets:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .enc_part:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case pvno = 0
+        case msg_type = 1
+        case tickets = 2
+        case enc_part = 3
     }
 
     var pvno: Krb5Int32
@@ -1515,49 +914,18 @@ struct KRB_CRED: Codable, Equatable {
 }
 
 struct KrbCredInfo: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case key
-        case prealm
-        case pname
-        case flags
-        case authtime
-        case starttime
-        case endtime
-        case renew_till
-        case srealm
-        case sname
-        case caddr
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .key:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .prealm:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .pname:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .flags:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .authtime:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .starttime:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .endtime:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            case .renew_till:
-                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .explicit)
-            case .srealm:
-                metadata = ASN1Metadata(tag: .taggedTag(8), tagging: .explicit)
-            case .sname:
-                metadata = ASN1Metadata(tag: .taggedTag(9), tagging: .explicit)
-            case .caddr:
-                metadata = ASN1Metadata(tag: .taggedTag(10), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case key = 0
+        case prealm = 1
+        case pname = 2
+        case flags = 3
+        case authtime = 4
+        case starttime = 5
+        case endtime = 6
+        case renew_till = 7
+        case srealm = 8
+        case sname = 9
+        case caddr = 10
     }
 
     var key: EncryptionKey
@@ -1576,34 +944,13 @@ struct KrbCredInfo: Codable, Equatable {
 struct EncKrbCredPart: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(29), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case ticket_info
-        case nonce
-        case timestamp
-        case usec
-        case s_address
-        case r_address
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .ticket_info:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .nonce:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .timestamp:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .usec:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .s_address:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .r_address:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case ticket_info = 0
+        case nonce = 1
+        case timestamp = 2
+        case usec = 3
+        case s_address = 4
+        case r_address = 5
     }
 
     var ticket_info: [KrbCredInfo]
@@ -1617,55 +964,20 @@ struct EncKrbCredPart: Codable, Equatable {
 struct KRB_ERROR: Codable, Equatable {
     static let metadata = ASN1Metadata(tag: .applicationTag(30), tagging: .explicit)
 
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case pvno
-        case msg_type
-        case ctime
-        case cusec
-        case stime
-        case susec
-        case error_code
-        case crealm
-        case cname
-        case realm
-        case sname
-        case e_text
-        case e_data
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .pvno:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .msg_type:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .ctime:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .cusec:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .stime:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .susec:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .error_code:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            case .crealm:
-                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .explicit)
-            case .cname:
-                metadata = ASN1Metadata(tag: .taggedTag(8), tagging: .explicit)
-            case .realm:
-                metadata = ASN1Metadata(tag: .taggedTag(9), tagging: .explicit)
-            case .sname:
-                metadata = ASN1Metadata(tag: .taggedTag(10), tagging: .explicit)
-            case .e_text:
-                metadata = ASN1Metadata(tag: .taggedTag(11), tagging: .explicit)
-            case .e_data:
-                metadata = ASN1Metadata(tag: .taggedTag(12), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case pvno = 0
+        case msg_type = 1
+        case ctime = 2
+        case cusec = 3
+        case stime = 4
+        case susec = 5
+        case error_code = 6
+        case crealm = 7
+        case cname = 8
+        case realm = 9
+        case sname = 10
+        case e_text = 11
+        case e_data = 12
     }
 
     var pvno: Krb5Int32
@@ -1680,30 +992,15 @@ struct KRB_ERROR: Codable, Equatable {
     var realm: Realm
     var sname: PrincipalName
     @GeneralString
-    var e_text: String?
+    var e_text: String? = nil
     var e_data: Data?
 }
 
 struct ChangePasswdDataMS: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case newpasswd
-        case targname
-        case targrealm
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .newpasswd:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .targname:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .targrealm:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case newpasswd = 0
+        case targname = 1
+        case targrealm = 2
     }
 
     var newpasswd: Data
@@ -1714,28 +1011,11 @@ struct ChangePasswdDataMS: Codable, Equatable {
 typealias EtypeList = [ENCTYPE]
 
 struct AD_KDCIssued: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case ad_checksum
-        case i_realm
-        case i_sname
-        case elements
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .ad_checksum:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .i_realm:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .i_sname:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .elements:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case ad_checksum = 0
+        case i_realm = 1
+        case i_sname = 2
+        case elements = 3
     }
 
     var ad_checksum: Checksum
@@ -1745,194 +1025,90 @@ struct AD_KDCIssued: Codable, Equatable {
 }
 
 struct AD_AND_OR: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case condition_count
-        case elements
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .condition_count:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .elements:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case condition_count = 0
+        case elements = 1
     }
 
     var condition_count: Krb5Int32
     var elements: AuthorizationData
 }
 
-struct PA_SAM_CHALLENGE_2_BODY: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case sam_type
-        case sam_flags
-        case sam_type_name
-        case sam_track_id
-        case sam_challenge_label
-        case sam_challenge
-        case sam_response_prompt
-        case sam_pk_for_sad
-        case sam_nonce
-        case sam_etype
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .sam_type:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .sam_flags:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .sam_type_name:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .sam_track_id:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .sam_challenge_label:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .sam_challenge:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .sam_response_prompt:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            case .sam_pk_for_sad:
-                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .explicit)
-            case .sam_nonce:
-                metadata = ASN1Metadata(tag: .taggedTag(8), tagging: .explicit)
-            case .sam_etype:
-                metadata = ASN1Metadata(tag: .taggedTag(9), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct PA_SAM_CHALLENGE_2_BODY: Codable, ASN1Codable.ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case sam_type = 0
+        case sam_flags = 1
+        case sam_type_name = 2
+        case sam_track_id = 3
+        case sam_challenge_label = 4
+        case sam_challenge = 5
+        case sam_response_prompt = 6
+        case sam_pk_for_sad = 7
+        case sam_nonce = 8
+        case sam_etype = 9
     }
 
     var sam_type: Krb5Int32
     var sam_flags: SAMFlags
     @GeneralString
-    var sam_type_name: String?
+    var sam_type_name: String? = nil
     @GeneralString
-    var sam_track_id: String?
+    var sam_track_id: String? = nil
     @GeneralString
-    var sam_challenge_label: String?
+    var sam_challenge_label: String? = nil
     @GeneralString
-    var sam_challenge: String?
+    var sam_challenge: String? = nil
     @GeneralString
-    var sam_response_prompt: String?
+    var sam_response_prompt: String? = nil
     var sam_pk_for_sad: EncryptionKey?
     var sam_nonce: Krb5Int32
     var sam_etype: Krb5Int32
 }
 
-struct PA_SAM_CHALLENGE_2: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case sam_body
-        case sam_cksum
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .sam_body:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .sam_cksum:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct PA_SAM_CHALLENGE_2: Codable, ASN1Codable.ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case sam_body = 0
+        case sam_cksum = 1
     }
 
     var sam_body: PA_SAM_CHALLENGE_2_BODY
     var sam_cksum: [Checksum]
 }
 
-struct PA_SAM_RESPONSE_2: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case sam_type
-        case sam_flags
-        case sam_track_id
-        case sam_enc_nonce_or_sad
-        case sam_nonce
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .sam_type:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .sam_flags:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .sam_track_id:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .sam_enc_nonce_or_sad:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .sam_nonce:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct PA_SAM_RESPONSE_2: Codable, ASN1Codable.ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case sam_type = 0
+        case sam_flags = 1
+        case sam_track_id = 2
+        case sam_enc_nonce_or_sad = 3
+        case sam_nonce = 4
     }
 
     var sam_type: Krb5Int32
     var sam_flags: SAMFlags
     @GeneralString
-    var sam_track_id: String?
+    var sam_track_id: String? = nil
     var sam_enc_nonce_or_sad: EncryptedData
     var sam_nonce: Krb5Int32
 }
 
-struct PA_ENC_SAM_RESPONSE_ENC: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case sam_nonce
-        case sam_sad
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .sam_nonce:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .sam_sad:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct PA_ENC_SAM_RESPONSE_ENC: Codable, ASN1Codable.ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case sam_nonce = 0
+        case sam_sad = 1
     }
 
     var sam_nonce: Krb5Int32
     @GeneralString
-    var sam_sad: String?
+    var sam_sad: String? = nil
 }
 
 struct PA_S4U2Self: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case name
-        case realm
-        case cksum
-        case auth
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .name:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .realm:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .cksum:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .auth:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case name = 0
+        case realm = 1
+        case cksum = 2
+        case auth = 3
     }
 
     var name: PrincipalName
@@ -1942,32 +1118,13 @@ struct PA_S4U2Self: Codable, Equatable {
     var auth: String = ""
 }
 
-struct S4UUserID: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case nonce
-        case cname
-        case crealm
-        case subject_certificate
-        case options
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .nonce:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .cname:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .crealm:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .subject_certificate:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .options:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct S4UUserID: Codable, Equatable, ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case nonce = 0
+        case cname = 1
+        case crealm = 2
+        case subject_certificate = 3
+        case options = 4
     }
 
     var nonce: Krb5UInt32
@@ -1978,22 +1135,9 @@ struct S4UUserID: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
 }
 
 struct PA_S4U_X509_USER: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case user_id
-        case checksum
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .user_id:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .checksum:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case user_id = 0
+        case checksum = 1
     }
 
     var user_id: S4UUserID
@@ -2001,22 +1145,9 @@ struct PA_S4U_X509_USER: Codable, Equatable {
 }
 
 struct AD_LoginAlias: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case login_alias
-        case checksum
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .login_alias:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .checksum:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case login_alias = 0
+        case checksum = 1
     }
 
     var login_alias: PrincipalName
@@ -2024,51 +1155,21 @@ struct AD_LoginAlias: Codable, Equatable {
 }
 
 struct PA_SvrReferralData: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case referred_name
-        case referred_realm
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .referred_name:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .referred_realm:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case referred_name = 1
+        case referred_realm = 0
     }
 
     var referred_name: PrincipalName?
     var referred_realm: Realm
 }
 
-struct PA_ServerReferralData: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case referred_realm
-        case true_principal_name
-        case requested_principal_name
-        case referral_valid_until
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .referred_realm:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .true_principal_name:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .requested_principal_name:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .referral_valid_until:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct PA_ServerReferralData: Codable, Equatable, ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case referred_realm = 0
+        case true_principal_name = 1
+        case requested_principal_name = 2
+        case referral_valid_until = 3
     }
 
     var referred_realm: Realm?
@@ -2077,26 +1178,11 @@ struct PA_ServerReferralData: Codable, Equatable, ASN1Codable.ASN1ExtensibleType
     var referral_valid_until: KerberosTime?
 }
 
-struct KrbFastReq: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case fast_options
-        case padata
-        case req_body
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .fast_options:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .padata:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .req_body:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct KrbFastReq: Codable, Equatable, ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case fast_options = 0
+        case padata = 1
+        case req_body = 2
     }
 
     var fast_options: FastOptions
@@ -2104,23 +1190,10 @@ struct KrbFastReq: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
     var req_body: KDC_REQ_BODY
 }
 
-struct KrbFastArmor: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case armor_type
-        case armor_value
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .armor_type:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .armor_value:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct KrbFastArmor: Codable, Equatable, ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case armor_type = 0
+        case armor_value = 1
     }
 
     var armor_type: Krb5Int32
@@ -2128,25 +1201,10 @@ struct KrbFastArmor: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
 }
 
 struct KrbFastArmoredReq: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case armor
-        case req_checksum
-        case enc_fast_req
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .armor:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .req_checksum:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .enc_fast_req:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case armor = 0
+        case req_checksum = 1
+        case enc_fast_req = 2
     }
 
     var armor: KrbFastArmor?
@@ -2154,51 +1212,21 @@ struct KrbFastArmoredReq: Codable, Equatable {
     var enc_fast_req: EncryptedData
 }
 
-enum PA_FX_FAST_REQUEST: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: CaseIterable, ASN1MetadataCodingKey {
-        case armored_data
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .armored_data:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            }
-
-            return metadata
-        }
+enum PA_FX_FAST_REQUEST: Codable, Equatable, ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case armored_data = 0
     }
 
     case armored_data(KrbFastArmoredReq)
 }
 
-struct KrbFastFinished: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case timestamp
-        case usec
-        case crealm
-        case cname
-        case ticket_checksum
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .timestamp:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .usec:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .crealm:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .cname:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .ticket_checksum:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct KrbFastFinished: Codable, Equatable, ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case timestamp = 0
+        case usec = 1
+        case crealm = 2
+        case cname = 3
+        case ticket_checksum = 4
     }
 
     var timestamp: KerberosTime
@@ -2208,29 +1236,12 @@ struct KrbFastFinished: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
     var ticket_checksum: Checksum
 }
 
-struct KrbFastResponse: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case padata
-        case strengthen_key
-        case finished
-        case nonce
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .padata:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .strengthen_key:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .finished:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .nonce:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct KrbFastResponse: Codable, Equatable, ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case padata = 0
+        case strengthen_key = 1
+        case finished = 2
+        case nonce = 3
     }
 
     var padata: METHOD_DATA
@@ -2239,67 +1250,28 @@ struct KrbFastResponse: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
     var nonce: Krb5UInt32
 }
 
-struct KrbFastArmoredRep: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case enc_fast_rep
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .enc_fast_rep:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            }
-
-            return metadata
-        }
+struct KrbFastArmoredRep: Codable, Equatable, ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case enc_fast_rep = 0
     }
 
     var enc_fast_rep: EncryptedData
 }
 
-enum PA_FX_FAST_REPLY: Codable, Equatable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: CaseIterable, ASN1MetadataCodingKey {
-        case armored_data
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .armored_data:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            }
-
-            return metadata
-        }
+enum PA_FX_FAST_REPLY: Codable, Equatable, ASN1ExtensibleType {
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case armored_data = 0
     }
 
     case armored_data(KrbFastArmoredRep)
 }
 
 struct KDCFastState: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case flags
-        case expiration
-        case fast_state
-        case expected_pa_types
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .flags:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .expiration:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .fast_state:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .expected_pa_types:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case flags = 0
+        case expiration = 1
+        case fast_state = 2
+        case expected_pa_types = 3
     }
 
     var flags: KDCFastFlags
@@ -2310,22 +1282,9 @@ struct KDCFastState: Codable, Equatable {
 }
 
 struct KDCFastCookie: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case version
-        case cookie
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .version:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .cookie:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case version = 0
+        case cookie = 1
     }
 
     @UTF8String
@@ -2334,25 +1293,10 @@ struct KDCFastCookie: Codable, Equatable {
 }
 
 struct KDC_PROXY_MESSAGE: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case kerb_message
-        case target_domain
-        case dclocator_hint
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .kerb_message:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .target_domain:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .dclocator_hint:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case kerb_message = 0
+        case target_domain = 1
+        case dclocator_hint = 2
     }
 
     var kerb_message: Data
@@ -2361,28 +1305,11 @@ struct KDC_PROXY_MESSAGE: Codable, Equatable {
 }
 
 struct KERB_TIMES: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case authtime
-        case starttime
-        case endtime
-        case renew_till
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .authtime:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .starttime:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .endtime:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .renew_till:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case authtime = 0
+        case starttime = 1
+        case endtime = 2
+        case renew_till = 3
     }
 
     var authtime: KerberosTime
@@ -2392,40 +1319,15 @@ struct KERB_TIMES: Codable, Equatable {
 }
 
 struct KERB_CRED: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case client
-        case server
-        case keyblock
-        case times
-        case ticket
-        case authdata
-        case addresses
-        case flags
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .client:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .server:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .keyblock:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .times:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .ticket:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .authdata:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .addresses:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            case .flags:
-                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case client = 0
+        case server = 1
+        case keyblock = 2
+        case times = 3
+        case ticket = 4
+        case authdata = 5
+        case addresses = 6
+        case flags = 7
     }
 
     var client: Principal
@@ -2439,40 +1341,15 @@ struct KERB_CRED: Codable, Equatable {
 }
 
 struct KERB_TGS_REQ_IN: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case cache
-        case addrs
-        case flags
-        case imp
-        case ticket
-        case in_cred
-        case krbtgt
-        case padata
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .cache:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .addrs:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .flags:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .imp:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            case .ticket:
-                metadata = ASN1Metadata(tag: .taggedTag(4), tagging: .explicit)
-            case .in_cred:
-                metadata = ASN1Metadata(tag: .taggedTag(5), tagging: .explicit)
-            case .krbtgt:
-                metadata = ASN1Metadata(tag: .taggedTag(6), tagging: .explicit)
-            case .padata:
-                metadata = ASN1Metadata(tag: .taggedTag(7), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case cache = 0
+        case addrs = 1
+        case flags = 2
+        case imp = 3
+        case ticket = 4
+        case in_cred = 5
+        case krbtgt = 6
+        case padata = 7
     }
 
     var cache: Data
@@ -2486,22 +1363,9 @@ struct KERB_TGS_REQ_IN: Codable, Equatable {
 }
 
 struct KERB_TGS_REQ_OUT: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case subkey
-        case t
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .subkey:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .t:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case subkey = 0
+        case t = 1
     }
 
     var subkey: EncryptionKey?
@@ -2509,28 +1373,11 @@ struct KERB_TGS_REQ_OUT: Codable, Equatable {
 }
 
 struct KERB_TGS_REP_IN: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case cache
-        case subkey
-        case in_cred
-        case t
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .cache:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .subkey:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .in_cred:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            case .t:
-                metadata = ASN1Metadata(tag: .taggedTag(3), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case cache = 0
+        case subkey = 1
+        case in_cred = 2
+        case t = 3
     }
 
     var cache: Data
@@ -2540,25 +1387,10 @@ struct KERB_TGS_REP_IN: Codable, Equatable {
 }
 
 struct KERB_TGS_REP_OUT: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case cache
-        case cred
-        case subkey
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .cache:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .cred:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            case .subkey:
-                metadata = ASN1Metadata(tag: .taggedTag(2), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case cache = 0
+        case cred = 1
+        case subkey = 2
     }
 
     var cache: Data
@@ -2567,22 +1399,9 @@ struct KERB_TGS_REP_OUT: Codable, Equatable {
 }
 
 struct KERB_ARMOR_SERVICE_REPLY: Codable, Equatable {
-    enum CodingKeys: ASN1MetadataCodingKey {
-        case armor
-        case armor_key
-
-        static func metadata(forKey key: Self) -> ASN1Metadata? {
-            let metadata: ASN1Metadata?
-
-            switch key {
-            case .armor:
-                metadata = ASN1Metadata(tag: .taggedTag(0), tagging: .explicit)
-            case .armor_key:
-                metadata = ASN1Metadata(tag: .taggedTag(1), tagging: .explicit)
-            }
-
-            return metadata
-        }
+    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+        case armor = 0
+        case armor_key = 1
     }
 
     var armor: KrbFastArmor
