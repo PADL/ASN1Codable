@@ -27,23 +27,23 @@ final class ASN1AutomaticTaggingContext: CustomStringConvertible {
     private var enumMetadata: EnumMetadata?
 
     init?<T>(_ type: T.Type) {
-        let hasTaggedFields: Bool
+        let disableAutomaticTagging: Bool
 
         // this is expensive, so use automatic tags sparingly, or have the compiler do the job
         if type is any Collection.Type {
-            hasTaggedFields = true
+            disableAutomaticTagging = true
         } else if let metadata = reflect(type) as? StructMetadata {
-            hasTaggedFields = metadata.descriptor.fields.hasTaggedFields(metadata)
+            disableAutomaticTagging = metadata.descriptor.fields.hasTaggedFields(metadata)
         } else if let metadata = reflect(type) as? ClassMetadata {
-            hasTaggedFields = metadata.descriptor.fields.hasTaggedFields(metadata)
+            disableAutomaticTagging = metadata.descriptor.fields.hasTaggedFields(metadata)
         } else if let metadata = reflect(type) as? EnumMetadata {
-            hasTaggedFields = metadata.descriptor.fields.hasTaggedFields(metadata)
+            disableAutomaticTagging = metadata.descriptor.fields.hasTaggedFields(metadata)
             self.enumMetadata = metadata
         } else {
-            hasTaggedFields = false
+            disableAutomaticTagging = false
         }
 
-        guard !hasTaggedFields else {
+        guard !disableAutomaticTagging else {
             return nil
         }
 
