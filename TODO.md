@@ -12,6 +12,7 @@ Medium priority
 - AnyCodable does not round trip Data
 - make ASN1Kit OID representation [UInt] or Data
 - add validation logic to string property wrappers
+- support for non-minimally encoded INTEGER
 
 Low priority
 ------------
