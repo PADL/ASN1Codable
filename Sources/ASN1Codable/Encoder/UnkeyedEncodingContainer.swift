@@ -142,10 +142,29 @@ extension ASN1EncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
 }
 
 extension ASN1EncoderImpl.UnkeyedContainer {
+    private func encodeUnkeyedSingleValueIfPresent<T>(_ value: T) throws where T: Encodable {
+        let context = self.context.encodingSingleValue(value)
+        var container = self.nestedSingleValueContainer(context: context)
+
+        if let value = value as? ExpressibleByNilLiteral,
+           let value = value as? Encodable? {
+            if case .some(let value) = value {
+                try container.encode(value)
+            } else {
+                try container.encode(Null())
+            }
+        }
+    }
+
     private func encodeUnkeyedSingleValue<T>(_ value: T) throws where T: Encodable {
         let context = self.context.encodingSingleValue(value)
         var container = self.nestedSingleValueContainer(context: context)
-        try container.encode(value)
+
+        if value is OptionalProtocol {
+            try self.encodeUnkeyedSingleValueIfPresent(value)
+        } else {
+            try container.encode(value)
+        }
     }
 
     private func nestedSingleValueContainer(context: ASN1EncodingContext) -> SingleValueEncodingContainer {

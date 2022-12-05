@@ -23,3 +23,20 @@ protocol OptionalProtocol {
 extension Optional: OptionalProtocol {
     static var wrappedType: Any.Type { Wrapped.self }
 }
+
+func isNilOrWrappedNil<T>(_ value: T) -> Bool {
+    var wrappedValue: Any = value
+
+    // swiftlint:disable force_cast
+    while wrappedValue is any ASN1TaggedValue {
+        wrappedValue = (wrappedValue as! any ASN1TaggedValue).wrappedValue
+    }
+
+    if let wrappedValue = wrappedValue as? ExpressibleByNilLiteral,
+       let wrappedValue = wrappedValue as? Any?,
+       case .none = wrappedValue {
+        return true
+    } else {
+        return false
+    }
+}
