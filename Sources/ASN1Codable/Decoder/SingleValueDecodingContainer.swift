@@ -209,9 +209,6 @@ extension ASN1DecoderImpl.SingleValueContainer {
                 value = try self.decodePrimitiveValue(type, from: object, verifiedTag: skipTaggedValues) as! T
             } else if let type = type as? any KeyValueSetDictionaryCodable.Type {
                 value = try self.decodeDictionaryValue(type, from: object) as! T
-            } else if let type = type as? OptionalProtocol.Type,
-                      let wrappedType = type.wrappedType as? Decodable.Type {
-                value = try self.decodeIfPresent(wrappedType, from: object, skipTaggedValues: skipTaggedValues) as! T
             } else {
                 value = try self.decodeConstructedValue(type, from: object)
             }
@@ -326,9 +323,19 @@ extension ASN1DecoderImpl.SingleValueContainer {
 
         let verifiedUniversalTag = !unwrappedObject.constructed && (metadata.tag?.isUniversal ?? false)
 
-        let value = try self.decode(type,
+        let value: T
+        let skipTaggedValues = verifiedUniversalTag || skipTaggedValues
+
+        if let type = type as? OptionalProtocol.Type,
+           let wrappedType = type.wrappedType as? Decodable.Type {
+            value = try self.decodeIfPresent(wrappedType,
+                                             from: unwrappedObject,
+                                             skipTaggedValues: skipTaggedValues) as! T
+        } else {
+            value = try self.decode(type,
                                     from: unwrappedObject,
-                                    skipTaggedValues: verifiedUniversalTag || skipTaggedValues)
+                                    skipTaggedValues: skipTaggedValues)
+        }
 
         if !metadata.validateValueConstraints(value) {
             let context = DecodingError.Context(codingPath: self.codingPath,
