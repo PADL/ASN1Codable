@@ -276,6 +276,28 @@ extension ASN1CodableTests {
         self.test_encodeDecode(TestStruct(), encodedAs: data, taggingEnvironment: .automatic)
     }
 
+    func test_SEQUENCE_PrivateTaggedTestStruct_ContextTagCodingKey() {
+        struct TestStruct: Codable, Equatable, ASN1PrivateTaggedType {
+            static var tagNumber: UInt = 100
+
+            enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+                case version = 0
+                case data = 1
+                case bitString = 2
+            }
+
+            var version: Int = 1
+            var data = Data([0x02, 0x03, 0xFF])
+            var bitString = BitString([0x02, 0x03, 0xCC])
+        }
+
+        let data = Data(base64Encoded: "/2QWMBSgAwIBAaEFBAMCA/+iBgMEAAIDzA==")!
+        self.test_encodeDecode(TestStruct(), encodedAs: data)
+
+        // check automatic tagging is disabled
+        self.test_encodeDecode(TestStruct(), encodedAs: data, taggingEnvironment: .automatic)
+    }
+
     func test_SEQUENCE_TestClass_CodingKey() {
         let data = Data(base64Encoded: "/2QWMBSgAwIBAaEFBAMCA/+iBgMEAAIDzA==")!
         self.test_encodeDecode(TestClass(), encodedAs: data)
