@@ -239,5 +239,5 @@ enum GeneralName: Codable {
 }
 ```
 
-The former is a more compact representation that may be used with a uniform tagging environment (note that `directoryName` is defined as `IMPLICIT` in the ASN.1, but is promoted to `EXPLICIT` as it is a `CHOICE`; this is handled at runtime). It also has an API stability guarantee that the latter foramt does not.
+The former is a more compact representation that may be used with a uniform tagging environment (note that `directoryName` is defined as `IMPLICIT` in the ASN.1, but is promoted to `EXPLICIT` as it is a `CHOICE`; this is handled at runtime). It also has an API stability guarantee that the latter format does not.
 
