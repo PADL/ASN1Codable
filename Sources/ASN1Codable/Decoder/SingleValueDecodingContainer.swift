@@ -417,7 +417,6 @@ extension ASN1DecoderImpl.SingleValueContainer {
         _: T.Type,
         from object: ASN1Object
     ) throws -> T where T: KeyValueSetDictionaryCodable {
-        self.context.taggingEnvironment = .explicit // make sure we cancel AUTOMATIC TAGS
         let set = try self.decodeConstructedValue(Set<KeyValue<T.Key, T.Value>>.self, from: object)
         return T(keyValueSet: set)
     }
