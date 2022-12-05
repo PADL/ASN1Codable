@@ -32,9 +32,16 @@ public struct ASN1Metadata: Equatable {
     /// value constraints for integer types (and, eventually, string types)
     var valueConstraints: ClosedRange<Int>?
 
-    public init(tag: ASN1DecodedTag? = nil, tagging: ASN1Tagging? = nil) {
+    public init(
+        tag: ASN1DecodedTag? = nil,
+        tagging: ASN1Tagging? = nil,
+        sizeConstraints: ClosedRange<Int>? = nil,
+        valueConstraints: ClosedRange<Int>? = nil
+    ) {
         self.tag = tag
         self.tagging = tagging
+        self.sizeConstraints = sizeConstraints
+        self.valueConstraints = valueConstraints
     }
 }
 
