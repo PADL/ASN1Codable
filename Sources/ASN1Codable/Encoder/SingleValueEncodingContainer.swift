@@ -252,15 +252,15 @@ extension ASN1EncoderImpl.SingleValueContainer {
         if let tag = metadata.tag, tag.isUniversal, let value = value as? ASN1EncodableType {
             wrappedObject = try value.asn1encode(tag: tag)
         } else {
-            var tagging = metadata.tagging ?? self.context.taggingEnvironment
-            if tagging == .implicit, self.context.enumCodingState == .enum {
-                /// IMPLICIT tagging of types that are CHOICE types have the tag converted to EXPLICIT
-                tagging = .explicit
-            }
-
             let object = try self.encode(value, skipTaggedValues: skipTaggedValues)
 
             if let object, let tag = metadata.tag {
+                var tagging = metadata.tagging ?? self.context.taggingEnvironment
+                if tagging == .implicit, self.context.enumCodingState == .enum {
+                    /// IMPLICIT tagging of types that are CHOICE types have the tag converted to EXPLICIT
+                    tagging = .explicit
+                }
+
                 if tagging == .implicit, self.context.enumCodingState == .enum {
                     wrappedObject = ASN1ImplicitlyWrappedObject(object: object, tag: tag)
                 } else {
