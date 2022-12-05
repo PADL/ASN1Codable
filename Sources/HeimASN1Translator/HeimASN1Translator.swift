@@ -154,7 +154,7 @@ public final class HeimASN1Translator {
         }
 
         self.tagValues.sorted().forEach {
-            outputStream.write("\(self.module == nil ? "" : "\t")public enum ASN1TagNumber$\($0): ASN1TagNumberRepresentable {}\n")
+            outputStream.write("\(self.module == nil ? "" : "\t")public enum ASN1TagNumber$\($0): ASN1Codable.ASN1TagNumberRepresentable {}\n")
         }
 
         if self.module != nil {

@@ -397,9 +397,9 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         let codingKeyConformance: String
 
         if self.isUniformlyContextTagged {
-            codingKeyConformance = self.uniformContextTaggingEnvironment == .implicit ? "ASN1ImplicitTagCodingKey" : "ASN1ExplicitTagCodingKey"
+            codingKeyConformance = self.uniformContextTaggingEnvironment == .implicit ? "ASN1Codable.ASN1ImplicitTagCodingKey" : "ASN1Codable.ASN1ExplicitTagCodingKey"
         } else if self.needsMetadataCodingKeys {
-            codingKeyConformance = "ASN1MetadataCodingKey"
+            codingKeyConformance = "ASN1Codable.ASN1MetadataCodingKey"
         } else {
             codingKeyConformance = "CodingKey"
         }
