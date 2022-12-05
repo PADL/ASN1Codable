@@ -103,7 +103,7 @@ class TBSCertificate: Codable {
 }
 ```
 
-However, when using the compiler, ergonomics are slightly improved by avoiding the property wrapper and instead using a specialised CodingKeys:
+Ergonomics are slightly improved by avoiding the property wrapper and instead using a specialised CodingKeys. This format exposes ASN1Kit internal types (specifically `ASN1DecodedTag`) and is such not guaranteed to be stable across releases; rather, it is only to be used by the `asn1json2swift` translator.
 
 ```swift
 struct TBSCertificate: Codable {
@@ -239,5 +239,5 @@ enum GeneralName: Codable {
 }
 ```
 
-The former is a more compact representation that may be used with a uniform tagging environment (note that `directoryName` is defined as `IMPLICIT` in the ASN.1, but is promoted to `EXPLICIT` as it is a `CHOICE`; this is handled at runtime).
+The former is a more compact representation that may be used with a uniform tagging environment (note that `directoryName` is defined as `IMPLICIT` in the ASN.1, but is promoted to `EXPLICIT` as it is a `CHOICE`; this is handled at runtime). It also has an API stability guarantee that the latter foramt does not.
 
