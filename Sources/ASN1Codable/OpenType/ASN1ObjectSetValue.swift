@@ -44,7 +44,6 @@ public struct ASN1ObjectSetValue: Codable {
 
         let type = objectSetCodingContext.type(encoder.context)
 
-        // FIXME: set tagging environment to EXPLICIT then restore
         do {
             if objectSetCodingContext.encodeAsOctetString {
                 let berData: Data
