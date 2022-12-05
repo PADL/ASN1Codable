@@ -119,8 +119,8 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         let keys: [Key]
         let objects: [ASN1Object]?
 
-        if self.context.enumCodingState == .enum, let currentObject = try? self.currentObject() {
-            objects = [currentObject]
+        if self.context.enumCodingState == .enum {
+            objects = [self.object]
         } else {
             objects = self.object.data.items
         }
