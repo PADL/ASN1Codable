@@ -19,7 +19,7 @@ Features supported by ASN1Codable include:
 * Encoding and decoding of any Swift type that conforms to `Encodable` or `Decodable` (respectively)
 * `AUTOMATIC` tagging
 * Large integers using BigNumber
-* Preservation of encoded value on decode in `_save` (for verifying signatures)
+* Preservation of encoded value on decode in `_save` (e.g. for verifying signatures)
 
 ## Architecture
 
@@ -29,7 +29,7 @@ ASN.1 types have additional metadata, most prominently tag numbers and tagging e
 
 Generally this involves using a custom `CodingKey` type that either directly encodes the tag number (for types with uniform tagging) or provides a function mapping a key to metadata. There are some cases, such as type aliases and enumerated types with non-uniform tagging, where generic wrappers are used instead. For universal types such as integers and strings, ASN1Codable uses Swift type metadata.
 
-## Usage
+### Usage
 
 You can use the encoder and decoder as follows:
 
@@ -54,9 +54,27 @@ There are some limitations, for example anonymous nested types are not supported
 
 The `asn1json2swift` tool is a driver for the framework.
 
+### Usage
+
+```sh
+asn1json2swift translate --input [file] --output [file]
+    --map-type [ASN1Type]:[@class|@objc|@external|SwiftType]
+    --conform-type [ASN1Type]:[SwiftProtocol]
+```
+
+The `--map-type` option allows an ASN.1 type to be emitted as a Swift or Objective-C class, or to be excluded. If `@external` is specified, then you should provide a Swift typealias or type with that name. If a Swift type is specified, then the translator will emit a typealias but no type definition.
+
+The `--conform-type` allows additional protocol conformances to be emitted for a given ASN.1 type. By default all types are `Codable`; if they are included in a `SET` then they are also `Hashable` and `Equatable`. Types marked by the ASN.1 compiler as preserving the original encoded value also conform to `ASN1PreserveBinary`. Types that themselves are tagged conform to `ASN1TaggedType`. A Swift `struct` translated from a `SET` conforms to the market protocol `ASN1SetCodable`. Other protocol conformances are used to indicate extensible and open types.
+
 ## certutil
 
 This repository includes `Certificate.framework`, a C API modeled on the macOS `Security.framework`, as a proof of concept. Included also is a `certutil` tool for reading a PEM-encoded certificate and outputting a JSON representation, along with the SAN and re-encoded DER. The Swift types are generated from `rfc2459.json` at build time, which in turn (if `/usr/local/heimdal/bin/asn1_compile` is present) is generated from `rfc2459.asn1`.
+
+### Usage
+
+```sh
+certutil parse --file [file]|--string [string] --json --reencode --san
+```
 
 ## Examples
 
