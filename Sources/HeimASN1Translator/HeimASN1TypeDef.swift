@@ -445,8 +445,8 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         }
         if self.needsMetadataCodingKeys {
             outputStream.write("\n")
-            outputStream.write("\t\tstatic func metadata(forKey key: Self) -> ASN1Metadata? {\n")
-            outputStream.write("\t\t\tlet metadata: ASN1Metadata?\n\n")
+            outputStream.write("\t\tstatic func metadata(forKey key: Self) -> ASN1Codable.ASN1Metadata? {\n")
+            outputStream.write("\t\t\tlet metadata: ASN1Codable.ASN1Metadata?\n\n")
             outputStream.write("\t\t\tswitch key {\n")
             self.members?.forEach {
                 let prefix = $0.typeDefValue!.defaultValue != nil ? "_" : ""
@@ -458,7 +458,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                     let taggingEnvironment = type.taggingEnvironment
                     outputStream
                         .write(
-                            "\t\t\t\tmetadata = ASN1Metadata(tag: \(tag.initializer), tagging: \(taggingEnvironment?.initializer ?? "nil"))\n"
+                            "\t\t\t\tmetadata = ASN1Codable.ASN1Metadata(tag: \(tag.initializer), tagging: \(taggingEnvironment?.initializer ?? "nil"))\n"
                         )
                 } else {
                     outputStream.write("\t\t\t\tmetadata = nil\n")
@@ -543,7 +543,7 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                     if let tag = self.grandParent?.tag, !tag.isUniversal {
                         let taggingEnvironment = self.grandParent?.taggingEnvironment
                         outputStream
-                            .write("\t\(visibility)static let metadata = ASN1Metadata(tag: \(tag.initializer), " +
+                            .write("\t\(visibility)static let metadata = ASN1Codable.ASN1Metadata(tag: \(tag.initializer), " +
                                 "tagging: \(taggingEnvironment?.initializer ?? "nil"))\n\n")
                     }
 
