@@ -29,9 +29,17 @@ struct ASN1TaggedDictionaryCodingKey: ASN1ContextTagCodingKey {
     }
 
     init?(stringValue: String) {
-        guard let tagNo = UInt(stringValue) else {
-            return nil
+        let regex = try! NSRegularExpression(pattern: #"\[(\d+)\]"#)
+        let range = NSRange(location: 0, length: stringValue.utf16.count)
+        var tagNo: UInt?
+
+        regex.enumerateMatches(in: stringValue, options: [], range: range) { match, _, _ in
+            guard let match else { return }
+            guard let firstCaptureRange = Range(match.range(at: 1), in: stringValue) else { return }
+            tagNo = UInt(stringValue[firstCaptureRange])
         }
+
+        guard let tagNo else { return nil }
         self.tagNo = tagNo
     }
 
