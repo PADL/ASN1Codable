@@ -224,7 +224,8 @@ struct HeimASN1FieldDescriptor: HeimASN1Emitter, HeimASN1SwiftTypeRepresentable,
             wrappers.append(taggedWrapperType)
         }
 
-        if let objectSetWrapperType = self.objectSetWrapperType, self.isObjectSetTypeType || self.canUseObjectSetValuePropertyWrapper {
+        if let objectSetWrapperType = self.objectSetWrapperType,
+           self.isObjectSetTypeType || self.canUseObjectSetValuePropertyWrapper {
             wrappers.append(objectSetWrapperType)
         }
 

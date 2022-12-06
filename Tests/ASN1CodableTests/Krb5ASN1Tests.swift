@@ -60,7 +60,9 @@ extension ASN1CodableTests {
             "722e652e6b74682e7365a10a1b08452e" +
             "4b54482e5345")
         let n2 = PrincipalName(name_type: KRB5_NT_SRV_HST, name_string: [GeneralString(wrappedValue: "host"),
-                                                                         GeneralString(wrappedValue: "nutcracker.e.kth.se")])
+                                                                         GeneralString(
+                                                                             wrappedValue: "nutcracker.e.kth.se"
+                                                                         )])
         let t2 = Principal(name: n2, realm: GeneralString(wrappedValue: "E.KTH.SE"))
         self.test_encodeDecode(t2, encodedAs: test2)
     }

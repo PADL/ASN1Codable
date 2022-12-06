@@ -138,7 +138,11 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         }
     }
 
-    private func emitTypeDef(_ typeDef: HeimASN1TypeDef, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+    private func emitTypeDef(
+        _ typeDef: HeimASN1TypeDef,
+        containingTypeDef: HeimASN1TypeDef,
+        _ outputStream: inout OutputStream
+    ) throws {
         typeDef.parent = containingTypeDef
 
         if containingTypeDef.isTypeDef ?? false {
@@ -148,7 +152,11 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         }
     }
 
-    private func emitTypeDefField(_ typeDef: HeimASN1TypeDef, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+    private func emitTypeDefField(
+        _ typeDef: HeimASN1TypeDef,
+        containingTypeDef: HeimASN1TypeDef,
+        _ outputStream: inout OutputStream
+    ) throws {
         let isChoice = containingTypeDef.parent?.isChoice ?? false
 
         if isChoice {
@@ -173,7 +181,10 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
             outputStream.write("\n")
             if let defaultValue = containingTypeDef.defaultValue {
                 // emit an accessor with the public type name
-                outputStream.write("\t\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(fieldDescriptor.bareSwiftTypeSansOptional) {\n")
+                outputStream
+                    .write(
+                        "\t\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(fieldDescriptor.bareSwiftTypeSansOptional) {\n"
+                    )
                 let defaultValueString: String
                 if defaultValue.value is String {
                     defaultValueString = "\"\(defaultValue.value)\""
@@ -195,16 +206,24 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
     private func emitSwiftTypeAlias(containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) {
         if !(containingTypeDef.translator?.typeRefExists(containingTypeDef.generatedName) ?? false) {
             let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
-            outputStream.write("\(containingTypeDef.visibility)typealias \(containingTypeDef.generatedName) = \(swiftType)\n")
+            outputStream
+                .write("\(containingTypeDef.visibility)typealias \(containingTypeDef.generatedName) = \(swiftType)\n")
             containingTypeDef.translator?.cacheTypeRef(containingTypeDef.generatedName)
         }
     }
 
-    private func emitTypeDefDefinition(_ typeDef: HeimASN1TypeDef, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+    private func emitTypeDefDefinition(
+        _ typeDef: HeimASN1TypeDef,
+        containingTypeDef: HeimASN1TypeDef,
+        _ outputStream: inout OutputStream
+    ) throws {
         let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
 
         if containingTypeDef.tag == .universal(.enumerated) {
-            outputStream.write("\(containingTypeDef.visibility)enum \(containingTypeDef.generatedName): \(containingTypeDef.swiftConformances(swiftType)) {\n")
+            outputStream
+                .write(
+                    "\(containingTypeDef.visibility)enum \(containingTypeDef.generatedName): \(containingTypeDef.swiftConformances(swiftType)) {\n"
+                )
             try typeDef.members?.forEach {
                 if let member = $0.typeDefValue {
                     member.parent = typeDef
@@ -243,13 +262,20 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         return "\(value)"
     }
 
-    private func emitUniversal(_ universal: HeimASN1UniversalType, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+    private func emitUniversal(
+        _ universal: HeimASN1UniversalType,
+        containingTypeDef: HeimASN1TypeDef,
+        _ outputStream: inout OutputStream
+    ) throws {
         // let swiftType = self.swiftType(containingTypeDef: containingTypeDef)
         let swiftType = self.swiftType!
         let constant = containingTypeDef.constant ?? false
 
         if constant {
-            outputStream.write("\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(swiftType)\(containingTypeDef.isOptional ?? false ? "?" : "")")
+            outputStream
+                .write(
+                    "\(containingTypeDef.visibility)var \(containingTypeDef.generatedName): \(swiftType)\(containingTypeDef.isOptional ?? false ? "?" : "")"
+                )
 
             switch universal {
             case .objectIdentifier:
@@ -270,7 +296,10 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
                         try member.emit(&outputStream)
                     } else if let member = $0.dictionaryValue?.first {
                         let value = wrappedInitializer(containingTypeDef: containingTypeDef, value: member.value)
-                        outputStream.write("\(containingTypeDef.visibility)let \(member.key): \(containingTypeDef.generatedName) = \(value)\n")
+                        outputStream
+                            .write(
+                                "\(containingTypeDef.visibility)let \(member.key): \(containingTypeDef.generatedName) = \(value)\n"
+                            )
                     }
                 }
             default:
@@ -279,7 +308,11 @@ indirect enum HeimASN1Type: Codable, Equatable, HeimASN1SwiftTypeRepresentable, 
         }
     }
 
-    private func emitTypeRef(_ ref: String, containingTypeDef: HeimASN1TypeDef, _ outputStream: inout OutputStream) throws {
+    private func emitTypeRef(
+        _ ref: String,
+        containingTypeDef: HeimASN1TypeDef,
+        _ outputStream: inout OutputStream
+    ) throws {
         if containingTypeDef.isTypeDef ?? false {
             self.emitSwiftTypeAlias(containingTypeDef: containingTypeDef, &outputStream)
         } else if containingTypeDef.parent?.tTypeUniversalValue == .choice {

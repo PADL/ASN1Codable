@@ -38,7 +38,8 @@ extension ASN1DecodedTag {
     }
 }
 
-final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable, HeimASN1TagRepresentable, Equatable, CustomStringConvertible {
+final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable, HeimASN1TagRepresentable,
+    Equatable, CustomStringConvertible {
     static func == (lhs: HeimASN1TypeDef, rhs: HeimASN1TypeDef) -> Bool {
         lhs.name == rhs.name && lhs.generatedName == rhs.generatedName
     }
@@ -115,7 +116,10 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         self.isTypeDef = try container.decodeIfPresent(Bool.self, forKey: .isTypeDef)
         self.tagClass = try container.decodeIfPresent(HeimASN1TagClass.self, forKey: .tagClass)
         self.tagValue = try container.decodeIfPresent(UInt.self, forKey: .tagValue)
-        self.taggingEnvironment = try container.decodeIfPresent(HeimASN1TaggingEnvironment.self, forKey: .taggingEnvironment)
+        self.taggingEnvironment = try container.decodeIfPresent(
+            HeimASN1TaggingEnvironment.self,
+            forKey: .taggingEnvironment
+        )
         self.tType = try container.decodeIfPresent(HeimASN1Type.self, forKey: .tType)
         self.cType = try container.decodeIfPresent(String.self, forKey: .cType)
         self.members = try container.decodeIfPresent([HeimASN1TypeMember].self, forKey: .members)
@@ -134,7 +138,10 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         self.preserve = try container.decodeIfPresent(Bool.self, forKey: .preserve)
         self.decorate = try container.decodeIfPresent([HeimASN1Decoration].self, forKey: .decorate)
         self.defaultValue = try container.decodeIfPresent(AnyCodable.self, forKey: .defaultValue)
-        self._desiredTaggingEnvironment = try container.decodeIfPresent(HeimASN1TaggingEnvironment.self, forKey: ._desiredTaggingEnvironment)
+        self._desiredTaggingEnvironment = try container.decodeIfPresent(
+            HeimASN1TaggingEnvironment.self,
+            forKey: ._desiredTaggingEnvironment
+        )
         self.translator = decoder.userInfo[HeimASN1TranslatorUserInfoKey] as? HeimASN1Translator
     }
 
@@ -349,7 +356,9 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
             let valueMember = self.members?.first { $0.typeDefValue?.name == openType.openTypeMember }
             // FIXME: tags
             let isOctetString: Bool = valueMember?.typeDefValue?.type?.tag == ASN1DecodedTag.universal(.octetString)
-            conformances.append(isOctetString ? "ASN1Codable.ASN1ObjectSetOctetStringCodable" : "ASN1Codable.ASN1ObjectSetCodable")
+            conformances
+                .append(isOctetString ? "ASN1Codable.ASN1ObjectSetOctetStringCodable" :
+                    "ASN1Codable.ASN1ObjectSetCodable")
         }
 
         // now add any additional user specificied conformances
@@ -397,7 +406,9 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         let codingKeyConformance: String
 
         if self.isUniformlyContextTagged {
-            codingKeyConformance = self.uniformContextTaggingEnvironment == .implicit ? "ASN1Codable.ASN1ImplicitTagCodingKey" : "ASN1Codable.ASN1ExplicitTagCodingKey"
+            codingKeyConformance = self
+                .uniformContextTaggingEnvironment == .implicit ? "ASN1Codable.ASN1ImplicitTagCodingKey" :
+                "ASN1Codable.ASN1ExplicitTagCodingKey"
         } else if self.needsMetadataCodingKeys {
             codingKeyConformance = "ASN1Codable.ASN1MetadataCodingKey"
         } else {
@@ -413,7 +424,8 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         outputStream.write("\(codingKeyConformance) {\n")
         self.members?.forEach {
             if $0.typeDefValue!.defaultValue != nil {
-                outputStream.write("\t\tcase _\($0.typeDefValue!.generatedName) = \"\($0.typeDefValue!.generatedName)\"\n")
+                outputStream
+                    .write("\t\tcase _\($0.typeDefValue!.generatedName) = \"\($0.typeDefValue!.generatedName)\"\n")
             } else if self.isUniformlyContextTagged {
                 let typeDefValue = $0.typeDefValue!
                 let generatedName = typeDefValue.generatedName
@@ -444,7 +456,10 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                 if let type = typeDefValue, let tag = type.tag, !tag.isUniversal {
                     // FIXME: do we use desiredTaggingEnvironment and have the runtime promote to EXPLICIT?
                     let taggingEnvironment = type.taggingEnvironment
-                    outputStream.write("\t\t\t\tmetadata = ASN1Metadata(tag: \(tag.initializer), tagging: \(taggingEnvironment?.initializer ?? "nil"))\n")
+                    outputStream
+                        .write(
+                            "\t\t\t\tmetadata = ASN1Metadata(tag: \(tag.initializer), tagging: \(taggingEnvironment?.initializer ?? "nil"))\n"
+                        )
                 } else {
                     outputStream.write("\t\t\t\tmetadata = nil\n")
                 }
@@ -520,12 +535,16 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                         finalOrObjCPrefix.append(" ")
                     }
 
-                    outputStream.write("\(visibility)\(finalOrObjCPrefix)\(swiftMetaType) \(self.generatedName): \(self.swiftConformances(nil)) {\n")
+                    outputStream
+                        .write(
+                            "\(visibility)\(finalOrObjCPrefix)\(swiftMetaType) \(self.generatedName): \(self.swiftConformances(nil)) {\n"
+                        )
 
                     if let tag = self.grandParent?.tag, !tag.isUniversal {
                         let taggingEnvironment = self.grandParent?.taggingEnvironment
-                        outputStream.write("\t\(visibility)static let metadata = ASN1Metadata(tag: \(tag.initializer), " +
-                            "tagging: \(taggingEnvironment?.initializer ?? "nil"))\n\n")
+                        outputStream
+                            .write("\t\(visibility)static let metadata = ASN1Metadata(tag: \(tag.initializer), " +
+                                "tagging: \(taggingEnvironment?.initializer ?? "nil"))\n\n")
                     }
 
                     if let openType = self.openType {
@@ -573,7 +592,10 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
                         // highestUsedMember = members.last { }
                         let rawType = try (closestIntTypeForOptionSet(highestUsedMember))
 
-                        outputStream.write("\(visibility)struct \(self.generatedName): \(self.swiftConformances("BitStringOptionSet")) {\n")
+                        outputStream
+                            .write(
+                                "\(visibility)struct \(self.generatedName): \(self.swiftConformances("BitStringOptionSet")) {\n"
+                            )
                         outputStream.write("\t\(visibility)var rawValue: \(rawType)\n\n")
                         outputStream.write("\t\(visibility)init(rawValue: \(rawType)) {\n")
                         outputStream.write("\t\tself.rawValue = rawValue\n")
@@ -661,7 +683,8 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
 
         self.translator?.apply { typeDef, _ in
             if let members = typeDef.members, members.contains(where: { member in
-                // members look like: {name: fieldname, type: {name: typeNameOfContainingType, ttype: typeRef, alias: true}
+                // members look like: {name: fieldname, type: {name: typeNameOfContainingType, ttype: typeRef, alias:
+                // true}
 
                 guard let memberTypeDefValue = member.typeDefValue?.type?.typeDefValue,
                       memberTypeDefValue.isAlias ?? false,

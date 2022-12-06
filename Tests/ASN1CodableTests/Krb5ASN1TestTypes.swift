@@ -293,9 +293,17 @@ typealias AS_REP = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$11, ASN1Codable
 
 typealias TGS_REP = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$13, ASN1Codable.ASN1ExplicitTagging, KDC_REP>
 
-typealias EncASRepPart = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$25, ASN1Codable.ASN1ExplicitTagging, EncKDCRepPart>
+typealias EncASRepPart = ASN1ApplicationTagged<
+    KERBEROS5.ASN1TagNumber$25,
+    ASN1Codable.ASN1ExplicitTagging,
+    EncKDCRepPart
+>
 
-typealias EncTGSRepPart = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$26, ASN1Codable.ASN1ExplicitTagging, EncKDCRepPart>
+typealias EncTGSRepPart = ASN1ApplicationTagged<
+    KERBEROS5.ASN1TagNumber$26,
+    ASN1Codable.ASN1ExplicitTagging,
+    EncKDCRepPart
+>
 
 var krb5_pvno: Int = 5
 

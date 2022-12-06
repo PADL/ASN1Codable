@@ -5,6 +5,7 @@
 --extensionacl on-declarations
 --swiftversion 5.7
 --patternlet inline
+--maxwidth 120
 --disable wrapMultilineStatementBraces
 --disable opaqueGenericParameters
 --disable sortedImports

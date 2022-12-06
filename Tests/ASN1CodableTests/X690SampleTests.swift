@@ -58,14 +58,20 @@ extension ASN1CodableTests {
         let ralphName = X690SampleName(givenName: "Ralph", initial: "T", familyName: "Smith")
         let susanName = X690SampleName(givenName: "Susan", initial: "B", familyName: "Smith")
         let children = [X690SampleChildInformation(name: ralphName,
-                                                   dateOfBirth: X690SampleDate(wrappedValue: VisibleString(wrappedValue: "19571111"))),
+                                                   dateOfBirth: X690SampleDate(
+                                                       wrappedValue: VisibleString(wrappedValue: "19571111")
+                                                   )),
                         X690SampleChildInformation(name: susanName,
-                                                   dateOfBirth: X690SampleDate(wrappedValue: VisibleString(wrappedValue: "19590717")))]
+                                                   dateOfBirth: X690SampleDate(
+                                                       wrappedValue: VisibleString(wrappedValue: "19590717")
+                                                   ))]
 
         let r = X690SamplePersonnelRecord(name: name,
                                           title: "Director",
                                           number: X690SampleEmployeeNumber(wrappedValue: 51),
-                                          dateOfHire: X690SampleDate(wrappedValue: VisibleString(wrappedValue: "19710917")),
+                                          dateOfHire: X690SampleDate(
+                                              wrappedValue: VisibleString(wrappedValue: "19710917")
+                                          ),
                                           nameOfSpouse: nameOfSpouse,
                                           children: children)
 
