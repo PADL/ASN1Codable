@@ -483,7 +483,6 @@
 			isa = PBXGroup;
 			children = (
 				D3FB2DA929187C2800BC72AF /* ASN1AutomaticTaggingContext.swift */,
-				D351DC68290E8AF700540132 /* ASN1CodingContext.swift */,
 				D382641229299C6400808667 /* ASN1Metadata.swift */,
 				D3565CAF29346A0A002236A5 /* ASN1UserInfoKeys.swift */,
 			);
@@ -601,6 +600,7 @@
 		D3D6E7C6292DBB0600198A86 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				D351DC68290E8AF700540132 /* ASN1CodingContext.swift */,
 				D363A449292AF21C007476B4 /* ASN1CodingKey.swift */,
 				D389097029223ACD00FF05C4 /* ASN1ExtensibleType.swift */,
 				D351DC6A290E8AF700540132 /* ASN1PreserveBinary.swift */,
