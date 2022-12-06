@@ -61,7 +61,7 @@ The `asn1json2swift` tool should be invoked with the JSON output of the Heimdal 
 ```sh
 asn1json2swift translate --input [file] --output [file]
     --map-type [ASN1Type]:[@class|@objc|@external|SwiftType]
-    --conform-type [ASN1Type]:[SwiftProtocol]
+    --conform-type [*|ASN1Type]:[SwiftProtocol]
 ```
 
 The `--map-type` option allows an ASN.1 type to be emitted as a Swift or Objective-C class, or to be excluded. If `@external` is specified, then you should provide a Swift typealias or type with that name. If a Swift type is specified, then the translator will emit a typealias but no type definition.

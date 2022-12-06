@@ -364,7 +364,8 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         // now add any additional user specificied conformances
         // it would make more sense to use a Set but, we do want to preserve
         // order for readability
-        if let additionalConformances = self.translator?.additionalConformances[self.generatedName] {
+        if let additionalConformances = self.translator?.additionalConformances[self.generatedName] ??
+            self.translator?.additionalConformances["*"] {
             additionalConformances.filter { !conformances.contains($0) }.forEach {
                 conformances.append($0)
             }
