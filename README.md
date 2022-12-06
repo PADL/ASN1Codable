@@ -56,6 +56,8 @@ The `asn1json2swift` tool is a driver for the framework.
 
 ### Usage
 
+The `asn1json2swift` tool should be invoked with the JSON output of the Heimdal `asn1_compile` tool.
+
 ```sh
 asn1json2swift translate --input [file] --output [file]
     --map-type [ASN1Type]:[@class|@objc|@external|SwiftType]
