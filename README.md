@@ -38,9 +38,11 @@ let encodedValue = try ASN1Encoder().encode(1234)
 let decodedValue = try ASN1Decoder().decode(Int.self, from: encodedValue)
 ```
 
+There are plenty of other examples in the Tests directory.
+
 ## asn1json2swift
 
-The HeimASN1Translator framework reads the JSON AST representation emitted by `asn1_compile` and emits Swift source code. (Note: you will need to use the master branch of Heimdal if you wish to recompile the ASN.1 as the translator depends on some new features of the ASN.1 compiler.)
+The `asn1json2swift` tool reads the JSON AST representation emitted by `asn1_compile` and emits Swift source code. Note that you will need to use the master branch of Heimdal if you wish to recompile the ASN.1 as the translator depends on some new features of the ASN.1 compiler.
 
 Features include:
 
@@ -51,8 +53,6 @@ Features include:
 * User-specified additional conformances
 
 There are some limitations, for example anonymous nested types are not supported, and there are some cases where property wrapper initializers are not correctly emitted. These are easily worked around.
-
-The `asn1json2swift` tool is a driver for the framework.
 
 ### Usage
 
