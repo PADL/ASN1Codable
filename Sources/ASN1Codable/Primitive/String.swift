@@ -180,33 +180,3 @@ public struct VisibleString<Value: Codable & ExpressibleByString>:
         ASN1Metadata(tag: .universal(.visibleString))
     }
 }
-
-extension ASN1DecodedTag {
-    var isString: Bool {
-        switch self {
-        case .universal(let tag):
-            return tag.isString
-        default:
-            return false
-        }
-    }
-}
-
-extension ASN1Tag {
-    var isString: Bool {
-        switch self {
-        case .numericString,
-             .ia5String,
-             .printableString,
-             .graphicString,
-             .visibleString,
-             .generalString,
-             .universalString,
-             .bmpString,
-             .utf8String:
-            return true
-        default:
-            return false
-        }
-    }
-}
