@@ -404,6 +404,22 @@ extension ASN1CodableTests {
                                taggingEnvironment: .automatic)
     }
 
+    func test_SET_PersonnelRecord_AutomaticallyTaggedType() {
+        struct PersonnelRecord: Codable, Equatable, ASN1SetCodable, ASN1AutomaticallyTaggedType {
+            var name: Data
+            var location: Int
+            var age: Int?
+        }
+
+        self.test_encodeDecode(PersonnelRecord(name: Data([0x44, 0x61, 0x76, 0x79, 0x20, 0x4A, 0x6F, 0x6E,
+                                                           0x65, 0x73]),
+                               location: 0,
+                               age: 44),
+                               encodedAs: Data([0x31, 0x12, 0x80, 0x0A, 0x44, 0x61, 0x76, 0x79,
+                                                0x20, 0x4A, 0x6F, 0x6E, 0x65, 0x73, 0x81, 0x01,
+                                                0x00, 0x82, 0x01, 0x2C]))
+    }
+
     func test_AUTOMATIC_SEQUENCE_PersonnelRecord() {
         struct PersonnelRecord: Codable, Equatable {
             @UTF8String var name: String = "John"

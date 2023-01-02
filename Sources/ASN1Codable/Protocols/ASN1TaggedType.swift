@@ -38,3 +38,6 @@ extension ASN1TaggedTypeTagging {
         }
     }
 }
+
+/// type members are automatically tagged
+public protocol ASN1AutomaticallyTaggedType {}
