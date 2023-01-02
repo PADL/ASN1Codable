@@ -219,6 +219,29 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         self.tType == .universal(.choice)
     }
 
+    var isAutomaticallyTagged: Bool {
+        guard self.translator?.module?.tagging == .automatic else {
+            return false
+        }
+
+        guard self._isSetOrSequence || self.isChoice else {
+            return false
+        }
+
+        guard let members = self.members, !members.isEmpty else { return true }
+
+        let isUntagged: Bool = members.reduce(true) {
+            guard $0 == true,
+                  let typeDefValue = self.isChoice ? $1.typeDefValue : $1.typeDefValue?.type?.typeDefValue else {
+                return false
+            }
+
+            return typeDefValue.tagClass == nil || typeDefValue.tagClass == .universal
+        }
+
+        return isUntagged
+    }
+
     var isUniformlyContextTagged: Bool {
         guard let members = self.members, !members.isEmpty else { return false }
 
@@ -351,6 +374,9 @@ final class HeimASN1TypeDef: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresen
         }
         if self.isExtensible ?? false {
             conformances.append("ASN1Codable.ASN1ExtensibleType")
+        }
+        if self.isAutomaticallyTagged {
+            conformances.append("ASN1Codable.ASN1AutomaticallyTaggedType")
         }
         if let openType = self.openType {
             let valueMember = self.members?.first { $0.typeDefValue?.name == openType.openTypeMember }

@@ -21,6 +21,7 @@ struct HeimASN1Module: Codable {
     enum Tagging: String, Codable {
         case explicit
         case implicit
+        case automatic
     }
 
     var module: String
