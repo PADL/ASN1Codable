@@ -58,10 +58,10 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     /// with uniform tagging to Swift types. (The same can be achieved with `ASN1MetadataCodingKey`
     /// but this approach results in smaller code size as the tag number is encapsulated in the raw
     /// representable type itself.)
-    private func contextTagCodingKeys<Key: ASN1ContextTagCodingKey>(
-        _: Key.Type,
+    private func contextTagCodingKeys<_Key: ASN1ContextTagCodingKey>(
+        _: _Key.Type,
         _ objects: [ASN1Object]
-    ) -> [Key] {
+    ) -> [_Key] {
         guard objects.allSatisfy(\.tag.isContextSpecific) else {
             return []
         }
@@ -69,7 +69,7 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         return objects.compactMap {
             if case .taggedTag(let tagNo) = $0.tag,
                let tagNo = Int(exactly: tagNo) {
-                return Key(intValue: tagNo)
+                return _Key(intValue: tagNo)
             } else {
                 return nil
             }
@@ -78,19 +78,19 @@ extension ASN1DecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
     /// types with `ASN1MetadataCodingKey` conforming coding keys provide a `metadata(forKey:)`
     /// function that maps a key to a non-universal tag and tagging environment.
-    private func metadataCodingKeys<Key: ASN1MetadataCodingKey>(
-        _ type: Key.Type,
+    private func metadataCodingKeys<_Key: ASN1MetadataCodingKey>(
+        _ type: _Key.Type,
         _ objects: [ASN1Object]
-    ) -> [Key] {
+    ) -> [_Key] {
         objects.compactMap { object in
             object.tag.isUniversal ? self.context.codingKey(type, object: object)
-                : Key.allCases.first { Key.metadata(forKey: $0)?.tag == object.tag }
+                : _Key.allCases.first { _Key.metadata(forKey: $0)?.tag == object.tag }
         }
     }
 
     /// for a regular `CodingKey` we use reflection to map the tag to a field name. This does assume that
     /// the key name matches the field name. This is the only strategy that works with universal tags.
-    private func codingKeys<Key: CodingKey>(
+    private func codingKeys(
         _ type: Key.Type,
         _ objects: [ASN1Object]
     ) -> [Key] {
