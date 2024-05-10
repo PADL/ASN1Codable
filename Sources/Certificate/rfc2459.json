@@ -803,6 +803,16 @@
 {"label":"iso","value":1},{"label":"identified-organization","value":3},{"label":"dod","value":6},{"label":"internet","value":1},{"label":"security","value":5},{"label":"mechanisms","value":5},{"label":"pkix","value":7},{"label":null,"value":48},{"label":null,"value":3}]}
 {"name":"id-pkix-ad-caRepository","gen_name":"id_pkix_ad_caRepository","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
 {"label":"iso","value":1},{"label":"identified-organization","value":3},{"label":"dod","value":6},{"label":"internet","value":1},{"label":"security","value":5},{"label":"mechanisms","value":5},{"label":"pkix","value":7},{"label":null,"value":48},{"label":null,"value":5}]}
+{"name":"PrivateKeyVersion","gen_name":"PrivateKeyVersion","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":2,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrivateKeyVersion","gen_name":"PrivateKeyVersion","is_type":true,"exported":true,"typedef":true,"ttype":"INTEGER","ctype":"heim_integer"}
+}
+{"name":"PrivateKey","gen_name":"PrivateKey","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":4,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrivateKey","gen_name":"PrivateKey","is_type":true,"exported":false,"typedef":true,"ttype":"OCTET STRING","ctype":"heim_octet_string"}
+}
+{"name":"id-curve-ed-25519","gen_name":"id_curve_ed_25519","type":"OBJECT IDENTIFIER","constant":true,"exported":true,"value":[
+{"label":null,"value":1},{"label":null,"value":3},{"label":null,"value":101},{"label":null,"value":112}]}
 {"module":"RFC2459","tagging":"explicit","objid":[]}
 {"name":"DSAParams","gen_name":"DSAParams","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
 "ttype":
@@ -2005,6 +2015,39 @@
 },{"name":"inhibitPolicyMapping","gen_name":"inhibitPolicyMapping","optional":true,"defval":null,"type":{"name":"PolicyConstraints","gen_name":"*inhibitPolicyMapping","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":1,"tagenv":"IMPLICIT",
 "ttype":
 {"name":"PolicyConstraints","gen_name":"*inhibitPolicyMapping","is_type":true,"exported":true,"typedef":false,"ttype":"SkipCerts","alias":true
+}
+}
+}]}
+}
+{"name":"PrivateKeyAlgorithmIdentifier","gen_name":"PrivateKeyAlgorithmIdentifier","is_type":true,"exported":true,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrivateKeyAlgorithmIdentifier","gen_name":"PrivateKeyAlgorithmIdentifier","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct PrivateKeyAlgorithmIdentifier","members":[
+{"name":"algorithm","gen_name":"algorithm","optional":false,"type":{"name":"PrivateKeyAlgorithmIdentifier","gen_name":"algorithm","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":6,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrivateKeyAlgorithmIdentifier","gen_name":"algorithm","is_type":true,"exported":false,"typedef":false,"ttype":"OBJECT IDENTIFIER","ctype":"heim_oid"}
+}
+},{"name":"parameters","gen_name":"parameters","optional":false,"type":{"name":"PrivateKeyAlgorithmIdentifier","gen_name":"parameters","is_type":true,"exported":true,"typedef":false,"ttype":"HEIM_ANY","alias":true
+}
+}],"opentype":{"opentype":true,"arraytype":false,"classname":"_ALGORITHM-TYPE","objectsetname":"PrivateKeyAlgorithms","typeidmember":"algorithm","opentypemember":"parameters","typeidfield":"id","opentypefield":"Type","opentypeids":["id_curve_ed_25519"],
+"members":[{"name":"PrivateKeyAlgorithmIdentifier","gen_name":"*curve_ed_25519","is_type":true,"exported":false,"typedef":false,"tagclass":"UNIVERSAL","tagvalue":5,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrivateKeyAlgorithmIdentifier","gen_name":"*curve_ed_25519","is_type":true,"exported":false,"typedef":false,"ttype":"NULL","ctype":"int"}
+}
+]}
+}
+}
+{"name":"PrivateKeyInfo","gen_name":"PrivateKeyInfo","is_type":true,"exported":false,"typedef":true,"tagclass":"UNIVERSAL","tagvalue":16,"tagenv":"EXPLICIT",
+"ttype":
+{"name":"PrivateKeyInfo","gen_name":"PrivateKeyInfo","is_type":true,"exported":false,"typedef":true,"ttype":"SEQUENCE","extensible":false,"ctype":"struct PrivateKeyInfo","members":[
+{"name":"version","gen_name":"version","optional":false,"type":{"name":"PrivateKeyInfo","gen_name":"version","is_type":true,"exported":true,"typedef":false,"ttype":"PrivateKeyVersion","alias":true
+}
+},{"name":"privateKeyAlgorithm","gen_name":"privateKeyAlgorithm","optional":false,"type":{"name":"PrivateKeyInfo","gen_name":"privateKeyAlgorithm","is_type":true,"exported":true,"typedef":false,"ttype":"PrivateKeyAlgorithmIdentifier","alias":true
+}
+},{"name":"privateKey","gen_name":"privateKey","optional":false,"type":{"name":"PrivateKeyInfo","gen_name":"privateKey","is_type":true,"exported":true,"typedef":false,"ttype":"PrivateKey","alias":true
+}
+},{"name":"attributes","gen_name":"attributes","optional":true,"defval":null,"type":{"name":"PrivateKeyInfo","gen_name":"*attributes","is_type":true,"exported":false,"typedef":false,"tagclass":"CONTEXT","tagvalue":0,"tagenv":"IMPLICIT",
+"ttype":
+{"name":"PrivateKeyInfo","gen_name":"*attributes","is_type":true,"exported":true,"typedef":false,"ttype":"AttributeSet","alias":true
 }
 }
 }]}

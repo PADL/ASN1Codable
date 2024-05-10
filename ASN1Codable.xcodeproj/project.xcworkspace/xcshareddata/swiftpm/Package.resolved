@@ -1,4 +1,5 @@
 {
+  "originHash" : "9f959dffa98597cb25c0c817d4d0c8ae76a7c74b140e6ab076b3d18b2c7863e6",
   "pins" : [
     {
       "identity" : "anycodable",
@@ -75,7 +76,7 @@
     {
       "identity" : "nimble",
       "kind" : "remoteSourceControl",
-      "location" : "http://github.com/Quick/Nimble",
+      "location" : "https://github.com/Quick/Nimble",
       "state" : {
         "revision" : "c93f16c25af5770f0d3e6af27c9634640946b068",
         "version" : "9.2.1"
@@ -189,5 +190,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

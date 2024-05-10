@@ -1467,4 +1467,37 @@ KnownPolicyQualifiers _POLICYQUALIFIERINFO ::= {
 }
 PolicyQualifierInfo ::= PolicyQualifierInfo{KnownPolicyQualifiers}
 
+---
+--- Private key algorithms
+---
+
+PrivateKeyVersion ::= INTEGER
+
+PrivateKeyAlgorithmIdentifier{_ALGORITHM-TYPE:PrivateKeyAlgSet} ::= SEQUENCE {
+    algorithm   _ALGORITHM-TYPE.&id({PrivateKeyAlgSet}),
+    parameters  _ALGORITHM-TYPE.&Type({PrivateKeyAlgSet}{@algorithm})
+}
+
+PrivateKey ::= OCTET STRING
+
+id-curve-ed-25519		OBJECT IDENTIFIER ::= { 1 3 101 112 }
+
+curve-ed-25519 _ALGORITHM-TYPE ::= {
+    &id id-curve-ed-25519,
+    &Type NULL
+}
+
+PrivateKeyAlgorithms _ALGORITHM-TYPE ::= {
+    curve-ed-25519
+}
+
+PrivateKeyAlgorithmIdentifier ::= PrivateKeyAlgorithmIdentifier{PrivateKeyAlgorithms}
+
+PrivateKeyInfo ::= SEQUENCE {
+    version PrivateKeyVersion,
+    privateKeyAlgorithm PrivateKeyAlgorithmIdentifier,
+    privateKey PrivateKey,
+    attributes [0] IMPLICIT AttributeSet OPTIONAL
+}
+
 END
