@@ -18,68 +18,68 @@ import Foundation
 import ASN1Kit
 
 extension ASN1Tag: HeimASN1SwiftTypeRepresentable {
-    var swiftType: String? {
-        switch self {
-        case .boolean:
-            return "Bool"
-        case .integer:
-            return "Int"
-        case .bitString:
-            return "BitString"
-        case .octetString:
-            return "Data"
-        case .null:
-            return "Null"
-        case .objectIdentifier:
-            return "ObjectIdentifier"
-        case .sequence:
-            return "Array"
-        case .set:
-            return "Set"
-        case .generalizedTime,
-             .utcTime,
-             .printableString,
-             .t61String,
-             .graphicString,
-             .visibleString,
-             .generalString,
-             .universalString,
-             .bmpString,
-             .ia5String,
-             .utf8String:
-            let wrapped = self.wrappedSwiftType!
-            return "\(wrapped.0)<\(wrapped.1)>"
-        default:
-            return nil
-        }
+  var swiftType: String? {
+    switch self {
+    case .boolean:
+      return "Bool"
+    case .integer:
+      return "Int"
+    case .bitString:
+      return "BitString"
+    case .octetString:
+      return "Data"
+    case .null:
+      return "Null"
+    case .objectIdentifier:
+      return "ObjectIdentifier"
+    case .sequence:
+      return "Array"
+    case .set:
+      return "Set"
+    case .generalizedTime,
+         .utcTime,
+         .printableString,
+         .t61String,
+         .graphicString,
+         .visibleString,
+         .generalString,
+         .universalString,
+         .bmpString,
+         .ia5String,
+         .utf8String:
+      let wrapped = self.wrappedSwiftType!
+      return "\(wrapped.0)<\(wrapped.1)>"
+    default:
+      return nil
     }
+  }
 
-    var wrappedSwiftType: (String, String)? {
-        switch self {
-        case .generalizedTime:
-            return ("GeneralizedTime", "Date")
-        case .utcTime:
-            return ("UTCTime", "Date")
-        case .graphicString:
-            return ("GraphicString", "String")
-        case .visibleString:
-            return ("VisibleString", "String")
-        case .printableString:
-            return ("PrintableString", "String")
-        case .t61String:
-            return ("TeletexString", "String")
-        case .generalString:
-            return ("GeneralString", "String")
-        case .universalString:
-            return ("UniversalString", "String")
-        case .bmpString:
-            return ("BMPString", "String")
-        case .ia5String:
-            return ("IA5String", "String")
-        case .utf8String:
-            return ("UTF8String", "String")
-        default:
-            return nil
-        }
+  var wrappedSwiftType: (String, String)? {
+    switch self {
+    case .generalizedTime:
+      return ("GeneralizedTime", "Date")
+    case .utcTime:
+      return ("UTCTime", "Date")
+    case .graphicString:
+      return ("GraphicString", "String")
+    case .visibleString:
+      return ("VisibleString", "String")
+    case .printableString:
+      return ("PrintableString", "String")
+    case .t61String:
+      return ("TeletexString", "String")
+    case .generalString:
+      return ("GeneralString", "String")
+    case .universalString:
+      return ("UniversalString", "String")
+    case .bmpString:
+      return ("BMPString", "String")
+    case .ia5String:
+      return ("IA5String", "String")
+    case .utf8String:
+      return ("UTF8String", "String")
+    default:
+      return nil
     }
+  }
 }

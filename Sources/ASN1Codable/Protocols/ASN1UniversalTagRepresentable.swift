@@ -18,9 +18,9 @@ import Foundation
 import ASN1Kit
 
 protocol ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { get }
+  static var tagNo: ASN1Tag { get }
 }
 
 extension Optional: ASN1UniversalTagRepresentable where Wrapped: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Kit.ASN1Tag { Wrapped.tagNo }
+  static var tagNo: ASN1Kit.ASN1Tag { Wrapped.tagNo }
 }

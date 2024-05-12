@@ -18,128 +18,128 @@ import Foundation
 import ASN1Kit
 
 protocol ASN1DecodingContainer {
-    var codingPath: [CodingKey] { get }
-    var userInfo: [CodingUserInfoKey: Any] { get }
-    var object: ASN1Object { get }
-    var context: ASN1DecodingContext { get set }
-    var currentIndex: Int { get set }
+  var codingPath: [CodingKey] { get }
+  var userInfo: [CodingUserInfoKey: Any] { get }
+  var object: ASN1Object { get }
+  var context: ASN1DecodingContext { get set }
+  var currentIndex: Int { get set }
 }
 
 /// helpers shared between keyed and unkeyed decoding containers
 
 extension ASN1DecodingContainer {
-    var count: Int? {
-        self.object.data.fold({ _ in
-            1
-        }, { items in
-            items.count
-        })
+  var count: Int? {
+    self.object.data.fold({ _ in
+      1
+    }, { items in
+      items.count
+    })
+  }
+
+  var isAtEnd: Bool {
+    guard let count = self.count else {
+      return true
     }
 
-    var isAtEnd: Bool {
-        guard let count = self.count else {
-            return true
-        }
+    return self.currentIndex >= count
+  }
 
-        return self.currentIndex >= count
+  private var isEmptySequence: Bool {
+    self.object.constructed && self.object.data.items?.isEmpty ?? true
+  }
+
+  private func validate() throws {
+    let isUnkeyedContainer = self is UnkeyedDecodingContainer
+
+    if !self.object.constructed, self.context.enumCodingState == .none, !self.object.isNull {
+      let context = DecodingError.Context(codingPath: self.codingPath,
+                                          debugDescription: "\(isUnkeyedContainer ? "Unkeyed" : "Keyed") " +
+                                            "container expected a constructed ASN.1 object")
+      throw DecodingError.dataCorrupted(context)
+    } else if isUnkeyedContainer, !self.isEmptySequence, self.isAtEnd {
+      let context = DecodingError.Context(codingPath: self.codingPath,
+                                          debugDescription: "Unkeyed decoding container is " +
+                                            "already at end of ASN.1 object")
+      throw DecodingError.dataCorrupted(context)
+    }
+  }
+
+  private func validateNestedContainer(_ object: ASN1Object) throws {
+    if object.constructed, object.tag.isUniversal {
+      if self.context.encodeAsSet, object.tag != .universal(.set) {
+        let context = DecodingError.Context(codingPath: codingPath,
+                                            debugDescription: "Expected \(ASN1DecodedTag.universal(.set)), " +
+                                              "but received tag \(object.tag)")
+        throw DecodingError.dataCorrupted(context)
+      } else if object.tag != .universal(.sequence) {
+        let context = DecodingError.Context(codingPath: codingPath,
+                                            debugDescription: "Expected a " +
+                                              "\(ASN1DecodedTag.universal(.sequence)), " +
+                                              "but received tag \(object.tag)")
+        throw DecodingError.dataCorrupted(context)
+      }
+    } else if self.context.enumCodingState != .enum {
+      let context = DecodingError.Context(codingPath: codingPath,
+                                          debugDescription: "Expected a constructed type, " +
+                                            "instead received tag \(object.tag)")
+      throw DecodingError.dataCorrupted(context)
+    }
+  }
+
+  /// returns the current object in a keyed or unkeyed decoding container,
+  /// subject to some validation checks
+  private func currentObject(
+    nestedContainer: Bool
+  ) throws -> ASN1Object {
+    let object: ASN1Object
+
+    if self.context.enumCodingState != .none || self.object.isNull {
+      // enums have a single value, which is the enum value itself
+      object = self.object
+    } else if self.isAtEnd {
+      // if we've reached the end of the SEQUENCE or SET, we still need to initialise
+      // the remaining wrapped objects; pad the object set with null instances.
+      object = ASN1Null
+    } else if self.object.constructed, let items = self.object.data.items, self.currentIndex < items.count {
+      // return the object at the current index
+      object = items[self.currentIndex]
+    } else {
+      // either we've gone past the object count, or it's not a constructed object
+      let context = DecodingError.Context(codingPath: self.codingPath,
+                                          debugDescription: "Object \(self.object) is " +
+                                            "not constructed, or has less than \(self.currentIndex + 1) items")
+      throw DecodingError.dataCorrupted(context)
     }
 
-    private var isEmptySequence: Bool {
-        self.object.constructed && self.object.data.items?.isEmpty ?? true
+    try self.validate()
+
+    if nestedContainer {
+      try self.validateNestedContainer(object)
     }
 
-    private func validate() throws {
-        let isUnkeyedContainer = self is UnkeyedDecodingContainer
+    return object
+  }
 
-        if !self.object.constructed, self.context.enumCodingState == .none, !self.object.isNull {
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "\(isUnkeyedContainer ? "Unkeyed" : "Keyed") " +
-                                                    "container expected a constructed ASN.1 object")
-            throw DecodingError.dataCorrupted(context)
-        } else if isUnkeyedContainer, !self.isEmptySequence, self.isAtEnd {
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Unkeyed decoding container is " +
-                                                    "already at end of ASN.1 object")
-            throw DecodingError.dataCorrupted(context)
-        }
+  /// wrapped for _currentObject() that can coax decoding errors such that
+  /// they will hint to the caller to skip the field if OPTIONAL (see below)
+  func currentObject(
+    for type: Decodable.Type? = nil,
+    nestedContainer: Bool = false
+  ) throws -> ASN1Object {
+    do {
+      return try self.currentObject(nestedContainer: nestedContainer)
+    } catch {
+      if let type, case DecodingError.dataCorrupted(let context) = error {
+        // retype the error as a valueNotFound, which the field is OPTIONAL
+        // will tell the caller it is safe to skip this field
+        throw DecodingError.valueNotFound(type, context)
+      } else {
+        throw error
+      }
     }
+  }
 
-    private func validateNestedContainer(_ object: ASN1Object) throws {
-        if object.constructed, object.tag.isUniversal {
-            if self.context.encodeAsSet, object.tag != .universal(.set) {
-                let context = DecodingError.Context(codingPath: codingPath,
-                                                    debugDescription: "Expected \(ASN1DecodedTag.universal(.set)), " +
-                                                        "but received tag \(object.tag)")
-                throw DecodingError.dataCorrupted(context)
-            } else if object.tag != .universal(.sequence) {
-                let context = DecodingError.Context(codingPath: codingPath,
-                                                    debugDescription: "Expected a " +
-                                                        "\(ASN1DecodedTag.universal(.sequence)), " +
-                                                        "but received tag \(object.tag)")
-                throw DecodingError.dataCorrupted(context)
-            }
-        } else if self.context.enumCodingState != .enum {
-            let context = DecodingError.Context(codingPath: codingPath,
-                                                debugDescription: "Expected a constructed type, " +
-                                                    "instead received tag \(object.tag)")
-            throw DecodingError.dataCorrupted(context)
-        }
-    }
-
-    /// returns the current object in a keyed or unkeyed decoding container,
-    /// subject to some validation checks
-    private func currentObject(
-        nestedContainer: Bool
-    ) throws -> ASN1Object {
-        let object: ASN1Object
-
-        if self.context.enumCodingState != .none || self.object.isNull {
-            // enums have a single value, which is the enum value itself
-            object = self.object
-        } else if self.isAtEnd {
-            // if we've reached the end of the SEQUENCE or SET, we still need to initialise
-            // the remaining wrapped objects; pad the object set with null instances.
-            object = ASN1Null
-        } else if self.object.constructed, let items = self.object.data.items, self.currentIndex < items.count {
-            // return the object at the current index
-            object = items[self.currentIndex]
-        } else {
-            // either we've gone past the object count, or it's not a constructed object
-            let context = DecodingError.Context(codingPath: self.codingPath,
-                                                debugDescription: "Object \(self.object) is " +
-                                                    "not constructed, or has less than \(self.currentIndex + 1) items")
-            throw DecodingError.dataCorrupted(context)
-        }
-
-        try self.validate()
-
-        if nestedContainer {
-            try self.validateNestedContainer(object)
-        }
-
-        return object
-    }
-
-    /// wrapped for _currentObject() that can coax decoding errors such that
-    /// they will hint to the caller to skip the field if OPTIONAL (see below)
-    func currentObject(
-        for type: Decodable.Type? = nil,
-        nestedContainer: Bool = false
-    ) throws -> ASN1Object {
-        do {
-            return try self.currentObject(nestedContainer: nestedContainer)
-        } catch {
-            if let type, case DecodingError.dataCorrupted(let context) = error {
-                // retype the error as a valueNotFound, which the field is OPTIONAL
-                // will tell the caller it is safe to skip this field
-                throw DecodingError.valueNotFound(type, context)
-            } else {
-                throw error
-            }
-        }
-    }
-
-    var disableSetSorting: Bool {
-        self.userInfo[CodingUserInfoKey.ASN1DisableSetSorting] as? Bool ?? false
-    }
+  var disableSetSorting: Bool {
+    self.userInfo[CodingUserInfoKey.ASN1DisableSetSorting] as? Bool ?? false
+  }
 }

@@ -18,7 +18,7 @@ import Foundation
 import ASN1Kit
 
 public protocol ASN1ObjectSetCodable: Codable {
-    static var knownTypes: [AnyHashable: Codable.Type] { get }
+  static var knownTypes: [AnyHashable: Codable.Type] { get }
 }
 
 public protocol ASN1ObjectSetOctetStringCodable: ASN1ObjectSetCodable {}

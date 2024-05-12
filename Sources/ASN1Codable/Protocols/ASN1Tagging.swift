@@ -17,23 +17,23 @@
 import Foundation
 
 public enum ASN1Tagging {
-    case explicit
-    case implicit
-    case automatic
+  case explicit
+  case implicit
+  case automatic
 }
 
 public protocol ASN1TaggingRepresentable {
-    static var tagging: ASN1Tagging? { get }
+  static var tagging: ASN1Tagging? { get }
 }
 
 public enum ASN1ExplicitTagging: ASN1TaggingRepresentable {
-    public static var tagging: ASN1Tagging? { .explicit }
+  public static var tagging: ASN1Tagging? { .explicit }
 }
 
 public enum ASN1ImplicitTagging: ASN1TaggingRepresentable {
-    public static var tagging: ASN1Tagging? { .implicit }
+  public static var tagging: ASN1Tagging? { .implicit }
 }
 
 public enum ASN1DefaultTagging: ASN1TaggingRepresentable {
-    public static var tagging: ASN1Tagging? { nil }
+  public static var tagging: ASN1Tagging? { nil }
 }

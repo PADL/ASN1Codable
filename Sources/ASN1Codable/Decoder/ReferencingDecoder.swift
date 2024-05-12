@@ -18,31 +18,31 @@ import Foundation
 import ASN1Kit
 
 extension ASN1DecoderImpl {
-    final class ReferencingDecoder: ASN1DecoderImpl {
-        var decodingContainer: ASN1DecodingContainer
+  final class ReferencingDecoder: ASN1DecoderImpl {
+    var decodingContainer: ASN1DecodingContainer
 
-        init(_ decodingContainer: ASN1DecodingContainer, at index: Int) {
-            self.decodingContainer = decodingContainer
-            super.init(object: decodingContainer.object,
-                       codingPath: decodingContainer.codingPath,
-                       userInfo: decodingContainer.userInfo,
-                       context: decodingContainer.context)
-            self.codingPath.append(ASN1Key(index: index))
-        }
-
-        init(_ decodingContainer: ASN1DecodingContainer, key: CodingKey) {
-            self.decodingContainer = decodingContainer
-            super.init(object: decodingContainer.object,
-                       codingPath: decodingContainer.codingPath,
-                       userInfo: decodingContainer.userInfo,
-                       context: decodingContainer.context)
-            self.codingPath.append(key)
-        }
-
-        deinit {
-            guard let container = self.container else { return }
-            precondition(container.currentIndex >= self.decodingContainer.currentIndex)
-            self.decodingContainer.currentIndex = container.currentIndex
-        }
+    init(_ decodingContainer: ASN1DecodingContainer, at index: Int) {
+      self.decodingContainer = decodingContainer
+      super.init(object: decodingContainer.object,
+                 codingPath: decodingContainer.codingPath,
+                 userInfo: decodingContainer.userInfo,
+                 context: decodingContainer.context)
+      self.codingPath.append(ASN1Key(index: index))
     }
+
+    init(_ decodingContainer: ASN1DecodingContainer, key: CodingKey) {
+      self.decodingContainer = decodingContainer
+      super.init(object: decodingContainer.object,
+                 codingPath: decodingContainer.codingPath,
+                 userInfo: decodingContainer.userInfo,
+                 context: decodingContainer.context)
+      self.codingPath.append(key)
+    }
+
+    deinit {
+      guard let container = self.container else { return }
+      precondition(container.currentIndex >= self.decodingContainer.currentIndex)
+      self.decodingContainer.currentIndex = container.currentIndex
+    }
+  }
 }

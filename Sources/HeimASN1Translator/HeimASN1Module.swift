@@ -18,43 +18,43 @@ import Foundation
 import ASN1Kit
 
 struct HeimASN1Module: Codable {
-    enum Tagging: String, Codable {
-        case explicit
-        case implicit
-        case automatic
-    }
+  enum Tagging: String, Codable {
+    case explicit
+    case implicit
+    case automatic
+  }
 
-    var module: String
-    var tagging: Tagging
-    var objid: [ObjectIdentifier]?
+  var module: String
+  var tagging: Tagging
+  var objid: [ObjectIdentifier]?
 }
 
 final class HeimASN1ModuleRef: Codable {
-    enum CodingKeys: String, CodingKey {
-        case name = "imports"
+  enum CodingKeys: String, CodingKey {
+    case name = "imports"
+  }
+
+  var name: String
+  var translator: HeimASN1Translator?
+
+  func `import`(translator: HeimASN1Translator) throws {
+    let file: URL
+    let path = "\(self.name).json"
+
+    if let parentURL = translator.url {
+      let containingURL = parentURL.deletingLastPathComponent()
+      file = containingURL.appendingPathComponent(path)
+    } else {
+      file = URL(fileURLWithPath: path)
     }
 
-    var name: String
-    var translator: HeimASN1Translator?
+    var options: HeimASN1Translator.Options = translator.options
+    options.insert(.isImportedModule)
 
-    func `import`(translator: HeimASN1Translator) throws {
-        let file: URL
-        let path = "\(self.name).json"
-
-        if let parentURL = translator.url {
-            let containingURL = parentURL.deletingLastPathComponent()
-            file = containingURL.appendingPathComponent(path)
-        } else {
-            file = URL(fileURLWithPath: path)
-        }
-
-        var options: HeimASN1Translator.Options = translator.options
-        options.insert(.isImportedModule)
-
-        self.translator = HeimASN1Translator(options: options,
-                                             typeMaps: translator.typeMaps,
-                                             additionalConformances: translator.additionalConformances)
-        self.translator!.parent = translator
-        try self.translator!.import(file)
-    }
+    self.translator = HeimASN1Translator(options: options,
+                                         typeMaps: translator.typeMaps,
+                                         additionalConformances: translator.additionalConformances)
+    self.translator!.parent = translator
+    try self.translator!.import(file)
+  }
 }

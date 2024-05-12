@@ -19,12 +19,12 @@ import ASN1Kit
 
 /// A placeholder key used to mark already processed keys when coding tagged values
 struct ASN1PlaceholderCodingKey: CodingKey {
-    private let wrappedValue: ASN1CodingKey
+  private let wrappedValue: ASN1CodingKey
 
-    init(_ wrappedValue: ASN1CodingKey) { self.wrappedValue = wrappedValue }
-    init?(intValue _: Int) { nil }
-    init?(stringValue _: String) { nil }
+  init(_ wrappedValue: ASN1CodingKey) { self.wrappedValue = wrappedValue }
+  init?(intValue _: Int) { nil }
+  init?(stringValue _: String) { nil }
 
-    var stringValue: String { self.wrappedValue.stringValue }
-    var intValue: Int? { self.wrappedValue.intValue }
+  var stringValue: String { self.wrappedValue.stringValue }
+  var intValue: Int? { self.wrappedValue.intValue }
 }

@@ -24,5 +24,5 @@ let helpCommand = HelpCommand(registry: commands)
 commands.register(helpCommand)
 
 commands.main(defaultVerb: helpCommand.verb) { error in
-    print("\(error)")
+  print("\(error)")
 }

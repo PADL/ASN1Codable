@@ -18,14 +18,14 @@ import Commandant
 import Foundation
 
 struct VersionCommand: CommandProtocol {
-    struct Error: Swift.Error {}
+  struct Error: Swift.Error {}
 
-    let verb: String = "version"
-    let function: String = "Show version info"
+  let verb: String = "version"
+  let function: String = "Show version info"
 
-    func run(_: NoOptions<TranslateCommand.Error>) -> Result<Void, TranslateCommand.Error> {
-        print("0.0")
+  func run(_: NoOptions<TranslateCommand.Error>) -> Result<Void, TranslateCommand.Error> {
+    print("0.0")
 
-        return .success(())
-    }
+    return .success(())
+  }
 }

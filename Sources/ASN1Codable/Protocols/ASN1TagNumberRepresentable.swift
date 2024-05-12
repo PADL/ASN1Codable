@@ -22,14 +22,14 @@ public protocol ASN1TagNumberRepresentable {}
 
 // extracts the tag number from the ASN1TagNumber placeholder type
 extension ASN1TagNumberRepresentable {
-    static var tagNo: UInt {
-        // this appears more performant than String(describing:)
-        // swiftlint:disable force_cast
-        let enumMetadata = reflect(self) as! EnumMetadata
-        let name = enumMetadata.descriptor.name
-        let nameComponents = name.components(separatedBy: "$")
+  static var tagNo: UInt {
+    // this appears more performant than String(describing:)
+    // swiftlint:disable force_cast
+    let enumMetadata = reflect(self) as! EnumMetadata
+    let name = enumMetadata.descriptor.name
+    let nameComponents = name.components(separatedBy: "$")
 
-        precondition(nameComponents.count == 2)
-        return UInt(nameComponents[1])!
-    }
+    precondition(nameComponents.count == 2)
+    return UInt(nameComponents[1])!
+  }
 }

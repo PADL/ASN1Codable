@@ -17,37 +17,37 @@
 import Foundation
 
 struct KeyValue<Key: Hashable & Codable, Value: Codable>: Codable, Hashable {
-    static func == (lhs: KeyValue<Key, Value>, rhs: KeyValue<Key, Value>) -> Bool {
-        guard lhs.key == rhs.key else {
-            return false
-        }
-
-        return true
+  static func == (lhs: KeyValue<Key, Value>, rhs: KeyValue<Key, Value>) -> Bool {
+    guard lhs.key == rhs.key else {
+      return false
     }
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(self.key)
-    }
+    return true
+  }
 
-    var key: Key
-    var value: Value
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(self.key)
+  }
+
+  var key: Key
+  var value: Value
 }
 
 protocol KeyValueSetDictionaryCodable<Key, Value> {
-    associatedtype Key: Codable & Hashable
-    associatedtype Value: Codable
-    init(keyValueSet: Set<KeyValue<Key, Value>>)
-    var keyValueSet: Set<KeyValue<Key, Value>> { get }
+  associatedtype Key: Codable & Hashable
+  associatedtype Value: Codable
+  init(keyValueSet: Set<KeyValue<Key, Value>>)
+  var keyValueSet: Set<KeyValue<Key, Value>> { get }
 }
 
 extension Dictionary: KeyValueSetDictionaryCodable where Key: Codable, Value: Codable {
-    init(keyValueSet: Set<KeyValue<Key, Value>>) {
-        self = Dictionary(uniqueKeysWithValues: keyValueSet.map {
-            ($0.key, $0.value)
-        })
-    }
+  init(keyValueSet: Set<KeyValue<Key, Value>>) {
+    self = Dictionary(uniqueKeysWithValues: keyValueSet.map {
+      ($0.key, $0.value)
+    })
+  }
 
-    var keyValueSet: Set<KeyValue<Key, Value>> {
-        Set(self.map { KeyValue(key: $0, value: $1) })
-    }
+  var keyValueSet: Set<KeyValue<Key, Value>> {
+    Set(self.map { KeyValue(key: $0, value: $1) })
+  }
 }

@@ -14,28 +14,28 @@ import Foundation
 import ASN1Kit
 
 struct ASN1Key: CodingKey {
-    var stringValue: String
-    var intValue: Int?
+  var stringValue: String
+  var intValue: Int?
 
-    init?(stringValue: String) {
-        self.stringValue = stringValue
-        self.intValue = nil
-    }
+  init?(stringValue: String) {
+    self.stringValue = stringValue
+    self.intValue = nil
+  }
 
-    init?(intValue: Int) {
-        self.stringValue = "\(intValue)"
-        self.intValue = intValue
-    }
+  init?(intValue: Int) {
+    self.stringValue = "\(intValue)"
+    self.intValue = intValue
+  }
 
-    init(stringValue: String, intValue: Int?) {
-        self.stringValue = stringValue
-        self.intValue = intValue
-    }
+  init(stringValue: String, intValue: Int?) {
+    self.stringValue = stringValue
+    self.intValue = intValue
+  }
 
-    init(index: Int) {
-        self.stringValue = "Index \(index)"
-        self.intValue = index
-    }
+  init(index: Int) {
+    self.stringValue = "Index \(index)"
+    self.intValue = index
+  }
 
-    static let `super` = ASN1Key(stringValue: "super")!
+  static let `super` = ASN1Key(stringValue: "super")!
 }

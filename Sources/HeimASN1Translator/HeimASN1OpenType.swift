@@ -17,39 +17,39 @@
 import Foundation
 
 final class HeimASN1OpenType: Codable, CustomStringConvertible {
-    var openType: Bool = false
-    var arrayType: Bool = false
-    var className: String = ""
-    var objectSetName: String = ""
-    var typeIdMember: String = ""
-    var openTypeMember: String = ""
-    var typeIdField: String = ""
-    var openTypeField: String = ""
-    var members: [HeimASN1TypeDef] = []
-    var openTypeIds: [String]? = []
+  var openType: Bool = false
+  var arrayType: Bool = false
+  var className: String = ""
+  var objectSetName: String = ""
+  var typeIdMember: String = ""
+  var openTypeMember: String = ""
+  var typeIdField: String = ""
+  var openTypeField: String = ""
+  var members: [HeimASN1TypeDef] = []
+  var openTypeIds: [String]? = []
 
-    enum CodingKeys: String, CodingKey {
-        case openType = "opentype"
-        case arrayType = "arraytype"
-        case className = "classname"
-        case objectSetName = "objectsetname" // Known ...
-        case typeIdMember = "typeidmember" // type-id (ASN.1 name)
-        case openTypeMember = "opentypemember" // value (ASN.1 name)
-        case typeIdField = "typeidfield"
-        case openTypeField = "opentypefield"
-        case members
-        case openTypeIds = "opentypeids"
+  enum CodingKeys: String, CodingKey {
+    case openType = "opentype"
+    case arrayType = "arraytype"
+    case className = "classname"
+    case objectSetName = "objectsetname" // Known ...
+    case typeIdMember = "typeidmember" // type-id (ASN.1 name)
+    case openTypeMember = "opentypemember" // value (ASN.1 name)
+    case typeIdField = "typeidfield"
+    case openTypeField = "opentypefield"
+    case members
+    case openTypeIds = "opentypeids"
+  }
+
+  var description: String {
+    "OpenType \(self.className) with \(self.members.count) members"
+  }
+
+  func typeId(for member: HeimASN1TypeDef) -> String? {
+    guard let index = self.members.firstIndex(of: member) else {
+      return nil
     }
 
-    var description: String {
-        "OpenType \(self.className) with \(self.members.count) members"
-    }
-
-    func typeId(for member: HeimASN1TypeDef) -> String? {
-        guard let index = self.members.firstIndex(of: member) else {
-            return nil
-        }
-
-        return self.openTypeIds?[index]
-    }
+    return self.openTypeIds?[index]
+  }
 }

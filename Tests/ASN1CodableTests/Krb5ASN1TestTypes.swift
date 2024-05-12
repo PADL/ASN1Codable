@@ -199,65 +199,65 @@ typealias Realm = GeneralString<String>
 typealias KerberosTime = GeneralizedTime<Date>
 
 struct APOptions: RFC1510BitStringOptionSet, Codable, Equatable {
-    var rawValue: UInt8
+  var rawValue: UInt8
 
-    init(rawValue: UInt8) {
-        self.rawValue = rawValue
-    }
+  init(rawValue: UInt8) {
+    self.rawValue = rawValue
+  }
 
-    static let reserved = APOptions(rawValue: 1 << 0)
-    static let use_session_key = APOptions(rawValue: 1 << 1)
-    static let mutual_required = APOptions(rawValue: 1 << 2)
+  static let reserved = APOptions(rawValue: 1 << 0)
+  static let use_session_key = APOptions(rawValue: 1 << 1)
+  static let mutual_required = APOptions(rawValue: 1 << 2)
 }
 
 struct TicketFlags: RFC1510BitStringOptionSet, Codable, Equatable {
-    var rawValue: UInt32
+  var rawValue: UInt32
 
-    init(rawValue: UInt32) {
-        self.rawValue = rawValue
-    }
+  init(rawValue: UInt32) {
+    self.rawValue = rawValue
+  }
 
-    static let reserved = TicketFlags(rawValue: 1 << 0)
-    static let forwardable = TicketFlags(rawValue: 1 << 1)
-    static let forwarded = TicketFlags(rawValue: 1 << 2)
-    static let proxiable = TicketFlags(rawValue: 1 << 3)
-    static let proxy = TicketFlags(rawValue: 1 << 4)
-    static let may_postdate = TicketFlags(rawValue: 1 << 5)
-    static let postdated = TicketFlags(rawValue: 1 << 6)
-    static let invalid = TicketFlags(rawValue: 1 << 7)
-    static let renewable = TicketFlags(rawValue: 1 << 8)
-    static let initial = TicketFlags(rawValue: 1 << 9)
-    static let pre_authent = TicketFlags(rawValue: 1 << 10)
-    static let hw_authent = TicketFlags(rawValue: 1 << 11)
-    static let transited_policy_checked = TicketFlags(rawValue: 1 << 12)
-    static let ok_as_delegate = TicketFlags(rawValue: 1 << 13)
-    static let enc_pa_rep = TicketFlags(rawValue: 1 << 15)
-    static let anonymous = TicketFlags(rawValue: 1 << 16)
+  static let reserved = TicketFlags(rawValue: 1 << 0)
+  static let forwardable = TicketFlags(rawValue: 1 << 1)
+  static let forwarded = TicketFlags(rawValue: 1 << 2)
+  static let proxiable = TicketFlags(rawValue: 1 << 3)
+  static let proxy = TicketFlags(rawValue: 1 << 4)
+  static let may_postdate = TicketFlags(rawValue: 1 << 5)
+  static let postdated = TicketFlags(rawValue: 1 << 6)
+  static let invalid = TicketFlags(rawValue: 1 << 7)
+  static let renewable = TicketFlags(rawValue: 1 << 8)
+  static let initial = TicketFlags(rawValue: 1 << 9)
+  static let pre_authent = TicketFlags(rawValue: 1 << 10)
+  static let hw_authent = TicketFlags(rawValue: 1 << 11)
+  static let transited_policy_checked = TicketFlags(rawValue: 1 << 12)
+  static let ok_as_delegate = TicketFlags(rawValue: 1 << 13)
+  static let enc_pa_rep = TicketFlags(rawValue: 1 << 15)
+  static let anonymous = TicketFlags(rawValue: 1 << 16)
 }
 
 struct KDCOptions: RFC1510BitStringOptionSet, Codable, Equatable {
-    var rawValue: UInt32
+  var rawValue: UInt32
 
-    init(rawValue: UInt32) {
-        self.rawValue = rawValue
-    }
+  init(rawValue: UInt32) {
+    self.rawValue = rawValue
+  }
 
-    static let reserved = KDCOptions(rawValue: 1 << 0)
-    static let forwardable = KDCOptions(rawValue: 1 << 1)
-    static let forwarded = KDCOptions(rawValue: 1 << 2)
-    static let proxiable = KDCOptions(rawValue: 1 << 3)
-    static let proxy = KDCOptions(rawValue: 1 << 4)
-    static let allow_postdate = KDCOptions(rawValue: 1 << 5)
-    static let postdated = KDCOptions(rawValue: 1 << 6)
-    static let renewable = KDCOptions(rawValue: 1 << 8)
-    static let cname_in_addl_tkt = KDCOptions(rawValue: 1 << 14)
-    static let canonicalize = KDCOptions(rawValue: 1 << 15)
-    static let request_anonymous = KDCOptions(rawValue: 1 << 16)
-    static let disable_transited_check = KDCOptions(rawValue: 1 << 26)
-    static let renewable_ok = KDCOptions(rawValue: 1 << 27)
-    static let enc_tkt_in_skey = KDCOptions(rawValue: 1 << 28)
-    static let renew = KDCOptions(rawValue: 1 << 30)
-    static let validate = KDCOptions(rawValue: 1 << 31)
+  static let reserved = KDCOptions(rawValue: 1 << 0)
+  static let forwardable = KDCOptions(rawValue: 1 << 1)
+  static let forwarded = KDCOptions(rawValue: 1 << 2)
+  static let proxiable = KDCOptions(rawValue: 1 << 3)
+  static let proxy = KDCOptions(rawValue: 1 << 4)
+  static let allow_postdate = KDCOptions(rawValue: 1 << 5)
+  static let postdated = KDCOptions(rawValue: 1 << 6)
+  static let renewable = KDCOptions(rawValue: 1 << 8)
+  static let cname_in_addl_tkt = KDCOptions(rawValue: 1 << 14)
+  static let canonicalize = KDCOptions(rawValue: 1 << 15)
+  static let request_anonymous = KDCOptions(rawValue: 1 << 16)
+  static let disable_transited_check = KDCOptions(rawValue: 1 << 26)
+  static let renewable_ok = KDCOptions(rawValue: 1 << 27)
+  static let enc_tkt_in_skey = KDCOptions(rawValue: 1 << 28)
+  static let renew = KDCOptions(rawValue: 1 << 30)
+  static let validate = KDCOptions(rawValue: 1 << 31)
 }
 
 typealias LR_TYPE = Int
@@ -275,16 +275,16 @@ typealias AS_REQ = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$10, ASN1Codable
 typealias TGS_REQ = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$12, ASN1Codable.ASN1ExplicitTagging, KDC_REQ>
 
 struct PAC_OPTIONS_FLAGS: RFC1510BitStringOptionSet, Codable, Equatable {
-    var rawValue: UInt8
+  var rawValue: UInt8
 
-    init(rawValue: UInt8) {
-        self.rawValue = rawValue
-    }
+  init(rawValue: UInt8) {
+    self.rawValue = rawValue
+  }
 
-    static let claims = PAC_OPTIONS_FLAGS(rawValue: 1 << 0)
-    static let branch_aware = PAC_OPTIONS_FLAGS(rawValue: 1 << 1)
-    static let forward_to_full_dc = PAC_OPTIONS_FLAGS(rawValue: 1 << 2)
-    static let resource_based_constrained_delegation = PAC_OPTIONS_FLAGS(rawValue: 1 << 3)
+  static let claims = PAC_OPTIONS_FLAGS(rawValue: 1 << 0)
+  static let branch_aware = PAC_OPTIONS_FLAGS(rawValue: 1 << 1)
+  static let forward_to_full_dc = PAC_OPTIONS_FLAGS(rawValue: 1 << 2)
+  static let resource_based_constrained_delegation = PAC_OPTIONS_FLAGS(rawValue: 1 << 3)
 }
 
 typealias PROV_SRV_LOCATION = GeneralString<String>
@@ -294,15 +294,15 @@ typealias AS_REP = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$11, ASN1Codable
 typealias TGS_REP = ASN1ApplicationTagged<KERBEROS5.ASN1TagNumber$13, ASN1Codable.ASN1ExplicitTagging, KDC_REP>
 
 typealias EncASRepPart = ASN1ApplicationTagged<
-    KERBEROS5.ASN1TagNumber$25,
-    ASN1Codable.ASN1ExplicitTagging,
-    EncKDCRepPart
+  KERBEROS5.ASN1TagNumber$25,
+  ASN1Codable.ASN1ExplicitTagging,
+  EncKDCRepPart
 >
 
 typealias EncTGSRepPart = ASN1ApplicationTagged<
-    KERBEROS5.ASN1TagNumber$26,
-    ASN1Codable.ASN1ExplicitTagging,
-    EncKDCRepPart
+  KERBEROS5.ASN1TagNumber$26,
+  ASN1Codable.ASN1ExplicitTagging,
+  EncKDCRepPart
 >
 
 var krb5_pvno: Int = 5
@@ -324,347 +324,347 @@ let PA_SAM_TYPE_CRYPTOCARD: PA_SAM_TYPE = 6
 typealias PA_SAM_REDIRECT = HostAddresses
 
 struct SAMFlags: RFC1510BitStringOptionSet, Codable, Equatable {
-    var rawValue: UInt8
+  var rawValue: UInt8
 
-    init(rawValue: UInt8) {
-        self.rawValue = rawValue
-    }
+  init(rawValue: UInt8) {
+    self.rawValue = rawValue
+  }
 
-    static let use_sad_as_key = SAMFlags(rawValue: 1 << 0)
-    static let send_encrypted_sad = SAMFlags(rawValue: 1 << 1)
-    static let must_pk_encrypt_sad = SAMFlags(rawValue: 1 << 2)
+  static let use_sad_as_key = SAMFlags(rawValue: 1 << 0)
+  static let send_encrypted_sad = SAMFlags(rawValue: 1 << 1)
+  static let must_pk_encrypt_sad = SAMFlags(rawValue: 1 << 2)
 }
 
 typealias PA_SERVER_REFERRAL_DATA = EncryptedData
 
 struct FastOptions: RFC1510BitStringOptionSet, Codable, Equatable {
-    var rawValue: UInt32
+  var rawValue: UInt32
 
-    init(rawValue: UInt32) {
-        self.rawValue = rawValue
-    }
+  init(rawValue: UInt32) {
+    self.rawValue = rawValue
+  }
 
-    static let reserved = FastOptions(rawValue: 1 << 0)
-    static let hide_client_names = FastOptions(rawValue: 1 << 1)
-    static let critical2 = FastOptions(rawValue: 1 << 2)
-    static let critical3 = FastOptions(rawValue: 1 << 3)
-    static let critical4 = FastOptions(rawValue: 1 << 4)
-    static let critical5 = FastOptions(rawValue: 1 << 5)
-    static let critical6 = FastOptions(rawValue: 1 << 6)
-    static let critical7 = FastOptions(rawValue: 1 << 7)
-    static let critical8 = FastOptions(rawValue: 1 << 8)
-    static let critical9 = FastOptions(rawValue: 1 << 9)
-    static let critical10 = FastOptions(rawValue: 1 << 10)
-    static let critical11 = FastOptions(rawValue: 1 << 11)
-    static let critical12 = FastOptions(rawValue: 1 << 12)
-    static let critical13 = FastOptions(rawValue: 1 << 13)
-    static let critical14 = FastOptions(rawValue: 1 << 14)
-    static let critical15 = FastOptions(rawValue: 1 << 15)
-    static let kdc_follow_referrals = FastOptions(rawValue: 1 << 16)
+  static let reserved = FastOptions(rawValue: 1 << 0)
+  static let hide_client_names = FastOptions(rawValue: 1 << 1)
+  static let critical2 = FastOptions(rawValue: 1 << 2)
+  static let critical3 = FastOptions(rawValue: 1 << 3)
+  static let critical4 = FastOptions(rawValue: 1 << 4)
+  static let critical5 = FastOptions(rawValue: 1 << 5)
+  static let critical6 = FastOptions(rawValue: 1 << 6)
+  static let critical7 = FastOptions(rawValue: 1 << 7)
+  static let critical8 = FastOptions(rawValue: 1 << 8)
+  static let critical9 = FastOptions(rawValue: 1 << 9)
+  static let critical10 = FastOptions(rawValue: 1 << 10)
+  static let critical11 = FastOptions(rawValue: 1 << 11)
+  static let critical12 = FastOptions(rawValue: 1 << 12)
+  static let critical13 = FastOptions(rawValue: 1 << 13)
+  static let critical14 = FastOptions(rawValue: 1 << 14)
+  static let critical15 = FastOptions(rawValue: 1 << 15)
+  static let kdc_follow_referrals = FastOptions(rawValue: 1 << 16)
 }
 
 struct KDCFastFlags: RFC1510BitStringOptionSet, Codable, Equatable {
-    var rawValue: UInt8
+  var rawValue: UInt8
 
-    init(rawValue: UInt8) {
-        self.rawValue = rawValue
-    }
+  init(rawValue: UInt8) {
+    self.rawValue = rawValue
+  }
 
-    static let use_reply_key = KDCFastFlags(rawValue: 1 << 0)
-    static let reply_key_used = KDCFastFlags(rawValue: 1 << 1)
-    static let reply_key_replaced = KDCFastFlags(rawValue: 1 << 2)
-    static let kdc_verified = KDCFastFlags(rawValue: 1 << 3)
-    static let requested_hidden_names = KDCFastFlags(rawValue: 1 << 4)
+  static let use_reply_key = KDCFastFlags(rawValue: 1 << 0)
+  static let reply_key_used = KDCFastFlags(rawValue: 1 << 1)
+  static let reply_key_replaced = KDCFastFlags(rawValue: 1 << 2)
+  static let kdc_verified = KDCFastFlags(rawValue: 1 << 3)
+  static let requested_hidden_names = KDCFastFlags(rawValue: 1 << 4)
 }
 
 struct PrincipalName: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case name_type = 0
-        case name_string = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case name_type = 0
+    case name_string = 1
+  }
 
-    var name_type: NAME_TYPE
-    var name_string: [GeneralString<String>]
+  var name_type: NAME_TYPE
+  var name_string: [GeneralString<String>]
 }
 
 struct HostAddress: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case addr_type = 0
-        case address = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case addr_type = 0
+    case address = 1
+  }
 
-    var addr_type: Krb5Int32
-    var address: Data
+  var addr_type: Krb5Int32
+  var address: Data
 }
 
 typealias HostAddresses = [HostAddress]
 
 struct AuthorizationDataElement: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case ad_type = 0
-        case ad_data = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case ad_type = 0
+    case ad_data = 1
+  }
 
-    var ad_type: Krb5Int32
-    var ad_data: Data
+  var ad_type: Krb5Int32
+  var ad_data: Data
 }
 
 typealias AuthorizationData = [AuthorizationDataElement]
 
 struct LastReqInner: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case lr_type = 0
-        case lr_value = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case lr_type = 0
+    case lr_value = 1
+  }
 
-    var lr_type: LR_TYPE
-    var lr_value: KerberosTime
+  var lr_type: LR_TYPE
+  var lr_value: KerberosTime
 }
 
 typealias LastReq = [LastReqInner]
 
 struct EncryptedData: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case etype = 0
-        case kvno = 1
-        case cipher = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case etype = 0
+    case kvno = 1
+    case cipher = 2
+  }
 
-    var etype: ENCTYPE
-    var kvno: Krb5Int32?
-    var cipher: Data
+  var etype: ENCTYPE
+  var kvno: Krb5Int32?
+  var cipher: Data
 }
 
 struct EncryptionKey: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case keytype = 0
-        case keyvalue = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case keytype = 0
+    case keyvalue = 1
+  }
 
-    var keytype: Krb5Int32
-    var keyvalue: Data
+  var keytype: Krb5Int32
+  var keyvalue: Data
 }
 
 struct TransitedEncoding: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case tr_type = 0
-        case contents = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case tr_type = 0
+    case contents = 1
+  }
 
-    var tr_type: Krb5Int32
-    var contents: Data
+  var tr_type: Krb5Int32
+  var contents: Data
 }
 
 struct Ticket: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(1), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(1), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case tkt_vno = 0
-        case realm = 1
-        case sname = 2
-        case enc_part = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case tkt_vno = 0
+    case realm = 1
+    case sname = 2
+    case enc_part = 3
+  }
 
-    var tkt_vno: Krb5Int32
-    var realm: Realm
-    var sname: PrincipalName
-    var enc_part: EncryptedData
+  var tkt_vno: Krb5Int32
+  var realm: Realm
+  var sname: PrincipalName
+  var enc_part: EncryptedData
 }
 
 struct EncTicketPart: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(3), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(3), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case flags = 0
-        case key = 1
-        case crealm = 2
-        case cname = 3
-        case transited = 4
-        case authtime = 5
-        case starttime = 6
-        case endtime = 7
-        case renew_till = 8
-        case caddr = 9
-        case authorization_data = 10
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case flags = 0
+    case key = 1
+    case crealm = 2
+    case cname = 3
+    case transited = 4
+    case authtime = 5
+    case starttime = 6
+    case endtime = 7
+    case renew_till = 8
+    case caddr = 9
+    case authorization_data = 10
+  }
 
-    var flags: TicketFlags
-    var key: EncryptionKey
-    var crealm: Realm
-    var cname: PrincipalName
-    var transited: TransitedEncoding
-    var authtime: KerberosTime
-    var starttime: KerberosTime?
-    var endtime: KerberosTime
-    var renew_till: KerberosTime?
-    var caddr: HostAddresses?
-    var authorization_data: AuthorizationData?
+  var flags: TicketFlags
+  var key: EncryptionKey
+  var crealm: Realm
+  var cname: PrincipalName
+  var transited: TransitedEncoding
+  var authtime: KerberosTime
+  var starttime: KerberosTime?
+  var endtime: KerberosTime
+  var renew_till: KerberosTime?
+  var caddr: HostAddresses?
+  var authorization_data: AuthorizationData?
 }
 
 struct Checksum: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case cksumtype = 0
-        case checksum = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case cksumtype = 0
+    case checksum = 1
+  }
 
-    var cksumtype: CKSUMTYPE
-    var checksum: Data
+  var cksumtype: CKSUMTYPE
+  var checksum: Data
 }
 
 struct EncKDCRepPart: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case key = 0
-        case last_req = 1
-        case nonce = 2
-        case key_expiration = 3
-        case flags = 4
-        case authtime = 5
-        case starttime = 6
-        case endtime = 7
-        case renew_till = 8
-        case srealm = 9
-        case sname = 10
-        case caddr = 11
-        case encrypted_pa_data = 12
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case key = 0
+    case last_req = 1
+    case nonce = 2
+    case key_expiration = 3
+    case flags = 4
+    case authtime = 5
+    case starttime = 6
+    case endtime = 7
+    case renew_till = 8
+    case srealm = 9
+    case sname = 10
+    case caddr = 11
+    case encrypted_pa_data = 12
+  }
 
-    var key: EncryptionKey
-    var last_req: LastReq
-    var nonce: Krb5Int32
-    var key_expiration: KerberosTime?
-    var flags: TicketFlags
-    var authtime: KerberosTime
-    var starttime: KerberosTime?
-    var endtime: KerberosTime
-    var renew_till: KerberosTime?
-    var srealm: Realm
-    var sname: PrincipalName
-    var caddr: HostAddresses?
-    var encrypted_pa_data: METHOD_DATA?
+  var key: EncryptionKey
+  var last_req: LastReq
+  var nonce: Krb5Int32
+  var key_expiration: KerberosTime?
+  var flags: TicketFlags
+  var authtime: KerberosTime
+  var starttime: KerberosTime?
+  var endtime: KerberosTime
+  var renew_till: KerberosTime?
+  var srealm: Realm
+  var sname: PrincipalName
+  var caddr: HostAddresses?
+  var encrypted_pa_data: METHOD_DATA?
 }
 
 enum PrincipalNameAttrSrc: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case enc_kdc_rep_part = 0
-        case enc_ticket_part = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case enc_kdc_rep_part = 0
+    case enc_ticket_part = 1
+  }
 
-    case enc_kdc_rep_part(EncKDCRepPart)
-    case enc_ticket_part(EncTicketPart)
+  case enc_kdc_rep_part(EncKDCRepPart)
+  case enc_ticket_part(EncTicketPart)
 }
 
 struct PrincipalNameAttrs: Codable, Equatable {
-    var pac: AnyCodable?
+  var pac: AnyCodable?
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case authenticated = 0
-        case source = 1
-        case authenticator_ad = 2
-        case peer_realm = 3
-        case transited = 4
-        case pac_verified = 5
-        case kdc_issued_verified = 6
-        case want_ad = 7
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case authenticated = 0
+    case source = 1
+    case authenticator_ad = 2
+    case peer_realm = 3
+    case transited = 4
+    case pac_verified = 5
+    case kdc_issued_verified = 6
+    case want_ad = 7
+  }
 
-    var authenticated: Bool
-    var source: PrincipalNameAttrSrc?
-    var authenticator_ad: AuthorizationData?
-    var peer_realm: Realm?
-    var transited: TransitedEncoding?
-    var pac_verified: Bool
-    var kdc_issued_verified: Bool
-    var want_ad: AuthorizationData?
+  var authenticated: Bool
+  var source: PrincipalNameAttrSrc?
+  var authenticator_ad: AuthorizationData?
+  var peer_realm: Realm?
+  var transited: TransitedEncoding?
+  var pac_verified: Bool
+  var kdc_issued_verified: Bool
+  var want_ad: AuthorizationData?
 }
 
 struct CompositePrincipal: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(48), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(48), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case name = 0
-        case realm = 1
-        case nameattrs = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case name = 0
+    case realm = 1
+    case nameattrs = 2
+  }
 
-    var name: PrincipalName
-    var realm: Realm
-    var nameattrs: PrincipalNameAttrs?
+  var name: PrincipalName
+  var realm: Realm
+  var nameattrs: PrincipalNameAttrs?
 }
 
 struct Principal: Codable, Equatable {
-    var nameattrs: PrincipalNameAttrs?
+  var nameattrs: PrincipalNameAttrs?
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case name = 0
-        case realm = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case name = 0
+    case realm = 1
+  }
 
-    var name: PrincipalName
-    var realm: Realm
+  var name: PrincipalName
+  var realm: Realm
 }
 
 typealias Principals = [Principal]
 
 struct Authenticator: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(2), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(2), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case authenticator_vno = 0
-        case crealm = 1
-        case cname = 2
-        case cksum = 3
-        case cusec = 4
-        case ctime = 5
-        case subkey = 6
-        case seq_number = 7
-        case authorization_data = 8
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case authenticator_vno = 0
+    case crealm = 1
+    case cname = 2
+    case cksum = 3
+    case cusec = 4
+    case ctime = 5
+    case subkey = 6
+    case seq_number = 7
+    case authorization_data = 8
+  }
 
-    var authenticator_vno: Krb5Int32
-    var crealm: Realm
-    var cname: PrincipalName
-    var cksum: Checksum?
-    var cusec: Krb5Int32
-    var ctime: KerberosTime
-    var subkey: EncryptionKey?
-    var seq_number: Krb5UInt32?
-    var authorization_data: AuthorizationData?
+  var authenticator_vno: Krb5Int32
+  var crealm: Realm
+  var cname: PrincipalName
+  var cksum: Checksum?
+  var cusec: Krb5Int32
+  var ctime: KerberosTime
+  var subkey: EncryptionKey?
+  var seq_number: Krb5UInt32?
+  var authorization_data: AuthorizationData?
 }
 
 struct PA_DATA: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case padata_type = 1
-        case padata_value = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case padata_type = 1
+    case padata_value = 2
+  }
 
-    var padata_type: PADATA_TYPE
-    var padata_value: Data
+  var padata_type: PADATA_TYPE
+  var padata_value: Data
 }
 
 struct ETYPE_INFO_ENTRY: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case etype = 0
-        case salt = 1
-        case salttype = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case etype = 0
+    case salt = 1
+    case salttype = 2
+  }
 
-    var etype: ENCTYPE
-    var salt: Data?
-    var salttype: Krb5Int32?
+  var etype: ENCTYPE
+  var salt: Data?
+  var salttype: Krb5Int32?
 }
 
 typealias ETYPE_INFO = [ETYPE_INFO_ENTRY]
 
 struct ETYPE_INFO2_ENTRY: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case etype = 0
-        case salt = 1
-        case s2kparams = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case etype = 0
+    case salt = 1
+    case s2kparams = 2
+  }
 
-    var etype: ENCTYPE
-    var salt: KerberosString?
-    var s2kparams: Data?
+  var etype: ENCTYPE
+  var salt: KerberosString?
+  var s2kparams: Data?
 }
 
 typealias ETYPE_INFO2 = [ETYPE_INFO2_ENTRY]
@@ -672,97 +672,97 @@ typealias ETYPE_INFO2 = [ETYPE_INFO2_ENTRY]
 typealias METHOD_DATA = [PA_DATA]
 
 struct TypedData: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case data_type = 0
-        case data_value = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case data_type = 0
+    case data_value = 1
+  }
 
-    var data_type: Krb5Int32
-    var data_value: Data?
+  var data_type: Krb5Int32
+  var data_value: Data?
 }
 
 typealias TYPED_DATA = [TypedData]
 
 struct KDC_REQ_BODY: Codable, Equatable, ASN1PreserveBinary {
-    var _save: Data? = nil
+  var _save: Data? = nil
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case kdc_options = 0
-        case cname = 1
-        case realm = 2
-        case sname = 3
-        case from = 4
-        case till = 5
-        case rtime = 6
-        case nonce = 7
-        case etype = 8
-        case addresses = 9
-        case enc_authorization_data = 10
-        case additional_tickets = 11
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case kdc_options = 0
+    case cname = 1
+    case realm = 2
+    case sname = 3
+    case from = 4
+    case till = 5
+    case rtime = 6
+    case nonce = 7
+    case etype = 8
+    case addresses = 9
+    case enc_authorization_data = 10
+    case additional_tickets = 11
+  }
 
-    var kdc_options: KDCOptions
-    var cname: PrincipalName?
-    var realm: Realm
-    var sname: PrincipalName?
-    var from: KerberosTime?
-    var till: KerberosTime?
-    var rtime: KerberosTime?
-    var nonce: Krb5Int32
-    var etype: [ENCTYPE]
-    var addresses: HostAddresses?
-    var enc_authorization_data: EncryptedData?
-    var additional_tickets: [Ticket]?
+  var kdc_options: KDCOptions
+  var cname: PrincipalName?
+  var realm: Realm
+  var sname: PrincipalName?
+  var from: KerberosTime?
+  var till: KerberosTime?
+  var rtime: KerberosTime?
+  var nonce: Krb5Int32
+  var etype: [ENCTYPE]
+  var addresses: HostAddresses?
+  var enc_authorization_data: EncryptedData?
+  var additional_tickets: [Ticket]?
 }
 
 struct KDC_REQ: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case pvno = 1
-        case msg_type = 2
-        case padata = 3
-        case req_body = 4
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case pvno = 1
+    case msg_type = 2
+    case padata = 3
+    case req_body = 4
+  }
 
-    var pvno: Krb5Int32
-    var msg_type: MESSAGE_TYPE
-    var padata: METHOD_DATA?
-    var req_body: KDC_REQ_BODY
+  var pvno: Krb5Int32
+  var msg_type: MESSAGE_TYPE
+  var padata: METHOD_DATA?
+  var req_body: KDC_REQ_BODY
 }
 
 struct PA_ENC_TS_ENC: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case patimestamp = 0
-        case pausec = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case patimestamp = 0
+    case pausec = 1
+  }
 
-    var patimestamp: KerberosTime
-    var pausec: Krb5Int32?
+  var patimestamp: KerberosTime
+  var pausec: Krb5Int32?
 }
 
 struct PA_PAC_REQUEST: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case include_pac = 0
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case include_pac = 0
+  }
 
-    var include_pac: Bool
+  var include_pac: Bool
 }
 
 struct PA_PAC_OPTIONS: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case flags = 0
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case flags = 0
+  }
 
-    var flags: PAC_OPTIONS_FLAGS
+  var flags: PAC_OPTIONS_FLAGS
 }
 
 struct KERB_AD_RESTRICTION_ENTRY: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case restriction_type = 0
-        case restriction = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case restriction_type = 0
+    case restriction = 1
+  }
 
-    var restriction_type: Krb5Int32
-    var restriction: Data
+  var restriction_type: Krb5Int32
+  var restriction: Data
 }
 
 typealias PA_KERB_KEY_LIST_REQ = [ENCTYPE]
@@ -770,670 +770,670 @@ typealias PA_KERB_KEY_LIST_REQ = [ENCTYPE]
 typealias PA_KERB_KEY_LIST_REP = [ENCTYPE]
 
 struct KDC_REP: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case pvno = 0
-        case msg_type = 1
-        case padata = 2
-        case crealm = 3
-        case cname = 4
-        case ticket = 5
-        case enc_part = 6
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case pvno = 0
+    case msg_type = 1
+    case padata = 2
+    case crealm = 3
+    case cname = 4
+    case ticket = 5
+    case enc_part = 6
+  }
 
-    var pvno: Krb5Int32
-    var msg_type: MESSAGE_TYPE
-    var padata: METHOD_DATA?
-    var crealm: Realm
-    var cname: PrincipalName
-    var ticket: Ticket
-    var enc_part: EncryptedData
+  var pvno: Krb5Int32
+  var msg_type: MESSAGE_TYPE
+  var padata: METHOD_DATA?
+  var crealm: Realm
+  var cname: PrincipalName
+  var ticket: Ticket
+  var enc_part: EncryptedData
 }
 
 struct AP_REQ: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(14), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(14), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case pvno = 0
-        case msg_type = 1
-        case ap_options = 2
-        case ticket = 3
-        case authenticator = 4
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case pvno = 0
+    case msg_type = 1
+    case ap_options = 2
+    case ticket = 3
+    case authenticator = 4
+  }
 
-    var pvno: Krb5Int32
-    var msg_type: MESSAGE_TYPE
-    var ap_options: APOptions
-    var ticket: Ticket
-    var authenticator: EncryptedData
+  var pvno: Krb5Int32
+  var msg_type: MESSAGE_TYPE
+  var ap_options: APOptions
+  var ticket: Ticket
+  var authenticator: EncryptedData
 }
 
 struct AP_REP: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(15), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(15), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case pvno = 0
-        case msg_type = 1
-        case enc_part = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case pvno = 0
+    case msg_type = 1
+    case enc_part = 2
+  }
 
-    var pvno: Krb5Int32
-    var msg_type: MESSAGE_TYPE
-    var enc_part: EncryptedData
+  var pvno: Krb5Int32
+  var msg_type: MESSAGE_TYPE
+  var enc_part: EncryptedData
 }
 
 struct EncAPRepPart: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(27), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(27), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case ctime = 0
-        case cusec = 1
-        case subkey = 2
-        case seq_number = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case ctime = 0
+    case cusec = 1
+    case subkey = 2
+    case seq_number = 3
+  }
 
-    var ctime: KerberosTime
-    var cusec: Krb5Int32
-    var subkey: EncryptionKey?
-    var seq_number: Krb5UInt32?
+  var ctime: KerberosTime
+  var cusec: Krb5Int32
+  var subkey: EncryptionKey?
+  var seq_number: Krb5UInt32?
 }
 
 struct KRB_SAFE_BODY: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case user_data = 0
-        case timestamp = 1
-        case usec = 2
-        case seq_number = 3
-        case s_address = 4
-        case r_address = 5
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case user_data = 0
+    case timestamp = 1
+    case usec = 2
+    case seq_number = 3
+    case s_address = 4
+    case r_address = 5
+  }
 
-    var user_data: Data
-    var timestamp: KerberosTime?
-    var usec: Krb5Int32?
-    var seq_number: Krb5UInt32?
-    var s_address: HostAddress?
-    var r_address: HostAddress?
+  var user_data: Data
+  var timestamp: KerberosTime?
+  var usec: Krb5Int32?
+  var seq_number: Krb5UInt32?
+  var s_address: HostAddress?
+  var r_address: HostAddress?
 }
 
 struct KRB_SAFE: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(20), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(20), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case pvno = 0
-        case msg_type = 1
-        case safe_body = 2
-        case cksum = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case pvno = 0
+    case msg_type = 1
+    case safe_body = 2
+    case cksum = 3
+  }
 
-    var pvno: Krb5Int32
-    var msg_type: MESSAGE_TYPE
-    var safe_body: KRB_SAFE_BODY
-    var cksum: Checksum
+  var pvno: Krb5Int32
+  var msg_type: MESSAGE_TYPE
+  var safe_body: KRB_SAFE_BODY
+  var cksum: Checksum
 }
 
 struct KRB_PRIV: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(21), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(21), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case pvno = 0
-        case msg_type = 1
-        case enc_part = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case pvno = 0
+    case msg_type = 1
+    case enc_part = 3
+  }
 
-    var pvno: Krb5Int32
-    var msg_type: MESSAGE_TYPE
-    var enc_part: EncryptedData
+  var pvno: Krb5Int32
+  var msg_type: MESSAGE_TYPE
+  var enc_part: EncryptedData
 }
 
 struct EncKrbPrivPart: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(28), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(28), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case user_data = 0
-        case timestamp = 1
-        case usec = 2
-        case seq_number = 3
-        case s_address = 4
-        case r_address = 5
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case user_data = 0
+    case timestamp = 1
+    case usec = 2
+    case seq_number = 3
+    case s_address = 4
+    case r_address = 5
+  }
 
-    var user_data: Data
-    var timestamp: KerberosTime?
-    var usec: Krb5Int32?
-    var seq_number: Krb5UInt32?
-    var s_address: HostAddress?
-    var r_address: HostAddress?
+  var user_data: Data
+  var timestamp: KerberosTime?
+  var usec: Krb5Int32?
+  var seq_number: Krb5UInt32?
+  var s_address: HostAddress?
+  var r_address: HostAddress?
 }
 
 struct KRB_CRED: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(22), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(22), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case pvno = 0
-        case msg_type = 1
-        case tickets = 2
-        case enc_part = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case pvno = 0
+    case msg_type = 1
+    case tickets = 2
+    case enc_part = 3
+  }
 
-    var pvno: Krb5Int32
-    var msg_type: MESSAGE_TYPE
-    var tickets: [Ticket]
-    var enc_part: EncryptedData
+  var pvno: Krb5Int32
+  var msg_type: MESSAGE_TYPE
+  var tickets: [Ticket]
+  var enc_part: EncryptedData
 }
 
 struct KrbCredInfo: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case key = 0
-        case prealm = 1
-        case pname = 2
-        case flags = 3
-        case authtime = 4
-        case starttime = 5
-        case endtime = 6
-        case renew_till = 7
-        case srealm = 8
-        case sname = 9
-        case caddr = 10
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case key = 0
+    case prealm = 1
+    case pname = 2
+    case flags = 3
+    case authtime = 4
+    case starttime = 5
+    case endtime = 6
+    case renew_till = 7
+    case srealm = 8
+    case sname = 9
+    case caddr = 10
+  }
 
-    var key: EncryptionKey
-    var prealm: Realm?
-    var pname: PrincipalName?
-    var flags: TicketFlags?
-    var authtime: KerberosTime?
-    var starttime: KerberosTime?
-    var endtime: KerberosTime?
-    var renew_till: KerberosTime?
-    var srealm: Realm?
-    var sname: PrincipalName?
-    var caddr: HostAddresses?
+  var key: EncryptionKey
+  var prealm: Realm?
+  var pname: PrincipalName?
+  var flags: TicketFlags?
+  var authtime: KerberosTime?
+  var starttime: KerberosTime?
+  var endtime: KerberosTime?
+  var renew_till: KerberosTime?
+  var srealm: Realm?
+  var sname: PrincipalName?
+  var caddr: HostAddresses?
 }
 
 struct EncKrbCredPart: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(29), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(29), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case ticket_info = 0
-        case nonce = 1
-        case timestamp = 2
-        case usec = 3
-        case s_address = 4
-        case r_address = 5
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case ticket_info = 0
+    case nonce = 1
+    case timestamp = 2
+    case usec = 3
+    case s_address = 4
+    case r_address = 5
+  }
 
-    var ticket_info: [KrbCredInfo]
-    var nonce: Krb5Int32?
-    var timestamp: KerberosTime?
-    var usec: Krb5Int32?
-    var s_address: HostAddress?
-    var r_address: HostAddress?
+  var ticket_info: [KrbCredInfo]
+  var nonce: Krb5Int32?
+  var timestamp: KerberosTime?
+  var usec: Krb5Int32?
+  var s_address: HostAddress?
+  var r_address: HostAddress?
 }
 
 struct KRB_ERROR: Codable, Equatable {
-    static let metadata = ASN1Metadata(tag: .applicationTag(30), tagging: .explicit)
+  static let metadata = ASN1Metadata(tag: .applicationTag(30), tagging: .explicit)
 
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case pvno = 0
-        case msg_type = 1
-        case ctime = 2
-        case cusec = 3
-        case stime = 4
-        case susec = 5
-        case error_code = 6
-        case crealm = 7
-        case cname = 8
-        case realm = 9
-        case sname = 10
-        case e_text = 11
-        case e_data = 12
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case pvno = 0
+    case msg_type = 1
+    case ctime = 2
+    case cusec = 3
+    case stime = 4
+    case susec = 5
+    case error_code = 6
+    case crealm = 7
+    case cname = 8
+    case realm = 9
+    case sname = 10
+    case e_text = 11
+    case e_data = 12
+  }
 
-    var pvno: Krb5Int32
-    var msg_type: MESSAGE_TYPE
-    var ctime: KerberosTime?
-    var cusec: Krb5Int32?
-    var stime: KerberosTime
-    var susec: Krb5Int32
-    var error_code: Krb5Int32
-    var crealm: Realm?
-    var cname: PrincipalName?
-    var realm: Realm
-    var sname: PrincipalName
-    @GeneralString
-    var e_text: String? = nil
-    var e_data: Data?
+  var pvno: Krb5Int32
+  var msg_type: MESSAGE_TYPE
+  var ctime: KerberosTime?
+  var cusec: Krb5Int32?
+  var stime: KerberosTime
+  var susec: Krb5Int32
+  var error_code: Krb5Int32
+  var crealm: Realm?
+  var cname: PrincipalName?
+  var realm: Realm
+  var sname: PrincipalName
+  @GeneralString
+  var e_text: String? = nil
+  var e_data: Data?
 }
 
 struct ChangePasswdDataMS: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case newpasswd = 0
-        case targname = 1
-        case targrealm = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case newpasswd = 0
+    case targname = 1
+    case targrealm = 2
+  }
 
-    var newpasswd: Data
-    var targname: PrincipalName?
-    var targrealm: Realm?
+  var newpasswd: Data
+  var targname: PrincipalName?
+  var targrealm: Realm?
 }
 
 typealias EtypeList = [ENCTYPE]
 
 struct AD_KDCIssued: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case ad_checksum = 0
-        case i_realm = 1
-        case i_sname = 2
-        case elements = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case ad_checksum = 0
+    case i_realm = 1
+    case i_sname = 2
+    case elements = 3
+  }
 
-    var ad_checksum: Checksum
-    var i_realm: Realm?
-    var i_sname: PrincipalName?
-    var elements: AuthorizationData
+  var ad_checksum: Checksum
+  var i_realm: Realm?
+  var i_sname: PrincipalName?
+  var elements: AuthorizationData
 }
 
 struct AD_AND_OR: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case condition_count = 0
-        case elements = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case condition_count = 0
+    case elements = 1
+  }
 
-    var condition_count: Krb5Int32
-    var elements: AuthorizationData
+  var condition_count: Krb5Int32
+  var elements: AuthorizationData
 }
 
 struct PA_SAM_CHALLENGE_2_BODY: Codable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case sam_type = 0
-        case sam_flags = 1
-        case sam_type_name = 2
-        case sam_track_id = 3
-        case sam_challenge_label = 4
-        case sam_challenge = 5
-        case sam_response_prompt = 6
-        case sam_pk_for_sad = 7
-        case sam_nonce = 8
-        case sam_etype = 9
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case sam_type = 0
+    case sam_flags = 1
+    case sam_type_name = 2
+    case sam_track_id = 3
+    case sam_challenge_label = 4
+    case sam_challenge = 5
+    case sam_response_prompt = 6
+    case sam_pk_for_sad = 7
+    case sam_nonce = 8
+    case sam_etype = 9
+  }
 
-    var sam_type: Krb5Int32
-    var sam_flags: SAMFlags
-    @GeneralString
-    var sam_type_name: String? = nil
-    @GeneralString
-    var sam_track_id: String? = nil
-    @GeneralString
-    var sam_challenge_label: String? = nil
-    @GeneralString
-    var sam_challenge: String? = nil
-    @GeneralString
-    var sam_response_prompt: String? = nil
-    var sam_pk_for_sad: EncryptionKey?
-    var sam_nonce: Krb5Int32
-    var sam_etype: Krb5Int32
+  var sam_type: Krb5Int32
+  var sam_flags: SAMFlags
+  @GeneralString
+  var sam_type_name: String? = nil
+  @GeneralString
+  var sam_track_id: String? = nil
+  @GeneralString
+  var sam_challenge_label: String? = nil
+  @GeneralString
+  var sam_challenge: String? = nil
+  @GeneralString
+  var sam_response_prompt: String? = nil
+  var sam_pk_for_sad: EncryptionKey?
+  var sam_nonce: Krb5Int32
+  var sam_etype: Krb5Int32
 }
 
 struct PA_SAM_CHALLENGE_2: Codable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case sam_body = 0
-        case sam_cksum = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case sam_body = 0
+    case sam_cksum = 1
+  }
 
-    var sam_body: PA_SAM_CHALLENGE_2_BODY
-    var sam_cksum: [Checksum]
+  var sam_body: PA_SAM_CHALLENGE_2_BODY
+  var sam_cksum: [Checksum]
 }
 
 struct PA_SAM_RESPONSE_2: Codable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case sam_type = 0
-        case sam_flags = 1
-        case sam_track_id = 2
-        case sam_enc_nonce_or_sad = 3
-        case sam_nonce = 4
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case sam_type = 0
+    case sam_flags = 1
+    case sam_track_id = 2
+    case sam_enc_nonce_or_sad = 3
+    case sam_nonce = 4
+  }
 
-    var sam_type: Krb5Int32
-    var sam_flags: SAMFlags
-    @GeneralString
-    var sam_track_id: String? = nil
-    var sam_enc_nonce_or_sad: EncryptedData
-    var sam_nonce: Krb5Int32
+  var sam_type: Krb5Int32
+  var sam_flags: SAMFlags
+  @GeneralString
+  var sam_track_id: String? = nil
+  var sam_enc_nonce_or_sad: EncryptedData
+  var sam_nonce: Krb5Int32
 }
 
 struct PA_ENC_SAM_RESPONSE_ENC: Codable, ASN1Codable.ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case sam_nonce = 0
-        case sam_sad = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case sam_nonce = 0
+    case sam_sad = 1
+  }
 
-    var sam_nonce: Krb5Int32
-    @GeneralString
-    var sam_sad: String? = nil
+  var sam_nonce: Krb5Int32
+  @GeneralString
+  var sam_sad: String? = nil
 }
 
 struct PA_S4U2Self: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case name = 0
-        case realm = 1
-        case cksum = 2
-        case auth = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case name = 0
+    case realm = 1
+    case cksum = 2
+    case auth = 3
+  }
 
-    var name: PrincipalName
-    var realm: Realm
-    var cksum: Checksum
-    @GeneralString
-    var auth: String = ""
+  var name: PrincipalName
+  var realm: Realm
+  var cksum: Checksum
+  @GeneralString
+  var auth: String = ""
 }
 
 struct S4UUserID: Codable, Equatable, ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case nonce = 0
-        case cname = 1
-        case crealm = 2
-        case subject_certificate = 3
-        case options = 4
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case nonce = 0
+    case cname = 1
+    case crealm = 2
+    case subject_certificate = 3
+    case options = 4
+  }
 
-    var nonce: Krb5UInt32
-    var cname: PrincipalName?
-    var crealm: Realm
-    var subject_certificate: Data?
-    var options: BitString?
+  var nonce: Krb5UInt32
+  var cname: PrincipalName?
+  var crealm: Realm
+  var subject_certificate: Data?
+  var options: BitString?
 }
 
 struct PA_S4U_X509_USER: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case user_id = 0
-        case checksum = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case user_id = 0
+    case checksum = 1
+  }
 
-    var user_id: S4UUserID
-    var checksum: Checksum
+  var user_id: S4UUserID
+  var checksum: Checksum
 }
 
 struct AD_LoginAlias: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case login_alias = 0
-        case checksum = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case login_alias = 0
+    case checksum = 1
+  }
 
-    var login_alias: PrincipalName
-    var checksum: Checksum
+  var login_alias: PrincipalName
+  var checksum: Checksum
 }
 
 struct PA_SvrReferralData: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case referred_name = 1
-        case referred_realm = 0
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case referred_name = 1
+    case referred_realm = 0
+  }
 
-    var referred_name: PrincipalName?
-    var referred_realm: Realm
+  var referred_name: PrincipalName?
+  var referred_realm: Realm
 }
 
 struct PA_ServerReferralData: Codable, Equatable, ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case referred_realm = 0
-        case true_principal_name = 1
-        case requested_principal_name = 2
-        case referral_valid_until = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case referred_realm = 0
+    case true_principal_name = 1
+    case requested_principal_name = 2
+    case referral_valid_until = 3
+  }
 
-    var referred_realm: Realm?
-    var true_principal_name: PrincipalName?
-    var requested_principal_name: PrincipalName?
-    var referral_valid_until: KerberosTime?
+  var referred_realm: Realm?
+  var true_principal_name: PrincipalName?
+  var requested_principal_name: PrincipalName?
+  var referral_valid_until: KerberosTime?
 }
 
 struct KrbFastReq: Codable, Equatable, ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case fast_options = 0
-        case padata = 1
-        case req_body = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case fast_options = 0
+    case padata = 1
+    case req_body = 2
+  }
 
-    var fast_options: FastOptions
-    var padata: METHOD_DATA
-    var req_body: KDC_REQ_BODY
+  var fast_options: FastOptions
+  var padata: METHOD_DATA
+  var req_body: KDC_REQ_BODY
 }
 
 struct KrbFastArmor: Codable, Equatable, ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case armor_type = 0
-        case armor_value = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case armor_type = 0
+    case armor_value = 1
+  }
 
-    var armor_type: Krb5Int32
-    var armor_value: Data
+  var armor_type: Krb5Int32
+  var armor_value: Data
 }
 
 struct KrbFastArmoredReq: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case armor = 0
-        case req_checksum = 1
-        case enc_fast_req = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case armor = 0
+    case req_checksum = 1
+    case enc_fast_req = 2
+  }
 
-    var armor: KrbFastArmor?
-    var req_checksum: Checksum
-    var enc_fast_req: EncryptedData
+  var armor: KrbFastArmor?
+  var req_checksum: Checksum
+  var enc_fast_req: EncryptedData
 }
 
 enum PA_FX_FAST_REQUEST: Codable, Equatable, ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case armored_data = 0
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case armored_data = 0
+  }
 
-    case armored_data(KrbFastArmoredReq)
+  case armored_data(KrbFastArmoredReq)
 }
 
 struct KrbFastFinished: Codable, Equatable, ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case timestamp = 0
-        case usec = 1
-        case crealm = 2
-        case cname = 3
-        case ticket_checksum = 4
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case timestamp = 0
+    case usec = 1
+    case crealm = 2
+    case cname = 3
+    case ticket_checksum = 4
+  }
 
-    var timestamp: KerberosTime
-    var usec: Krb5Int32
-    var crealm: Realm
-    var cname: PrincipalName
-    var ticket_checksum: Checksum
+  var timestamp: KerberosTime
+  var usec: Krb5Int32
+  var crealm: Realm
+  var cname: PrincipalName
+  var ticket_checksum: Checksum
 }
 
 struct KrbFastResponse: Codable, Equatable, ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case padata = 0
-        case strengthen_key = 1
-        case finished = 2
-        case nonce = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case padata = 0
+    case strengthen_key = 1
+    case finished = 2
+    case nonce = 3
+  }
 
-    var padata: METHOD_DATA
-    var strengthen_key: EncryptionKey?
-    var finished: KrbFastFinished?
-    var nonce: Krb5UInt32
+  var padata: METHOD_DATA
+  var strengthen_key: EncryptionKey?
+  var finished: KrbFastFinished?
+  var nonce: Krb5UInt32
 }
 
 struct KrbFastArmoredRep: Codable, Equatable, ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case enc_fast_rep = 0
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case enc_fast_rep = 0
+  }
 
-    var enc_fast_rep: EncryptedData
+  var enc_fast_rep: EncryptedData
 }
 
 enum PA_FX_FAST_REPLY: Codable, Equatable, ASN1ExtensibleType {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case armored_data = 0
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case armored_data = 0
+  }
 
-    case armored_data(KrbFastArmoredRep)
+  case armored_data(KrbFastArmoredRep)
 }
 
 struct KDCFastState: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case flags = 0
-        case expiration = 1
-        case fast_state = 2
-        case expected_pa_types = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case flags = 0
+    case expiration = 1
+    case fast_state = 2
+    case expected_pa_types = 3
+  }
 
-    var flags: KDCFastFlags
-    @GeneralizedTime
-    var expiration: Date = .init()
-    var fast_state: METHOD_DATA
-    var expected_pa_types: [PADATA_TYPE]?
+  var flags: KDCFastFlags
+  @GeneralizedTime
+  var expiration: Date = .init()
+  var fast_state: METHOD_DATA
+  var expected_pa_types: [PADATA_TYPE]?
 }
 
 struct KDCFastCookie: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case version = 0
-        case cookie = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case version = 0
+    case cookie = 1
+  }
 
-    @UTF8String
-    var version: String = ""
-    var cookie: EncryptedData
+  @UTF8String
+  var version: String = ""
+  var cookie: EncryptedData
 }
 
 struct KDC_PROXY_MESSAGE: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case kerb_message = 0
-        case target_domain = 1
-        case dclocator_hint = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case kerb_message = 0
+    case target_domain = 1
+    case dclocator_hint = 2
+  }
 
-    var kerb_message: Data
-    var target_domain: Realm?
-    var dclocator_hint: BigNumber.BInt?
+  var kerb_message: Data
+  var target_domain: Realm?
+  var dclocator_hint: BigNumber.BInt?
 }
 
 struct KERB_TIMES: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case authtime = 0
-        case starttime = 1
-        case endtime = 2
-        case renew_till = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case authtime = 0
+    case starttime = 1
+    case endtime = 2
+    case renew_till = 3
+  }
 
-    var authtime: KerberosTime
-    var starttime: KerberosTime
-    var endtime: KerberosTime
-    var renew_till: KerberosTime
+  var authtime: KerberosTime
+  var starttime: KerberosTime
+  var endtime: KerberosTime
+  var renew_till: KerberosTime
 }
 
 struct KERB_CRED: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case client = 0
-        case server = 1
-        case keyblock = 2
-        case times = 3
-        case ticket = 4
-        case authdata = 5
-        case addresses = 6
-        case flags = 7
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case client = 0
+    case server = 1
+    case keyblock = 2
+    case times = 3
+    case ticket = 4
+    case authdata = 5
+    case addresses = 6
+    case flags = 7
+  }
 
-    var client: Principal
-    var server: Principal
-    var keyblock: EncryptionKey
-    var times: KERB_TIMES
-    var ticket: Data
-    var authdata: Data
-    var addresses: HostAddresses
-    var flags: TicketFlags
+  var client: Principal
+  var server: Principal
+  var keyblock: EncryptionKey
+  var times: KERB_TIMES
+  var ticket: Data
+  var authdata: Data
+  var addresses: HostAddresses
+  var flags: TicketFlags
 }
 
 struct KERB_TGS_REQ_IN: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case cache = 0
-        case addrs = 1
-        case flags = 2
-        case imp = 3
-        case ticket = 4
-        case in_cred = 5
-        case krbtgt = 6
-        case padata = 7
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case cache = 0
+    case addrs = 1
+    case flags = 2
+    case imp = 3
+    case ticket = 4
+    case in_cred = 5
+    case krbtgt = 6
+    case padata = 7
+  }
 
-    var cache: Data
-    var addrs: HostAddresses
-    var flags: Krb5UInt32
-    var imp: Principal?
-    var ticket: Data?
-    var in_cred: KERB_CRED
-    var krbtgt: KERB_CRED
-    var padata: METHOD_DATA
+  var cache: Data
+  var addrs: HostAddresses
+  var flags: Krb5UInt32
+  var imp: Principal?
+  var ticket: Data?
+  var in_cred: KERB_CRED
+  var krbtgt: KERB_CRED
+  var padata: METHOD_DATA
 }
 
 struct KERB_TGS_REQ_OUT: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case subkey = 0
-        case t = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case subkey = 0
+    case t = 1
+  }
 
-    var subkey: EncryptionKey?
-    var t: TGS_REQ
+  var subkey: EncryptionKey?
+  var t: TGS_REQ
 }
 
 struct KERB_TGS_REP_IN: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case cache = 0
-        case subkey = 1
-        case in_cred = 2
-        case t = 3
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case cache = 0
+    case subkey = 1
+    case in_cred = 2
+    case t = 3
+  }
 
-    var cache: Data
-    var subkey: EncryptionKey?
-    var in_cred: KERB_CRED
-    var t: TGS_REP
+  var cache: Data
+  var subkey: EncryptionKey?
+  var in_cred: KERB_CRED
+  var t: TGS_REP
 }
 
 struct KERB_TGS_REP_OUT: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case cache = 0
-        case cred = 1
-        case subkey = 2
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case cache = 0
+    case cred = 1
+    case subkey = 2
+  }
 
-    var cache: Data
-    var cred: KERB_CRED
-    var subkey: EncryptionKey
+  var cache: Data
+  var cred: KERB_CRED
+  var subkey: EncryptionKey
 }
 
 struct KERB_ARMOR_SERVICE_REPLY: Codable, Equatable {
-    enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
-        case armor = 0
-        case armor_key = 1
-    }
+  enum CodingKeys: Int, ASN1ExplicitTagCodingKey {
+    case armor = 0
+    case armor_key = 1
+  }
 
-    var armor: KrbFastArmor
-    var armor_key: EncryptionKey
+  var armor: KrbFastArmor
+  var armor_key: EncryptionKey
 }
 
 public enum KERBEROS5 {
-    public enum ASN1TagNumber$1: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$2: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$3: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$10: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$11: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$12: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$13: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$14: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$15: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$20: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$21: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$22: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$25: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$26: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$27: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$28: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$29: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$30: ASN1TagNumberRepresentable {}
-    public enum ASN1TagNumber$48: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$1: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$2: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$3: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$10: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$11: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$12: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$13: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$14: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$15: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$20: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$21: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$22: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$25: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$26: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$27: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$28: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$29: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$30: ASN1TagNumberRepresentable {}
+  public enum ASN1TagNumber$48: ASN1TagNumberRepresentable {}
 }

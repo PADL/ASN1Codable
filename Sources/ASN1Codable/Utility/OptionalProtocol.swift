@@ -17,9 +17,9 @@
 import Foundation
 
 protocol OptionalProtocol {
-    static var wrappedType: Any.Type { get }
+  static var wrappedType: Any.Type { get }
 }
 
 extension Optional: OptionalProtocol {
-    static var wrappedType: Any.Type { Wrapped.self }
+  static var wrappedType: Any.Type { Wrapped.self }
 }

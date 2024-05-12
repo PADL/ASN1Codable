@@ -18,94 +18,94 @@ import Foundation
 import ASN1Kit
 
 class ASN1DecoderImpl {
-    var container: ASN1DecodingContainer?
+  var container: ASN1DecodingContainer?
 
-    let object: ASN1Object
-    var codingPath: [CodingKey]
-    let userInfo: [CodingUserInfoKey: Any]
-    let context: ASN1DecodingContext
+  let object: ASN1Object
+  var codingPath: [CodingKey]
+  let userInfo: [CodingUserInfoKey: Any]
+  let context: ASN1DecodingContext
 
-    init(
-        object: ASN1Object,
-        codingPath: [CodingKey] = [],
-        userInfo: [CodingUserInfoKey: Any] = [:],
-        taggingEnvironment: ASN1Tagging? = nil,
-        objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
-    ) {
-        self.object = object
-        self.codingPath = codingPath
-        self.userInfo = userInfo
-        self.context = ASN1DecodingContext(taggingEnvironment: taggingEnvironment ?? .explicit,
-                                           objectSetTypeDictionary: objectSetTypeDictionary)
-    }
+  init(
+    object: ASN1Object,
+    codingPath: [CodingKey] = [],
+    userInfo: [CodingUserInfoKey: Any] = [:],
+    taggingEnvironment: ASN1Tagging? = nil,
+    objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? = nil
+  ) {
+    self.object = object
+    self.codingPath = codingPath
+    self.userInfo = userInfo
+    self.context = ASN1DecodingContext(taggingEnvironment: taggingEnvironment ?? .explicit,
+                                       objectSetTypeDictionary: objectSetTypeDictionary)
+  }
 
-    init(
-        object: ASN1Object,
-        codingPath: [CodingKey] = [],
-        userInfo: [CodingUserInfoKey: Any] = [:],
-        context: ASN1DecodingContext = ASN1DecodingContext()
-    ) {
-        self.object = object
-        self.codingPath = codingPath
-        self.userInfo = userInfo
-        self.context = context
-    }
+  init(
+    object: ASN1Object,
+    codingPath: [CodingKey] = [],
+    userInfo: [CodingUserInfoKey: Any] = [:],
+    context: ASN1DecodingContext = ASN1DecodingContext()
+  ) {
+    self.object = object
+    self.codingPath = codingPath
+    self.userInfo = userInfo
+    self.context = context
+  }
 }
 
 extension ASN1DecoderImpl: Decoder {
-    func container<Key>(keyedBy _: Key.Type) throws -> KeyedDecodingContainer<Key> where Key: CodingKey {
-        precondition(self.container == nil)
+  func container<Key>(keyedBy _: Key.Type) throws -> KeyedDecodingContainer<Key> where Key: CodingKey {
+    precondition(self.container == nil)
 
-        let container = try KeyedContainer<Key>(object: self.object,
-                                                codingPath: self.codingPath,
-                                                userInfo: self.userInfo,
-                                                context: self.context)
-        self.container = container
+    let container = try KeyedContainer<Key>(object: self.object,
+                                            codingPath: self.codingPath,
+                                            userInfo: self.userInfo,
+                                            context: self.context)
+    self.container = container
 
-        return KeyedDecodingContainer(container)
-    }
+    return KeyedDecodingContainer(container)
+  }
 
-    func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        precondition(self.container == nil)
+  func unkeyedContainer() throws -> UnkeyedDecodingContainer {
+    precondition(self.container == nil)
 
-        let container = try UnkeyedContainer(object: self.object,
-                                             codingPath: self.codingPath,
-                                             userInfo: self.userInfo,
-                                             context: self.context)
-        self.container = container
+    let container = try UnkeyedContainer(object: self.object,
+                                         codingPath: self.codingPath,
+                                         userInfo: self.userInfo,
+                                         context: self.context)
+    self.container = container
 
-        return container
-    }
+    return container
+  }
 
-    func singleValueContainer() throws -> SingleValueDecodingContainer {
-        precondition(self.container == nil)
+  func singleValueContainer() throws -> SingleValueDecodingContainer {
+    precondition(self.container == nil)
 
-        let container = SingleValueContainer(object: self.object,
-                                             codingPath: self.codingPath,
-                                             userInfo: self.userInfo,
-                                             context: self.context)
-        self.container = container
+    let container = SingleValueContainer(object: self.object,
+                                         codingPath: self.codingPath,
+                                         userInfo: self.userInfo,
+                                         context: self.context)
+    self.container = container
 
-        return container
-    }
+    return container
+  }
 }
 
 extension ASN1DecoderImpl {
-    static func isNilOrWrappedNil<T>(_ value: T) -> Bool where T: Decodable {
-        var wrappedValue: any Decodable = value
+  static func isNilOrWrappedNil<T>(_ value: T) -> Bool where T: Decodable {
+    var wrappedValue: any Decodable = value
 
-        // swiftlint:disable force_cast
-        while wrappedValue is any ASN1TaggedValue {
-            wrappedValue = (wrappedValue as! any ASN1TaggedValue).wrappedValue
-        }
-
-        // FIXME: first assignment is to silence warnings
-        if let wrappedValue = wrappedValue as? ExpressibleByNilLiteral,
-           let wrappedValue = wrappedValue as? Decodable?,
-           case .none = wrappedValue {
-            return true
-        } else {
-            return false
-        }
+    // swiftlint:disable force_cast
+    while wrappedValue is any ASN1TaggedValue {
+      wrappedValue = (wrappedValue as! any ASN1TaggedValue).wrappedValue
     }
+
+    // FIXME: first assignment is to silence warnings
+    if let wrappedValue = wrappedValue as? ExpressibleByNilLiteral,
+       let wrappedValue = wrappedValue as? Decodable?,
+       case .none = wrappedValue {
+      return true
+    } else {
+      return false
+    }
+  }
 }

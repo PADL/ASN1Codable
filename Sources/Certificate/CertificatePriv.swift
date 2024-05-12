@@ -20,463 +20,463 @@ import Network
 
 @_cdecl("CertificateCreateWithBytes")
 public func CertificateCreateWithBytes(
-    _: CFAllocator!,
-    _ bytes: [UInt8],
-    _ der_length: CFIndex
+  _: CFAllocator!,
+  _ bytes: [UInt8],
+  _ der_length: CFIndex
 ) -> CertificateRef? {
-    let data = Data(bytes: bytes, count: der_length)
-    return Certificate.create(with: data)
+  let data = Data(bytes: bytes, count: der_length)
+  return Certificate.create(with: data)
 }
 
 @_cdecl("CertificateCreateWithKeychainItem")
 public func CertificateCreateWithKeychainItem(
-    _: CFAllocator!,
-    _ der_certificate: CFData,
-    _ keychain_item: Unmanaged<CFTypeRef>
+  _: CFAllocator!,
+  _ der_certificate: CFData,
+  _ keychain_item: Unmanaged<CFTypeRef>
 ) -> CertificateRef? {
-    guard let certificate = Certificate.create(with: der_certificate as Data) else { return nil }
-    certificate._swiftObject._keychain_item = keychain_item.takeRetainedValue()
-    return certificate
+  guard let certificate = Certificate.create(with: der_certificate as Data) else { return nil }
+  certificate._swiftObject._keychain_item = keychain_item.takeRetainedValue()
+  return certificate
 }
 
 @_cdecl("CertificateCopyComponentAttributes")
 public func CertificateCopyComponentAttributes(_ certificate: CertificateRef?) -> Unmanaged<CFDictionary>? {
-    guard let certificate = certificate?._swiftObject else { return nil }
-    guard let componentAttributes = certificate.componentAttributes else { return nil }
-    return Unmanaged.passRetained(componentAttributes)
+  guard let certificate = certificate?._swiftObject else { return nil }
+  guard let componentAttributes = certificate.componentAttributes else { return nil }
+  return Unmanaged.passRetained(componentAttributes)
 }
 
 @_cdecl("CertificateGetSubjectKeyID")
 public func CertificateGetSubjectKeyID(_ certificate: CertificateRef?) -> Unmanaged<CFData>? {
-    guard let certificate = certificate?._swiftObject else { return nil }
-    guard let subjectKeyID: Data = certificate.extension(id_x509_ce_subjectKeyIdentifier) else { return nil }
-    return Unmanaged.passUnretained(subjectKeyID as CFData)
+  guard let certificate = certificate?._swiftObject else { return nil }
+  guard let subjectKeyID: Data = certificate.extension(id_x509_ce_subjectKeyIdentifier) else { return nil }
+  return Unmanaged.passUnretained(subjectKeyID as CFData)
 }
 
 @_cdecl("CertificateSetKeychainItem")
 public func CertificateSetKeychainItem(
-    _ certificate: CertificateRef?,
-    _ keychain_item: Unmanaged<CFTypeRef>
+  _ certificate: CertificateRef?,
+  _ keychain_item: Unmanaged<CFTypeRef>
 ) -> OSStatus {
-    guard let certificate = certificate?._swiftObject else { return errSecParam }
-    certificate._keychain_item = keychain_item.takeRetainedValue()
-    return errSecSuccess
+  guard let certificate = certificate?._swiftObject else { return errSecParam }
+  certificate._keychain_item = keychain_item.takeRetainedValue()
+  return errSecSuccess
 }
 
 @_cdecl("CertificateGetLength")
 public func CertificateGetLength(_ certificate: CertificateRef) -> CFIndex {
-    let certificate = certificate._swiftObject
-    return certificate._save?.count ?? 0
+  let certificate = certificate._swiftObject
+  return certificate._save?.count ?? 0
 }
 
 @_cdecl("CertificateCopyIPAddresses")
 public func CertificateCopyIPAddresses(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
-    let certificate = certificate._swiftObject
+  let certificate = certificate._swiftObject
 
-    guard let datas = certificate.subjectAltName?.compactMap({
-        if case .iPAddress(let ipAddress) = $0 {
-            if let ipv4Address = IPv4Address(ipAddress) {
-                return String(describing: ipv4Address)
-            } else if let ipv6Address = IPv6Address(ipAddress) {
-                return String(describing: ipv6Address)
-            } else {
-                return nil
-            }
-        } else {
-            return nil
-        }
-    }), !datas.isEmpty else {
+  guard let datas = certificate.subjectAltName?.compactMap({
+    if case .iPAddress(let ipAddress) = $0 {
+      if let ipv4Address = IPv4Address(ipAddress) {
+        return String(describing: ipv4Address)
+      } else if let ipv6Address = IPv6Address(ipAddress) {
+        return String(describing: ipv6Address)
+      } else {
         return nil
+      }
+    } else {
+      return nil
     }
+  }), !datas.isEmpty else {
+    return nil
+  }
 
-    return Unmanaged.passRetained(datas as CFArray)
+  return Unmanaged.passRetained(datas as CFArray)
 }
 
 @_cdecl("CertificateCopyRFC822Names")
 public func CertificateCopyRFC822Names(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
-    let certificate = certificate._swiftObject
+  let certificate = certificate._swiftObject
 
-    var names = [String]()
+  var names = [String]()
 
-    if let san = certificate.subjectAltName {
-        names.append(contentsOf: san.compactMap {
-            if case .rfc822Name(let rfc822Name) = $0 {
-                return String(describing: rfc822Name)
-            } else {
-                return nil
-            }
-        })
-    } else if let rdns = certificate.rdns(identifiedBy: id_at_emailAddress) {
-        names.append(contentsOf: rdns)
-    }
-
-    guard !names.isEmpty else {
+  if let san = certificate.subjectAltName {
+    names.append(contentsOf: san.compactMap {
+      if case .rfc822Name(let rfc822Name) = $0 {
+        return String(describing: rfc822Name)
+      } else {
         return nil
-    }
+      }
+    })
+  } else if let rdns = certificate.rdns(identifiedBy: id_at_emailAddress) {
+    names.append(contentsOf: rdns)
+  }
 
-    return Unmanaged.passRetained(names as CFArray)
+  guard !names.isEmpty else {
+    return nil
+  }
+
+  return Unmanaged.passRetained(names as CFArray)
 }
 
 @_cdecl("CertificateCopyEmailAddresses")
 public func CertificateCopyEmailAddresses(
-    _ certificate: CertificateRef?,
-    _ emailAddresses: UnsafeMutablePointer<Unmanaged<CFArray>?>?
+  _ certificate: CertificateRef?,
+  _ emailAddresses: UnsafeMutablePointer<Unmanaged<CFArray>?>?
 ) -> OSStatus {
-    guard let certificate = certificate?._swiftObject else { return errSecParam }
-    guard let emailAddresses else { return errSecParam }
+  guard let certificate = certificate?._swiftObject else { return errSecParam }
+  guard let emailAddresses else { return errSecParam }
 
-    var rfc822Names = CertificateCopyRFC822Names(certificate._cfObject)
-    if rfc822Names == nil {
-        rfc822Names = Unmanaged.passRetained([CFString]() as CFArray)
-    }
+  var rfc822Names = CertificateCopyRFC822Names(certificate._cfObject)
+  if rfc822Names == nil {
+    rfc822Names = Unmanaged.passRetained([CFString]() as CFArray)
+  }
 
-    emailAddresses.pointee = rfc822Names
+  emailAddresses.pointee = rfc822Names
 
-    return errSecSuccess
+  return errSecSuccess
 }
 
 @_cdecl("CertificateCopyCommonNames")
 public func CertificateCopyCommonNames(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
-    let certificate = certificate._swiftObject
+  let certificate = certificate._swiftObject
 
-    guard let rdns = certificate.rdns(identifiedBy: id_at_commonName),
-          !rdns.isEmpty else {
-        return nil
-    }
+  guard let rdns = certificate.rdns(identifiedBy: id_at_commonName),
+        !rdns.isEmpty else {
+    return nil
+  }
 
-    return Unmanaged.passRetained(rdns as CFArray)
+  return Unmanaged.passRetained(rdns as CFArray)
 }
 
 let errSecInternal: OSStatus = -26276
 
 @_cdecl("CertificateCopyCommonName")
 public func CertificateCopyCommonName(
-    _ certificate: CertificateRef?,
-    _ commonName: UnsafeMutablePointer<Unmanaged<CFString>?>?
+  _ certificate: CertificateRef?,
+  _ commonName: UnsafeMutablePointer<Unmanaged<CFString>?>?
 ) -> OSStatus {
-    guard let certificate = certificate?._swiftObject else { return errSecParam }
-    guard let commonName else { return errSecParam }
-    guard let commonNames = CertificateCopyRFC822Names(certificate._cfObject)?.takeRetainedValue()
-        as? [String] else { return errSecInternal }
-    guard let firstCommonName = commonNames.first else { return errSecInternal }
+  guard let certificate = certificate?._swiftObject else { return errSecParam }
+  guard let commonName else { return errSecParam }
+  guard let commonNames = CertificateCopyRFC822Names(certificate._cfObject)?.takeRetainedValue()
+    as? [String] else { return errSecInternal }
+  guard let firstCommonName = commonNames.first else { return errSecInternal }
 
-    commonName.pointee = Unmanaged.passRetained(firstCommonName as CFString)
+  commonName.pointee = Unmanaged.passRetained(firstCommonName as CFString)
 
-    return errSecSuccess
+  return errSecSuccess
 }
 
 @_cdecl("CertificateCopyNTPrincipalNames")
 public func CertificateCopyNTPrincipalNames(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
-    let certificate = certificate._swiftObject
+  let certificate = certificate._swiftObject
 
-    guard let names = certificate.subjectAltName?.compactMap({
-        if case .otherName(let otherName) = $0,
-           otherName.type_id == id_pkix_on_pkinit_ms_san ||
-           otherName.type_id == id_pkix_on_pkinit_san {
-            return String(describing: otherName.value)
-        } else {
-            return nil
-        }
-    }), !names.isEmpty else {
-        return nil
+  guard let names = certificate.subjectAltName?.compactMap({
+    if case .otherName(let otherName) = $0,
+       otherName.type_id == id_pkix_on_pkinit_ms_san ||
+       otherName.type_id == id_pkix_on_pkinit_san {
+      return String(describing: otherName.value)
+    } else {
+      return nil
     }
+  }), !names.isEmpty else {
+    return nil
+  }
 
-    return Unmanaged.passRetained(names as CFArray)
+  return Unmanaged.passRetained(names as CFArray)
 }
 
 @objc
 protocol PropertyType {
-    var propertyType: String? { get }
+  var propertyType: String? { get }
 }
 
 extension NSObject {
-    @objc var propertyType: String? {
-        nil
-    }
+  @objc var propertyType: String? {
+    nil
+  }
 }
 
 extension NSDictionary {
-    // swiftlint:disable override_in_extension
-    override var propertyType: String? {
-        "section"
-    }
+  // swiftlint:disable override_in_extension
+  override var propertyType: String? {
+    "section"
+  }
 }
 
 extension NSData {
-    // swiftlint:disable override_in_extension
-    override var propertyType: String? {
-        "data"
-    }
+  // swiftlint:disable override_in_extension
+  override var propertyType: String? {
+    "data"
+  }
 }
 
 extension NSString {
-    // swiftlint:disable override_in_extension
-    override var propertyType: String? {
-        "string"
-    }
+  // swiftlint:disable override_in_extension
+  override var propertyType: String? {
+    "string"
+  }
 }
 
 extension NSURL {
-    // swiftlint:disable override_in_extension
-    override var propertyType: String? {
-        "url"
-    }
+  // swiftlint:disable override_in_extension
+  override var propertyType: String? {
+    "url"
+  }
 }
 
 extension NSDate {
-    // swiftlint:disable override_in_extension
-    override var propertyType: String? {
-        "date"
-    }
+  // swiftlint:disable override_in_extension
+  override var propertyType: String? {
+    "date"
+  }
 }
 
 extension NSArray {
-    // swiftlint:disable override_in_extension
-    override var propertyType: String? {
-        "array"
-    }
+  // swiftlint:disable override_in_extension
+  override var propertyType: String? {
+    "array"
+  }
 }
 
 extension NSNumber {
-    // swiftlint:disable override_in_extension
-    override var propertyType: String? {
-        "number"
-    }
+  // swiftlint:disable override_in_extension
+  override var propertyType: String? {
+    "number"
+  }
 }
 
 extension NSDictionary {
-    var nsKeyValueArray: NSArray {
-        self.map {
-            let label = $0.0
-            var value = $0.1
-            let propertyType = (value as? NSObject)?.propertyType
+  var nsKeyValueArray: NSArray {
+    self.map {
+      let label = $0.0
+      var value = $0.1
+      let propertyType = (value as? NSObject)?.propertyType
 
-            if let dictionary = value as? NSDictionary { value = dictionary.nsKeyValueArray }
+      if let dictionary = value as? NSDictionary { value = dictionary.nsKeyValueArray }
 
-            if let propertyType {
-                return ["type": propertyType, "label": label, "value": value] as NSDictionary
-            } else {
-                return ["label": label, "value": value] as NSDictionary
-            }
-        } as NSArray
-    }
+      if let propertyType {
+        return ["type": propertyType, "label": label, "value": value] as NSDictionary
+      } else {
+        return ["label": label, "value": value] as NSDictionary
+      }
+    } as NSArray
+  }
 }
 
 extension Dictionary where Value: NSObject {
-    var nsKeyValueArray: NSArray {
-        (self as NSDictionary).nsKeyValueArray
-    }
+  var nsKeyValueArray: NSArray {
+    (self as NSDictionary).nsKeyValueArray
+  }
 }
 
 extension BitString {
-    var nsData: NSData {
-        self.wrappedValue as NSData
-    }
+  var nsData: NSData {
+    self.wrappedValue as NSData
+  }
 }
 
 extension Certificate {
-    func rdnProperty(_ name: Name) -> NSDictionary? {
-        guard case .rdnSequence(let rdns) = name, !rdns.isEmpty else {
-            return nil
+  func rdnProperty(_ name: Name) -> NSDictionary? {
+    guard case .rdnSequence(let rdns) = name, !rdns.isEmpty else {
+      return nil
+    }
+
+    return rdns.reduce([String: NSObject]()) { result, rdn in
+      var result = result as [String: NSObject]
+
+      rdn.forEach { type, value in
+        let oid = String(describing: type)
+        let value = String(describing: value) as NSString
+
+        if let existing = result[oid] {
+          if let existing = existing as? NSMutableArray {
+            existing.add(value)
+          } else {
+            result[oid] = NSMutableArray(objects: [existing, value])
+          }
+        } else {
+          result[oid] = value
         }
+      }
 
-        return rdns.reduce([String: NSObject]()) { result, rdn in
-            var result = result as [String: NSObject]
+      return result
+    } as NSDictionary
+  }
 
-            rdn.forEach { type, value in
-                let oid = String(describing: type)
-                let value = String(describing: value) as NSString
+  var versionProperty: NSString {
+    "\(self.tbsCertificate.version ?? rfc3280_version_2 + 1)" as NSString
+  }
 
-                if let existing = result[oid] {
-                    if let existing = existing as? NSMutableArray {
-                        existing.add(value)
-                    } else {
-                        result[oid] = NSMutableArray(objects: [existing, value])
-                    }
-                } else {
-                    result[oid] = value
-                }
-            }
+  var serialNumberProperty: NSDictionary {
+    // FIXME: why is there this inner wrapping? looks wrong to me
+    ["Serial Number": String(describing: self.tbsCertificate.serialNumber) as NSString] as NSDictionary
+  }
 
-            return result
-        } as NSDictionary
+  var validityPeriodProperty: NSDictionary {
+    ["Not Valid Before": self.tbsCertificate.validity.notBefore.nsDate,
+     "Not Valid After": self.tbsCertificate.validity.notAfter.nsDate] as NSDictionary
+  }
+
+  var publicKeyAlgorithmProperty: NSDictionary {
+    var properties = [String: NSObject]()
+    let spki = self.tbsCertificate.subjectPublicKeyInfo
+
+    properties["Algorithm"] = String(describing: spki.algorithm.algorithm) as NSObject
+
+    if let parameters = spki.algorithm.parameters, !(parameters is Null) {
+      properties["Parameters"] = String(describing: parameters) as NSObject
     }
+    return properties as NSDictionary
+  }
 
-    var versionProperty: NSString {
-        "\(self.tbsCertificate.version ?? rfc3280_version_2 + 1)" as NSString
+  var publicKeyDataProperty: NSData {
+    self.tbsCertificate.subjectPublicKeyInfo.subjectPublicKey.nsData
+  }
+
+  var publicKeyInfoProperty: NSDictionary {
+    var properties = [String: NSObject]()
+    properties["Public Key Algorithm"] = self.publicKeyAlgorithmProperty
+    properties["Public Key Data"] = self.publicKeyDataProperty
+    return properties as NSDictionary
+  }
+
+  var signatureAlgorithmProperty: NSDictionary {
+    var properties = [String: NSObject]()
+
+    properties["Algorithm"] = String(describing: signatureAlgorithm.algorithm) as NSObject
+
+    if let parameters = signatureAlgorithm.parameters, !(parameters is Null) {
+      properties["Parameters"] = String(describing: parameters) as NSObject
     }
+    return properties as NSDictionary
+  }
 
-    var serialNumberProperty: NSDictionary {
-        // FIXME: why is there this inner wrapping? looks wrong to me
-        ["Serial Number": String(describing: self.tbsCertificate.serialNumber) as NSString] as NSDictionary
-    }
+  var signatureDataProperty: NSData {
+    self.signatureValue.nsData
+  }
 
-    var validityPeriodProperty: NSDictionary {
-        ["Not Valid Before": self.tbsCertificate.validity.notBefore.nsDate,
-         "Not Valid After": self.tbsCertificate.validity.notAfter.nsDate] as NSDictionary
-    }
-
-    var publicKeyAlgorithmProperty: NSDictionary {
-        var properties = [String: NSObject]()
-        let spki = self.tbsCertificate.subjectPublicKeyInfo
-
-        properties["Algorithm"] = String(describing: spki.algorithm.algorithm) as NSObject
-
-        if let parameters = spki.algorithm.parameters, !(parameters is Null) {
-            properties["Parameters"] = String(describing: parameters) as NSObject
-        }
-        return properties as NSDictionary
-    }
-
-    var publicKeyDataProperty: NSData {
-        self.tbsCertificate.subjectPublicKeyInfo.subjectPublicKey.nsData
-    }
-
-    var publicKeyInfoProperty: NSDictionary {
-        var properties = [String: NSObject]()
-        properties["Public Key Algorithm"] = self.publicKeyAlgorithmProperty
-        properties["Public Key Data"] = self.publicKeyDataProperty
-        return properties as NSDictionary
-    }
-
-    var signatureAlgorithmProperty: NSDictionary {
-        var properties = [String: NSObject]()
-
-        properties["Algorithm"] = String(describing: signatureAlgorithm.algorithm) as NSObject
-
-        if let parameters = signatureAlgorithm.parameters, !(parameters is Null) {
-            properties["Parameters"] = String(describing: parameters) as NSObject
-        }
-        return properties as NSDictionary
-    }
-
-    var signatureDataProperty: NSData {
-        self.signatureValue.nsData
-    }
-
-    var signatureProperty: NSDictionary {
-        var properties = [String: NSObject]()
-        properties["Signature Algorithm"] = self.signatureAlgorithmProperty
-        properties["Signature Data"] = self.signatureDataProperty
-        return properties as NSDictionary
-    }
+  var signatureProperty: NSDictionary {
+    var properties = [String: NSObject]()
+    properties["Signature Algorithm"] = self.signatureAlgorithmProperty
+    properties["Signature Data"] = self.signatureDataProperty
+    return properties as NSDictionary
+  }
 }
 
 extension Time {
-    var nsDate: NSDate {
-        switch self {
-        case .utcTime(let utcTime):
-            return utcTime.wrappedValue as NSDate
-        case .generalTime(let generalizedTime):
-            return generalizedTime.wrappedValue as NSDate
-        }
+  var nsDate: NSDate {
+    switch self {
+    case .utcTime(let utcTime):
+      return utcTime.wrappedValue as NSDate
+    case .generalTime(let generalizedTime):
+      return generalizedTime.wrappedValue as NSDate
     }
+  }
 }
 
 @_cdecl("CertificateCopyLegacyProperties")
 public func CertificateCopyLegacyProperties(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
-    let certificate = certificate._swiftObject
+  let certificate = certificate._swiftObject
 
-    var properties = [String: NSObject]()
+  var properties = [String: NSObject]()
 
-    if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.subject) {
-        properties["Subject Name"] = subjectName
-    }
+  if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.subject) {
+    properties["Subject Name"] = subjectName
+  }
 
-    if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.issuer) {
-        properties["Issuer Name"] = subjectName
-    }
+  if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.issuer) {
+    properties["Issuer Name"] = subjectName
+  }
 
-    properties["Version"] = certificate.versionProperty
-    properties["Serial Number"] = certificate.serialNumberProperty
+  properties["Version"] = certificate.versionProperty
+  properties["Serial Number"] = certificate.serialNumberProperty
 
-    properties["Not Valid Before"] = certificate.tbsCertificate.validity.notBefore.nsDate
-    properties["Not Valid After"] = certificate.tbsCertificate.validity.notAfter.nsDate
+  properties["Not Valid Before"] = certificate.tbsCertificate.validity.notBefore.nsDate
+  properties["Not Valid After"] = certificate.tbsCertificate.validity.notAfter.nsDate
 
-    properties["Subject Unique ID"] = certificate.tbsCertificate.subjectUniqueID?.nsData
-    properties["Issuer Unique ID"] = certificate.tbsCertificate.issuerUniqueID?.nsData
+  properties["Subject Unique ID"] = certificate.tbsCertificate.subjectUniqueID?.nsData
+  properties["Issuer Unique ID"] = certificate.tbsCertificate.issuerUniqueID?.nsData
 
-    properties["Public Key Algorithm"] = certificate.publicKeyAlgorithmProperty
-    properties["Public Key Data"] = certificate.publicKeyDataProperty
+  properties["Public Key Algorithm"] = certificate.publicKeyAlgorithmProperty
+  properties["Public Key Data"] = certificate.publicKeyDataProperty
 
-    // appendExtension
-    properties["Signature"] = certificate.signatureDataProperty
-    // SEC_FINGERPRINTS_KEY appendFingerprintsProperty
+  // appendExtension
+  properties["Signature"] = certificate.signatureDataProperty
+  // SEC_FINGERPRINTS_KEY appendFingerprintsProperty
 
-    return Unmanaged.passRetained(properties.nsKeyValueArray)
+  return Unmanaged.passRetained(properties.nsKeyValueArray)
 }
 
 @_cdecl("CertificateCopyProperties")
 public func CertificateCopyProperties(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
-    let certificate = certificate._swiftObject
+  let certificate = certificate._swiftObject
 
-    if let properties = certificate._properties {
-        return Unmanaged.passRetained(properties)
-    }
+  if let properties = certificate._properties {
+    return Unmanaged.passRetained(properties)
+  }
 
-    var properties = [String: NSObject]()
+  var properties = [String: NSObject]()
 
-    if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.subject) {
-        properties["Subject Name"] = subjectName
-    }
+  if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.subject) {
+    properties["Subject Name"] = subjectName
+  }
 
-    if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.issuer) {
-        properties["Issuer Name"] = subjectName
-    }
+  if let subjectName = certificate.rdnProperty(certificate.tbsCertificate.issuer) {
+    properties["Issuer Name"] = subjectName
+  }
 
-    properties["Version"] = certificate.versionProperty
-    properties["Serial Number"] = certificate.serialNumberProperty
-    properties["Validity Period"] = certificate.validityPeriodProperty
+  properties["Version"] = certificate.versionProperty
+  properties["Serial Number"] = certificate.serialNumberProperty
+  properties["Validity Period"] = certificate.validityPeriodProperty
 
-    properties["Subject Unique ID"] = certificate.tbsCertificate.subjectUniqueID?.nsData
-    properties["Issuer Unique ID"] = certificate.tbsCertificate.issuerUniqueID?.nsData
-    properties["Public Key Info"] = certificate.publicKeyInfoProperty
+  properties["Subject Unique ID"] = certificate.tbsCertificate.subjectUniqueID?.nsData
+  properties["Issuer Unique ID"] = certificate.tbsCertificate.issuerUniqueID?.nsData
+  properties["Public Key Info"] = certificate.publicKeyInfoProperty
 
-    // appendExtension
-    properties["Signature"] = certificate.signatureProperty
-    // SEC_FINGERPRINTS_KEY appendFingerprintsProperty
+  // appendExtension
+  properties["Signature"] = certificate.signatureProperty
+  // SEC_FINGERPRINTS_KEY appendFingerprintsProperty
 
-    certificate._properties = properties.nsKeyValueArray
+  certificate._properties = properties.nsKeyValueArray
 
-    return Unmanaged.passRetained(certificate._properties!)
+  return Unmanaged.passRetained(certificate._properties!)
 }
 
 @_cdecl("CertificateCopyDescriptionsFromSAN")
 public func CertificateCopyDescriptionsFromSAN(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
-    let certificate = certificate._swiftObject
-    guard let names = certificate.subjectAltName?.map({ String(describing: $0) }),
-          !names.isEmpty else {
-        return nil
-    }
+  let certificate = certificate._swiftObject
+  guard let names = certificate.subjectAltName?.map({ String(describing: $0) }),
+        !names.isEmpty else {
+    return nil
+  }
 
-    return Unmanaged.passRetained(names as CFArray)
+  return Unmanaged.passRetained(names as CFArray)
 }
 
 @_cdecl("CertificateCopyDataReencoded")
 public func CertificateCopyDataReencoded(_ certificate: CertificateRef) -> Unmanaged<CFData>? {
-    let certificate = certificate._swiftObject
-    let asn1Encoder = ASN1Encoder()
+  let certificate = certificate._swiftObject
+  let asn1Encoder = ASN1Encoder()
 
-    do {
-        let data = try asn1Encoder.encode(certificate)
-        return Unmanaged.passRetained(data as CFData)
-    } catch {
-        return nil
-    }
+  do {
+    let data = try asn1Encoder.encode(certificate)
+    return Unmanaged.passRetained(data as CFData)
+  } catch {
+    return nil
+  }
 }
 
 @_cdecl("CertificateCopyJSONDescription")
 public func CertificateCopyJSONDescription(_ certificate: CertificateRef) -> Unmanaged<CFString>? {
-    let certificate = certificate._swiftObject
+  let certificate = certificate._swiftObject
 
-    let jsonEncoder = JSONEncoder()
-    jsonEncoder.outputFormatting = .prettyPrinted
+  let jsonEncoder = JSONEncoder()
+  jsonEncoder.outputFormatting = .prettyPrinted
 
-    do {
-        let data = try jsonEncoder.encode(certificate)
-        guard let string = String(data: data, encoding: .utf8) else { return nil }
-        return Unmanaged.passRetained(string as CFString)
-    } catch {}
+  do {
+    let data = try jsonEncoder.encode(certificate)
+    guard let string = String(data: data, encoding: .utf8) else { return nil }
+    return Unmanaged.passRetained(string as CFString)
+  } catch {}
 
-    return nil
+  return nil
 }

@@ -18,40 +18,40 @@ import Foundation
 import ASN1Kit
 
 enum HeimASN1TaggingEnvironment: String, Codable, HeimASN1SwiftTypeRepresentable {
-    case explicit = "EXPLICIT"
-    case implicit = "IMPLICIT"
-    case automatic = "AUTOMATIC"
+  case explicit = "EXPLICIT"
+  case implicit = "IMPLICIT"
+  case automatic = "AUTOMATIC"
 
-    var swiftType: String? {
-        switch self {
-        case .explicit:
-            return "ASN1Codable.ASN1ExplicitTagging"
-        case .implicit:
-            return "ASN1Codable.ASN1ImplicitTagging"
-        default:
-            return "ASN1Codable.ASN1DefaultTagging"
-        }
+  var swiftType: String? {
+    switch self {
+    case .explicit:
+      return "ASN1Codable.ASN1ExplicitTagging"
+    case .implicit:
+      return "ASN1Codable.ASN1ImplicitTagging"
+    default:
+      return "ASN1Codable.ASN1DefaultTagging"
     }
+  }
 
-    var initializer: String {
-        switch self {
-        case .explicit:
-            return ".explicit"
-        case .implicit:
-            return ".implicit"
-        case .automatic:
-            return ".automatic"
-        }
+  var initializer: String {
+    switch self {
+    case .explicit:
+      return ".explicit"
+    case .implicit:
+      return ".implicit"
+    case .automatic:
+      return ".automatic"
     }
+  }
 }
 
 protocol HeimASN1TagRepresentable {
-    var tag: ASN1DecodedTag? { get }
+  var tag: ASN1DecodedTag? { get }
 }
 
 enum HeimASN1TagClass: String, Codable {
-    case universal = "UNIVERSAL"
-    case application = "APPLICATION"
-    case context = "CONTEXT"
-    case `private` = "PRIVATE"
+  case universal = "UNIVERSAL"
+  case application = "APPLICATION"
+  case context = "CONTEXT"
+  case `private` = "PRIVATE"
 }

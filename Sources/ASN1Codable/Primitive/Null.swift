@@ -17,26 +17,26 @@
 import Foundation
 
 public struct Null: Codable {
-    public init() {}
+  public init() {}
 }
 
 extension Null: Equatable {}
 extension Null: Hashable {}
 
 extension Null: ASN1DecodableType {
-    public init(from asn1: ASN1Object) throws {
-        guard asn1.tag == .universal(.null) else {
-            throw ASN1Error.malformedEncoding("ASN.1 object has incorrect tag \(asn1.tag)")
-        }
+  public init(from asn1: ASN1Object) throws {
+    guard asn1.tag == .universal(.null) else {
+      throw ASN1Error.malformedEncoding("ASN.1 object has incorrect tag \(asn1.tag)")
     }
+  }
 }
 
 extension Null: ASN1EncodableType {
-    public func asn1encode(tag _: ASN1DecodedTag?) throws -> ASN1Object {
-        ASN1Null
-    }
+  public func asn1encode(tag _: ASN1DecodedTag?) throws -> ASN1Object {
+    ASN1Null
+  }
 }
 
 extension Null: ASN1UniversalTagRepresentable {
-    static var tagNo: ASN1Tag { .null }
+  static var tagNo: ASN1Tag { .null }
 }

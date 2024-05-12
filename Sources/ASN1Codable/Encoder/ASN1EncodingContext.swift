@@ -19,38 +19,38 @@ import ASN1Kit
 import Echo
 
 struct ASN1EncodingContext: ASN1CodingContext {
-    /// default tagging environment
-    var taggingEnvironment: ASN1Tagging = .explicit
-    /// custom object set type dictionary
-    var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary?
-    /// whether we are decoding an enumerated type
-    var enumCodingState: ASN1EnumCodingState = .none
-    /// whether we are decoding a struct that is has SET instead of SEQUENCE encoding
-    var encodeAsSet = false
-    /// the innermost decoded tag: this is used for allowing any string type to be represented by an untagged String
-    var currentTag: ASN1DecodedTag?
-    /// state for open type decoding
-    var objectSetCodingContext: ASN1ObjectSetCodingContext?
-    /// state for AUTOMATIC tagging
-    var automaticTaggingContext: ASN1AutomaticTaggingContext?
+  /// default tagging environment
+  var taggingEnvironment: ASN1Tagging = .explicit
+  /// custom object set type dictionary
+  var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary?
+  /// whether we are decoding an enumerated type
+  var enumCodingState: ASN1EnumCodingState = .none
+  /// whether we are decoding a struct that is has SET instead of SEQUENCE encoding
+  var encodeAsSet = false
+  /// the innermost decoded tag: this is used for allowing any string type to be represented by an untagged String
+  var currentTag: ASN1DecodedTag?
+  /// state for open type decoding
+  var objectSetCodingContext: ASN1ObjectSetCodingContext?
+  /// state for AUTOMATIC tagging
+  var automaticTaggingContext: ASN1AutomaticTaggingContext?
 
-    private static func isEnum<T>(_ value: T) -> Bool {
-        reflect(type(of: value)) is EnumMetadata
+  private static func isEnum<T>(_ value: T) -> Bool {
+    reflect(type(of: value)) is EnumMetadata
+  }
+
+  func encodingSingleValue<T>(_ value: T) -> Self {
+    var context = self
+
+    if Self.isEnum(value) {
+      context.enumCodingState = .enum
+    } else {
+      context.enumCodingState = .none
     }
 
-    func encodingSingleValue<T>(_ value: T) -> Self {
-        var context = self
+    return context
+  }
 
-        if Self.isEnum(value) {
-            context.enumCodingState = .enum
-        } else {
-            context.enumCodingState = .none
-        }
-
-        return context
-    }
-
-    mutating func encodingNestedContainer() {
-        self.nextEnumCodingState()
-    }
+  mutating func encodingNestedContainer() {
+    self.nextEnumCodingState()
+  }
 }

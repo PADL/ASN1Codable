@@ -19,24 +19,24 @@ import ASN1Kit
 
 @propertyWrapper
 public struct ASN1ContextTagged<Tag, Tagging, Value>: Codable, ASN1TaggedValue where
-    Tag: ASN1TagNumberRepresentable,
-    Tagging: ASN1TaggingRepresentable,
-    Value: Codable {
-    public static var tagNumber: Tag.Type { Tag.self }
+  Tag: ASN1TagNumberRepresentable,
+  Tagging: ASN1TaggingRepresentable,
+  Value: Codable {
+  public static var tagNumber: Tag.Type { Tag.self }
 
-    public var wrappedValue: Value
+  public var wrappedValue: Value
 
-    public init(wrappedValue: Value) {
-        self.wrappedValue = wrappedValue
-    }
+  public init(wrappedValue: Value) {
+    self.wrappedValue = wrappedValue
+  }
 
-    public init() where Value: ExpressibleByNilLiteral {
-        self.wrappedValue = nil
-    }
+  public init() where Value: ExpressibleByNilLiteral {
+    self.wrappedValue = nil
+  }
 
-    public static var metadata: ASN1Metadata {
-        ASN1Metadata(tag: .taggedTag(tagNumber.tagNo), tagging: Tagging.tagging)
-    }
+  public static var metadata: ASN1Metadata {
+    ASN1Metadata(tag: .taggedTag(tagNumber.tagNo), tagging: Tagging.tagging)
+  }
 }
 
 extension ASN1ContextTagged: Equatable where Value: Equatable {}
@@ -44,18 +44,18 @@ extension ASN1ContextTagged: Equatable where Value: Equatable {}
 extension ASN1ContextTagged: Hashable where Value: Hashable {}
 
 public protocol ASN1ContextTaggedType: ASN1TaggedType {
-    static var tagNumber: UInt { get }
+  static var tagNumber: UInt { get }
 }
 
 extension ASN1ContextTaggedType {
-    public static var metadata: ASN1Metadata {
-        let tagging: ASN1Tagging?
-        if let self = self as? ASN1TaggedTypeTagging.Type {
-            tagging = self.tagging
-        } else {
-            tagging = nil
-        }
-
-        return ASN1Metadata(tag: .taggedTag(self.tagNumber), tagging: tagging)
+  public static var metadata: ASN1Metadata {
+    let tagging: ASN1Tagging?
+    if let self = self as? ASN1TaggedTypeTagging.Type {
+      tagging = self.tagging
+    } else {
+      tagging = nil
     }
+
+    return ASN1Metadata(tag: .taggedTag(self.tagNumber), tagging: tagging)
+  }
 }

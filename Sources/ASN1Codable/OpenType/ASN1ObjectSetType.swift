@@ -21,33 +21,33 @@ import ASN1Kit
 /// discriminant in encoding an object set.
 @propertyWrapper
 public struct ASN1ObjectSetType<ValueType>: Codable where ValueType: Codable & Hashable {
-    public var wrappedValue: ValueType
+  public var wrappedValue: ValueType
 
-    public init(wrappedValue: ValueType) {
-        self.wrappedValue = wrappedValue
+  public init(wrappedValue: ValueType) {
+    self.wrappedValue = wrappedValue
+  }
+
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.singleValueContainer()
+    try container.encode(self.wrappedValue)
+
+    if let encoder = encoder as? ASN1EncoderImpl,
+       let objectSetCodingContext = encoder.context.objectSetCodingContext {
+      precondition(objectSetCodingContext.valueType == nil)
+      objectSetCodingContext.valueType = self.wrappedValue
     }
+  }
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(self.wrappedValue)
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.singleValueContainer()
+    self.wrappedValue = try container.decode(ValueType.self)
 
-        if let encoder = encoder as? ASN1EncoderImpl,
-           let objectSetCodingContext = encoder.context.objectSetCodingContext {
-            precondition(objectSetCodingContext.valueType == nil)
-            objectSetCodingContext.valueType = self.wrappedValue
-        }
+    if let decoder = decoder as? ASN1DecoderImpl,
+       let objectSetCodingContext = decoder.context.objectSetCodingContext {
+      precondition(objectSetCodingContext.valueType == nil)
+      objectSetCodingContext.valueType = self.wrappedValue
     }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        self.wrappedValue = try container.decode(ValueType.self)
-
-        if let decoder = decoder as? ASN1DecoderImpl,
-           let objectSetCodingContext = decoder.context.objectSetCodingContext {
-            precondition(objectSetCodingContext.valueType == nil)
-            objectSetCodingContext.valueType = self.wrappedValue
-        }
-    }
+  }
 }
 
 extension ASN1ObjectSetType: Equatable where ValueType: Equatable {}

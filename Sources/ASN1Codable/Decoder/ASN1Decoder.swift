@@ -18,34 +18,34 @@ import Foundation
 import ASN1Kit
 
 public final class ASN1Decoder {
-    public var userInfo: [CodingUserInfoKey: Any] = [:]
-    public var taggingEnvironment: ASN1Tagging?
-    public var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary?
+  public var userInfo: [CodingUserInfoKey: Any] = [:]
+  public var taggingEnvironment: ASN1Tagging?
+  public var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary?
 
-    public init() {}
+  public init() {}
 
-    public func decode<T>(_: T.Type, from data: Data) throws -> T where T: Decodable {
-        do {
-            let object = try ASN1Kit.ASN1Decoder.decode(asn1: data)
-            let decoder = ASN1DecoderImpl(object: object,
-                                          userInfo: userInfo,
-                                          taggingEnvironment: taggingEnvironment,
-                                          objectSetTypeDictionary: objectSetTypeDictionary)
-            let box = try Box<T>(from: decoder)
-            return box.value
-        } catch let error as ASN1Error {
-            let context = DecodingError.Context(codingPath: [],
-                                                debugDescription: "ASN.1 decoding error",
-                                                underlyingError: error)
-            throw DecodingError.dataCorrupted(context)
-        }
+  public func decode<T>(_: T.Type, from data: Data) throws -> T where T: Decodable {
+    do {
+      let object = try ASN1Kit.ASN1Decoder.decode(asn1: data)
+      let decoder = ASN1DecoderImpl(object: object,
+                                    userInfo: userInfo,
+                                    taggingEnvironment: taggingEnvironment,
+                                    objectSetTypeDictionary: objectSetTypeDictionary)
+      let box = try Box<T>(from: decoder)
+      return box.value
+    } catch let error as ASN1Error {
+      let context = DecodingError.Context(codingPath: [],
+                                          debugDescription: "ASN.1 decoding error",
+                                          underlyingError: error)
+      throw DecodingError.dataCorrupted(context)
     }
+  }
 }
 
 #if canImport(Combine)
-    import Combine
+  import Combine
 
-    extension ASN1Decoder: TopLevelDecoder {
-        public typealias Output = Data
-    }
+  extension ASN1Decoder: TopLevelDecoder {
+    public typealias Output = Data
+  }
 #endif

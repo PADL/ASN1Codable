@@ -23,94 +23,94 @@ typealias AppleComponentAttributes = ASN1TaggedDictionary
 typealias RelativeDistinguishedName = [AttributeType: DirectoryString]
 
 extension CertificateRef {
-    var _swiftObject: Certificate {
-        unsafeBitCast(self, to: Certificate.self)
-    }
+  var _swiftObject: Certificate {
+    unsafeBitCast(self, to: Certificate.self)
+  }
 }
 
 extension Certificate {
-    var _cfObject: CertificateRef {
-        unsafeBitCast(Unmanaged<Certificate>.passUnretained(self), to: CertificateRef.self)
-    }
+  var _cfObject: CertificateRef {
+    unsafeBitCast(Unmanaged<Certificate>.passUnretained(self), to: CertificateRef.self)
+  }
 
-    static func create(with der_certificate: Data) -> CertificateRef? {
-        do {
-            let decoder = ASN1Decoder()
-            let certificate = try decoder.decode(Certificate.self, from: der_certificate as Data)
-            return unsafeBitCast(Unmanaged<Certificate>.passRetained(certificate), to: CertificateRef.self)
-        } catch {
-            debugPrint("Failed to decode certificate: \(error)")
-            return nil
-        }
+  static func create(with der_certificate: Data) -> CertificateRef? {
+    do {
+      let decoder = ASN1Decoder()
+      let certificate = try decoder.decode(Certificate.self, from: der_certificate as Data)
+      return unsafeBitCast(Unmanaged<Certificate>.passRetained(certificate), to: CertificateRef.self)
+    } catch {
+      debugPrint("Failed to decode certificate: \(error)")
+      return nil
     }
+  }
 }
 
 @_cdecl("CertificateCreateWithData")
 public func CertificateCreateWithData(
-    _: CFAllocator!,
-    _ der_certificate: Unmanaged<CFData>?
+  _: CFAllocator!,
+  _ der_certificate: Unmanaged<CFData>?
 ) -> CertificateRef? {
-    guard let der_certificate else { return nil }
-    return Certificate.create(with: der_certificate.takeUnretainedValue() as Data)
+  guard let der_certificate else { return nil }
+  return Certificate.create(with: der_certificate.takeUnretainedValue() as Data)
 }
 
 @_cdecl("CertificateCopyData")
 public func CertificateCopyData(_ certificate: CertificateRef?) -> Unmanaged<CFData>? {
-    guard let certificate = certificate?._swiftObject else { return nil }
-    guard let data = certificate._save else { return nil }
-    return Unmanaged.passRetained(data as CFData)
+  guard let certificate = certificate?._swiftObject else { return nil }
+  guard let data = certificate._save else { return nil }
+  return Unmanaged.passRetained(data as CFData)
 }
 
 extension Certificate {
-    // swiftlint:disable discouraged_optional_collection
-    func rdns(identifiedBy oid: AttributeType) -> [String]? {
-        guard case .rdnSequence(let rdns) = self.tbsCertificate.subject, !rdns.isEmpty else {
-            return nil
-        }
-
-        let strings: [String] = rdns.compactMap {
-            guard let first = $0.first(where: { $0.0 == oid }) else { return nil }
-            return String(describing: first.value)
-        }
-
-        guard !strings.isEmpty else { return nil }
-
-        return strings
+  // swiftlint:disable discouraged_optional_collection
+  func rdns(identifiedBy oid: AttributeType) -> [String]? {
+    guard case .rdnSequence(let rdns) = self.tbsCertificate.subject, !rdns.isEmpty else {
+      return nil
     }
 
-    var rdnCount: Int {
-        guard case .rdnSequence(let rdns) = self.tbsCertificate.subject else { return 0 }
-        return rdns.count
+    let strings: [String] = rdns.compactMap {
+      guard let first = $0.first(where: { $0.0 == oid }) else { return nil }
+      return String(describing: first.value)
     }
+
+    guard !strings.isEmpty else { return nil }
+
+    return strings
+  }
+
+  var rdnCount: Int {
+    guard case .rdnSequence(let rdns) = self.tbsCertificate.subject else { return 0 }
+    return rdns.count
+  }
 }
 
 @_cdecl("CertificateCopySubjectSummary")
 public func CertificateCopySubjectSummary(_ certificate: CertificateRef) -> Unmanaged<CFString>? {
-    let certificate = certificate._swiftObject
-    let summary: String
+  let certificate = certificate._swiftObject
+  let summary: String
 
-    // FIXME: mirror Security.framework, currently just returns a DN
-    if let cn = certificate.rdns(identifiedBy: id_at_commonName), !cn.isEmpty {
-        summary = cn[0]
-    } else if certificate.rdnCount != 0 {
-        summary = certificate.tbsCertificate.subject.description
-    } else if let emails = CertificateCopyRFC822Names(certificate._cfObject),
-              let email = (emails.takeRetainedValue() as NSArray).firstObject as? String {
-        summary = email
-    } else if let dns = CertificateCopyDNSNamesFromSAN(certificate._cfObject),
-              let dns = (dns.takeRetainedValue() as NSArray).firstObject as? String {
-        summary = dns
-    } else {
-        return nil
-    }
+  // FIXME: mirror Security.framework, currently just returns a DN
+  if let cn = certificate.rdns(identifiedBy: id_at_commonName), !cn.isEmpty {
+    summary = cn[0]
+  } else if certificate.rdnCount != 0 {
+    summary = certificate.tbsCertificate.subject.description
+  } else if let emails = CertificateCopyRFC822Names(certificate._cfObject),
+            let email = (emails.takeRetainedValue() as NSArray).firstObject as? String {
+    summary = email
+  } else if let dns = CertificateCopyDNSNamesFromSAN(certificate._cfObject),
+            let dns = (dns.takeRetainedValue() as NSArray).firstObject as? String {
+    summary = dns
+  } else {
+    return nil
+  }
 
-    return Unmanaged.passRetained(summary as CFString)
+  return Unmanaged.passRetained(summary as CFString)
 }
 
 @_cdecl("CertificateGetKeyUsage")
 public func CertificateGetKeyUsage(_ certificate: CertificateRef?) -> UInt32 {
-    guard let certificate = certificate?._swiftObject else { return 0 }
-    guard let keyUsage: KeyUsage = certificate.extension(id_x509_ce_keyUsage) else { return 0 }
+  guard let certificate = certificate?._swiftObject else { return 0 }
+  guard let keyUsage: KeyUsage = certificate.extension(id_x509_ce_keyUsage) else { return 0 }
 
-    return UInt32(keyUsage.rawValue)
+  return UInt32(keyUsage.rawValue)
 }

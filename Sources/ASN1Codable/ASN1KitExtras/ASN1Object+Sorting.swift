@@ -18,34 +18,34 @@ import Foundation
 import ASN1Kit
 
 extension ASN1Object {
-    var sortedByTag: ASN1Object {
-        guard self.constructed, let items = self.data.items else {
-            return self
-        }
-
-        let sorted = items.sorted { ASN1DecodedTag.sort($0.tag, $1.tag) }
-
-        return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
+  var sortedByTag: ASN1Object {
+    guard self.constructed, let items = self.data.items else {
+      return self
     }
 
-    var sortedByEncodedValue: ASN1Object {
-        guard self.constructed, self.tag == .universal(.set), let items = self.data.items else {
-            return self
-        }
+    let sorted = items.sorted { ASN1DecodedTag.sort($0.tag, $1.tag) }
 
-        let sorted = items.sorted(by: Self.sort)
+    return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
+  }
 
-        return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
+  var sortedByEncodedValue: ASN1Object {
+    guard self.constructed, self.tag == .universal(.set), let items = self.data.items else {
+      return self
     }
 
-    private static func sort(_ lhs: ASN1Object, _ rhs: ASN1Object) -> Bool {
-        do {
-            let lhsSerialized = try lhs.serialize()
-            let rhsSerialized = try rhs.serialize()
+    let sorted = items.sorted(by: Self.sort)
 
-            return lhsSerialized.lexicographicallyPrecedes(rhsSerialized)
-        } catch {
-            return false
-        }
+    return ASN1Kit.create(tag: self.tag, data: .constructed(sorted))
+  }
+
+  private static func sort(_ lhs: ASN1Object, _ rhs: ASN1Object) -> Bool {
+    do {
+      let lhsSerialized = try lhs.serialize()
+      let rhsSerialized = try rhs.serialize()
+
+      return lhsSerialized.lexicographicallyPrecedes(rhsSerialized)
+    } catch {
+      return false
     }
+  }
 }

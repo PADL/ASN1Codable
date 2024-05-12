@@ -17,27 +17,27 @@
 import Foundation
 
 struct HeimASN1Decoration: Codable {
-    var type: String
-    var name: String
-    var isOptional: Bool
-    var isExternal: Bool
-    var isPointer: Bool
-    var isVoidStar: Bool
-    var isStructStar: Bool
-    var copyFunction: String
-    var freeFunction: String
-    var headerName: String
+  var type: String
+  var name: String
+  var isOptional: Bool
+  var isExternal: Bool
+  var isPointer: Bool
+  var isVoidStar: Bool
+  var isStructStar: Bool
+  var copyFunction: String
+  var freeFunction: String
+  var headerName: String
 
-    enum CodingKeys: String, CodingKey {
-        case type
-        case name
-        case isOptional = "optional"
-        case isExternal = "external"
-        case isPointer = "pointer"
-        case isVoidStar = "void_star"
-        case isStructStar = "struct_star"
-        case copyFunction = "copy_function"
-        case freeFunction = "free_function"
-        case headerName = "header_name"
-    }
+  enum CodingKeys: String, CodingKey {
+    case type
+    case name
+    case isOptional = "optional"
+    case isExternal = "external"
+    case isPointer = "pointer"
+    case isVoidStar = "void_star"
+    case isStructStar = "struct_star"
+    case copyFunction = "copy_function"
+    case freeFunction = "free_function"
+    case headerName = "header_name"
+  }
 }

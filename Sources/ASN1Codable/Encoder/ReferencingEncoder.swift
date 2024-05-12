@@ -18,28 +18,28 @@ import Foundation
 import ASN1Kit
 
 extension ASN1EncoderImpl {
-    final class ReferencingEncoder: ASN1EncoderImpl {
-        var encodingContainer: ASN1EncodingContainer
+  final class ReferencingEncoder: ASN1EncoderImpl {
+    var encodingContainer: ASN1EncodingContainer
 
-        init(_ encodingContainer: ASN1EncodingContainer, at index: Int) {
-            self.encodingContainer = encodingContainer
-            super.init(codingPath: encodingContainer.codingPath,
-                       userInfo: encodingContainer.userInfo,
-                       context: encodingContainer.context)
-            self.codingPath.append(ASN1Key(index: index))
-        }
-
-        init(_ encodingContainer: ASN1EncodingContainer, key: CodingKey) {
-            self.encodingContainer = encodingContainer
-            super.init(codingPath: encodingContainer.codingPath,
-                       userInfo: encodingContainer.userInfo,
-                       context: encodingContainer.context)
-            self.codingPath.append(key)
-        }
-
-        deinit {
-            guard let containers = self.container?.containers else { return }
-            encodingContainer.containers.append(contentsOf: containers)
-        }
+    init(_ encodingContainer: ASN1EncodingContainer, at index: Int) {
+      self.encodingContainer = encodingContainer
+      super.init(codingPath: encodingContainer.codingPath,
+                 userInfo: encodingContainer.userInfo,
+                 context: encodingContainer.context)
+      self.codingPath.append(ASN1Key(index: index))
     }
+
+    init(_ encodingContainer: ASN1EncodingContainer, key: CodingKey) {
+      self.encodingContainer = encodingContainer
+      super.init(codingPath: encodingContainer.codingPath,
+                 userInfo: encodingContainer.userInfo,
+                 context: encodingContainer.context)
+      self.codingPath.append(key)
+    }
+
+    deinit {
+      guard let containers = self.container?.containers else { return }
+      encodingContainer.containers.append(contentsOf: containers)
+    }
+  }
 }

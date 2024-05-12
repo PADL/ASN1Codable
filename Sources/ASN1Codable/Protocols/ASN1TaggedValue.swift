@@ -18,67 +18,67 @@ import Foundation
 import ASN1Kit
 
 public protocol ASN1TaggedValue: Codable, CustomStringConvertible,
-    CustomDebugStringConvertible, ASN1TypeMetadataRepresentable {
-    associatedtype Value: Codable
+  CustomDebugStringConvertible, ASN1TypeMetadataRepresentable {
+  associatedtype Value: Codable
 
-    var wrappedValue: Value { get set }
-    var projectedValue: ASN1Metadata { get }
+  var wrappedValue: Value { get set }
+  var projectedValue: ASN1Metadata { get }
 
-    init(wrappedValue: Value)
+  init(wrappedValue: Value)
 }
 
 public protocol ASN1UniversalTaggedValue: ASN1TaggedValue {}
 
 extension ASN1TaggedValue {
-    static var wrappedType: Value.Type {
-        Value.self
+  static var wrappedType: Value.Type {
+    Value.self
+  }
+
+  public var projectedValue: ASN1Metadata {
+    Self.metadata
+  }
+
+  public func encode(to encoder: Encoder) throws {
+    var singleValueContainer = encoder.singleValueContainer()
+
+    if let singleValueContainer = singleValueContainer as? ASN1EncoderImpl.SingleValueContainer {
+      try singleValueContainer.encodeTagged(self.wrappedValue, with: Self.metadata)
+    } else {
+      try singleValueContainer.encode(self.wrappedValue)
+    }
+  }
+
+  public init(from decoder: Decoder) throws {
+    let singleValueContainer = try decoder.singleValueContainer()
+
+    if let singleValueContainer = singleValueContainer as? ASN1DecoderImpl.SingleValueContainer {
+      try self.init(wrappedValue: singleValueContainer.decodeTagged(Value.self, with: Self.metadata))
+    } else {
+      try self.init(wrappedValue: singleValueContainer.decode(Value.self))
+    }
+  }
+
+  public var description: String {
+    String(describing: self.wrappedValue)
+  }
+
+  public var debugDescription: String {
+    let valueDescription: String
+    var debugDescription = self.projectedValue.debugDescription
+
+    switch self.wrappedValue {
+    case is Void:
+      valueDescription = "null"
+    case let wrappedValue as CustomDebugStringConvertible:
+      valueDescription = wrappedValue.debugDescription
+    default:
+      valueDescription = String(describing: self.wrappedValue)
     }
 
-    public var projectedValue: ASN1Metadata {
-        Self.metadata
+    if !debugDescription.isEmpty {
+      debugDescription.append(" ")
     }
-
-    public func encode(to encoder: Encoder) throws {
-        var singleValueContainer = encoder.singleValueContainer()
-
-        if let singleValueContainer = singleValueContainer as? ASN1EncoderImpl.SingleValueContainer {
-            try singleValueContainer.encodeTagged(self.wrappedValue, with: Self.metadata)
-        } else {
-            try singleValueContainer.encode(self.wrappedValue)
-        }
-    }
-
-    public init(from decoder: Decoder) throws {
-        let singleValueContainer = try decoder.singleValueContainer()
-
-        if let singleValueContainer = singleValueContainer as? ASN1DecoderImpl.SingleValueContainer {
-            try self.init(wrappedValue: singleValueContainer.decodeTagged(Value.self, with: Self.metadata))
-        } else {
-            try self.init(wrappedValue: singleValueContainer.decode(Value.self))
-        }
-    }
-
-    public var description: String {
-        String(describing: self.wrappedValue)
-    }
-
-    public var debugDescription: String {
-        let valueDescription: String
-        var debugDescription = self.projectedValue.debugDescription
-
-        switch self.wrappedValue {
-        case is Void:
-            valueDescription = "null"
-        case let wrappedValue as CustomDebugStringConvertible:
-            valueDescription = wrappedValue.debugDescription
-        default:
-            valueDescription = String(describing: self.wrappedValue)
-        }
-
-        if !debugDescription.isEmpty {
-            debugDescription.append(" ")
-        }
-        debugDescription.append(valueDescription)
-        return debugDescription
-    }
+    debugDescription.append(valueDescription)
+    return debugDescription
+  }
 }

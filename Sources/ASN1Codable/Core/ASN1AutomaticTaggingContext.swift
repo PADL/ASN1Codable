@@ -23,144 +23,144 @@ import Echo
 /// Automatic tagging assigns a new implicit tag for each structure
 /// or enum field.
 final class ASN1AutomaticTaggingContext: CustomStringConvertible {
-    private var tagNo: UInt
-    private var enumMetadata: EnumMetadata?
+  private var tagNo: UInt
+  private var enumMetadata: EnumMetadata?
 
-    init?<T>(_ type: T.Type) {
-        let disableAutomaticTagging: Bool
+  init?<T>(_ type: T.Type) {
+    let disableAutomaticTagging: Bool
 
-        // this is expensive, so use automatic tags sparingly, or have the compiler do the job
-        if type is any Collection.Type {
-            disableAutomaticTagging = true
-        } else if let metadata = reflect(type) as? StructMetadata {
-            disableAutomaticTagging = metadata.descriptor.fields.hasTaggedFields(metadata)
-        } else if let metadata = reflect(type) as? ClassMetadata {
-            disableAutomaticTagging = metadata.descriptor.fields.hasTaggedFields(metadata)
-        } else if let metadata = reflect(type) as? EnumMetadata {
-            disableAutomaticTagging = metadata.descriptor.fields.hasTaggedFields(metadata)
-            self.enumMetadata = metadata
-        } else {
-            disableAutomaticTagging = false
-        }
-
-        guard !disableAutomaticTagging else {
-            return nil
-        }
-
-        self.tagNo = 0
+    // this is expensive, so use automatic tags sparingly, or have the compiler do the job
+    if type is any Collection.Type {
+      disableAutomaticTagging = true
+    } else if let metadata = reflect(type) as? StructMetadata {
+      disableAutomaticTagging = metadata.descriptor.fields.hasTaggedFields(metadata)
+    } else if let metadata = reflect(type) as? ClassMetadata {
+      disableAutomaticTagging = metadata.descriptor.fields.hasTaggedFields(metadata)
+    } else if let metadata = reflect(type) as? EnumMetadata {
+      disableAutomaticTagging = metadata.descriptor.fields.hasTaggedFields(metadata)
+      self.enumMetadata = metadata
+    } else {
+      disableAutomaticTagging = false
     }
 
-    private func tagNumber<Key: CaseIterable & CodingKey>(_ key: Key) -> UInt? {
-        let allCases = Key.allCases
-
-        guard let firstIndex = allCases.firstIndex(where: {
-            $0.stringValue == key.stringValue
-        }) else {
-            return nil
-        }
-
-        let distance: Int = allCases.distance(from: allCases.startIndex, to: firstIndex)
-        return UInt(exactly: distance)
+    guard !disableAutomaticTagging else {
+      return nil
     }
 
-    private func tagNumber<Key: CodingKey>(_ key: Key) -> UInt? {
-        guard let metadata = self.enumMetadata else {
-            return nil
-        }
+    self.tagNo = 0
+  }
 
-        guard let index = metadata.descriptor.fields.records.firstIndex(where: { $0.name == key.stringValue }) else {
-            return nil
-        }
+  private func tagNumber<Key: CaseIterable & CodingKey>(_ key: Key) -> UInt? {
+    let allCases = Key.allCases
 
-        return UInt(exactly: index)
+    guard let firstIndex = allCases.firstIndex(where: {
+      $0.stringValue == key.stringValue
+    }) else {
+      return nil
     }
 
-    func selectTag<Key>(_ key: Key) where Key: CodingKey {
-        precondition(self.tagNo == 0)
+    let distance: Int = allCases.distance(from: allCases.startIndex, to: firstIndex)
+    return UInt(exactly: distance)
+  }
 
-        let tagNo: UInt?
-        if let key = key as? any(CaseIterable & CodingKey) {
-            tagNo = self.tagNumber(key)
-        } else {
-            tagNo = self.tagNumber(key)
-        }
-
-        guard let tagNo else {
-            return
-        }
-
-        self.tagNo = tagNo
+  private func tagNumber<Key: CodingKey>(_ key: Key) -> UInt? {
+    guard let metadata = self.enumMetadata else {
+      return nil
     }
 
-    private func caseIterableCodingKey<Key: CaseIterable & CodingKey>(
-        _: Key.Type,
-        fromContextTag tagNo: UInt
-    ) -> Key? {
-        guard tagNo < Key.allCases.count, let index = Int(exactly: tagNo) else {
-            return nil
-        }
-
-        // swiftlint:disable force_cast
-        return Key.allCases[index as! Key.AllCases.Index]
+    guard let index = metadata.descriptor.fields.records.firstIndex(where: { $0.name == key.stringValue }) else {
+      return nil
     }
 
-    private func codingKey<Key: CodingKey>(fromContextTag tagNo: UInt) -> Key? {
-        guard let metadata = self.enumMetadata else {
-            return nil
-        }
+    return UInt(exactly: index)
+  }
 
-        guard tagNo < metadata.descriptor.fields.records.count,
-              let index = Int(exactly: tagNo) else {
-            return nil
-        }
+  func selectTag<Key>(_ key: Key) where Key: CodingKey {
+    precondition(self.tagNo == 0)
 
-        return Key(stringValue: metadata.descriptor.fields.records[index].name)
+    let tagNo: UInt?
+    if let key = key as? any(CaseIterable & CodingKey) {
+      tagNo = self.tagNumber(key)
+    } else {
+      tagNo = self.tagNumber(key)
     }
 
-    func selectTag<Key>(_ tag: ASN1DecodedTag) -> Key? where Key: CodingKey {
-        guard case .taggedTag(let tagNo) = tag else {
-            return nil
-        }
-
-        let key: Key?
-
-        if let type = Key.self as? any(CaseIterable & CodingKey).Type {
-            // swiftlint:disable force_cast
-            key = self.caseIterableCodingKey(type, fromContextTag: tagNo) as! Key?
-        } else {
-            key = self.codingKey(fromContextTag: tagNo)
-        }
-
-        if key != nil {
-            self.tagNo = tagNo
-        }
-
-        return key
+    guard let tagNo else {
+      return
     }
 
-    private func nextTag() -> ASN1DecodedTag {
-        defer { self.tagNo += 1 }
-        return .taggedTag(self.tagNo)
+    self.tagNo = tagNo
+  }
+
+  private func caseIterableCodingKey<Key: CaseIterable & CodingKey>(
+    _: Key.Type,
+    fromContextTag tagNo: UInt
+  ) -> Key? {
+    guard tagNo < Key.allCases.count, let index = Int(exactly: tagNo) else {
+      return nil
     }
 
-    func metadataForNextTag() -> ASN1Metadata {
-        ASN1Metadata(tag: self.nextTag(), tagging: .implicit)
+    // swiftlint:disable force_cast
+    return Key.allCases[index as! Key.AllCases.Index]
+  }
+
+  private func codingKey<Key: CodingKey>(fromContextTag tagNo: UInt) -> Key? {
+    guard let metadata = self.enumMetadata else {
+      return nil
     }
 
-    var description: String {
-        "ASN1AutomaticTaggingContext(tagNo: \(self.tagNo))"
+    guard tagNo < metadata.descriptor.fields.records.count,
+          let index = Int(exactly: tagNo) else {
+      return nil
     }
+
+    return Key(stringValue: metadata.descriptor.fields.records[index].name)
+  }
+
+  func selectTag<Key>(_ tag: ASN1DecodedTag) -> Key? where Key: CodingKey {
+    guard case .taggedTag(let tagNo) = tag else {
+      return nil
+    }
+
+    let key: Key?
+
+    if let type = Key.self as? any(CaseIterable & CodingKey).Type {
+      // swiftlint:disable force_cast
+      key = self.caseIterableCodingKey(type, fromContextTag: tagNo) as! Key?
+    } else {
+      key = self.codingKey(fromContextTag: tagNo)
+    }
+
+    if key != nil {
+      self.tagNo = tagNo
+    }
+
+    return key
+  }
+
+  private func nextTag() -> ASN1DecodedTag {
+    defer { self.tagNo += 1 }
+    return .taggedTag(self.tagNo)
+  }
+
+  func metadataForNextTag() -> ASN1Metadata {
+    ASN1Metadata(tag: self.nextTag(), tagging: .implicit)
+  }
+
+  var description: String {
+    "ASN1AutomaticTaggingContext(tagNo: \(self.tagNo))"
+  }
 }
 
 extension FieldDescriptor {
-    fileprivate func hasTaggedFields(_ metadata: TypeMetadata) -> Bool {
-        self.records.contains {
-            guard let fieldType = metadata.type(of: $0.mangledTypeName),
-                  let wrappedFieldType = fieldType as? any ASN1TaggedValue.Type,
-                  !(wrappedFieldType is any ASN1UniversalTaggedValue.Type) else {
-                return false
-            }
-            return wrappedFieldType.metadata.tag != nil
-        }
+  fileprivate func hasTaggedFields(_ metadata: TypeMetadata) -> Bool {
+    self.records.contains {
+      guard let fieldType = metadata.type(of: $0.mangledTypeName),
+            let wrappedFieldType = fieldType as? any ASN1TaggedValue.Type,
+            !(wrappedFieldType is any ASN1UniversalTaggedValue.Type) else {
+        return false
+      }
+      return wrappedFieldType.metadata.tag != nil
     }
+  }
 }

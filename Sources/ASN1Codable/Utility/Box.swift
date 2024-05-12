@@ -17,23 +17,23 @@
 import Foundation
 
 struct Box<Value> {
-    let value: Value
+  let value: Value
 
-    init(_ value: Value) {
-        self.value = value
-    }
+  init(_ value: Value) {
+    self.value = value
+  }
 }
 
 extension Box: Encodable where Value: Encodable {
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(self.value)
-    }
+  func encode(to encoder: Encoder) throws {
+    var container = encoder.singleValueContainer()
+    try container.encode(self.value)
+  }
 }
 
 extension Box: Decodable where Value: Decodable {
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        self.init(try container.decode(Value.self))
-    }
+  init(from decoder: Decoder) throws {
+    let container = try decoder.singleValueContainer()
+    self.init(try container.decode(Value.self))
+  }
 }

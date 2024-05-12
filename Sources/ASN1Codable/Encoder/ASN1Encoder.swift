@@ -18,31 +18,31 @@ import Foundation
 import ASN1Kit
 
 public final class ASN1Encoder {
-    public var userInfo: [CodingUserInfoKey: Any] = [:]
-    public var taggingEnvironment: ASN1Tagging?
-    public var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary?
+  public var userInfo: [CodingUserInfoKey: Any] = [:]
+  public var taggingEnvironment: ASN1Tagging?
+  public var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary?
 
-    public init() {}
+  public init() {}
 
-    public func encode<T: Encodable>(_ value: T) throws -> Data {
-        let encoder = ASN1EncoderImpl(userInfo: self.userInfo,
-                                      taggingEnvironment: self.taggingEnvironment,
-                                      objectSetTypeDictionary: self.objectSetTypeDictionary)
-        let box = Box(value) // needed to encode containing structure
-        try box.encode(to: encoder)
-        guard let object = encoder.object else {
-            let context = EncodingError.Context(codingPath: [], debugDescription: "No object encoded")
-            throw EncodingError.invalidValue(value, context)
-        }
-
-        return try object.serialize()
+  public func encode<T: Encodable>(_ value: T) throws -> Data {
+    let encoder = ASN1EncoderImpl(userInfo: self.userInfo,
+                                  taggingEnvironment: self.taggingEnvironment,
+                                  objectSetTypeDictionary: self.objectSetTypeDictionary)
+    let box = Box(value) // needed to encode containing structure
+    try box.encode(to: encoder)
+    guard let object = encoder.object else {
+      let context = EncodingError.Context(codingPath: [], debugDescription: "No object encoded")
+      throw EncodingError.invalidValue(value, context)
     }
+
+    return try object.serialize()
+  }
 }
 
 #if canImport(Combine)
-    import Combine
+  import Combine
 
-    extension ASN1Encoder: TopLevelEncoder {
-        public typealias Input = Data
-    }
+  extension ASN1Encoder: TopLevelEncoder {
+    public typealias Input = Data
+  }
 #endif

@@ -40,30 +40,30 @@ import AnyCodable
 
 // swiftlint:disable force_try
 extension ASN1CodableTests {
-    func test_principal() {
-        let test0 = try! Data(hex: "301ba010300ea003020101a10730051b" +
-            "036c6861a1071b0553552e5345")
-        let n0 = PrincipalName(name_type: KRB5_NT_PRINCIPAL, name_string: [GeneralString(wrappedValue: "lha")])
-        let t0 = Principal(name: n0, realm: GeneralString(wrappedValue: "SU.SE"))
-        self.test_encodeDecode(t0, encodedAs: test0)
+  func test_principal() {
+    let test0 = try! Data(hex: "301ba010300ea003020101a10730051b" +
+      "036c6861a1071b0553552e5345")
+    let n0 = PrincipalName(name_type: KRB5_NT_PRINCIPAL, name_string: [GeneralString(wrappedValue: "lha")])
+    let t0 = Principal(name: n0, realm: GeneralString(wrappedValue: "SU.SE"))
+    self.test_encodeDecode(t0, encodedAs: test0)
 
-        let test1 = try! Data(hex: "3021a0163014a003020101a10d300b1b" +
-            "036c68611b04726f6f74a1071b055355" +
-            "2e5345")
-        let n1 = PrincipalName(name_type: KRB5_NT_PRINCIPAL, name_string: [GeneralString(wrappedValue: "lha"),
-                                                                           GeneralString(wrappedValue: "root")])
-        let t1 = Principal(name: n1, realm: GeneralString(wrappedValue: "SU.SE"))
-        self.test_encodeDecode(t1, encodedAs: test1)
+    let test1 = try! Data(hex: "3021a0163014a003020101a10d300b1b" +
+      "036c68611b04726f6f74a1071b055355" +
+      "2e5345")
+    let n1 = PrincipalName(name_type: KRB5_NT_PRINCIPAL, name_string: [GeneralString(wrappedValue: "lha"),
+                                                                       GeneralString(wrappedValue: "root")])
+    let t1 = Principal(name: n1, realm: GeneralString(wrappedValue: "SU.SE"))
+    self.test_encodeDecode(t1, encodedAs: test1)
 
-        let test2 = try! Data(hex: "3034a0263024a003020103a11d301b1b" +
-            "04686f73741b136e7574637261636b65" +
-            "722e652e6b74682e7365a10a1b08452e" +
-            "4b54482e5345")
-        let n2 = PrincipalName(name_type: KRB5_NT_SRV_HST, name_string: [GeneralString(wrappedValue: "host"),
-                                                                         GeneralString(
-                                                                             wrappedValue: "nutcracker.e.kth.se"
-                                                                         )])
-        let t2 = Principal(name: n2, realm: GeneralString(wrappedValue: "E.KTH.SE"))
-        self.test_encodeDecode(t2, encodedAs: test2)
-    }
+    let test2 = try! Data(hex: "3034a0263024a003020103a11d301b1b" +
+      "04686f73741b136e7574637261636b65" +
+      "722e652e6b74682e7365a10a1b08452e" +
+      "4b54482e5345")
+    let n2 = PrincipalName(name_type: KRB5_NT_SRV_HST, name_string: [GeneralString(wrappedValue: "host"),
+                                                                     GeneralString(
+                                                                       wrappedValue: "nutcracker.e.kth.se"
+                                                                     )])
+    let t2 = Principal(name: n2, realm: GeneralString(wrappedValue: "E.KTH.SE"))
+    self.test_encodeDecode(t2, encodedAs: test2)
+  }
 }

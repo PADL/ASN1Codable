@@ -1,4 +1,4 @@
---indent 4
+--indent 2
 --someAny false
 --self insert
 --wrapparameters before-first
@@ -9,3 +9,4 @@
 --disable wrapMultilineStatementBraces
 --disable opaqueGenericParameters
 --disable sortedImports
+--swiftversion 5.9

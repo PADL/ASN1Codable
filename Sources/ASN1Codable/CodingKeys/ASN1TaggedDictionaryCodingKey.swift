@@ -18,46 +18,46 @@ import Foundation
 import ASN1Kit
 
 struct ASN1TaggedDictionaryCodingKey: ASN1ContextTagCodingKey {
-    var metadata: ASN1Metadata {
-        ASN1Metadata(tag: .taggedTag(self.tagNo), tagging: .explicit)
+  var metadata: ASN1Metadata {
+    ASN1Metadata(tag: .taggedTag(self.tagNo), tagging: .explicit)
+  }
+
+  var tagNo: UInt
+
+  init(tagNo: UInt) {
+    self.tagNo = tagNo
+  }
+
+  init?(stringValue: String) {
+    let regex = try! NSRegularExpression(pattern: #"\[(\d+)\]"#)
+    let range = NSRange(location: 0, length: stringValue.utf16.count)
+    var tagNo: UInt?
+
+    regex.enumerateMatches(in: stringValue, options: [], range: range) { match, _, _ in
+      guard let match else { return }
+      guard let firstCaptureRange = Range(match.range(at: 1), in: stringValue) else { return }
+      tagNo = UInt(stringValue[firstCaptureRange])
     }
 
-    var tagNo: UInt
+    guard let tagNo else { return nil }
+    self.tagNo = tagNo
+  }
 
-    init(tagNo: UInt) {
-        self.tagNo = tagNo
+  init?(intValue: Int) {
+    guard let tagNo = UInt(exactly: intValue) else {
+      return nil
     }
+    self.tagNo = tagNo
+  }
 
-    init?(stringValue: String) {
-        let regex = try! NSRegularExpression(pattern: #"\[(\d+)\]"#)
-        let range = NSRange(location: 0, length: stringValue.utf16.count)
-        var tagNo: UInt?
+  var stringValue: String {
+    "[\(self.tagNo)]"
+  }
 
-        regex.enumerateMatches(in: stringValue, options: [], range: range) { match, _, _ in
-            guard let match else { return }
-            guard let firstCaptureRange = Range(match.range(at: 1), in: stringValue) else { return }
-            tagNo = UInt(stringValue[firstCaptureRange])
-        }
-
-        guard let tagNo else { return nil }
-        self.tagNo = tagNo
+  var intValue: Int? {
+    guard let intValue = Int(exactly: self.tagNo) else {
+      return nil
     }
-
-    init?(intValue: Int) {
-        guard let tagNo = UInt(exactly: intValue) else {
-            return nil
-        }
-        self.tagNo = tagNo
-    }
-
-    var stringValue: String {
-        "[\(self.tagNo)]"
-    }
-
-    var intValue: Int? {
-        guard let intValue = Int(exactly: self.tagNo) else {
-            return nil
-        }
-        return intValue
-    }
+    return intValue
+  }
 }

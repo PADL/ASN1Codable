@@ -21,21 +21,21 @@ import AnyCodable
 /// Represents a type-erased object set value.
 @propertyWrapper
 public struct ASN1AnyObjectSetValue: Codable, Equatable, Hashable {
-    public typealias Value = AnyCodable
+  public typealias Value = AnyCodable
 
-    public var wrappedValue: Value
+  public var wrappedValue: Value
 
-    public init(wrappedValue: Value) {
-        self.wrappedValue = wrappedValue
-    }
+  public init(wrappedValue: Value) {
+    self.wrappedValue = wrappedValue
+  }
 
-    public func encode(to encoder: Encoder) throws {
-        let objectSetValue = ASN1ObjectSetValue(wrappedValue: self.wrappedValue)
-        try objectSetValue.encode(to: encoder)
-    }
+  public func encode(to encoder: Encoder) throws {
+    let objectSetValue = ASN1ObjectSetValue(wrappedValue: self.wrappedValue)
+    try objectSetValue.encode(to: encoder)
+  }
 
-    public init(from decoder: Decoder) throws {
-        let objectSetValue = try ASN1ObjectSetValue(from: decoder)
-        self.wrappedValue = AnyCodable(objectSetValue.wrappedValue)
-    }
+  public init(from decoder: Decoder) throws {
+    let objectSetValue = try ASN1ObjectSetValue(from: decoder)
+    self.wrappedValue = AnyCodable(objectSetValue.wrappedValue)
+  }
 }

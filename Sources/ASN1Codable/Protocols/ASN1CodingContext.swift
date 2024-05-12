@@ -17,43 +17,43 @@
 import Foundation
 
 enum ASN1EnumCodingState {
-    case none
-    case `enum`
-    case enumCase
+  case none
+  case `enum`
+  case enumCase
 }
 
 enum ASN1CodingKeyRepresentableDictionaryType {
-    case none
-    case tag
-    case tuple
+  case none
+  case tag
+  case tuple
 }
 
 /// A protocol containing context for encoding or decoding a type, that is shared between
 /// diffferent types of encoding or decoding containers. This is implemented as a value type.
 protocol ASN1CodingContext {
-    var taggingEnvironment: ASN1Tagging { get }
-    var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? { get }
+  var taggingEnvironment: ASN1Tagging { get }
+  var objectSetTypeDictionary: ASN1ObjectSetTypeDictionary? { get }
 
-    var enumCodingState: ASN1EnumCodingState { get set }
-    var encodeAsSet: Bool { get set }
-    var objectSetCodingContext: ASN1ObjectSetCodingContext? { get set }
-    var automaticTaggingContext: ASN1AutomaticTaggingContext? { get set }
+  var enumCodingState: ASN1EnumCodingState { get set }
+  var encodeAsSet: Bool { get set }
+  var objectSetCodingContext: ASN1ObjectSetCodingContext? { get set }
+  var automaticTaggingContext: ASN1AutomaticTaggingContext? { get set }
 }
 
 extension ASN1CodingContext {
-    mutating func nextEnumCodingState() {
-        if self.enumCodingState == .enum {
-            self.enumCodingState = .enumCase
-        } else {
-            self.enumCodingState = .none
-        }
+  mutating func nextEnumCodingState() {
+    if self.enumCodingState == .enum {
+      self.enumCodingState = .enumCase
+    } else {
+      self.enumCodingState = .none
     }
+  }
 
-    mutating func automaticTagging<T>(_ type: T.Type) {
-        if self.taggingEnvironment == .automatic || type is ASN1AutomaticallyTaggedType.Type {
-            self.automaticTaggingContext = ASN1AutomaticTaggingContext(T.self)
-        } else {
-            self.automaticTaggingContext = nil
-        }
+  mutating func automaticTagging<T>(_ type: T.Type) {
+    if self.taggingEnvironment == .automatic || type is ASN1AutomaticallyTaggedType.Type {
+      self.automaticTaggingContext = ASN1AutomaticTaggingContext(T.self)
+    } else {
+      self.automaticTaggingContext = nil
     }
+  }
 }

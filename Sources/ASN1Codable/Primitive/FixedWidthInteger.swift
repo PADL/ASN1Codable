@@ -29,58 +29,58 @@ import Foundation
 import ASN1Kit
 
 extension FixedWidthInteger {
-    init(from asn1: ASN1Object) throws {
-        guard let data = asn1.data.primitive else {
-            throw ASN1Error.malformedEncoding("ASN.1 object has incorrect tag \(asn1.tag)")
-        }
-
-        if data.isEmpty {
-            throw ASN1Error.malformedEncoding("ASN.1 integer is empty")
-        } else if data.count == 1 {
-            //
-        } else if (data[0] == 0 && data[1] & 0x80 == 0) || (data[0] == 0xFF && data[1] & 0x80 == 0x80) {
-            // note that the latter check may fail with certificates from CAs that
-            // read 8 bytes of RNG into a buffer and tag with [UNIVERSAL INTEGER]
-            // for serialNumber. so we may need to remove this check.
-            throw ASN1Error.malformedEncoding("ASN.1 integer is not minimally encoded")
-        }
-
-        // FIXME: can FixedWidthInteger be larger than platform integer?
-        if Self.isSigned {
-            guard let value = data.asn1integer,
-                  let fixedWidthInteger = Self(exactly: value) else {
-                throw ASN1Error.malformedEncoding("Integer encoded in \(asn1) is too large")
-            }
-            self = fixedWidthInteger
-        } else {
-            let slice: Data
-
-            if data[0] & 0x80 == 0x80 {
-                throw ASN1Error.malformedEncoding("Integer encoded in \(asn1) is negative")
-            } else if data[0] == 0 {
-                slice = data[1 ..< data.count]
-            } else {
-                slice = data
-            }
-
-            guard let value = slice.unsignedIntValue,
-                  let fixedWidthInteger = Self(exactly: value) else {
-                throw ASN1Error.malformedEncoding("Integer encoded in \(asn1) is too large")
-            }
-            self = fixedWidthInteger
-        }
+  init(from asn1: ASN1Object) throws {
+    guard let data = asn1.data.primitive else {
+      throw ASN1Error.malformedEncoding("ASN.1 object has incorrect tag \(asn1.tag)")
     }
+
+    if data.isEmpty {
+      throw ASN1Error.malformedEncoding("ASN.1 integer is empty")
+    } else if data.count == 1 {
+      //
+    } else if (data[0] == 0 && data[1] & 0x80 == 0) || (data[0] == 0xFF && data[1] & 0x80 == 0x80) {
+      // note that the latter check may fail with certificates from CAs that
+      // read 8 bytes of RNG into a buffer and tag with [UNIVERSAL INTEGER]
+      // for serialNumber. so we may need to remove this check.
+      throw ASN1Error.malformedEncoding("ASN.1 integer is not minimally encoded")
+    }
+
+    // FIXME: can FixedWidthInteger be larger than platform integer?
+    if Self.isSigned {
+      guard let value = data.asn1integer,
+            let fixedWidthInteger = Self(exactly: value) else {
+        throw ASN1Error.malformedEncoding("Integer encoded in \(asn1) is too large")
+      }
+      self = fixedWidthInteger
+    } else {
+      let slice: Data
+
+      if data[0] & 0x80 == 0x80 {
+        throw ASN1Error.malformedEncoding("Integer encoded in \(asn1) is negative")
+      } else if data[0] == 0 {
+        slice = data[1 ..< data.count]
+      } else {
+        slice = data
+      }
+
+      guard let value = slice.unsignedIntValue,
+            let fixedWidthInteger = Self(exactly: value) else {
+        throw ASN1Error.malformedEncoding("Integer encoded in \(asn1) is too large")
+      }
+      self = fixedWidthInteger
+    }
+  }
 }
 
 extension FixedWidthInteger {
-    func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
-        let fixedWidthInteger: (any FixedWidthInteger & ASN1EncodableType)?
+  func asn1encode(tag: ASN1DecodedTag?) throws -> ASN1Object {
+    let fixedWidthInteger: (any FixedWidthInteger & ASN1EncodableType)?
 
-        fixedWidthInteger = Self.isSigned ? Int(exactly: self) : UInt(exactly: self)
-        guard let fixedWidthInteger else {
-            throw ASN1Error.malformedEncoding("Integer \(self) is too large")
-        }
-
-        return try fixedWidthInteger.asn1encode(tag: tag)
+    fixedWidthInteger = Self.isSigned ? Int(exactly: self) : UInt(exactly: self)
+    guard let fixedWidthInteger else {
+      throw ASN1Error.malformedEncoding("Integer \(self) is too large")
     }
+
+    return try fixedWidthInteger.asn1encode(tag: tag)
+  }
 }

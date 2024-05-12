@@ -19,69 +19,69 @@ import ASN1Codable
 
 @_cdecl("CertificateCopyIPAddressDatas")
 public func CertificateCopyIPAddressDatas(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
-    let certificate = certificate._swiftObject
+  let certificate = certificate._swiftObject
 
-    guard let datas = certificate.subjectAltName?.compactMap({
-        if case .iPAddress(let ipAddress) = $0 {
-            return ipAddress
-        } else {
-            return nil
-        }
-    }), !datas.isEmpty else {
-        return nil
+  guard let datas = certificate.subjectAltName?.compactMap({
+    if case .iPAddress(let ipAddress) = $0 {
+      return ipAddress
+    } else {
+      return nil
     }
+  }), !datas.isEmpty else {
+    return nil
+  }
 
-    return Unmanaged.passRetained(datas as CFArray)
+  return Unmanaged.passRetained(datas as CFArray)
 }
 
 @_cdecl("CertificateCopyDNSNamesFromSAN")
 public func CertificateCopyDNSNamesFromSAN(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
-    let certificate = certificate._swiftObject
+  let certificate = certificate._swiftObject
 
-    guard let datas = certificate.subjectAltName?.compactMap({
-        if case .dNSName(let dnsName) = $0 {
-            return dnsName
-        } else {
-            return nil
-        }
-    }), !datas.isEmpty else {
-        return nil
+  guard let datas = certificate.subjectAltName?.compactMap({
+    if case .dNSName(let dnsName) = $0 {
+      return dnsName
+    } else {
+      return nil
     }
+  }), !datas.isEmpty else {
+    return nil
+  }
 
-    return Unmanaged.passRetained(datas as CFArray)
+  return Unmanaged.passRetained(datas as CFArray)
 }
 
 @_cdecl("CertificateCopyRFC822NamesFromSAN")
 public func CertificateCopyRFC822NamesFromSAN(_ certificate: CertificateRef) -> Unmanaged<CFArray>? {
-    let certificate = certificate._swiftObject
+  let certificate = certificate._swiftObject
 
-    guard let names = certificate.subjectAltName?.compactMap({
-        if case .rfc822Name(let rfc822Name) = $0 {
-            return String(describing: rfc822Name)
-        } else {
-            return nil
-        }
-    }), !names.isEmpty else {
-        return nil
+  guard let names = certificate.subjectAltName?.compactMap({
+    if case .rfc822Name(let rfc822Name) = $0 {
+      return String(describing: rfc822Name)
+    } else {
+      return nil
     }
+  }), !names.isEmpty else {
+    return nil
+  }
 
-    return Unmanaged.passRetained(names as CFArray)
+  return Unmanaged.passRetained(names as CFArray)
 }
 
 @_cdecl("CertificateCopySerialNumberData")
 public func CertificateCopySerialNumberData(
-    _ certificate: CertificateRef?,
-    _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?
+  _ certificate: CertificateRef?,
+  _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?
 ) -> Unmanaged<CFData>? {
-    guard let certificate = certificate?._swiftObject else {
-        error?.pointee = Unmanaged.passRetained(CFErrorCreate(kCFAllocatorDefault,
-                                                              kCFErrorDomainOSStatus,
-                                                              CFIndex(errSecDecode),
-                                                              nil))
-        return nil
-    }
-    guard let serial = certificate.serialNumberData else {
-        return nil
-    }
-    return Unmanaged.passRetained(serial)
+  guard let certificate = certificate?._swiftObject else {
+    error?.pointee = Unmanaged.passRetained(CFErrorCreate(kCFAllocatorDefault,
+                                                          kCFErrorDomainOSStatus,
+                                                          CFIndex(errSecDecode),
+                                                          nil))
+    return nil
+  }
+  guard let serial = certificate.serialNumberData else {
+    return nil
+  }
+  return Unmanaged.passRetained(serial)
 }

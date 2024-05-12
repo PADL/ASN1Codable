@@ -18,29 +18,29 @@ import Foundation
 import ASN1Kit
 
 struct ASN1ImplicitlyWrappedObject: ASN1Object {
-    let data: ASN1Data
-    let tag: ASN1DecodedTag
-    let originalEncoding: Data?
+  let data: ASN1Data
+  let tag: ASN1DecodedTag
+  let originalEncoding: Data?
 
-    init(object: ASN1Object, tag: ASN1DecodedTag, constructed: Bool? = nil) {
-        if constructed ?? object.constructed {
-            self.data = ASN1Data.constructed([object])
-        } else {
-            self.data = object.data
-        }
-        self.tag = tag
-        self.originalEncoding = object.originalEncoding
+  init(object: ASN1Object, tag: ASN1DecodedTag, constructed: Bool? = nil) {
+    if constructed ?? object.constructed {
+      self.data = ASN1Data.constructed([object])
+    } else {
+      self.data = object.data
     }
+    self.tag = tag
+    self.originalEncoding = object.originalEncoding
+  }
 
-    var length: Int {
-        self.data.length
-    }
+  var length: Int {
+    self.data.length
+  }
 
-    var constructed: Bool {
-        if case .constructed = self.data {
-            return true
-        } else {
-            return false
-        }
+  var constructed: Bool {
+    if case .constructed = self.data {
+      return true
+    } else {
+      return false
     }
+  }
 }

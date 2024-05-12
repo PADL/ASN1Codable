@@ -18,15 +18,15 @@ import Foundation
 import ASN1Kit
 
 protocol ASN1EncodingContainer {
-    var containers: [ASN1EncodingContainer] { get set }
-    var codingPath: [CodingKey] { get }
-    var userInfo: [CodingUserInfoKey: Any] { get }
-    var object: ASN1Object? { get }
-    var context: ASN1EncodingContext { get set }
+  var containers: [ASN1EncodingContainer] { get set }
+  var codingPath: [CodingKey] { get }
+  var userInfo: [CodingUserInfoKey: Any] { get }
+  var object: ASN1Object? { get }
+  var context: ASN1EncodingContext { get set }
 }
 
 extension ASN1EncodingContainer {
-    var disableSetSorting: Bool {
-        self.userInfo[CodingUserInfoKey.ASN1DisableSetSorting] as? Bool ?? false
-    }
+  var disableSetSorting: Bool {
+    self.userInfo[CodingUserInfoKey.ASN1DisableSetSorting] as? Bool ?? false
+  }
 }

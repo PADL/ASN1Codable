@@ -28,15 +28,15 @@ public protocol ASN1ImplicitlyTaggedType: ASN1TaggedTypeTagging {}
 public protocol ASN1ExplicitlyTaggedType: ASN1TaggedTypeTagging {}
 
 extension ASN1TaggedTypeTagging {
-    static var tagging: ASN1Tagging? {
-        if self is ASN1ImplicitlyTaggedType.Type {
-            return .implicit
-        } else if self is ASN1ExplicitlyTaggedType.Type {
-            return .explicit
-        } else {
-            return nil
-        }
+  static var tagging: ASN1Tagging? {
+    if self is ASN1ImplicitlyTaggedType.Type {
+      return .implicit
+    } else if self is ASN1ExplicitlyTaggedType.Type {
+      return .explicit
+    } else {
+      return nil
     }
+  }
 }
 
 /// type members are automatically tagged

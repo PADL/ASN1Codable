@@ -19,73 +19,73 @@ import ASN1Kit
 import AnyCodable
 
 indirect enum HeimASN1TypeMember: Codable, HeimASN1Emitter, HeimASN1SwiftTypeRepresentable {
-    case dictionary([String: AnyCodable])
-    case typeDef(HeimASN1TypeDef)
+  case dictionary([String: AnyCodable])
+  case typeDef(HeimASN1TypeDef)
 
-    var dictionaryValue: [String: AnyCodable]? {
-        if case .dictionary(let type) = self {
-            return type
-        } else {
-            return nil
-        }
+  var dictionaryValue: [String: AnyCodable]? {
+    if case .dictionary(let type) = self {
+      return type
+    } else {
+      return nil
+    }
+  }
+
+  var typeDefValue: HeimASN1TypeDef? {
+    if case .typeDef(let type) = self {
+      return type
+    } else {
+      return nil
+    }
+  }
+
+  var bitStringTag: String? {
+    guard let typeDefValue = self.typeDefValue else {
+      return nil
     }
 
-    var typeDefValue: HeimASN1TypeDef? {
-        if case .typeDef(let type) = self {
-            return type
-        } else {
-            return nil
-        }
+    let components = typeDefValue.generatedName.components(separatedBy: ":")
+
+    guard components.count == 2 else {
+      return nil
     }
 
-    var bitStringTag: String? {
-        guard let typeDefValue = self.typeDefValue else {
-            return nil
-        }
-
-        let components = typeDefValue.generatedName.components(separatedBy: ":")
-
-        guard components.count == 2 else {
-            return nil
-        }
-
-        guard !components[0].hasPrefix("_unused") else {
-            return nil
-        }
-
-        return components[0]
+    guard !components[0].hasPrefix("_unused") else {
+      return nil
     }
 
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
+    return components[0]
+  }
 
-        do {
-            let constructed = try container.decode(HeimASN1TypeDef.self)
-            self = .typeDef(constructed)
-        } catch {
-            do {
-                let dictionary = try container.decode([String: AnyCodable].self)
-                self = .dictionary(dictionary)
-            } catch {
-                throw error
-            }
-        }
+  init(from decoder: Decoder) throws {
+    let container = try decoder.singleValueContainer()
+
+    do {
+      let constructed = try container.decode(HeimASN1TypeDef.self)
+      self = .typeDef(constructed)
+    } catch {
+      do {
+        let dictionary = try container.decode([String: AnyCodable].self)
+        self = .dictionary(dictionary)
+      } catch {
+        throw error
+      }
     }
+  }
 
-    func encode(to _: Encoder) throws {}
+  func encode(to _: Encoder) throws {}
 
-    var swiftType: String? {
-        switch self {
-        case .typeDef(let type):
-            return type.swiftType
-        case .dictionary:
-            fatalError("unimplemented")
-        }
+  var swiftType: String? {
+    switch self {
+    case .typeDef(let type):
+      return type.swiftType
+    case .dictionary:
+      fatalError("unimplemented")
     }
+  }
 
-    func emit(_ outputStream: inout OutputStream) throws {
-        if case .typeDef(let type) = self {
-            try type.emit(&outputStream)
-        }
+  func emit(_ outputStream: inout OutputStream) throws {
+    if case .typeDef(let type) = self {
+      try type.emit(&outputStream)
     }
+  }
 }
