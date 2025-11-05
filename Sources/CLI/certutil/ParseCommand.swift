@@ -14,12 +14,17 @@
 // limitations under the License.
 //
 
-import Commandant
+import ArgumentParser
 import Algorithms
 import DataKit
 import Foundation
 
-struct ParseCommand: CommandProtocol {
+struct ParseCommand: ParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "parse",
+    abstract: "Parse ASN.1 encoded file or from cmd-line input"
+  )
+
   enum Error: Swift.Error {
     case fileReadError
     case decodingError
@@ -27,17 +32,29 @@ struct ParseCommand: CommandProtocol {
     case jsonEncodingError
   }
 
-  let verb: String = "parse"
-  let function: String = "Parse ASN.1 encoded file or from cmd-line input"
+  @Option(name: .long, help: "path to PEM encoded file")
+  var file: String = ""
 
-  func data(options: Options) -> Data? {
+  @Option(name: .long, help: "string passed as ASN.1 encoded base64")
+  var string: String = ""
+
+  @Flag(name: .long, help: "output certificate as JSON")
+  var json: Bool = false
+
+  @Flag(name: .long, help: "re-encode to ASN.1")
+  var reencode: Bool = false
+
+  @Flag(name: .long, help: "display certificate SANs")
+  var san: Bool = false
+
+  func data() -> Data? {
     var data: Data?
     let fileContents: Data?
 
-    if !options.file.isEmpty {
-      let file = URL(fileURLWithPath: (options.file as NSString).expandingTildeInPath)
-      fileContents = try? Data(contentsOf: file)
-    } else if options.string.isEmpty {
+    if !file.isEmpty {
+      let fileURL = URL(fileURLWithPath: (file as NSString).expandingTildeInPath)
+      fileContents = try? Data(contentsOf: fileURL)
+    } else if string.isEmpty {
       return nil
     } else {
       fileContents = nil
@@ -60,10 +77,10 @@ struct ParseCommand: CommandProtocol {
       }
       data = Data(base64Encoded: base64)
     } else {
-      data = Data(base64Encoded: options.string)
+      data = Data(base64Encoded: string)
       if data == nil {
         do {
-          data = try Data(hex: options.string)
+          data = try Data(hex: string)
         } catch {}
       }
     }
@@ -71,25 +88,25 @@ struct ParseCommand: CommandProtocol {
     return data
   }
 
-  func run(_ options: Options) -> Result<Void, Error> {
-    guard let data = self.data(options: options), !data.isEmpty else {
-      return .failure(.fileReadError)
+  func run() throws {
+    guard let data = self.data(), !data.isEmpty else {
+      throw Error.fileReadError
     }
     guard let cert = CertificateCreateWithData(kCFAllocatorDefault, data as CFData) else {
-      return .failure(.decodingError)
+      throw Error.decodingError
     }
 
-    if options.json {
+    if json {
       guard let json = CertificateCopyJSONDescription(cert) else {
-        return .failure(.jsonEncodingError)
+        throw Error.jsonEncodingError
       }
 
       print("\(json)")
     }
 
-    if options.reencode {
+    if reencode {
       guard let encoded = CertificateCopyDataReencoded(cert) else {
-        return .failure(.encodingError)
+        throw Error.encodingError
       }
 
       print("-----BEGIN CERTIFICATE-----")
@@ -98,47 +115,10 @@ struct ParseCommand: CommandProtocol {
       print("-----END CERTIFICATE-----")
     }
 
-    if options.san, let sans = CertificateCopyDescriptionsFromSAN(cert) {
+    if san, let sans = CertificateCopyDescriptionsFromSAN(cert) {
       (sans as NSArray).forEach { san in
         print("\(san)")
       }
-    }
-
-    return .success(())
-  }
-
-  struct Options: OptionsProtocol {
-    let file: String
-    let string: String
-    let json: Bool
-    let reencode: Bool
-    let san: Bool
-
-    static func create(_ file: String) ->
-      (_ string: String) ->
-      (_ json: Bool) ->
-      (_ reencode: Bool) ->
-      (_ san: Bool) -> Options {
-      { (string: String) in { (json: Bool) in { (reencode: Bool) in { (san: Bool) in
-        Options(file: file,
-                string: string,
-                json: json,
-                reencode: reencode,
-                san: san)
-      }
-      }
-      }
-      }
-    }
-
-    static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<Error>> {
-      // swiftlint:disable:previous identifier_name
-      self.create
-        <*> m <| Option(key: "file", defaultValue: "", usage: "path to PEM encoded file")
-        <*> m <| Option(key: "string", defaultValue: "", usage: "string passed as ASN.1 encoded base64")
-        <*> m <| Option(key: "json", defaultValue: true, usage: "output certificate as JSON")
-        <*> m <| Option(key: "reencode", defaultValue: false, usage: "re-encode to ASN.1")
-        <*> m <| Option(key: "san", defaultValue: false, usage: "display ccertificate SANs")
     }
   }
 }

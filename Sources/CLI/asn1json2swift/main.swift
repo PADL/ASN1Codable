@@ -14,15 +14,16 @@
 // limitations under the License.
 //
 
-import Commandant
+import ArgumentParser
 import Foundation
 
-let commands = CommandRegistry<TranslateCommand.Error>()
-commands.register(TranslateCommand())
-commands.register(VersionCommand())
-let helpCommand = HelpCommand(registry: commands)
-commands.register(helpCommand)
-
-commands.main(defaultVerb: helpCommand.verb) { error in
-  print("\(error)")
+struct ASN1JSON2Swift: ParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "asn1json2swift",
+    abstract: "ASN.1 JSON to Swift translator",
+    subcommands: [TranslateCommand.self, VersionCommand.self],
+    defaultSubcommand: TranslateCommand.self
+  )
 }
+
+ASN1JSON2Swift.main()

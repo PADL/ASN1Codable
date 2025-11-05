@@ -14,18 +14,16 @@
 // limitations under the License.
 //
 
-import Commandant
+import ArgumentParser
 import Foundation
 
-struct VersionCommand: CommandProtocol {
-  struct Error: Swift.Error {}
+struct VersionCommand: ParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "version",
+    abstract: "Show version info"
+  )
 
-  let verb: String = "version"
-  let function: String = "Show version info"
-
-  func run(_: NoOptions<TranslateCommand.Error>) -> Result<Void, TranslateCommand.Error> {
+  func run() throws {
     print("0.0")
-
-    return .success(())
   }
 }

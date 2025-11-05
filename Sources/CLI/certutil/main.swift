@@ -14,15 +14,16 @@
 // limitations under the License.
 //
 
-import Commandant
+import ArgumentParser
 import Foundation
 
-let commands = CommandRegistry<ParseCommand.Error>()
-commands.register(ParseCommand())
-commands.register(VersionCommand())
-let helpCommand = HelpCommand(registry: commands)
-commands.register(helpCommand)
-
-commands.main(defaultVerb: helpCommand.verb) { error in
-  print("\(error)")
+struct CertUtil: ParsableCommand {
+  static let configuration = CommandConfiguration(
+    commandName: "certutil",
+    abstract: "Certificate utility",
+    subcommands: [ParseCommand.self, VersionCommand.self],
+    defaultSubcommand: ParseCommand.self
+  )
 }
+
+CertUtil.main()
